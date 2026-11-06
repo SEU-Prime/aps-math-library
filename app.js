@@ -12,7 +12,6 @@ const readerNewTab = document.querySelector("#reader-new-tab");
 
 let courses = [];
 let activeFilter = "all";
-let typesetQueue = Promise.resolve();
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (character) => ({
@@ -35,24 +34,12 @@ function courseCard(course) {
         <div class="course-meta"><span class="category-label">${escapeHtml(course.groupLabel)}</span><span class="course-pages">${escapeHtml(course.scope)} · ${course.pages} 页</span></div>
         <h2 class="course-title">${escapeHtml(course.title)}<span class="course-subtitle">${escapeHtml(course.subtitle)}</span></h2>
         <p class="course-summary">${escapeHtml(course.summary)}</p>
-        <div class="course-formula" aria-label="代表公式"><span>\\(${escapeHtml(course.formula)}\\)</span></div>
         <div class="course-actions">
           <button class="action-button action-primary" type="button" data-read="${escapeHtml(course.id)}">阅读 PDF</button>
           <a class="action-button action-secondary" href="./${escapeHtml(course.tex)}" download>TeX 源文件</a>
         </div>
       </div>
     </article>`;
-}
-
-function typesetFormulas() {
-  if (!window.MathJax?.typesetPromise) return;
-  typesetQueue = typesetQueue
-    .catch(() => {})
-    .then(() => {
-      window.MathJax.typesetClear([list]);
-      return window.MathJax.typesetPromise([list]);
-    })
-    .catch(() => {});
 }
 
 function updateCourses() {
@@ -63,7 +50,6 @@ function updateCourses() {
     return matchesGroup && (!query || searchText.includes(query));
   });
   list.innerHTML = filtered.map(courseCard).join("");
-  typesetFormulas();
   count.textContent = `显示 ${filtered.length} 门课程`;
   empty.hidden = filtered.length !== 0;
 }

@@ -16,7 +16,7 @@ powershell -ExecutionPolicy Bypass -File .\serve.ps1
 
 将本目录推送到 GitHub 的 `main` 分支后，`.github/workflows/pages.yml` 会自动构建并部署网站。首次部署完成后，可在仓库的 **Settings → Pages** 查看访问地址。
 
-页面是纯静态文件，不依赖 Node.js；课程卡片上的 TeX 公式由 MathJax CDN 排版，因此公式预览需要联网。PDF 和 TeX 源文件可独立下载。公开仓库会让讲义 PDF 和 TeX 源文件对所有人可访问。
+页面是纯静态文件，不依赖 Node.js 或第三方 CDN。公开仓库会让讲义 PDF 和 TeX 源文件对所有人可访问。
 
 ## 目录结构
 
