@@ -1,6 +1,6 @@
 # APS 数学课程资料库
 
-一个无需构建步骤的静态课程目录，收录 14 门 APS 数学面试双语讲义。每门课程包含编译后的 PDF、对应的 LaTeX 源文件和用于目录预览的首页缩略图。
+一个无需构建步骤的静态课程目录，收录 14 门 APS 数学面试双语讲义。课程卡片提供代表公式预览，完整讲义可在网页内直接翻页阅读，无需下载。
 
 ## 本地预览
 
@@ -16,11 +16,11 @@ powershell -ExecutionPolicy Bypass -File .\serve.ps1
 
 将本目录推送到 GitHub 的 `main` 分支后，`.github/workflows/pages.yml` 会自动构建并部署网站。首次部署完成后，可在仓库的 **Settings → Pages** 查看访问地址。
 
-页面是纯静态文件，不依赖 Node.js；课程卡片上的 TeX 公式由 MathJax CDN 排版，因此公式预览需要联网。PDF 和 TeX 源文件可独立下载。公开仓库会让讲义 PDF 和 TeX 源文件对所有人可访问。
+页面是纯静态文件，不依赖 Node.js；课程卡片上的 TeX 公式由 MathJax CDN 排版，因此公式预览需要联网。浏览器内嵌 PDF 阅读器显示完整 LaTeX 排版。公开仓库会让讲义 PDF 和 TeX 源文件对所有人可访问。
 
 ## 目录结构
 
-- `index.html`、`styles.css`、`app.js`：课程目录、筛选、搜索和 PDF 阅读器。
+- `index.html`、`styles.css`、`app.js`：课程目录、筛选、搜索、公式排版和网页阅读器。
 - `courses.json`：课程范围、简介及材料链接。
 - `materials/<课程代号>/`：各课程 PDF、TeX 源文件和封面缩略图。
 
