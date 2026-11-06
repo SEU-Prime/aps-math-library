@@ -1,0 +1,140 @@
+\documentclass[UTF8,11pt,a4paper]{ctexart}
+\usepackage{amsmath,amssymb,geometry,enumitem,hyperref}
+\geometry{margin=2.1cm}\setlist{itemsep=2pt,topsep=3pt}
+\hypersetup{colorlinks=true,linkcolor=blue}
+\newcommand{\EN}[1]{\par\noindent \textbf{English.} #1\par}
+\newcommand{\READ}[1]{\par\noindent \textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\EX}[2]{\par\noindent \textbf{例子 / Example.} #1\par\EN{#2}}
+\newcommand{\ASK}[4]{\par\noindent \textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent \textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
+\title{数学物理方程 APS 面试准备\\[4pt]\large 讲义第 3 版第 1--4 章：分类、分离变量、变换与 Green 函数}
+\author{Mathematical Physics Equations: Bilingual Review}
+\date{}
+\begin{document}\maketitle
+\section*{课程概述 | Course overview}
+\noindent \textbf{中文口述稿。} 我在这门课学习用偏微分方程描述随时间和位置变化的物理量。例如细杆温度 $u(x,t)$ 在均匀、无热源的理想模型下满足 $u_t=\kappa u_{xx}$，其中 $\kappa>0$ 是热扩散系数。如果杆长为 $1$、两端温度保持为零，初始温度是 $\sin(\pi x)$，分离变量得到 $u(x,t)=e^{-\kappa\pi^2t}\sin(\pi x)$。正弦项满足两端条件，指数项说明温差逐渐衰减。为了确定解，除了方程还必须说明初始状态和边界条件。
+\EN{In this course, I studied partial differential equations for quantities that change in space and time. For example, the temperature $u(x,t)$ in an ideal uniform rod without heat sources satisfies $u_t=\kappa u_{xx}$, where $\kappa>0$ is the thermal diffusivity. For a rod of length one with zero endpoint temperatures and initial profile $\sin(\pi x)$, separation of variables gives $u(x,t)=e^{-\kappa\pi^2t}\sin(\pi x)$. The sine factor satisfies the endpoint conditions, while the exponential factor shows the temperature difference decaying. The PDE needs initial and boundary conditions to determine the solution.}
+
+\noindent \textbf{具体应用联系。} 一根长度为 $L$、两端固定的细弦，其横向位移 $u(x,t)$ 可由波动方程描述；细杆温度 $u(x,t)$ 可由热方程描述；无自由电荷区域的电势 $u(x,y,z)$ 满足 Laplace 方程。方程本身只给出局部演化/平衡规律，初始条件规定起始状态，边界条件描述端点如何被固定、加热或施加电势；少了这些条件，通常无法确定唯一物理解。
+\EN{The transverse displacement of a fixed string of length $L$ is modeled by the wave equation. The temperature in a thin rod is modeled by the heat equation, while electrostatic potential in a charge-free region satisfies Laplace's equation. The PDE gives a local evolution or equilibrium law; initial conditions specify the starting state and boundary conditions specify how the ends are fixed, heated, or assigned a potential. Without these conditions, a unique physical solution is generally not determined.}
+
+\section{方程类型与条件 | Equation types and data}
+\noindent 判别式 $B^2-AC<0$、$=0$、$>0$ 分别对应椭圆型、抛物型、双曲型；Laplace 方程、热方程、波方程分别是三类的典型例子。这里 $u$ 是待求的温度、位移或势函数，二阶下标表示连续求两次偏导，例如 $u_{xx}=\partial^2u/\partial x^2$。
+\EN{The sign of $B^2-AC$ classifies the equation: negative is elliptic, zero is parabolic, and positive is hyperbolic. Laplace's equation, the heat equation, and the wave equation are standard examples. The unknown $u$ may represent temperature, displacement, or potential; for instance, $u_{xx}$ is the second partial derivative with respect to $x$.}
+\noindent 一阶方程常写为 $a(x,t)u_x+b(x,t)u_t=c(x,t,u)$；特征线是沿着某些曲线把偏导方程化为常微分方程的路径。二维二阶线性方程主部写为 $Au_{xx}+2Bu_{xy}+Cu_{yy}$，判别式 $B^2-AC$ 的符号区分椭圆型、抛物型和双曲型：分别对应 Laplace 型平衡、heat 型扩散和 wave 型传播。系数会随位置变化时，应逐点判断类型。
+\EN{A first-order equation can be reduced to ordinary differential equations along characteristic curves. For a second-order equation with principal part $Au_{xx}+2Bu_{xy}+Cu_{yy}$, the sign of $B^2-AC$ distinguishes elliptic, parabolic, and hyperbolic types, associated with Laplace-type equilibrium, heat-type diffusion, and wave-type propagation. If coefficients vary, the type is checked pointwise.}
+
+\noindent 初值条件给定某时刻的 $u$，波动方程还需要初速度 $u_t$；边界条件可为 Dirichlet（给定 $u$）、Neumann（给定法向导数 $\partial u/\partial n$）或 Robin（两者线性组合）。初边值条件必须与方程和区域相容。
+\READ{“A Dirichlet condition specifies the value of u on the boundary; a Neumann condition specifies its normal derivative.”}
+\EN{Dirichlet data fix the value of the solution on the boundary, Neumann data fix its normal rate of change, and Robin data combine the two. Initial data describe the state at a starting time, while boundary data describe interaction with the edge of the domain.}
+
+\EX{常系数输运方程 $u_t+a u_x=0$ 的特征线满足 $dx/dt=a$，故 $x-at$ 沿特征线不变。若初值 $u(x,0)=f(x)$，解为 $u(x,t)=f(x-at)$，即初始波形以速度 $a$ 平移而不改变形状。}{For the transport equation $u_t+a u_x=0$, characteristics satisfy $dx/dt=a$, so $x-at$ is constant along them. With initial data $u(x,0)=f(x)$, the solution is $u(x,t)=f(x-at)$: the initial profile translates at speed $a$.}
+
+\section{波动方程初值问题 | Initial-value problems for waves}
+\noindent\textbf{达朗贝尔公式。} 对整条实线上的无阻尼弦，若 $u_{tt}=c^2u_{xx}$，初位移 $u(x,0)=\varphi(x)$、初速度 $u_t(x,0)=\psi(x)$，在适当光滑性下解为
+\[
+u(x,t)=\frac{\varphi(x-ct)+\varphi(x+ct)}2+
+\frac1{2c}\int_{x-ct}^{x+ct}\psi(s)\,ds.
+\]
+第一项是初始形状向左右传播的两部分；第二项累加初速度对当前点的影响。$c>0$ 为波速，$s$ 是积分中的空间变量。解在 $(x,t)$ 的值只受初始区间 $[x-ct,x+ct]$ 影响，这称有限传播速度和依赖区间。
+\READ{“u at x and t is one half of the initial displacement at x minus ct and x plus ct, plus one over two c times the integral of the initial velocity from x minus ct to x plus ct.”}
+\EN{For the wave equation on the whole line, d'Alembert's formula expresses the solution using initial displacement $\varphi$ and initial velocity $\psi$. The first term splits the initial shape into left- and right-traveling waves. The integral accounts for the initial velocity. The value at $(x,t)$ depends only on initial data in $[x-ct,x+ct]$, illustrating finite propagation speed.}
+
+\EX{取 $c=1$、$\varphi(x)=\sin x$、$\psi(x)=0$，则 $u(x,t)=[\sin(x-t)+\sin(x+t)]/2=\sin x\cos t$。直接求导可验证 $u_{tt}=u_{xx}$；在 $t=0$ 有 $u=\sin x$、$u_t=0$，初始条件也得到满足。}{If $c=1$, $\varphi(x)=\sin x$, and $\psi=0$, the formula gives $u(x,t)=\sin x\cos t$. Direct differentiation verifies $u_{tt}=u_{xx}$, and at $t=0$ the displacement is $\sin x$ and the velocity is zero.}
+
+\noindent\textbf{有界区间与能量。} 对 $0<x<L$、两端固定的弦，分离变量得到空间模态 $\sin(n\pi x/L)$。令 $\omega_n=cn\pi/L$，第 $n$ 个时间因子为 $A_n\cos(\omega_nt)+B_n\sin(\omega_nt)$：初位移对应 $A_n$，初速度对应 $\omega_n B_n$。无外力时能量
+\[
+E(t)=\frac12\int_0^L\bigl(u_t^2+c^2u_x^2\bigr)\,dx
+\]
+在足够光滑且边界固定时保持常数。两组解之差若初始能量为零，则能量恒为零，从而在这些条件下证明解的唯一性。空间边界有其他形式时，相应能量边界项也需要检查。
+\EN{For a string fixed at both ends, separation of variables gives spatial modes $\sin(n\pi x/L)$. For the time factor $A_n\cos(\omega_nt)+B_n\sin(\omega_nt)$, initial displacement determines $A_n$ and initial velocity determines $\omega_n B_n$, where $\omega_n=cn\pi/L$. With sufficiently smooth solutions and fixed endpoints, the displayed energy is constant. The difference of two solutions with the same data has zero initial energy, which proves uniqueness under these conditions. Other boundary conditions require checking the boundary terms.}
+
+\section{热方程、热核与最大值原理 | Heat kernel and maximum principle}
+\noindent 对全直线热方程 $u_t=\kappa u_{xx}$、初值 $u(x,0)=\varphi(x)$，$\kappa>0$，适当条件下的解为热核卷积
+\[
+u(x,t)=\int_{-\infty}^{\infty}
+\frac{e^{-(x-\xi)^2/(4\kappa t)}}{\sqrt{4\pi\kappa t}}\,\varphi(\xi)\,d\xi,\quad t>0.
+\]
+积分变量 $\xi$ 表示初始位置；核函数非负、对 $\xi$ 的积分为 $1$，因此 $u(x,t)$ 是初始温度在附近的加权平均。时间越大，加权范围越宽、局部尖峰越平滑。这一表达也展示 Fourier 变换与基本解方法的联系。
+\EN{On the whole line, the heat equation solution is the convolution of the initial temperature with the heat kernel shown above. The variable $\xi$ is the initial position. The kernel is nonnegative and integrates to one, so the solution is a weighted average of the initial data. As time grows, peaks are smoothed over a wider region. This formula connects Fourier transforms with fundamental solutions.}
+
+\noindent\textbf{最大值原理。} 对有界空间区域内的齐次热方程，在适当光滑性下，指定时间段内的最大值由初始时刻或空间边界控制。故如果两份温度分布使用相同初边值，它们的差也满足齐次方程且初边值为零；最大值原理迫使差为零，得到唯一性。若有内部热源或不同边界条件，必须调整结论。
+\EN{For the homogeneous heat equation on a bounded domain, the maximum over a time interval is controlled by the initial data and spatial boundary values, under suitable regularity assumptions. If two solutions share the same data, their difference has zero initial and boundary values; the maximum principle then gives uniqueness. Internal sources and other boundary conditions require a modified argument.}
+
+\section{位势方程与边值方法 | Potential equations and boundary methods}
+\noindent 静态无源问题满足 $\Delta u=0$，称 Laplace 方程；有源问题常写为 $-\Delta u=f$，称 Poisson 方程（符号约定可能不同）。调和函数满足平均值性质：一点的值等于充分小球面上函数值的平均；最大值原理进一步说明非常数调和函数不会在内部取得最大值。这些性质可用于证明 Dirichlet 问题唯一性。
+\EN{The source-free steady equation is Laplace's equation $\Delta u=0$; a common sourced form is Poisson's equation $-\Delta u=f$, with sign conventions varying by text. Harmonic functions satisfy a mean-value property and the maximum principle. The latter gives uniqueness for the Dirichlet problem under appropriate assumptions.}
+
+\EX{单位圆盘中求满足边界 $u(1,\theta)=\cos\theta$ 的调和函数。由极坐标分离变量得到 $u(r,\theta)=r\cos\theta=x$。检验：$\Delta x=0$，且边界 $r=1$ 时正好等于 $\cos\theta$。从物理上看，这是一种边界温度按水平方向线性变化的稳态分布。}{On the unit disk, solve Laplace's equation with boundary data $u(1,\theta)=\cos\theta$. Separation in polar coordinates gives $u(r,\theta)=r\cos\theta=x$. It satisfies $\Delta x=0$ and the stated boundary condition, representing a steady temperature that varies linearly in the horizontal direction.}
+
+\noindent\textbf{变分与近似。} 对 $-u''=f$、$u(0)=u(L)=0$，乘以边界为零的测试函数 $v$ 后积分，分部积分得到弱形式 $\int_0^Lu'v'\,dx=\int_0^Lfv\,dx$。Ritz--Galerkin 方法把 $u$ 近似成有限个基函数的线性组合，在同一有限维空间选测试函数，于是得到线性方程组。这连接数学物理方程、泛函分析和数值分析；收敛还需检查空间、系数及逼近条件。
+\EN{For $-u''=f$ with zero endpoints, multiply by a test function $v$ that also vanishes at the endpoints and integrate by parts to obtain $\int u'v'=\int fv$. Ritz--Galerkin approximates $u$ by a finite linear combination of basis functions and tests against the same finite-dimensional space, producing a linear system. Convergence requires suitable assumptions on the spaces, coefficients, and approximating subspaces.}
+
+\section{分离变量与 Fourier 展开 | Separation of variables}
+\noindent 对线性方程尝试乘积形式 $u(x,t)=X(x)T(t)$，代回后把只含 $x$ 的式子与只含 $t$ 的式子分开，并令它们等于分离常数。边界条件通常导出 Sturm--Liouville 特征值问题；特征函数组成展开基，再由初值求 Fourier 系数。最后检查级数满足方程、边界条件，并在适当意义下收敛到初值。
+\EN{For a linear PDE, try a product $u(x,t)=X(x)T(t)$. Substitution separates the spatial and temporal equations using a separation constant. Boundary conditions produce a Sturm--Liouville eigenvalue problem; its eigenfunctions form an expansion, and the initial condition determines the Fourier coefficients. The resulting series must satisfy the PDE and boundary conditions and converge to the initial data in an appropriate sense.}
+
+\EX{单位区间上解热方程 $u_t=\kappa u_{xx}$，边界 $u(0,t)=u(1,t)=0$，初值 $u(x,0)=\sin(\pi x)$。取 $X=\sin(\pi x)$ 得到唯一模态
+\[
+u(x,t)=e^{-\kappa\pi^2t}\sin(\pi x).
+\]
+$\kappa>0$ 是热扩散系数；$e^{-\kappa\pi^2t}$ 表示温差逐渐衰减，空间波形保持第一特征模态。}{For $u_t=\kappa u_{xx}$ on the unit interval with zero endpoint temperatures and initial profile $\sin(\pi x)$, separation gives $u(x,t)=e^{-\kappa\pi^2t}\sin(\pi x)$. Here $\kappa>0$ is the diffusivity. The amplitude decays while the spatial profile remains the first eigenmode.}
+\READ{“u of x and t equals the exponential of negative kappa pi squared t, times sine of pi x.”}
+
+\noindent 对长度 $1$、两端固定的弦，波动方程 $u_{tt}=c^2u_{xx}$ 的单一模态解为 $u(x,t)=\sin(\pi x)(A\cos(c\pi t)+B\sin(c\pi t))$。$c$ 是波速，初始位移决定 $A$，初速度决定 $B$。热方程解随时间衰减，波方程则在理想无阻尼模型中振荡。
+
+\EN{For the string example, $u(x,t)$ is the transverse displacement, $c$ is the wave speed, and the constants $A$ and $B$ are determined by the initial displacement and velocity. The sine factor enforces the fixed-end conditions.}
+
+\section{积分变换方法 | Integral transform methods}
+\noindent Fourier 变换把空间微分转换为频率乘法：在常用约定下，$\mathcal F[u_{xx}](\xi)=-\xi^2\widehat u(\xi)$。例如全直线上的热方程变成每个频率分别满足的常微分方程 $\partial_t\widehat u=-\kappa\xi^2\widehat u$，解为 $\widehat u(\xi,t)=e^{-\kappa\xi^2t}\widehat u(\xi,0)$；再作逆变换得到空间解。此法适合全空间或边界简单的问题。
+\EN{The Fourier transform turns spatial differentiation into multiplication by frequency: under a common convention, $\mathcal F[u_{xx}](\xi)=-\xi^2\widehat u(\xi)$. The heat equation on the real line becomes an ODE for each frequency, with solution $\widehat u(\xi,t)=e^{-\kappa\xi^2t}\widehat u(\xi,0)$. The inverse transform recovers the spatial solution. This method is effective on the whole line or in domains with simple boundaries.}
+
+\noindent 对时间变量用 Laplace 变换，可将导数转为代数式并带入初值：$\mathcal L[u_t](s)=sU(s)-u(0)$。其中 $s$ 是变换变量，$U(s)$ 是 $u(t)$ 的变换。求解 $U$ 后再做逆变换；此法适合已知初值且外力分段变化或含冲击的问题。
+\EN{The Laplace transform is often applied in time. It converts a time derivative into an algebraic expression while retaining the initial value: $s$ is the transform variable and $U(s)$ is the transform of $u(t)$. We solve for the transform and then invert it. This is useful for initial-value problems with piecewise forcing or impulses.}
+\READ{“Laplace of u prime is s U of s minus u at zero.”}
+
+\EX{若 $y'(t)+ay(t)=g(t)$、$y(0)=y_0$，Laplace 变换给 $(s+a)Y(s)-y_0=G(s)$，所以 $Y(s)=(G(s)+y_0)/(s+a)$。分母中的 $s+a$ 表示系统衰减率，$G(s)$ 编码外力；求逆变换即可恢复响应。}{For $y'(t)+ay(t)=g(t)$ with $y(0)=y_0$, the Laplace transform gives $(s+a)Y(s)-y_0=G(s)$, hence $Y(s)=(G(s)+y_0)/(s+a)$. The factor $s+a$ represents the system decay rate, while $G(s)$ encodes the forcing. Inverting the transform recovers the response.}
+
+\section{Green 函数方法 | Green functions}
+\noindent 对线性算子 $L$ 与给定边界条件，Green 函数 $G(x,\xi)$ 是单位点源 $\delta(x-\xi)$ 的响应，满足 $L_xG(x,\xi)=\delta(x-\xi)$ 及相应齐次边界条件。于是 $Lu=f$ 的解常可写成
+\[
+u(x)=\int G(x,\xi)f(\xi)\,d\xi
+\]
+再加上满足边界数据的齐次解。$\xi$ 表示源的位置，$G(x,\xi)$ 表示源在 $\xi$ 对观测点 $x$ 的影响。Green 函数把线性叠加原理写成积分形式。
+\EN{The Green function $G(x,\xi)$ records how a unit source at $\xi$ affects the solution observed at $x$. Integrating against $f(\xi)$ adds the effects of all source locations; nonzero boundary data require adding a homogeneous solution.}
+\READ{“The solution at x is the integral of the Green function at x and xi times the forcing at xi.”}
+
+\EX{在单位区间解 $-u''(x)=f(x)$、$u(0)=u(1)=0$。Green 函数为 $G(x,\xi)=\min(x,\xi)[1-\max(x,\xi)]$，因此 $u(x)=\int_0^1G(x,\xi)f(\xi)d\xi$。每个位置 $\xi$ 的外力按核函数加权，对观测点 $x$ 的总影响由积分累加。}{For $-u''(x)=f(x)$ on $(0,1)$ with zero endpoint values, the Green function is $G(x,\xi)=\min(x,\xi)[1-\max(x,\xi)]$. Thus $u(x)=\int_0^1G(x,\xi)f(\xi)d\xi$. The integral adds the contribution of forcing at every source location $\xi$.}
+
+\section{方法如何选择 | Choosing a method}
+\noindent 实际解题可先检查线性、常系数、区域和边界：一阶输运优先试特征线；矩形/区间上的齐次边界优先分离变量和 Fourier 级数；全空间常系数问题优先 Fourier 变换；时间初值问题和分段输入常适合 Laplace 变换；线性算子、复杂源项或需要系统响应时考虑 Green 函数。多个方法可以组合，例如先 Fourier 变换空间变量，再解时间 ODE。
+\EN{Choose a method after checking linearity, coefficients, domain, and boundary data. Characteristics suit first-order transport; separation and Fourier series suit simple bounded domains with homogeneous boundaries; Fourier transforms suit constant-coefficient problems on the whole space; Laplace transforms suit initial-value problems with piecewise forcing; Green functions express the response to a general source. Methods can also be combined.}
+
+\ASK{热方程与波动方程的分离变量结果有什么差别？}{How do separated solutions differ for the heat and wave equations?}{空间边界给出相同类型的特征函数，但热方程的时间因子是指数衰减，体现扩散和平滑；波方程的时间因子是正弦、余弦振荡，体现传播和惯性。}{The spatial eigenfunctions may be similar, but the heat equation has exponentially decaying time factors that represent diffusion, while the wave equation has oscillatory factors that represent propagation and inertia.}
+\ASK{Green 函数中的 $\delta$ 表示什么？}{What does the delta in the Green-function equation represent?}{Dirac delta 是集中在一个点、总质量为 $1$ 的广义函数；它表示单位点源。Green 函数是该点源经过线性算子和边界条件作用后的响应，再由积分叠加所有源点。}{The Dirac delta is a generalized function concentrated at one point with total mass one. It represents a unit point source. The Green function is the response to that source, and integration superposes the responses from all source points.}
+\ASK{为什么只写 PDE 还不能确定解？}{Why does a PDE alone not determine the solution?}{偏微分方程给出局部规律，通常还需要区域、初始值和边界条件。不同边界或初值可对应不同解；物理条件同时限定哪些解有意义。}{The PDE gives a local law, but the domain, initial values, and boundary conditions are usually also needed. Different data can lead to different solutions, while physical constraints specify which solution is relevant.}
+\section{分离变量的完整计算 | Separation step by step}
+\noindent 考虑 $0<x<1$ 上 $u_t=\kappa u_{xx}$，$\kappa>0$，两端保持零温度。令 $u=X(x)T(t)$ 并在非零处代入，得到 $T'/(\kappa T)=X''/X=-\lambda$。于是空间方程为 $X''+\lambda X=0$，时间方程为 $T'+\kappa\lambda T=0$。空间边界 $X(0)=X(1)=0$ 的非零解对应
+\[
+\lambda_n=n^2\pi^2,\quad X_n(x)=\sin(n\pi x),\quad T_n(t)=e^{-\kappa n^2\pi^2t},\quad n=1,2,\ldots.
+\]
+若初值 $f(x)=\sin(\pi x)+2\sin(2\pi x)$，线性叠加得到
+\[
+u(x,t)=e^{-\kappa\pi^2t}\sin(\pi x)+2e^{-4\kappa\pi^2t}\sin(2\pi x).
+\]
+第二项衰减得更快，说明高频起伏在这个模型中消失得更快；将 $t=0$ 代入可检查初值，每项在两端均为零。
+\EN{For the heat equation on the unit interval with zero endpoint temperatures, set $u=X T$. Substitution separates the equation into $X''+\lambda X=0$ and $T'+\kappa\lambda T=0$. The boundary conditions give the eigenvalues and modes above. For initial data $\sin(\pi x)+2\sin(2\pi x)$, add the two displayed solutions. The second, higher-frequency mode decays faster. At $t=0$ the solution returns the initial data, and both boundary values remain zero.}
+\READ{``The second mode decays exponentially at four times the rate of the first mode.''}
+
+\section{波的传播和能量 | Wave propagation and energy}
+\noindent 全直线上弦的位移满足 $u_{tt}=c^2u_{xx}$，其中 $c>0$ 是波速。给定初始位移 $u(x,0)=f(x)$ 和初始速度 $u_t(x,0)=g(x)$，d'Alembert 公式为
+\[
+u(x,t)=\frac{f(x-ct)+f(x+ct)}2+\frac1{2c}\int_{x-ct}^{x+ct}g(s)\,ds.
+\]
+例如 $f(x)=\cos x$、$g(x)=0$ 时，解为 $u(x,t)=\cos x\cos(ct)$；也可以看作两个半幅波分别向左、向右传播。对有限区间固定端点的充分光滑解，能量
+\[
+E(t)=\frac12\int_0^L\bigl(u_t^2+c^2u_x^2\bigr)\,dx
+\]
+由分部积分得到 $E'(t)=c^2[u_tu_x]_0^L=0$：固定端点使 $u_t=0$。因此零初值只能产生零解，也就说明同一初边值问题的经典解至多一个。
+\EN{For the wave equation on the whole line, $f$ and $g$ are the initial displacement and velocity, and $c$ is the wave speed. The displayed d'Alembert formula gives the solution. For $f(x)=\cos x$ and $g=0$, it becomes $\cos x\cos(ct)$, or two half-amplitude waves traveling in opposite directions. On a finite interval with fixed endpoints, integration by parts shows that the displayed energy is constant. Applied to the difference of two solutions, this proves uniqueness for sufficiently smooth solutions.}
+\ASK{为什么波动方程需要两个初始条件？}{Why does the wave equation need two initial conditions?}{因为方程对时间是二阶的，需要给初始位移和初始速度；而热方程对时间一阶，通常只需初始温度。}{It is second order in time, so we specify both the initial displacement and velocity. The heat equation is first order in time and usually needs only the initial temperature.}
+\end{document}

@@ -1,0 +1,414 @@
+\documentclass[UTF8,11pt,a4paper]{ctexart}
+\usepackage{amsmath,amssymb,geometry,enumitem,hyperref}
+\geometry{margin=2.05cm}
+\setlist{itemsep=2pt,topsep=4pt}
+\hypersetup{colorlinks=true,linkcolor=blue}
+\newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
+\newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\EX}[2]{\par\noindent\textbf{例子 / Example.} #1\par\EN{#2}}
+\newcommand{\ASK}[4]{\par\noindent\textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent\textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
+\title{数理统计 APS 面试准备\\[4pt]\large 陈希孺第 4--5 章与课程讲义 | Bilingual Review}
+\author{Mathematical Statistics}
+\date{}
+\begin{document}
+\maketitle
+
+\section*{课程概述 | Course overview}
+\noindent\textbf{中文口述稿。} 我学习用样本推断未知总体，而不是只描述已看到的数据。例如想了解生产线的不合格率 $p$，假设随机抽取的 $n$ 件产品独立、每件不合格概率相同。若其中 $X$ 件不合格，就可以用 $\hat p=X/n$ 估计 $p$；抽查 $100$ 件发现 $10$ 件不合格时，估计值是 $0.1$。换一批样本会得到不同结果，所以还要用置信区间表达不确定性。若要判断是否超过某个标准，我会先写出原假设和备择假设，再选择合适的检验方法。概率论提供抽样分布，数理统计则利用数据反推参数。
+
+\EN{In mathematical statistics, I learned to infer properties of a population from a sample. Suppose I want to estimate a production defect probability $p$. If $n$ sampled items are independent and have the same defect probability, I can use $\hat p=X/n$, where $X$ is the number of defects. Ten defects among one hundred items give an estimate of $0.1$. A different sample would give a different result, so I also use a confidence interval to express uncertainty. To assess a production standard, I first state a null and an alternative hypothesis, then select a suitable test. Probability gives the sampling distribution; statistics uses observed data to infer the parameter.}
+
+\noindent\textbf{学科联系与现实应用（拓展口述）。} 数理统计把概率论中的分布和抽样模型用于数据推断；参数估计回答“未知总体参数可能是多少”，假设检验回答“数据是否与某个主张相容”，区间估计则表达估计的不确定性。极大似然估计又把统计问题连接到数学分析和数值优化，因为复杂模型的似然方程常需数值求解。现实中，制造业可用抽样检验监控不良率，临床研究可比较治疗组与对照组，网站实验可比较两个版本的转化率。以两组转化率为例，应先定义成功事件和比较参数，再检查随机分组、样本独立性及样本量条件，最后用置信区间或检验量化差异；统计显著不自动代表差异有实际意义，也不能仅凭观察性关联断言因果。
+\EN{\textbf{Connections and applications (extension for an interview).} Mathematical statistics uses probability distributions and sampling models to draw conclusions from data. Estimation asks what an unknown population parameter might be; hypothesis testing asks whether data are compatible with a claim; an interval expresses uncertainty in an estimate. Maximum likelihood also connects statistics to calculus and numerical optimization, since likelihood equations for complex models often require numerical solution. Applications include monitoring defect rates in manufacturing, comparing treatment and control groups in clinical studies, and comparing conversion rates in website experiments. For two conversion rates, define the success event and parameter first, check randomization, independence, and sample-size conditions, then quantify the difference with a confidence interval or test. Statistical significance does not by itself imply practical importance, and observational association alone does not establish causation.}
+
+\ASK{数理统计如何用于实际决策？}{How is mathematical statistics used in practical decisions?}{例如工厂可以抽取产品估计不良率，并用置信区间表达估计精度；临床研究可以比较治疗组和对照组。要先说清抽样设计与模型假设，再解释估计或检验结论，不能把统计显著直接等同于实际重要或因果关系。}{A factory can sample products to estimate a defect rate and use a confidence interval to express precision; a clinical study can compare treatment and control groups. State the sampling design and model assumptions first, then interpret the estimate or test. Statistical significance alone does not establish practical importance or causation.}
+
+\noindent\textbf{范围说明。} 第四、五章按教材主线展开；抽样分布作为参数估计和检验所需的前置工具；贝叶斯估计、正态性检验和非参数检验结合课程讲义及试题整理。面试时应优先讲本人实际学过的部分。
+\EN{The main structure follows Chapters 4 and 5. Sampling distributions are included as tools needed for estimation and testing. Bayesian estimation, normality tests, and nonparametric tests are summarized from the course notes and exam materials. In an interview, prioritize the material actually covered in your classes.}
+
+\section{统计模型与抽样分布 | Statistical models and sampling distributions}
+\subsection{总体、样本与统计量 | Population, sample, and statistic}
+\noindent\textbf{统计模型。} 用一族分布 $\{F_\theta:\theta\in\Theta\}$ 描述总体，其中 $\theta$ 是未知参数。随机样本 $X_1,\ldots,X_n$ 通常假设独立同分布于 $F_\theta$。观测数据 $x_1,\ldots,x_n$ 是随机样本的一次实现；统计推断利用实现值，但概率性质来自抽样前的随机变量。
+
+\EN{A statistical model is a family of distributions $\{F_\theta:\theta\in\Theta\}$ indexed by an unknown parameter $\theta$. A random sample $X_1,\ldots,X_n$ is usually assumed to be independent and identically distributed from $F_\theta$. Observed data $x_1,\ldots,x_n$ are one realization of that sample. Inference uses the observed values, while its probability properties refer to the random sample before observation.}
+
+\noindent\textbf{从现实问题建立统计模型。} 可以按以下顺序讲清一个模型：\textbf{(1)观察单位：} 一件产品、一次电话、一个人还是一次测量；\textbf{(2)随机变量：} 记录合格/不合格、事件次数、等待时间还是测量值；\textbf{(3)机制和分布：} 说明试验次数是否固定、是否独立、有无放回、事件率是否恒定；\textbf{(4)参数：} 解释未知的 $p,\lambda,\mu,\sigma^2$ 在现实中代表什么；\textbf{(5)推断目标：} 估计参数、构造区间、比较两组或检验一个主张；\textbf{(6)检查与限制：} 核对抽样方式、模型拟合和结论适用范围。独立同分布（iid）不是默认事实：同一个人反复测量、同一批次产品或按时间连续采样，都可能产生相关性。
+\EN{A practical modeling explanation can follow six steps: (1) define the observational unit, such as one product, call, person, or measurement; (2) define the random variable, such as pass/fail, event count, waiting time, or measurement; (3) state the mechanism and distribution, including fixed trial count, independence, replacement, and rate assumptions; (4) interpret unknown parameters such as $p,\lambda,\mu,\sigma^2$; (5) state the inferential goal; and (6) check fit and limitations. Independent and identically distributed sampling is not automatic: repeated measurements on one person, products from one batch, or observations taken over time may be dependent.}
+
+\noindent\textbf{常见统计模型一览。}
+\begin{center}
+\begin{tabular}{p{0.22\linewidth}p{0.27\linewidth}p{0.39\linewidth}}
+数据与随机变量 & 模型 & 参数解释和核心条件\\
+固定 $n$ 件中的不合格数 $X$ & $\operatorname{Bin}(n,p)$ & $p$ 为单件不合格率；单件结果独立且概率相同\\
+固定时间内事件数 $N$ & $\operatorname{Poisson}(rt)$ & $r$ 为单位时间率；观察时长 $t$；率近似恒定、增量独立\\
+连续测量 $X_i$ & $N(\mu,\sigma^2)$ & $\mu$ 为总体中心、$\sigma$ 为个体波动尺度；独立正态适用于精确小样本推断\\
+恒定风险下寿命 $T$ & $\operatorname{Exp}(\lambda)$ & $\lambda$ 为每单位时间故障率；危险率恒定且无老化效应\\
+两组连续结果 & 两正态总体 / Welch 模型 & 先判断样本独立还是配对，再决定是否假设方差相同\\
+多类别计数 & Multinomial$(n,p_1,\ldots,p_k)$ & $p_j$ 为第 $j$ 类概率，概率和为 $1$，总次数固定
+\end{tabular}
+\end{center}
+表中的独立性和分布条件决定后续公式是否精确；如果模型只是近似，应将推断解释为近似结果。
+\EN{The table connects common observations to models and interprets their parameters. Assumptions such as independence and distribution shape determine whether later inference is exact. When the model is only approximate, the resulting inference is approximate as well.}
+
+\noindent\textbf{统计量、估计量与估计值。} 统计量 $T=T(X_1,\ldots,X_n)$ 是样本的函数，不能含未知参数；当它用于估计 $\theta$ 时称为估计量 $\hat\theta$。代入具体数据得到的数值 $\hat\theta(x_1,\ldots,x_n)$ 称为估计值。统计量的概率分布称抽样分布。
+\EN{A statistic $T=T(X_1,\ldots,X_n)$ is a function of the sample and cannot involve an unknown parameter. When used to estimate $\theta$, it is called an estimator $\hat\theta$. Its value after substituting observed data is an estimate. The probability distribution of a statistic is its sampling distribution.}
+
+\noindent\textbf{样本均值、方差与经验分布。}
+\[
+\bar X=\frac1n\sum_{i=1}^nX_i,\qquad
+S^2=\frac1{n-1}\sum_{i=1}^n(X_i-\bar X)^2,\qquad
+F_n(x)=\frac1n\sum_{i=1}^n\mathbf 1_{\{X_i\le x\}}.
+\]
+$S^2$ 的分母是 $n-1$，因此在 iid 且总体方差有限时 $E(S^2)=\sigma^2$。经验分布函数 $F_n$ 把每个样本点放置质量 $1/n$，是总体分布的自然样本近似。第 $k$ 阶原点样本矩为 $A_k=n^{-1}\sum_iX_i^k$；次序统计量记为 $X_{(1)}\le\cdots\le X_{(n)}$。
+\READ{“X bar equals one over n times the sum of X i. S squared equals one over n minus one times the sum of X i minus X bar, squared. F sub n of x is one over n times the sum of the indicators that X i is at most x.”}
+\EN{The sample mean and unbiased sample variance are defined above. The denominator of $S^2$ is $n-1$, which gives $E(S^2)=\sigma^2$ for an iid sample with finite variance. The empirical distribution assigns mass $1/n$ to each observation and approximates the population distribution. $A_k$ is the $k$th raw sample moment, and $X_{(k)}$ is the $k$th order statistic.}
+
+\EX{样本为 $1,2,2,5$ 时，$\bar x=2.5$，$s^2=[(1-2.5)^2+(2-2.5)^2+(2-2.5)^2+(5-2.5)^2]/3=3$；经验分布在 $x=2$ 处为 $F_4(2)=3/4$。}{For the sample $1,2,2,5$, the mean is $2.5$ and the unbiased sample variance is $3$. The empirical distribution at $x=2$ is $F_4(2)=3/4$.}
+
+\ASK{统计量、估计量和估计值有什么区别？}{What is the difference between a statistic, an estimator, and an estimate?}{统计量是样本函数；用于估计参数时叫估计量；代入观察数据后得到的具体数值叫估计值。统计量的抽样分布用于描述重复抽样时的变化。}{A statistic is a function of the sample. When it targets a parameter, it is an estimator. Its numerical value for observed data is an estimate. The sampling distribution describes how the statistic varies across repeated samples.}
+
+\subsection{正态总体的三大抽样分布 | The three classical normal-sample distributions}
+\noindent 设 $X_1,\ldots,X_n\overset{\mathrm{iid}}{\sim}N(\mu,\sigma^2)$，且 $n\ge2$。定义
+\[
+Z_i=\frac{X_i-\mu}{\sigma},\qquad
+\bar X=\frac1n\sum_iX_i,\qquad
+S^2=\frac1{n-1}\sum_i(X_i-\bar X)^2.
+\]
+正态样本的均值 $\bar X$ 与方差 $S^2$ 相互独立；$\bar X\sim N(\mu,\sigma^2/n)$。这两条性质是卡方和 $t$ 分布推导的关键。
+\EN{Let $X_1,\ldots,X_n$ be iid $N(\mu,\sigma^2)$ with $n\ge2$. The sample mean and sample variance are independent, and $\bar X\sim N(\mu,\sigma^2/n)$. These facts are central to the chi-square and $t$ distributions below.}
+
+\noindent\textbf{1. 卡方分布：样本方差的枢轴量。} 若 $Z_1,\ldots,Z_\nu$ 独立且服从 $N(0,1)$，则 $\sum_{i=1}^{\nu}Z_i^2\sim\chi^2_\nu$，称自由度为 $\nu$ 的卡方分布。对正态随机样本，
+\[
+\frac{(n-1)S^2}{\sigma^2}
+=\frac{\sum_{i=1}^n(X_i-\bar X)^2}{\sigma^2}
+\sim\chi^2_{n-1}.
+\]
+自由度是 $n-1$，因为偏差满足 $\sum_i(X_i-\bar X)=0$ 这一约束。它用于总体方差的精确置信区间与检验；正态性是精确结论的重要条件，非正态时一般不能照搬。
+\READ{“The sum of nu independent standard normal variables, each squared, follows a chi-square distribution with nu degrees of freedom. Therefore, n minus one times S squared divided by sigma squared follows a chi-square distribution with n minus one degrees of freedom.”}
+\EN{The sum of squares of $\nu$ independent standard normal variables has a chi-square distribution with $\nu$ degrees of freedom. For a normal sample, $(n-1)S^2/\sigma^2$ has $n-1$ degrees of freedom. One degree is lost because the deviations from the sample mean sum to zero. This pivot is used for exact inference on the variance; normality is essential for the exact result.}
+
+\noindent\textbf{2. $t$ 分布：总体方差未知时的均值推断。} 若 $Z\sim N(0,1)$、$U\sim\chi^2_\nu$ 且相互独立，则
+\[
+T=\frac{Z}{\sqrt{U/\nu}}\sim t_\nu.
+\]
+正态样本中，$\sqrt n(\bar X-\mu)/\sigma\sim N(0,1)$，且 $(n-1)S^2/\sigma^2\sim\chi^2_{n-1}$，两者独立。因此
+\[
+\frac{\bar X-\mu}{S/\sqrt n}\sim t_{n-1}.
+\]
+分母以随机的 $S$ 代替未知 $\sigma$，引入额外不确定性，所以 $t$ 分布比标准正态分布尾部更厚；自由度增加时它趋近标准正态。用于正态总体均值 $\mu$ 的精确区间估计和检验。
+\READ{“T equals X bar minus mu, divided by S over the square root of n, and follows a t distribution with n minus one degrees of freedom.”}
+\EN{A Student's $t$ variable is a standard normal variable divided by the square root of an independent chi-square variable per degree of freedom. Standardizing $\bar X$ and replacing the unknown $\sigma$ with $S$ gives a $t$ statistic with $n-1$ degrees of freedom. The random denominator adds uncertainty, so the $t$ distribution has heavier tails than the standard normal; it approaches the normal distribution as the degrees of freedom increase.}
+
+\noindent\textbf{3. $F$ 分布：两个方差的标准化比。} 若 $U_1\sim\chi^2_{\nu_1}$、$U_2\sim\chi^2_{\nu_2}$ 相互独立，则
+\[
+F=\frac{U_1/\nu_1}{U_2/\nu_2}\sim F_{\nu_1,\nu_2}.
+\]
+对两个相互独立的正态样本，若来自共同方差 $\sigma^2$ 的总体，则
+\[
+\frac{S_1^2}{S_2^2}\sim F_{n_1-1,n_2-1}.
+\]
+若两个总体方差不同，则 $(S_1^2/\sigma_1^2)/(S_2^2/\sigma_2^2)\sim F_{n_1-1,n_2-1}$。$F$ 分布只取正值且通常右偏；交换分子、分母会同时交换两个自由度，并取倒数。它常用于方差比检验，也用于正态总体方差比区间估计。
+\READ{“F equals a chi-square variable with nu one degrees of freedom divided by nu one, over an independent chi-square variable with nu two degrees of freedom divided by nu two.”}
+\EN{An $F$ variable is the ratio of two independent chi-square variables after each is divided by its degrees of freedom. For independent normal samples with a common variance, $S_1^2/S_2^2$ has an $F$ distribution with degrees of freedom $n_1-1$ and $n_2-1$. With unequal population variances, standardize each sample variance by its own population variance. The $F$ distribution is positive and usually right-skewed; reversing the ratio reverses the degrees of freedom and takes the reciprocal.}
+
+\EX{若 $n=16$ 的正态样本有 $\bar x=10.4,s=2.4$，总体方差未知，则均值的 95\% 区间用 $t_{0.975,15}\approx2.131$：$10.4\pm2.131(2.4/4)=[9.121,11.679]$。这里用 $t$ 而不是 $z$，因为 $\sigma$ 未知且由 $S$ 估计。}{For a normal sample of size $16$ with $\bar x=10.4$ and $s=2.4$, the population variance is unknown. Using $t_{0.975,15}\approx2.131$, the 95\% interval is $10.4\pm2.131(2.4/4)=[9.121,11.679]$. We use $t$ rather than $z$ because $\sigma$ is estimated by $S$.}
+
+\subsection{三个抽样分布怎样用于实际推断 | Using the three sampling distributions}
+\noindent\textbf{卡方：估计单个总体方差。} 例：从正态机器加工过程独立抽取 $n=10$ 件，样本方差为 $s^2=4$ 平方毫米。未知参数是过程方差 $\sigma^2$；标准差是 $\sigma=\sqrt{\sigma^2}$。由于
+\[
+\frac{(n-1)S^2}{\sigma^2}\sim\chi^2_9,
+\]
+把 $\chi^2$ 分位数反解得到 95\% 方差区间
+\[
+\left(\frac{9s^2}{\chi^2_{0.975,9}},\frac{9s^2}{\chi^2_{0.025,9}}\right)
+\approx\left(\frac{36}{19.023},\frac{36}{2.700}\right)
+=(1.89,13.33).
+\]
+区间明显不对称，因为卡方分布只取正值且右偏。它很宽表示 $n=10$ 对波动程度的信息有限；精确覆盖率依赖总体正态。
+\EN{For a normal manufacturing process, suppose $n=10$ independent items give sample variance $s^2=4$. The unknown variance is $\sigma^2$, and the standard deviation is $\sigma=\sqrt{\sigma^2}$. Inverting the chi-square pivot gives the 95\% interval above, approximately $(1.89,13.33)$. It is asymmetric because the chi-square distribution is positive and right-skewed. Its width shows that ten observations give limited information about variability; exact coverage relies on normality.}
+
+\noindent\textbf{$t$：估计总体平均值。} 仍用 $n=16,\bar x=10.4,s=2.4$ 的例子。要估计的是总体长期平均 $\mu$，而不是每个个体的取值。样本均值的标准误为 $s/\sqrt n=2.4/4=0.6$；乘以自由度 $15$ 的双侧临界值 $2.131$，误差界为 $1.279$，所以区间为 $(9.121,11.679)$。若先验给出的工程规格均值是 $10$，该区间包含 $10$，说明此样本没有显示平均值与 $10$ 有显著差别；这不等于证明均值恰好为 $10$。
+\EN{The $t$ interval estimates the long-run population mean $\mu$, not an individual measurement. Here the standard error is $s/\sqrt n=0.6$, and the margin of error is $2.131(0.6)=1.279$. The resulting interval contains the engineering target $10$, so the sample does not show a significant difference from that target. This does not prove that the mean equals exactly $10$.}
+
+\noindent\textbf{$F$：比较两个过程的波动。} 两台机器各自独立抽样，若两组数据都可合理视为正态，可比较过程方差。假设 $n_1=10,s_1^2=4$ 与 $n_2=12,s_2^2=1$，原假设 $H_0:\sigma_1^2=\sigma_2^2$ 下，统计量 $F=S_1^2/S_2^2=4$ 服从 $F_{9,11}$。观察到 $F=4$ 表示第一组样本方差是第二组的四倍；是否显著还需根据预先选择的单侧/双侧备择和 $F_{9,11}$ 尾部概率决定。不能把“样本方差比为 4”直接说成“真实方差比显著为 4”。经典 $F$ 方差检验对非正态数据较敏感。
+\EN{To compare variability from two machines, suppose independent normal samples have $n_1=10,s_1^2=4$ and $n_2=12,s_2^2=1$. Under $H_0:\sigma_1^2=\sigma_2^2$, the ratio $F=S_1^2/S_2^2=4$ follows $F_{9,11}$. The observed sample variance is four times the other, but significance depends on the prespecified one-sided or two-sided alternative and the tail probability. A sample ratio of four is not itself proof that the population variance ratio differs significantly. The classical $F$ test is sensitive to nonnormality.}
+
+\noindent\textbf{选择流程。} 一个参数、正态总体均值：$\sigma$ 已知用 $Z$，未知用 $t$；一个正态总体方差用 $\chi^2$；两个独立正态总体均值差用合并 $t$（方差相等假设合理时）或 Welch $t$；配对数据先做差再用单样本 $t$；两个正态方差比用 $F$。不合格率常从二项模型出发；稀有事件计数常用 Poisson；分类数据的类别比例用多项模型。先由实验设计和观测类型选模型，再计算检验量，不能只看题面中出现的数字。
+\EN{A practical selection guide is: use $Z$ for a normal mean when $\sigma$ is known and $t$ when it is unknown; use $\chi^2$ for one normal-population variance; use pooled $t$ for two independent normal means when equal variances are defensible, otherwise Welch's method; reduce paired data to differences and use a one-sample $t$ procedure; use $F$ for a ratio of two normal variances. Defect counts often start with a binomial model, rare event counts with Poisson, and category proportions with a multinomial model. Choose from the design and data type, not from arithmetic alone.}
+
+\subsection{三个可复述的完整模型例子 | Three complete model-to-inference examples}
+\noindent\textbf{例一：生产线不合格率。} 随机抽查 $n=200$ 件，发现 $x=40$ 件不合格。若每件结果独立且不合格率 $p$ 稳定，则 $X\sim\operatorname{Bin}(200,p)$。观测比例 $\hat p=x/n=0.20$ 是 $p$ 的极大似然估计；估计标准误近似为 $\sqrt{\hat p(1-\hat p)/n}=0.0283$。Wald 95\% 区间约为 $0.20\pm1.96(0.0283)=(0.144,0.256)$。若要检验新工艺是否把 $p=0.15$ 降低不了的问题，预先设 $H_0:p=0.15$、$H_1:p>0.15$；原假设标准误用 $\sqrt{0.15(0.85)/200}=0.0252$，故 $Z\approx(0.20-0.15)/0.0252=1.98$，单侧 $p$ 值约 $0.024$，在 $5\%$ 水平拒绝 $H_0$。这是大样本正态近似，且应确认抽样随机、产品结果近似独立、过程率稳定；显著性不说明实际损失有多大。
+\EN{A production line inspects $200$ randomly selected items and finds $40$ defective. If item outcomes are independent with a stable defect rate $p$, then $X\sim\operatorname{Bin}(200,p)$. The observed proportion $\hat p=0.20$ is the maximum-likelihood estimate. Its estimated standard error is $0.0283$, giving the approximate Wald 95\% interval $(0.144,0.256)$. To test whether the defect rate exceeds $0.15$, set $H_0:p=0.15$ and $H_1:p>0.15$ in advance. The null standard error is $0.0252$, giving $Z\approx1.98$ and a one-sided $p$-value of about $0.024$. Reject at 5\%. This is a large-sample approximation and assumes random sampling, approximate independence, and a stable process. Significance does not quantify the operational cost.}
+
+\noindent\textbf{例二：一小时内的故障/来电数。} 记录 $12$ 个小时共发生 $48$ 次事件，若每小时暴露相同且事件率稳定，Poisson 率的极大似然估计为 $\hat r=48/12=4$ 次/小时。在恒定率 Poisson 过程模型下，用估计率代入下一小时计数分布 $\operatorname{Poisson}(\hat r)$，得到至少 $5$ 次的概率估计 $1-e^{-4}\sum_{k=0}^4 4^k/k!\approx0.3712$；这是代入估计，未反映率估计的不确定性。若事件确实来自同一恒定率 Poisson 过程，事件间隔另可建模为指数分布，平均间隔估计为 $1/\hat r=0.25$ 小时，即 $15$ 分钟。若不同小时的强度因时段、天气或设备状态而变，应按时段分层或改用更丰富的模型；把 $48$ 次事件当作 $48$ 个独立时长观测会弄错数据单位。
+\EN{Suppose 48 events occur over 12 hours of equal exposure. Under a stable Poisson rate, the maximum-likelihood rate estimate is $\hat r=4$ per hour. Plugging this estimate into the next-hour Poisson model gives an estimated chance of at least five events of $1-e^{-4}\sum_{k=0}^4 4^k/k!\approx0.3712$. This plug-in calculation does not reflect uncertainty in the estimated rate. Under the same homogeneous Poisson-process assumption, inter-event times are exponential with estimated mean $1/\hat r=0.25$ hours, or 15 minutes. If intensity varies by time of day, weather, or machine state, stratify or use a richer model. The observational unit must be the count interval or event gap, not a mixture of the two.}
+
+\noindent\textbf{例三：测量总体平均值。} 对 $16$ 件产品测量某尺寸，得到 $\bar x=10.4$、$s=2.4$。若来自独立正态总体 $N(\mu,\sigma^2)$ 且 $\sigma$ 未知，估计目标 $\mu$，使用 $t_{15}$ 区间 $(9.121,11.679)$。建模上 $\mu$ 描述长期平均，$\sigma$ 描述个体间波动；把区间用于判断均值目标时，要区分“均值是否达标”和“单件产品是否落入规格”。单件合格率需要整个测量分布或直接的二项合格/不合格模型，不能只看均值置信区间。
+\EN{For 16 product measurements with $\bar x=10.4$ and $s=2.4$, assume an independent normal population $N(\mu,\sigma^2)$ with unknown $\sigma$. The target is the long-run mean $\mu$, estimated by the $t_{15}$ interval $(9.121,11.679)$. The parameter $\mu$ describes the process center and $\sigma$ its item-to-item spread. A confidence interval for the mean answers whether the average meets a target; it does not answer whether an individual item meets its specification. Individual conformance requires the full measurement distribution or a direct pass/fail model.}
+
+\ASK{卡方、$t$ 和 $F$ 分布各自解决什么问题？}{What inferential problems do the chi-square, $t$, and $F$ distributions address?}{卡方分布标准化一个正态总体的样本方差；$t$ 分布用于正态总体方差未知时的均值推断；$F$ 分布比较两个独立正态总体的方差。精确使用时要核对正态性、独立性和自由度。}{The chi-square distribution standardizes one normal sample variance. The $t$ distribution supports inference on a normal mean when the variance is unknown. The $F$ distribution compares variances from two independent normal populations. Exact use requires checking normality, independence, and degrees of freedom.}
+
+\ASK{为什么总体方差未知时不能直接用标准正态分布？}{Why can we not simply use the standard normal distribution when the population variance is unknown?}{把未知 $\sigma$ 换成随机的 $S$ 后，标准化统计量的分母也有抽样波动；正态样本下该额外波动由 $t$ 分布刻画。}{Replacing the unknown $\sigma$ with the random sample standard deviation $S$ adds sampling variability to the denominator. For a normal sample, the resulting statistic follows a $t$ distribution.}
+
+\subsection{一个完整的 Poisson 率推断 | A complete Poisson rate example}
+\noindent 假设工厂检查连续 $n=10$ 个长度相同且互不重叠的小时，每小时故障次数 $X_i$ 独立且服从 $\operatorname{Poisson}(\lambda)$，其中 $\lambda$ 表示每小时平均故障次数。观测值总和为 $\sum_i x_i=20$，所以样本均值 $\bar x=2$。独立 Poisson 变量相加仍服从 Poisson 分布，因而总数 $Y=\sum_iX_i\sim\operatorname{Poisson}(10\lambda)$。
+\EN{Suppose a factory observes ten nonoverlapping one-hour periods and models their independent failure counts as $X_i\sim\operatorname{Poisson}(\lambda)$, where $\lambda$ is the mean failures per hour. If the total observed count is 20, the sample mean is two. The sum is $Y=\sum_iX_i\sim\operatorname{Poisson}(10\lambda)$.}
+
+\noindent 联合似然中与参数有关的部分为 $L(\lambda)\propto e^{-n\lambda}\lambda^{\sum x_i}$，对数似然导数为 $-n+\sum_i x_i/\lambda$，因此极大似然估计是 $\hat\lambda=\bar x=2$ 次/小时。此估计是点估计，不表示真实率一定等于 $2$。其标准误可用 $\sqrt{\hat\lambda/n}=\sqrt{0.2}\approx0.447$ 估计；样本量或总计数足够大时，约 95\% 的正态近似区间是 $2\pm1.96(0.447)$，即约 $[1.12,2.88]$ 次/小时。
+\EN{The parameter-dependent likelihood is proportional to $e^{-n\lambda}\lambda^{\sum x_i}$. Its log derivative is $-n+\sum x_i/\lambda$, yielding the MLE $\hat\lambda=\bar x=2$ failures per hour. Its estimated standard error is $\sqrt{\hat\lambda/n}\approx0.447$. A rough large-sample 95\% normal interval is $2\pm1.96(0.447)$, approximately $[1.12,2.88]$ failures per hour.}
+
+\noindent 该区间是近似结果；计数很少时应考虑 Poisson 精确区间。若各时段工作负荷不同，应改用实际暴露时间或强度；若一个故障引发后续故障，独立性和恒定率可能失效。把计算结果与模型条件一起报告，比只给出一个数字更有意义。
+\EN{The interval is approximate; for sparse counts, consider an exact Poisson interval. Different exposure lengths or workloads require an appropriate exposure adjustment. If one failure triggers others, independence and constant rate may fail. Report the model assumptions together with the numerical estimate.}
+
+\ASK{为什么这个 Poisson 模型的估计量是平均每小时故障数？}{Why is the estimated Poisson rate the average count per hour?}{每小时计数的理论均值为 $\lambda$，矩估计直接令 $\lambda=\bar X$；对独立样本求对数似然导数，最大似然估计也得到同一结果。}{Each hourly count has expected value $\lambda$, so matching the theoretical and sample means gives $\hat\lambda=\bar X$. Differentiating the independent-sample log-likelihood gives the same maximum-likelihood estimator.}
+
+\section{第四章 参数估计 | Chapter 4: Parameter estimation}
+\subsection{4.1 参数估计问题与充分统计量 | Estimation problems and sufficiency}
+\noindent 参数估计的任务是根据观测样本估计总体模型中的未知参数 $\theta$。点估计给出一个数 $\hat\theta$；区间估计给出一段包含参数的不确定范围。估计方法应先由模型和样本条件确定，再讨论估计量的统计性质。
+\EN{Parameter estimation uses observed data to estimate an unknown parameter $\theta$ in a population model. A point estimate gives one value $\hat\theta$; an interval estimate gives a range expressing uncertainty. The model and sampling assumptions should be established before assessing an estimator.}
+
+\noindent\textbf{充分统计量。} 统计量 $T(X)$ 对 $\theta$ 充分，直观上表示给定 $T$ 后，原样本不再提供关于 $\theta$ 的额外信息。因子分解定理：若联合密度或概率质量函数可写成
+\[
+f_\theta(x_1,\ldots,x_n)=g_\theta(T(x_1,\ldots,x_n))h(x_1,\ldots,x_n),
+\]
+其中 $h$ 不依赖 $\theta$，则 $T$ 对 $\theta$ 充分。对于离散模型用联合概率质量函数，同样适用。
+\READ{“The joint density factors into g of theta and T of x, times h of x, where h does not depend on theta.”}
+\EN{A statistic $T(X)$ is sufficient for $\theta$ if, intuitively, the original sample contains no additional information about $\theta$ once $T$ is known. The factorization theorem says that sufficiency follows when the joint density or mass function factors into a parameter-dependent term involving $T$ and a parameter-free term.}
+
+\EX{若 $X_i\overset{\mathrm{iid}}{\sim}\mathrm{Bernoulli}(p)$，联合概率为 $p^{\sum x_i}(1-p)^{n-\sum x_i}$。依因子分解定理，成功总数 $T=\sum_iX_i$ 对 $p$ 充分；知道 $T$ 后，成功出现在哪些具体样本位置不再提供额外的 $p$ 信息。}{For iid Bernoulli observations, the joint mass is $p^{\sum x_i}(1-p)^{n-\sum x_i}$. By the factorization theorem, the success count $T=\sum_iX_i$ is sufficient for $p$. Given $T$, the locations of the successes provide no extra information about $p$.}
+
+\subsection{4.2 矩估计、极大似然估计与贝叶斯估计 | Moments, maximum likelihood, and Bayesian estimation}
+\noindent\textbf{矩估计。} 对含 $k$ 个未知参数的模型，选取 $k$ 个总体矩条件 $E_\theta(X^j)$，将总体原点矩替换为样本原点矩并解方程：
+\[
+\frac1n\sum_{i=1}^nX_i^j=E_\theta(X^j),\qquad j=1,\ldots,k.
+\]
+若模型用中心矩表达，也可相应匹配中心矩。矩估计计算直接，但不保证无偏或方差最小；解方程时还要检查参数空间限制。
+\READ{“The jth sample raw moment equals one over n times the sum of X i to the jth power; set it equal to the corresponding population moment and solve for theta.”}
+\EN{For a model with $k$ unknown parameters, select $k$ population-moment equations, replace the population raw moments by sample raw moments, and solve. Central moments may be used when convenient. The method is direct but does not guarantee an unbiased or minimum-variance estimator, and the solution must satisfy the parameter space.}
+
+\EX{若 $X_i\sim\mathrm{Poisson}(\lambda)$，因 $E(X)=\lambda$，令 $\bar X=\lambda$ 得 $\hat\lambda_{\mathrm{MOM}}=\bar X$。}{If $X_i\sim\mathrm{Poisson}(\lambda)$, then $E(X)=\lambda$. Equating $\bar X$ to this moment gives $\hat\lambda_{\mathrm{MOM}}=\bar X$.}
+
+\noindent\textbf{极大似然估计。} 对离散样本 $L(\theta;x)=\prod_i p_\theta(x_i)$；对连续样本 $L(\theta;x)=\prod_i f_\theta(x_i)$。似然是把已观察数据固定后看作参数的函数，不是参数本身的概率。定义
+\[
+\hat\theta_{\mathrm{MLE}}=\arg\max_{\theta\in\Theta}L(\theta;x)
+=\arg\max_{\theta\in\Theta}\ell(\theta;x),\qquad \ell=\log L.
+\]
+常见步骤：写出联合似然；取对数并求导；解得驻点；检查参数空间边界及极大值性质。多参数问题要对每个参数求偏导并联合求解。最大似然估计具有不变性：若 $\hat\theta$ 是 $\theta$ 的 MLE，则 $g(\hat\theta)$ 是 $g(\theta)$ 的 MLE。
+\READ{“Theta hat M L E is the value of theta that maximizes the likelihood, or equivalently the log-likelihood.”}
+\EN{The likelihood is the joint density or mass of the observed sample viewed as a function of the parameter; it is not a probability distribution for the parameter. Maximize the likelihood or log-likelihood, solve the score equations, and check parameter boundaries. For several parameters, solve the partial-derivative equations jointly. Maximum likelihood is invariant under one-to-one or general parameter transformations in the sense that $g(\hat\theta)$ estimates $g(\theta)$.}
+
+\EX{若 $X_i\sim\mathrm{Exp}(\lambda)$，密度 $f(x;\lambda)=\lambda e^{-\lambda x}$，$x\ge0,\lambda>0$，则 $\ell=n\log\lambda-\lambda\sum_i x_i$。令 $\ell'=n/\lambda-\sum_i x_i=0$，得到 $\hat\lambda_{\mathrm{MLE}}=n/\sum_iX_i=1/\bar X$。}{For an exponential distribution with rate $\lambda$, the log-likelihood is $\ell=n\log\lambda-\lambda\sum_i x_i$. Solving $\ell'=0$ gives $\hat\lambda_{\mathrm{MLE}}=n/\sum_iX_i=1/\bar X$.}
+
+\EX{若 $X_i\overset{\mathrm{iid}}\sim U(0,\theta)$，$\theta>0$，则矩估计为 $2\bar X$；似然在 $\theta\ge X_{(n)}$ 时与 $\theta^{-n}$ 成正比，因此 MLE 为 $X_{(n)}=\max_iX_i$。对 $0\le x\le\theta$，由独立性得 $P(X_{(n)}\le x)=(x/\theta)^n$，进而 $E[X_{(n)}]=n\theta/(n+1)$。所以最大值相合但向下有偏；乘以 $(n+1)/n$ 得到无偏估计量 $(n+1)X_{(n)}/n$。}{For iid $X_i\sim U(0,\theta)$, the method-of-moments estimate is $2\bar X$ and the MLE is $X_{(n)}=\max_iX_i$. Independence gives $P(X_{(n)}\le x)=(x/\theta)^n$ for $0\le x\le\theta$, so $E[X_{(n)}]=n\theta/(n+1)$. The maximum is consistent but downward biased; multiplying it by $(n+1)/n$ gives an unbiased estimator.}
+
+\noindent\textbf{贝叶斯估计。} 贝叶斯方法给参数先验分布 $\pi(\theta)$，观察样本后用 Bayes 公式更新为
+\[
+\pi(\theta\mid x)=\frac{L(\theta;x)\pi(\theta)}
+{\int_\Theta L(u;x)\pi(u)\,du}.
+\]
+后验分布结合了先验信息和样本似然。点估计还要指定损失函数：平方损失下取后验均值，绝对损失下通常取后验中位数。先验参数化要说明清楚；例如 Gamma$(a,b)$ 在本讲义中用形状 $a$、率 $b$ 表示。
+\READ{“The posterior density of theta given x is proportional to the likelihood times the prior density.”}
+\EN{Bayesian inference assigns a prior distribution $\pi(\theta)$ and updates it with the data using Bayes' formula. A point estimate depends on the loss function: the posterior mean minimizes squared-error loss, while a posterior median is commonly used under absolute-error loss. State the parameterization of a conjugate prior; here Gamma$(a,b)$ uses shape $a$ and rate $b$.}
+
+\EX{若 $X\mid p\sim\mathrm{Binomial}(n,p)$ 且 $p\sim\mathrm{Beta}(a,b)$，观察到 $x$ 次成功后 $p\mid x\sim\mathrm{Beta}(a+x,b+n-x)$。平方损失下的 Bayes 估计为后验均值 $(a+x)/(a+b+n)$。}{If $X\mid p\sim\mathrm{Binomial}(n,p)$ and $p\sim\mathrm{Beta}(a,b)$, then after observing $x$ successes, $p\mid x\sim\mathrm{Beta}(a+x,b+n-x)$. Under squared-error loss, the Bayes estimate is the posterior mean $(a+x)/(a+b+n)$.}
+
+\ASK{矩估计和极大似然估计有什么区别？}{How do the method of moments and maximum likelihood differ?}{矩估计匹配样本矩和理论矩；极大似然选择使已观察样本似然最大的参数。矩估计更直接，MLE 通常有良好大样本性质，但要检查边界和正则条件。}{The method of moments matches sample moments to theoretical moments. Maximum likelihood chooses the parameter that maximizes the likelihood of the observed sample. Moments are direct to compute; MLEs often have good large-sample properties but require checking boundaries and regularity conditions.}
+
+\ASK{似然函数是不是参数的概率分布？}{Is the likelihood a probability distribution for the parameter?}{不是。似然把观测数据固定，将联合密度或概率质量看作参数的函数；它用于比较不同参数值对观测数据的相对支持程度。}{No. The likelihood fixes the observed data and views their joint density or mass as a function of the parameter. It compares how well different parameter values support the observed data.}
+
+\subsection{4.3 点估计的优良性准则 | Criteria for point estimators}
+\noindent\textbf{偏差、无偏性和均方误差。}
+\[
+\operatorname{Bias}_\theta(\hat\theta)=E_\theta(\hat\theta)-\theta,\qquad
+\operatorname{MSE}_\theta(\hat\theta)=E_\theta[(\hat\theta-\theta)^2]
+=\operatorname{Var}_\theta(\hat\theta)+\operatorname{Bias}_\theta(\hat\theta)^2.
+\]
+若对所有参数值 $E_\theta(\hat\theta)=\theta$，则无偏。无偏只描述固定样本量下的平均误差；有偏估计也可能因方差较小而有更低的均方误差，不能只凭“无偏”判断优劣。
+\READ{“The mean squared error equals the variance plus the squared bias.”}
+\EN{The bias is the difference between an estimator's expectation and the target. The mean squared error decomposes into variance plus squared bias. Unbiasedness concerns average error at a fixed sample size; a biased estimator can still have smaller MSE if its variance is sufficiently low.}
+
+\noindent\textbf{相合性与渐近正态性。} 若对任意 $\varepsilon>0$，$P_\theta(|\hat\theta_n-\theta|>\varepsilon)\to0$，则 $\hat\theta_n$ 相合。相合性描述 $n\to\infty$ 时的行为，不能与有限样本无偏性混为一谈。若适当标准化后分布趋于正态，则称渐近正态；它支持大样本标准误和近似区间，但有限样本时仍需关注近似误差。
+\EN{An estimator is consistent if, for every $\varepsilon>0$, the probability that it differs from $\theta$ by more than $\varepsilon$ tends to zero as $n\to\infty$. Consistency is a large-sample property and differs from finite-sample unbiasedness. Asymptotic normality provides large-sample standard errors and approximate intervals, whose accuracy may be limited at small sample sizes.}
+
+\noindent\textbf{有效性、Fisher 信息与 Cramér--Rao 下界。} 对同一参数、同一模型中的无偏估计量，方差较小者通常称更有效。若模型满足可微性、支持集不依赖参数等正则条件，单个观测的 Fisher 信息为
+\[
+I_1(\theta)=E_\theta\left[\left(\frac{\partial}{\partial\theta}\log f_\theta(X)\right)^2\right],
+\]
+则无偏估计 $T$ 的方差满足
+\[
+\operatorname{Var}_\theta(T)\ge\frac{[g'(\theta)]^2}{nI_1(\theta)}
+\quad\text{若 }E_\theta(T)=g(\theta).
+\]
+估计 $\theta$ 本身时 $g'(\theta)=1$。达到下界表示在该正则无偏估计类中方差最小；不满足正则条件时不能直接套用此界。
+\READ{“The variance of an unbiased estimator of g of theta is at least the square of g prime of theta divided by n times the Fisher information in one observation.”}
+\EN{Efficiency compares variances of unbiased estimators for the same target and model. Under regularity conditions such as differentiability and parameter-independent support, the Cramér--Rao inequality gives the stated lower bound, where $I_1(\theta)$ is the Fisher information in one observation. An estimator attaining the bound has minimum variance in the relevant unbiased class. The regularity conditions matter.}
+
+\EX{若 $X_i\sim N(\mu,\sigma^2)$ 且 $\sigma^2$ 已知，则关于 $\mu$ 的总 Fisher 信息为 $n/\sigma^2$，无偏估计方差下界为 $\sigma^2/n$。$\bar X$ 无偏且方差为 $\sigma^2/n$，因此达到 Cramér--Rao 下界。}{For a normal sample with known $\sigma^2$, the total Fisher information for $\mu$ is $n/\sigma^2$, so the variance lower bound is $\sigma^2/n$. The sample mean is unbiased and has exactly this variance, so it attains the Cramér--Rao bound.}
+
+\noindent\textbf{UMVU 与 Rao--Blackwell 思想。} 一致最小方差无偏估计量（UMVU）在所有无偏估计量中，对每个参数值都具有最小方差。若 $T$ 充分且 $U$ 是无偏估计，则条件期望 $E(U\mid T)$ 仍无偏，且其方差不大于 $U$ 的方差；因此可利用充分统计量减少不必要的随机波动。充分性本身不自动保证某估计量是 UMVU，还需核对无偏性及最小方差条件。
+\EN{A uniformly minimum-variance unbiased estimator has the smallest variance among unbiased estimators for every parameter value. If $T$ is sufficient and $U$ is unbiased, then $E(U\mid T)$ remains unbiased and has no larger variance. Sufficiency can therefore remove unnecessary sampling variation, but it does not by itself prove that an estimator is UMVU.}
+
+\ASK{无偏、相合和有效分别说明什么？}{What do unbiasedness, consistency, and efficiency describe?}{无偏描述固定样本量下的期望；相合描述样本量增大时是否收敛到真参数；有效性比较同模型、同目标下估计量的方差。它们是不同性质。}{Unbiasedness describes expectation at a fixed sample size. Consistency describes convergence to the true parameter as sample size grows. Efficiency compares estimator variances for the same target and model. They are distinct properties.}
+
+\ASK{什么时候可以使用 Cramér--Rao 下界？}{When can we use the Cramér--Rao lower bound?}{需要检查模型可微、支持集与参数无关等正则条件，并且估计量无偏。若参数影响支持集，常规推导可能失效；此时不能只代公式。}{Check regularity conditions such as differentiability and parameter-independent support, and ensure the estimator is unbiased. If the parameter changes the support, the usual derivation may fail, so the formula cannot be applied mechanically.}
+
+\subsection{4.4 区间估计 | Interval estimation}
+\noindent\textbf{定义与枢轴量法。} $1-\alpha$ 置信区间 $[L(X),U(X)]$ 满足对固定真参数 $\theta$，
+\[
+P_\theta\{L(X)\le\theta\le U(X)\}=1-\alpha
+\]
+(精确区间情形)。参数固定，区间端点随样本随机。构造时先找含参数且分布已知的枢轴量，给出其概率界，再对不等式反解参数。
+\EN{A $1-\alpha$ confidence interval has repeated-sampling coverage probability $1-\alpha$ for the fixed true parameter. The parameter is fixed, while the interval endpoints are random before sampling. The pivot method finds a statistic involving the parameter with a known distribution, sets probability bounds, and solves the inequalities for the parameter.}
+
+\noindent\textbf{正态总体均值区间。} 对正态总体，若 $\sigma$ 已知，
+\[
+\bar X\pm z_{1-\alpha/2}\frac{\sigma}{\sqrt n}.
+\]
+若 $\sigma$ 未知，用 $S$ 并取自由度 $n-1$ 的 $t$ 分位数：
+\[
+\bar X\pm t_{1-\alpha/2,n-1}\frac{S}{\sqrt n}.
+\]
+第二个是正态总体下的精确区间。非正态总体大样本时有时可用中心极限定理近似，但样本量、偏态和异常值都会影响近似质量。
+\READ{“X bar plus or minus the t quantile with n minus one degrees of freedom, times S over the square root of n.”}
+\EN{For a normal population mean, use a normal quantile when $\sigma$ is known. When it is unknown, use the sample standard deviation and a $t$ quantile with $n-1$ degrees of freedom. The latter is exact under normality. A central-limit approximation may be used for some large nonnormal samples, but skewness, outliers, and sample size affect its accuracy.}
+
+\noindent\textbf{正态总体方差区间。} 记 $\chi^2_{q,\nu}$ 为自由度 $\nu$ 卡方分布的下侧 $q$ 分位数，则
+\[
+\left[
+\frac{(n-1)S^2}{\chi^2_{1-\alpha/2,n-1}},
+\frac{(n-1)S^2}{\chi^2_{\alpha/2,n-1}}
+\right]
+\]
+是 $\sigma^2$ 的 $1-\alpha$ 精确置信区间。注意卡方分布不对称，因此区间一般不以 $S^2$ 为中心。
+\EN{The chi-square pivot gives the exact variance interval shown above for a normal population. Here $\chi^2_{q,\nu}$ is the lower-tail $q$ quantile. Since the chi-square distribution is asymmetric, the interval is generally not centered at $S^2$.}
+
+\noindent\textbf{两个正态总体均值差与方差比。} 对独立样本、共同方差假设，令
+\[
+S_p^2=\frac{(n_1-1)S_1^2+(n_2-1)S_2^2}{n_1+n_2-2},
+\quad
+T=\frac{(\bar X-\bar Y)-(\mu_1-\mu_2)}
+{S_p\sqrt{1/n_1+1/n_2}}\sim t_{n_1+n_2-2}.
+\]
+因此均值差区间为 $(\bar X-\bar Y)\pm t_{1-\alpha/2,n_1+n_2-2}S_p\sqrt{1/n_1+1/n_2}$。使用前需有独立正态样本和方差相等假设。配对设计应先构造差值 $D_i=X_i-Y_i$，再做单样本推断。对于方差比，
+\[
+\frac{\sigma_1^2}{\sigma_2^2}\text{ 的区间}=
+\left[\frac{S_1^2/S_2^2}{F_{1-\alpha/2,\nu_1,\nu_2}},
+\frac{S_1^2/S_2^2}{F_{\alpha/2,\nu_1,\nu_2}}\right],
+\quad \nu_i=n_i-1.
+\]
+\EN{For independent normal samples with a common variance, the pooled variance and $t$ pivot above give a confidence interval for $\mu_1-\mu_2$. This method requires independent normal samples and an equal-variance assumption. For paired observations, analyze the within-pair differences as a one-sample problem. The $F$ pivot gives the stated interval for a ratio of population variances.}
+
+\noindent\textbf{解释。} 95\% 置信水平不是说已算出的固定区间有 95\% 概率包含参数；它表示重复抽样并反复使用同一构造方法时，长期约 95\% 的区间会覆盖固定参数。
+\EN{A 95\% confidence level does not mean that the already computed fixed interval has a 95\% probability of containing the parameter. It means that about 95\% of intervals produced by this procedure would cover the fixed parameter over repeated sampling.}
+
+\ASK{如何口头推导未知方差下的均值区间？}{How would you explain the mean interval when the variance is unknown?}{正态样本满足 $(\bar X-\mu)/(S/\sqrt n)\sim t_{n-1}$。取两侧 $t$ 分位数使中间概率为 $1-\alpha$，再对不等式关于 $\mu$ 反解，就得到区间。}{For a normal sample, $(\bar X-\mu)/(S/\sqrt n)$ follows $t_{n-1}$. Choose two $t$ quantiles that leave probability $1-\alpha$ between them, then solve the inequalities for $\mu$.}
+
+\ASK{配对样本和独立两样本有什么区别？}{How do paired samples differ from independent samples?}{重复测量或一一匹配的数据相关，应先计算每对差值并分析差值；两组独立观测才使用独立两样本方法。把配对数据当独立数据会丢失配对信息并改变标准误。}{Repeated measurements or matched observations are dependent; compute one difference per pair and analyze those differences. Use an independent two-sample method only when the groups are independent. Ignoring pairing loses information and changes the standard error.}
+
+\section{第五章 假设检验 | Chapter 5: Hypothesis testing}
+\subsection{5.1 问题提法和基本概念 | Formulation and basic concepts}
+\noindent\textbf{检验问题。} 统计假设是关于总体分布或参数的陈述。原假设 $H_0$ 与备择假设 $H_1$ 划分参数空间；备择可为左侧、右侧或双侧。先由科学问题确定 $H_1$，不能看到样本后再挑方向。检验统计量 $T(X)$ 在 $H_0$ 下的分布用于判定观察结果是否与 $H_0$ 相容。
+\EN{A statistical hypothesis is a claim about a population distribution or parameter. The null $H_0$ and alternative $H_1$ divide the parameter space; the alternative may be left-sided, right-sided, or two-sided. Choose the direction from the scientific question before examining the data. A test statistic is evaluated under $H_0$ to assess how compatible the observation is with the null.}
+
+\noindent\textbf{拒绝域、显著性水平与两类错误。} 拒绝域 $W$ 是导致拒绝 $H_0$ 的样本结果集合。第一类错误是在 $H_0$ 为真时拒绝它，概率为 $\alpha$ 或不超过预设显著性水平；第二类错误是在 $H_1$ 为真时未拒绝 $H_0$，概率记为 $\beta(\theta)$。功效函数为
+\[
+\pi(\theta)=P_\theta\{X\in W\}=1-\beta(\theta),\qquad \theta\in\Theta_1.
+\]
+扩大拒绝域通常提高备择下的功效，也会提高第一类错误风险；样本量、效应大小和数据变异也影响功效。
+\READ{“The power at theta is the probability that the sample falls in the rejection region when theta is the true parameter.”}
+\EN{The rejection region $W$ contains sample outcomes that lead to rejecting $H_0$. A Type I error rejects a true null and is controlled by the significance level. A Type II error fails to reject a false null and has probability $\beta(\theta)$. The power is $1-\beta(\theta)$. Enlarging the rejection region tends to increase power under alternatives but also raises Type I error risk.}
+
+\noindent\textbf{$p$ 值与结论措辞。} $p$ 值是在 $H_0$ 成立时，得到至少与当前数据同样不利于 $H_0$ 的检验统计量结果的概率。若 $p\le\alpha$，按该规则拒绝 $H_0$；若 $p>\alpha$，表述为“未能拒绝 $H_0$”，不能说已证明或接受 $H_0$。$p$ 值不是 $H_0$ 为真的概率，也不是效应大小。
+\EN{The $p$-value is the probability, assuming $H_0$ is true, of a test-statistic result at least as extreme against $H_0$ as the observed result. Reject when $p\le\alpha$; otherwise say that we fail to reject $H_0$. A $p$-value is not the probability that $H_0$ is true and is not a measure of effect size.}
+
+\EX{若检验得到 $p=0.03$，则在 $\alpha=0.05$ 下拒绝 $H_0$，在 $\alpha=0.01$ 下未能拒绝。结论随预先规定的显著性水平而定；不能把“未拒绝”说成“接受”。}{If a test gives $p=0.03$, reject $H_0$ at $\alpha=0.05$ but fail to reject it at $\alpha=0.01$. The decision depends on the prespecified significance level; failure to reject is not acceptance.}
+
+\ASK{什么是第一类错误、第二类错误和功效？}{What are Type I error, Type II error, and power?}{第一类错误是错拒真的 $H_0$；第二类错误是未拒绝假的 $H_0$；功效是正确拒绝假原假设的概率 $1-\beta$。在固定样本量下，控制一类错误通常会影响另一类错误。}{A Type I error rejects a true null. A Type II error fails to reject a false null. Power is the probability $1-\beta$ of rejecting a false null. At a fixed sample size, controlling one error probability affects the other.}
+
+\ASK{$p$ 值小于显著性水平意味着什么？}{What does it mean when the $p$-value is below the significance level?}{在原假设模型下，当前或更极端结果的概率不超过预设阈值，因此按检验规则拒绝 $H_0$。它不表示 $H_0$ 为真的概率小于该数值。}{Under the null model, the probability of the observed result or a more extreme one is no greater than the prespecified threshold, so the test rejects $H_0$. It does not mean that the probability that $H_0$ is true is below that value.}
+
+\subsection{5.2 重要参数检验 | Important parameter tests}
+\noindent\textbf{单个正态总体均值。} 检验 $H_0:\mu=\mu_0$ 时：
+\begin{itemize}
+\item $\sigma$ 已知：$Z=(\bar X-\mu_0)/(\sigma/\sqrt n)\sim N(0,1)$。
+\item $\sigma$ 未知、总体正态：$T=(\bar X-\mu_0)/(S/\sqrt n)\sim t_{n-1}$。
+\end{itemize}
+右侧备择 $H_1:\mu>\mu_0$ 在统计量足够大时拒绝；左侧反之；双侧备择按两端尾概率分配显著性水平。方向必须与备择一致。
+\READ{“Z equals X bar minus mu zero, divided by sigma over the square root of n. T equals X bar minus mu zero, divided by S over the square root of n.”}
+\EN{For a normal population mean, use a $Z$ statistic if $\sigma$ is known and a $t$ statistic with $n-1$ degrees of freedom if it is unknown. A right-sided alternative rejects for large values, a left-sided alternative for small values, and a two-sided alternative uses both tails.}
+
+\EX{某批枪弹储存前平均初速度为 $950$ m/s，已知标准差 $\sigma=100$ m/s。储存后随机测 $n=8$ 发，$\bar x=930$。检验是否降低：$H_0:\mu=950$ 对 $H_1:\mu<950$，$Z=(930-950)/(100/\sqrt8)\approx-0.566$。在 $\alpha=0.05$ 左尾临界值 $-1.645$，故未拒绝 $H_0$；样本不足以证明平均初速度显著降低。}{Before storage, the mean muzzle velocity is $950$ m/s with known standard deviation $100$ m/s. After storage, a sample of $8$ has mean $930$. For $H_0:\mu=950$ versus $H_1:\mu<950$, $Z=(930-950)/(100/\sqrt8)\approx-0.566$. The 5\% left-tail critical value is $-1.645$, so we fail to reject $H_0$; this sample does not establish a significant decrease.}
+
+\noindent\textbf{两个独立正态总体均值。} 先确认样本独立，之后根据方差条件选统计量。共同未知方差时使用合并方差 $S_p^2$ 和自由度 $n_1+n_2-2$ 的 $t$ 检验。若方差不假定相等，常用 Welch 统计量
+\[
+T_W=\frac{\bar X-\bar Y-(\mu_1-\mu_2)_0}
+{\sqrt{S_1^2/n_1+S_2^2/n_2}},
+\]
+自由度采用 Welch--Satterthwaite 近似。配对样本先定义 $D_i=X_i-Y_i$，对 $\mu_D$ 使用单样本 $t$ 检验。方差结构、独立/配对设计不可由计算结果临时决定。
+\EN{For two independent normal populations, first verify independence and choose the statistic according to the variance assumption. A common unknown variance leads to a pooled $t$ test with $n_1+n_2-2$ degrees of freedom. Without equal variances, Welch's statistic uses the standard error shown above and approximate Welch--Satterthwaite degrees of freedom. For paired data, form $D_i=X_i-Y_i$ and use a one-sample $t$ test on $\mu_D$.}
+
+\noindent\textbf{单个正态总体方差与两个方差比。} 检验 $H_0:\sigma^2=\sigma_0^2$ 时，
+\[
+\chi^2=\frac{(n-1)S^2}{\sigma_0^2}\sim\chi^2_{n-1}.
+\]
+检验两个独立正态总体方差相等时，在 $H_0:\sigma_1^2=\sigma_2^2$ 下，
+\[
+F=\frac{S_1^2}{S_2^2}\sim F_{n_1-1,n_2-1}.
+\]
+单侧或双侧拒绝域按备择决定；双侧时需处理 $F$ 分布不对称。方差的卡方和 $F$ 检验对正态性尤其敏感。
+\READ{“Chi-square equals n minus one times S squared divided by sigma zero squared.” “F equals S one squared divided by S two squared.”}
+\EN{A single normal-population variance test uses the chi-square statistic above. Under equal variances, the ratio of sample variances from two independent normal samples follows an $F$ distribution. Choose the tail or tails from the alternative; two-sided $F$ tests must account for the asymmetry of the distribution. Both procedures are sensitive to departures from normality.}
+
+\noindent\textbf{总体比例的大样本检验。} 对二项样本 $X\sim\mathrm{Binomial}(n,p)$，$\hat p=X/n$。检验 $H_0:p=p_0$ 时，若正态近似条件满足，
+\[
+Z=\frac{\hat p-p_0}{\sqrt{p_0(1-p_0)/n}}\approx N(0,1).
+\]
+分母使用原假设下的标准误。近似前检查 $np_0$ 和 $n(1-p_0)$ 是否足够大；小样本或稀有事件优先考虑精确二项检验。
+\EN{For a binomial sample, $\hat p=X/n$. Under $H_0:p=p_0$, a large-sample test uses the null standard error shown above and is approximately standard normal. Check that the expected success and failure counts are sufficiently large; for small samples or rare events, consider an exact binomial test.}
+
+\ASK{均值检验中如何选择 $z$、$t$ 或配对检验？}{How do you choose between a $z$ test, a $t$ test, and a paired test for means?}{先看数据是否成对；成对时分析差值。独立单样本中，总体标准差已知用 $z$，未知且正态时用 $t$；两独立样本再根据是否采用共同方差选合并 $t$ 或 Welch 方法。}{First determine whether the data are paired; if so, analyze differences. For one independent sample, use $z$ when the population standard deviation is known and $t$ when it is unknown under normality. For two independent samples, choose pooled $t$ or Welch according to the variance assumption.}
+
+\ASK{为什么方差检验要求正态性？}{Why do variance tests require normality?}{卡方统计量和方差比的精确抽样分布是由正态样本推导的。总体明显非正态时，卡方或 $F$ 检验的显著性水平可能失准，应考虑稳健或非参数方法。}{The exact chi-square and $F$ sampling distributions are derived for normal samples. With substantial nonnormality, their test levels can be inaccurate, so a robust or nonparametric alternative may be appropriate.}
+
+\subsection{5.3 拟合优度检验 | Goodness-of-fit tests}
+\noindent\textbf{Pearson 拟合优度检验。} 将观测分入 $k$ 个互斥类别，记观测频数为 $O_i$，原假设给出的概率为 $p_i(\theta)$，期望频数 $E_i=np_i(\theta)$。统计量为
+\[
+X^2=\sum_{i=1}^k\frac{(O_i-E_i)^2}{E_i}.
+\]
+若原假设完全指定且样本量足够大，近似自由度为 $k-1$；若由同一数据估计了 $m$ 个参数，通常为 $k-1-m$。这是一种大样本近似，期望频数过小会使近似变差；应按课件要求合并类别或使用精确/模拟方法。
+\READ{“The Pearson chi-square statistic is the sum over categories of observed minus expected, squared, divided by expected.”}
+\EN{For $k$ mutually exclusive categories, Pearson's statistic sums $(O_i-E_i)^2/E_i$. With a fully specified null, its large-sample degrees of freedom are $k-1$; estimating $m$ parameters from the data usually reduces the degrees of freedom to $k-1-m$. This is an asymptotic approximation and can be poor when expected counts are small.}
+
+\EX{遗传理论预测四类比例相同，观测数为 $40,22,18,20$，总数 $100$，故每类期望数为 $25$。$X^2=(15^2+(-3)^2+(-7)^2+(-5)^2)/25=12.32$，自由度 $3$。因 $12.32>\chi^2_{0.95,3}\approx7.815$，在 5\% 水平拒绝“四类等比例”的原假设。}{A genetic model predicts four equally likely categories. The observed counts are $40,22,18,20$ out of $100$, so each expected count is $25$. The statistic is $12.32$ with $3$ degrees of freedom. Since $12.32>\chi^2_{0.95,3}\approx7.815$, reject equal proportions at the 5\% level.}
+
+\noindent\textbf{列联表独立性检验。} 对 $r\times c$ 列联表，在行变量与列变量独立的原假设下，
+\[
+E_{ij}=\frac{O_{i+}O_{+j}}{n},\qquad
+X^2=\sum_{i=1}^r\sum_{j=1}^c\frac{(O_{ij}-E_{ij})^2}{E_{ij}},
+\quad df=(r-1)(c-1).
+\]
+这里检验的是两个分类变量是否有关联，不是因果关系。拟合优度检验与独立性检验使用同一 Pearson 形式，但期望频数的来源和自由度不同。
+\READ{“The expected count in cell i j equals the row total times the column total divided by the grand total.”}
+\EN{For an $r$ by $c$ table under independence, the expected count in cell $(i,j)$ is the row total times the column total divided by the grand total. The Pearson statistic has $(r-1)(c-1)$ degrees of freedom. It tests association, not causation. Goodness-of-fit and independence tests share the statistic's form but differ in how expected counts and degrees of freedom are obtained.}
+
+\ASK{拟合优度检验的自由度为什么要减去估计参数个数？}{Why do we subtract the number of estimated parameters from the degrees of freedom?}{频数总和固定带来一个约束，拟合模型时从数据估计的参数又消耗自由信息。完全指定的 $k$ 类模型通常有 $k-1$ 个自由度，估计 $m$ 个参数后通常为 $k-1-m$。}{The fixed total count imposes one constraint, and estimating model parameters from the same data uses additional information. A fully specified $k$-category model usually has $k-1$ degrees of freedom; estimating $m$ parameters typically leaves $k-1-m$.}
+
+\subsection{课程讲义补充：正态性与非参数检验 | Course-note supplement: normality and nonparametric tests}
+\noindent 正态概率图用于观察数据是否近似沿直线排列；Shapiro--Wilk 等检验以正态性为原假设。未拒绝正态性不等于证明总体正态，图形诊断、样本量和领域背景应共同考虑。
+\EN{A normal probability plot checks whether observations lie approximately along a straight line. Tests such as Shapiro--Wilk use normality as the null hypothesis. Failure to reject normality does not prove that the population is normal; graphical diagnostics, sample size, and subject-matter context should be considered together.}
+
+\noindent\textbf{符号检验与 Wilcoxon 符号秩检验。} 配对数据先取 $D_i=X_i-Y_i$。符号检验只记录 $D_i$ 的正负，在连续分布且中位数为零的原假设下，正号数服从 $\mathrm{Binomial}(n,1/2)$；它假设少，但不利用差值大小。Wilcoxon 符号秩检验先删去零差值，再对 $|D_i|$ 排名并给原差值符号，统计正秩和 $W^+$；其位置解释通常还需差值分布关于零对称。独立两样本的秩和检验则合并两组观测后排序，不能与配对符号秩检验混淆。
+\EN{For paired observations, form $D_i=X_i-Y_i$. The sign test uses only the signs; under a continuous zero-median null, the number of positive signs is binomial with success probability one half. The Wilcoxon signed-rank test removes zero differences, ranks $|D_i|$, and sums ranks with positive signs. Its location interpretation usually requires a symmetric difference distribution. The independent-sample rank-sum test instead pools and ranks two independent groups.}
+
+\EX{历年题中的 12 组成对评分差值为 $x_i-y_i$，其中正差值只有 3 个。符号检验的双侧概率为 $2P\{\mathrm{Bin}(12,1/2)\le3\}\approx0.146$，在 5\% 水平不拒绝中位差为零。若差值绝对值近似支持对称位置模型，符号秩检验利用大小信息；按该题秩次，正秩和为 $W^+=8.5$，结果可比符号检验更显著。两法结论不同不矛盾，它们使用的信息及假设不同。}{In a past exam's 12 paired ratings, only 3 differences are positive. The two-sided sign-test probability is $2P\{\mathrm{Bin}(12,1/2)\le3\}\approx0.146$, so we do not reject a zero median difference at 5\%. If a symmetric location model is reasonable, the signed-rank test uses the magnitudes as well; the positive rank sum for this data is $W^+=8.5$, which can yield stronger evidence. Different conclusions are not contradictory because the tests use different information and assumptions.}
+
+\ASK{符号检验和符号秩检验的差异是什么？}{How do the sign test and signed-rank test differ?}{符号检验只使用正负号，适用条件较弱但通常功效较低；符号秩检验还利用非零差值绝对值的秩，通常需要差值分布对称。配对样本必须先形成差值。}{The sign test uses only positive and negative signs, has weaker assumptions, and often has lower power. The signed-rank test also uses ranks of absolute nonzero differences and usually requires a symmetric difference distribution. For paired data, form differences first.}
+
+\section*{口试作答框架 | Oral-answer framework}
+介绍一道估计题时，可按“模型和参数—样本条件—估计量构造—性质或区间—结论”作答。介绍检验题时，可按“$H_0/H_1$—显著性水平—样本设计与分布条件—统计量及其原假设分布—拒绝域或 $p$ 值—结合背景的结论”作答；不要遗漏自由度、尾部方向和近似条件。
+\EN{For an estimation problem, state the model and parameter, sample assumptions, estimator construction, relevant properties or interval, and conclusion. For a test, state $H_0$ and $H_1$, the significance level, design and distribution assumptions, statistic and its null distribution, rejection region or $p$-value, and a contextual conclusion. Include degrees of freedom, tail direction, and approximation conditions.}
+
+\section*{来源与范围 | Sources and scope}
+主线依据陈希孺《概率论与数理统计》第四章“参数估计”（4.1--4.4）和第五章“假设检验”（5.1--5.3）的目录与内容；正态总体抽样分布作为推断工具补入。另参照“数理统计”目录中的课程复习讲义、期中期末试题及答案材料，核对估计、区间、参数检验、拟合优度、符号检验和符号秩检验等题型。若教材术语与授课讲义约定不同，口试时采用任课教师使用的定义与记号。
+\EN{The main structure follows Sections 4.1--4.4 on parameter estimation and Sections 5.1--5.3 on hypothesis testing in Chen Xiru's Probability and Mathematical Statistics. Normal-sample distributions are included as inference tools. Course review materials, midterm and final exams, and answer materials in the Mathematical Statistics folder were also used to check estimation, intervals, parameter tests, goodness-of-fit, sign-test, and signed-rank problem types. If course notes use a different convention from the textbook, follow the instructor's definitions and notation in the interview.}
+\end{document}

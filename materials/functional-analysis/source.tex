@@ -1,0 +1,175 @@
+\documentclass[UTF8,11pt,a4paper]{ctexart}
+\usepackage{amsmath,amssymb,geometry,enumitem,hyperref}
+\geometry{margin=2.1cm}\setlist{itemsep=2pt,topsep=3pt}
+\hypersetup{colorlinks=true,linkcolor=blue}
+\newcommand{\EN}[1]{\par\noindent \textbf{English.} #1\par}
+\newcommand{\READ}[1]{\par\noindent \textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\EX}[2]{\par\noindent \textbf{例子 / Example.} #1\par\EN{#2}}
+\newcommand{\ASK}[4]{\par\noindent \textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent \textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
+\title{泛函分析 APS 面试准备\\[4pt]\large 第 1--2 章范围：度量空间、线性算子与线性泛函}
+\author{Functional Analysis: Bilingual Review}
+\date{}
+\begin{document}\maketitle
+\section*{课程概述 | Course overview}
+\noindent \textbf{中文口述稿。} 泛函分析中，我把函数当作空间里的点，研究函数之间的距离以及运算是否稳定。例如在 $C[0,1]$ 中，用 $\|f-g\|_\infty=\max_{0\le x\le1}|f(x)-g(x)|$ 衡量两条曲线的最大差距。若测量误差不超过 $\varepsilon$，则它们的平均值之差也不超过 $\varepsilon$：$|\int_0^1(f-g)\,dx|\le\|f-g\|_\infty$。这说明积分在这个范数下连续。课程还研究完备性：近似解组成的 Cauchy 列是否在空间内有极限；这个问题与微分方程解的存在性相连。
+\EN{In functional analysis, I treat functions as points in a space and study distances and stability of operations. In $C[0,1]$, the supremum norm $\|f-g\|_\infty$ is the largest difference between two curves. If this difference is at most $\varepsilon$, their averages differ by at most $\varepsilon$ as well, because $|\int_0^1(f-g)dx|\le\|f-g\|_\infty$. Thus integration is continuous in this norm. I also studied completeness: whether a Cauchy sequence of approximate solutions has a limit in the same space, which connects to existence of solutions of differential equations.}
+
+\noindent \textbf{课程联系与具体应用。} 数值计算中常把微分方程离散成线性方程 $Ax=b$；泛函分析提供连续问题的无限维版本。若解算子 $A^{-1}$ 连续，则数据误差 $\|\Delta b\|$ 会受到控制：$\|\Delta x\|\le \|A^{-1}\|\,\|\Delta b\|$。反问题中若逆算子不连续，测量中的微小噪声可能造成很大的解误差，这解释了病态问题为何需要正则化。积分方程、边值问题和 Fourier 展开也常用函数空间与有界算子来表述。
+\EN{A numerical method often discretizes a differential equation into a linear system $Ax=b$. Functional analysis gives an infinite-dimensional framework for the original problem. If the solution operator $A^{-1}$ is continuous, data error is controlled by $\|\Delta x\|\le \|A^{-1}\|\,\|\Delta b\|$. In an inverse problem, a discontinuous inverse can amplify small measurement noise, which explains why regularization is needed. Integral equations, boundary-value problems, and Fourier expansions are also naturally expressed using function spaces and bounded operators.}
+
+\section{度量空间：距离、收敛与完备性 | Metric spaces}
+\noindent \textbf{度量。} 度量空间是集合 $X$ 配上距离函数 $d:X\times X\to[0,\infty)$，满足 $d(x,y)=0$ 当且仅当 $x=y$、对称性 $d(x,y)=d(y,x)$ 以及三角不等式 $d(x,z)\le d(x,y)+d(y,z)$。度量使“点靠近”“序列收敛”“函数连续”这些说法有精确定义。开球 $B(x,r)=\{y:d(x,y)<r\}$ 是以 $x$ 为中心、半径 $r$ 的邻域。
+\EN{A metric space is a set $X$ with a distance function $d:X\times X\to[0,\infty)$ satisfying positivity, symmetry, and the triangle inequality. A metric makes notions such as convergence and continuity precise. The open ball $B(x,r)=\{y:d(x,y)<r\}$ is the neighborhood of radius $r$ around $x$.}
+
+\noindent 序列 $x_n$ 收敛到 $x$，记为 $d(x_n,x)\to0$；它是 Cauchy 序列，若对任意 $\varepsilon>0$，存在 $N$ 使 $m,n\ge N$ 时 $d(x_m,x_n)<\varepsilon$。Cauchy 条件只比较序列内部的点，不预先要求极限在空间中。每个 Cauchy 序列都在 $X$ 中收敛时，称 $X$ 完备。紧致性在度量空间中可用“每个序列都有收敛子列”刻画；紧集总是有界且完备，但在一般度量空间中，有界或完备本身都不足以保证紧致。
+\noindent 开集是其中每个点都包含一个完全落在集合内的小开球；闭集包含所有自身极限点。函数 $f:X\to Y$ 连续，若 $x_n\to x$ 蕴含 $f(x_n)\to f(x)$。紧致性比有界性更强：在 $\mathbb R^n$ 中，集合紧致当且仅当闭且有界；在一般度量空间中不能直接套用这条判别。连续函数把紧集映成紧集，因此在紧集上能取得最大值和最小值。
+\EN{A set is open if every point contains a small ball lying inside the set; a closed set contains all its limit points. A function is continuous if it preserves limits of sequences. In $\mathbb R^n$, a set is compact exactly when it is closed and bounded, but this criterion need not hold in an arbitrary metric space. Continuous functions map compact sets to compact sets, so they attain their maximum and minimum on compact domains.}
+\READ{$x_n$ converges to $x$ if the distance between $x_n$ and $x$ tends to zero. A metric space is complete if every Cauchy sequence converges in that space.}
+
+\EX{有理数列可逼近 $\sqrt 2$，因此它在有理数空间 $\mathbb Q$ 的通常距离下是 Cauchy；但它在 $\mathbb Q$ 中没有极限，所以 $\mathbb Q$ 不完备。实数 $\mathbb R$ 可以看成对 $\mathbb Q$ 的完备化。这个例子说明“项彼此越来越近”与“空间中存在极限”是两个不同要求。}{A sequence of rational numbers can approximate $\sqrt 2$. It is Cauchy in $\mathbb Q$, but it has no limit in $\mathbb Q$, so $\mathbb Q$ is incomplete. The real line can be viewed as the completion of $\mathbb Q$. Being internally close and having a limit in the space are different requirements.}
+
+\noindent\textbf{Banach 不动点定理。} 若 $(X,d)$ 完备，且 $F:X\to X$ 满足 $d(Fx,Fy)\le qd(x,y)$，其中固定常数 $0\le q<1$，则 $F$ 有唯一不动点 $x^*$，从任意初值反复迭代 $x_{n+1}=F(x_n)$ 都收敛到它。压缩系数 $q$ 越小，误差通常衰减越快。它既是存在唯一性定理，也是一个可执行的求解算法。
+\EN{The Banach fixed-point theorem says that a contraction on a complete metric space has a unique fixed point. Repeated iteration from any initial point converges to it. The contraction factor $q<1$ controls the rate of error reduction, so the theorem gives both existence and a practical algorithm.}
+
+\EX{方程 $x=\cos x$ 可在 $[0,1]$ 上迭代 $x_{n+1}=\cos x_n$。映射把 $[0,1]$ 送入自身，且 $|\cos x-\cos y|\le(\sin1)|x-y|$，其中 $\sin1<1$；区间完备，所以存在唯一解。初值取 $x_0=0$ 时，$x_1=1$、$x_2=\cos1\approx0.5403$，继续迭代收敛到约 $0.7391$。}{To solve $x=\cos x$, iterate $x_{n+1}=\cos x_n$ on $[0,1]$. The map preserves the interval and satisfies $|\cos x-\cos y|\le(\sin1)|x-y|$ with $\sin1<1$. Since the interval is complete, there is a unique fixed point. Starting from zero gives $x_1=1$, $x_2\approx0.5403$, and the iterations converge to about $0.7391$.}
+
+\section{赋范空间与 Banach 空间 | Normed and Banach spaces}
+\noindent 向量空间上的范数 $\|x\|$ 满足非负且仅零向量范数为零、$\|\alpha x\|=|\alpha|\|x\|$、以及 $\|x+y\|\le\|x\|+\|y\|$。范数诱导度量 $d(x,y)=\|x-y\|$。完备的赋范线性空间称为 Banach 空间。完备性很重要：极限过程产生的近似解留在空间中，才能证明解存在。
+\EN{A norm assigns a nonnegative size to each vector, is zero only at the zero vector, scales by the absolute value of a scalar, and satisfies the triangle inequality. It induces the metric $d(x,y)=\|x-y\|$. A complete normed vector space is a Banach space. Completeness ensures that limits of Cauchy approximations remain in the space.}
+\READ{$d(x,y)$ equals the norm of $x$ minus $y$. A complete normed vector space is called a Banach space.}
+
+\EX{连续函数空间 $C[0,1]$ 配上上确界范数 $\|f\|_\infty=\max_{0\le x\le1}|f(x)|$ 是 Banach 空间：一致 Cauchy 的连续函数列一致收敛到连续函数。多项式空间配同一范数却不完备，因为多项式可以一致逼近 $|x-1/2|$，而它在 $x=1/2$ 不可微，因而不是多项式；极限离开了多项式空间。}{The space $C[0,1]$ with the supremum norm is complete: a uniformly Cauchy sequence of continuous functions converges uniformly to a continuous function. Its polynomial subspace with the same norm is not complete: polynomials can converge uniformly to $|x-1/2|$, which is not differentiable at $1/2$ and hence is not a polynomial.}
+
+\section{Hilbert 空间与最佳逼近 | Hilbert spaces and best approximation}
+\noindent 内积 $\langle x,y\rangle$ 除满足线性、对称（复空间中为共轭对称）外，还满足 $\langle x,x\rangle>0$ 对 $x\ne0$；它诱导范数 $\|x\|=\sqrt{\langle x,x\rangle}$。完备的内积空间称 Hilbert 空间。Cauchy--Schwarz 不等式 $|\langle x,y\rangle|\le\|x\|\|y\|$ 保证内积连续。与一般 Banach 空间相比，Hilbert 空间多了“正交”结构。
+\EN{An inner product is linear, symmetric (conjugate symmetric over complex scalars), and positive definite. It induces the norm $\|x\|=\sqrt{\langle x,x\rangle}$. A complete inner-product space is a Hilbert space. The Cauchy--Schwarz inequality bounds the inner product and makes orthogonality available in addition to the Banach-space structure.}
+
+\noindent 向量 $x,y$ 正交，若 $\langle x,y\rangle=0$。若 $M$ 是 Hilbert 空间中的闭线性子空间，则任意 $x$ 有唯一分解 $x=m+r$，其中 $m\in M$、$r\perp M$；$m$ 是距离 $x$ 最近的 $M$ 中向量。这是最小二乘逼近、Fourier 投影和数据拟合的抽象依据。
+\EN{Two vectors are orthogonal if their inner product is zero. For a closed subspace $M$ of a Hilbert space, every vector has a unique decomposition into a component in $M$ and an orthogonal residual. The component in $M$ is the closest point to the original vector, providing the foundation for least squares and Fourier projection.}
+
+\EX{用直线 $M=\operatorname{span}\{(1,1)\}$ 逼近 $x=(2,0)$。正交投影为 $m=((2,0)\cdot(1,1))/((1,1)\cdot(1,1))(1,1)=(1,1)$，残差 $r=(1,-1)$ 与方向 $(1,1)$ 内积为零。任何沿这条直线的其他点都比 $m$ 离 $x$ 更远。}{To approximate $x=(2,0)$ by the line spanned by $(1,1)$, project to obtain $m=(1,1)$. The residual $r=(1,-1)$ is orthogonal to $(1,1)$, so this is the unique closest point on the line.}
+
+\section{线性算子与线性泛函 | Operators and functionals}
+\noindent 线性算子 $T:X\to Y$ 满足 $T(\alpha x+\beta y)=\alpha T(x)+\beta T(y)$。若存在常数 $C$ 使 $\|Tx\|_Y\le C\|x\|_X$ 对所有 $x$ 成立，则 $T$ 有界；在线性算子之间，有界等价于连续。算子范数是
+\[
+\|T\|=\sup_{\|x\|_X\le1}\|Tx\|_Y,
+\qquad \|Tx\|_Y\le\|T\|\,\|x\|_X.
+\]
+\EN{A linear operator preserves addition and scalar multiplication. It is bounded if one constant controls the output norm by the input norm for every vector. For linear operators, boundedness is equivalent to continuity. The operator norm is the smallest such uniform bound.}
+\READ{“The operator norm of T is the supremum of the norm of T x over all x whose norm is at most one.”}
+\EN{A linear functional is a linear map from a vector space to its scalar field. It assigns one scalar to each vector, for example a weighted average, an integral, or evaluation at a point.}
+
+\EX{定义 $T:C[0,1]\to C[0,1]$ 为 $(Tf)(x)=\int_0^x f(t)\,dt$。则 $|Tf(x)|\le x\|f\|_\infty\le\|f\|_\infty$，所以 $\|Tf\|_\infty\le\|f\|_\infty$，即 $T$ 是有界线性算子且 $\|T\|\le1$。它把输入函数累积成积分曲线；误差满足 $\|T(f+e)-Tf\|_\infty\le\|e\|_\infty$。}{Define $T:C[0,1]\to C[0,1]$ by $(Tf)(x)=\int_0^x f(t)\,dt$. Since $|Tf(x)|\le x\|f\|_\infty\le\|f\|_\infty$, the operator is bounded and $\|T\|\le1$. It turns an input function into its accumulated integral, and the output error is bounded by the input error.}
+
+\noindent\textbf{对偶空间。} Banach 空间 $X$ 上所有有界线性泛函组成对偶空间 $X^*$。泛函范数为 $\|\ell\|=\sup_{\|x\|\le1}|\ell(x)|$，衡量单位球内最大输出。若 $\ell$ 有界，则 $|\ell(x)|\le\|\ell\|\|x\|$，所以对输入误差有直接控制。
+\EN{The dual space $X^*$ consists of all bounded linear functionals on $X$. Its norm is the largest absolute value attained on the unit ball. A bounded functional satisfies $|\ell(x)|\le\|\ell\|\|x\|$, so it controls sensitivity to input error.}
+
+\EX{在 $C[0,1]$ 上令 $\ell(f)=\int_0^1f(t)\,dt$。则 $|\ell(f)|\le\|f\|_\infty$，所以 $\ell$ 有界且 $\|\ell\|=1$（取常数函数 $f=1$ 达到等号）。它把整条曲线压缩成平均值；若测量曲线误差不超过 $\varepsilon$，平均值误差也不超过 $\varepsilon$。}{On $C[0,1]$, define $\ell(f)=\int_0^1f(t)\,dt$. Then $|\ell(f)|\le\|f\|_\infty$, and equality holds for the constant function one, so $\|\ell\|=1$. The functional converts a curve into its average, and a uniform measurement error of at most $\varepsilon$ causes an average error of at most $\varepsilon$.}
+
+\section{Riesz 表示、弱收敛与谱 | Representation, weak limits, and spectrum}
+\noindent\textbf{Riesz 表示定理。} 在 Hilbert 空间 $H$ 中，每个连续线性泛函 $\ell$ 都可由唯一的 $y\in H$ 表示为 $\ell(x)=\langle x,y\rangle$，而且 $\|\ell\|=\|y\|$。这里采用内积对第一个变量线性的约定；其他教材可能使用相反的复共轭约定。这个定理把“作用在向量上的线性测量”转化为与某个固定向量做内积。
+\EN{The Riesz representation theorem states that every continuous linear functional $\ell$ on a Hilbert space has a unique representing vector $y$ such that $\ell(x)=\langle x,y\rangle$ and $\|\ell\|=\|y\|$. We use an inner product linear in the first variable. The theorem turns a linear measurement into an inner product with a fixed vector.}
+
+\EX{在 $L^2[0,1]$ 中，测量 $\ell(f)=\int_0^1 f(t)t\,dt$ 可写成 $\langle f,g\rangle$，其中 $g(t)=t$。所以 $\|\ell\|=\|g\|_2=(\int_0^1t^2dt)^{1/2}=1/\sqrt3$；Cauchy--Schwarz 给出 $|\ell(f)|\le\|f\|_2/\sqrt3$。}{In $L^2[0,1]$, the measurement $\ell(f)=\int_0^1 f(t)t\,dt$ is the inner product with $g(t)=t$. Thus $\|\ell\|=\|g\|_2=1/\sqrt3$, and Cauchy--Schwarz gives $|\ell(f)|\le\|f\|_2/\sqrt3$.}
+
+\noindent\textbf{弱收敛。} 赋范空间中，$x_n\rightharpoonup x$ 表示对每个连续线性泛函 $\ell\in X^*$，都有 $\ell(x_n)\to\ell(x)$；强收敛则要求 $\|x_n-x\|\to0$。强收敛蕴含弱收敛，反之一般不成立。弱收敛适合在范数无法直接控制到零时研究解列的极限，但必须说明检验的是全部连续线性泛函。
+\EN{Weak convergence $x_n\rightharpoonup x$ means that $\ell(x_n)\to\ell(x)$ for every continuous linear functional $\ell$. Strong convergence requires $\|x_n-x\|\to0$. Strong convergence implies weak convergence, but not conversely. Weak convergence is useful for limiting sequences of approximate solutions even when their norms do not converge strongly.}
+
+\EX{在 $\ell^2$ 中，第 $n$ 个标准基向量 $e_n$ 的第 $n$ 项为 $1$，其余为 $0$。对任意 $y=(y_k)\in\ell^2$，$\langle e_n,y\rangle$ 的绝对值为 $|y_n|\to0$，所以 $e_n$ 弱收敛到零；但 $\|e_n\|_2=1$，故不强收敛到零。}{In $\ell^2$, the $n$th unit vector $e_n$ has a one in position $n$ and zeros elsewhere. For every $y\in\ell^2$, $|\langle e_n,y\rangle|=|y_n|\to0$, so $e_n$ converges weakly to zero. Yet $\|e_n\|_2=1$, so the convergence is not strong.}
+
+\noindent\textbf{谱。} 对复 Banach 空间上的有界线性算子 $T$，若 $T-\lambda I$ 存在有界逆，$\lambda$ 属于预解集；不满足这一条件的 $\lambda$ 构成谱 $\sigma(T)$。特征值只要求存在非零 $x$ 使 $Tx=\lambda x$，因此属于谱，但无限维谱可能还含没有特征向量的点。谱描述 $T-\lambda I$ 何时不能稳定地解出输入。
+\EN{For a bounded operator $T$ on a complex Banach space, the resolvent set consists of scalars $\lambda$ for which $T-\lambda I$ has a bounded inverse. The spectrum is its complement. Every eigenvalue belongs to the spectrum, but in infinite dimensions the spectrum can contain points that are not eigenvalues.}
+
+\ASK{弱收敛与强收敛的主要差别是什么？}{What is the difference between weak and strong convergence?}{强收敛要求向量范数距离趋于零；弱收敛只要求所有连续线性泛函给出的数值收敛。$\ell^2$ 的标准基序列弱收敛为零，但范数始终为一，所以不强收敛。}{Strong convergence requires the norm distance to tend to zero. Weak convergence requires convergence after applying every continuous linear functional. The unit vectors in $\ell^2$ converge weakly to zero, but their norms remain one.}
+
+\section{四个基本定理 | Four fundamental theorems}
+\noindent \textbf{Hahn--Banach 定理。} 在实或复线性空间上，满足一定支配条件的子空间线性泛函可以延拓到整个空间，并保持相同的范数。它保证可以用连续线性泛函“检测”向量和闭凸集，也支撑对偶空间理论。\EN{The Hahn--Banach theorem extends a suitably bounded linear functional from a subspace to the whole space without increasing its norm.}
+
+\noindent \textbf{开映射定理。} 若 $X,Y$ 是 Banach 空间且有界线性算子 $T:X\to Y$ 满射，则 $T$ 把开集映成开集。特别地，若 $T$ 还是单射，则逆算子 $T^{-1}$ 有界。它说明解存在且唯一时，某些完备性假设能带来稳定性。\EN{The open mapping theorem says that a bounded surjective linear map between Banach spaces maps open sets to open sets. A bounded bijection therefore has a bounded inverse.}
+
+\noindent \textbf{闭图像定理。} 若 Banach 空间间的线性算子图像 $\{(x,Tx):x\in X\}$ 在乘积空间中闭，则 $T$ 有界。实际使用时，常通过“$x_n\to x$ 且 $Tx_n\to y$ 必须推出 $y=Tx$”验证闭图像。\EN{The closed graph theorem says that a linear operator between Banach spaces is bounded if its graph is closed.}
+
+\noindent \textbf{一致有界原理。} 若 Banach 空间 $X$ 上一族有界线性算子 $\{T_\alpha\}$ 对每个固定 $x$ 都满足 $\sup_\alpha\|T_\alpha x\|<\infty$，则 $\sup_\alpha\|T_\alpha\|<\infty$。逐点有界因此提升为算子范数一致有界。\EN{The uniform boundedness principle turns pointwise boundedness of a family of bounded linear operators on a Banach space into a uniform bound on their operator norms.}
+
+\EX{在信号反卷积中，观测可写成 $y=Kx+\eta$：$x$ 是未知原信号，$K$ 是平滑模糊算子，$\eta$ 是测量噪声。$K$ 会压低高频信息，直接求 $K^{-1}y$ 会同时放大噪声。Tikhonov 正则化改为最小化 $\|Kx-y\|_2^2+\lambda\|x\|_2^2$；第一项要求拟合观测，第二项惩罚过大的解，$\lambda>0$ 控制平滑强度。}{In signal deconvolution, the observation is $y=Kx+\eta$, where $x$ is the unknown signal, $K$ is a smoothing blur operator, and $\eta$ is measurement noise. Since $K$ suppresses high frequencies, directly computing $K^{-1}y$ also amplifies noise. Tikhonov regularization minimizes $\|Kx-y\|_2^2+\lambda\|x\|_2^2$: the first term fits the data, the second penalizes large solutions, and $\lambda>0$ controls the amount of smoothing.}
+
+\ASK{为什么 Banach 空间的完备性会出现在基本定理中？}{Why does completeness appear in the fundamental theorems?}{完备性保证 Cauchy 近似过程在空间中有极限，防止极限离开定义域或值域。开映射、闭图像和一致有界原理都利用这一结构；删掉完备性后，结论可能失败。}{Completeness ensures that Cauchy approximation processes have limits in the space. The open mapping, closed graph, and uniform boundedness theorems rely on it, and their conclusions can fail without the relevant completeness assumptions.}
+\ASK{有界线性算子为什么等价于连续？}{Why is a linear operator bounded if and only if it is continuous?}{若 $T$ 有界，则 $\|T(x)-T(y)\|=\|T(x-y)\|\le C\|x-y\|$，所以连续。反过来，线性算子若在零点连续，就能找到邻域控制 $\|Tx\|$，再用缩放得到全空间上的统一界。}{If $T$ is bounded, then $\|T(x)-T(y)\|\le C\|x-y\|$, so it is continuous. Conversely, continuity at zero and linear scaling give a uniform bound on the whole space.}
+\ASK{泛函分析怎样解释病态反问题？}{How does functional analysis explain an ill-posed inverse problem?}{若正问题 $Ax=y$ 的逆映射不连续，小的数据误差可能导致大解误差。此时直接反演不稳定，通常加入平滑或惩罚项做正则化；正则化以一定偏差换取对噪声的稳定性。}{If the inverse map for $Ax=y$ is discontinuous, small data errors can cause large solution errors. Direct inversion is unstable, so one often adds smoothing or a penalty through regularization, trading some bias for robustness to noise.}
+\section[函数列收敛 | Function convergence]{从数列到函数列：收敛为什么要分类型 | From sequences to function convergence}
+\noindent \textbf{基础定义。} 点态收敛 $f_n\to f$ 指对每个固定的 $x$、每个 $\varepsilon>0$，存在可能依赖 $x$ 的 $N$，使 $n\ge N$ 时 $|f_n(x)-f(x)|<\varepsilon$。一致收敛要求对给定 $\varepsilon$，\emph{同一个} $N$ 对所有 $x$ 都有效；在 $C[a,b]$ 的上确界范数中，它等价于 $\|f_n-f\|_\infty\to0$。一致极限保连续性，点态极限不一定保连续性。
+\EN{Pointwise convergence means that, for each fixed $x$ and each $\varepsilon>0$, there is an $N$ that may depend on $x$ such that $|f_n(x)-f(x)|<\varepsilon$ for $n\ge N$. Uniform convergence requires one $N$ to work for every $x$. In the supremum norm on $C[a,b]$, this is exactly norm convergence. A uniform limit of continuous functions is continuous, whereas a pointwise limit need not be.}
+
+\EX{在 $[0,1]$ 上取 $f_n(x)=x^n$。当 $0\le x<1$ 时极限为 $0$，而 $f_n(1)=1$，因此点态极限在 $1$ 处不连续。每个 $f_n$ 都连续，所以收敛不可能一致。直接验证也可以：$x_n=2^{-1/n}\to1$ 且 $f_n(x_n)=1/2$，故 $\sup_x|f_n(x)-f(x)|\ge1/2$。}{On $[0,1]$, $f_n(x)=x^n$ tends to zero for $x<1$ but remains one at $x=1$, so the pointwise limit is discontinuous. Uniform convergence is impossible because all $f_n$ are continuous. Explicitly, $x_n=2^{-1/n}$ gives $f_n(x_n)=1/2$ while the limiting value at $x_n<1$ is zero.}
+\ASK{为什么一致收敛可以保连续，而点态收敛不行？}{Why does uniform convergence preserve continuity while pointwise convergence need not?}{一致收敛允许先选一个足够大的固定 $n$ 同时控制所有点上的近似误差，再用连续函数 $f_n$ 控制邻近点的函数值；点态收敛的指标可能随点变化，无法这样统一控制。}{Uniform convergence lets us choose one sufficiently large $n$ that controls the approximation error at every point; continuity of that fixed $f_n$ then controls nearby values. Pointwise convergence has no such uniform choice.}
+
+\section{压缩映射的证明思路与初值问题 | Fixed points and initial-value problems}
+\noindent 设 $F$ 的压缩常数为 $q<1$。由迭代式 $x_{n+1}=F(x_n)$ 得 $d(x_{n+1},x_n)\le q^n d(x_1,x_0)$；对 $m>n$，三角不等式与等比级数给出
+\[d(x_m,x_n)\le \frac{q^n}{1-q}\,d(x_1,x_0).\]
+右侧趋零，所以 $x_n$ 是 Cauchy 列。完备性提供极限 $x^*$；$F$ 连续，故 $F(x^*)=x^*$。若 $x^*,y^*$ 都是不动点，$d(x^*,y^*)\le qd(x^*,y^*)$ 迫使二者相等。这是存在、算法和唯一性的完整证明框架。
+\EN{For a contraction with constant $q<1$, the distance between successive iterates is at most $q^n d(x_1,x_0)$. The geometric-series bound above makes the iterates Cauchy. Completeness supplies a limit, continuity shows that the limit is a fixed point, and the contraction inequality shows that two fixed points must coincide.}
+\EX{常微分方程 $x'=f(t,x)$、$x(0)=x_0$ 等价于积分方程 $x(t)=x_0+\int_0^t f(s,x(s))ds$。若 $f$ 在所考虑区域对 $x$ 满足 Lipschitz 条件 $|f(t,x)-f(t,y)|\le L|x-y|$，则在合适的完备函数空间和足够短时间区间内，积分算子满足 $\|Fx-Fy\|_\infty\le LT\|x-y\|_\infty$。取 $LT<1$，并选取使算子映回该空间的区域，就可用压缩映射证明局部解存在唯一。}{The ODE $x'=f(t,x)$ with $x(0)=x_0$ is equivalent to an integral equation. If $f$ is Lipschitz in $x$ with constant $L$, its integral operator has Lipschitz constant at most $LT$ on a time interval of length $T$. On a suitable complete function space that the operator maps into itself, choosing $LT<1$ gives local existence and uniqueness by the contraction theorem.}
+
+\section{正交投影与最小二乘的计算 | Projection and least squares}
+\noindent \textbf{从几何到方程。} 在实 Hilbert 空间中，用 $m=\sum_{j=1}^na_j\phi_j$ 逼近 $x$，令误差平方 $J(a)=\|x-m\|^2$ 最小。若最优解存在，残差 $x-m$ 与每个方向 $\phi_i$ 正交，因而满足正规方程
+\[\sum_{j=1}^n\langle\phi_j,\phi_i\rangle a_j=\langle x,\phi_i\rangle,\qquad i=1,\ldots,n.\]
+系数矩阵称 Gram 矩阵。基向量线性无关时，它正定且解唯一；如果它们线性相关，系数可能不唯一，即使最佳逼近向量本身仍唯一。
+\EN{In a real Hilbert space, approximate $x$ by $m=\sum_j a_j\phi_j$ and minimize $\|x-m\|^2$. The residual must be orthogonal to every trial direction, giving the normal equations above. Their coefficient matrix is the Gram matrix. Independent trial vectors give a positive-definite Gram matrix and unique coefficients; dependent vectors can produce nonunique coefficients even when the best approximating vector is unique.}
+\EX{用常数函数 $a$ 在 $L^2[0,1]$ 中逼近 $f(t)=t$。选 $\phi_1(t)=1$，正规方程为 $a\int_0^1 1\,dt=\int_0^1t\,dt=1/2$，故 $a=1/2$。残差 $t-1/2$ 的积分为零，正交于常数函数；误差平方为 $\int_0^1(t-1/2)^2dt=1/12$。这就是用一个常数概括随时间线性增长的数据。}{Approximate $f(t)=t$ on $[0,1]$ by a constant in $L^2$. The normal equation gives $a=\int_0^1t\,dt=1/2$. The residual has zero integral and is orthogonal to constants. The squared error is $\int_0^1(t-1/2)^2dt=1/12$.}
+
+\section{算子可逆性与谱：一个具体计算 | Operator invertibility and spectrum}
+\noindent 有界线性算子 $T:X\to X$ 的谱不仅问“是否存在特征向量”，还问 $T-\lambda I$ 是否有定义在整个空间的有界逆。有限维情形中，这与矩阵 $T-\lambda I$ 不可逆等价，因此谱恰是特征值集合；无限维时两者可能不同。预解算子 $(T-\lambda I)^{-1}$ 的范数还可以反映求解 $(T-\lambda I)x=y$ 时对数据扰动的敏感程度。
+\EN{The spectrum asks whether $T-\lambda I$ has a bounded inverse defined on the entire space, not merely whether an eigenvector exists. In finite dimensions, the spectrum consists exactly of the eigenvalues; in infinite dimensions, it can be larger. The norm of the inverse also measures sensitivity when solving $(T-\lambda I)x=y$.}
+\EX{在 $\mathbb R^2$ 或复化后的 $\mathbb C^2$ 上，取 $T(x_1,x_2)=(2x_1,3x_2)$。若 $\lambda\ne2,3$，则 $(T-\lambda I)^{-1}(y_1,y_2)=(y_1/(2-\lambda),y_2/(3-\lambda))$。当 $\lambda=2$ 或 $3$ 时对应坐标不能由 $y$ 唯一恢复，所以谱为 $\{2,3\}$。当 $\lambda$ 接近谱时分母很小，逆问题对误差更敏感。}{For the diagonal operator $T(x_1,x_2)=(2x_1,3x_2)$, the inverse of $T-\lambda I$ divides the two coordinates by $2-\lambda$ and $3-\lambda$. It exists exactly when $\lambda\ne2,3$, so the spectrum is $\{2,3\}$. Near either value the inverse has large coefficients and the solution is sensitive to data error.}
+\ASK{为什么无限维空间中谱不一定都是特征值？}{Why need not every spectral value be an eigenvalue in infinite dimensions?}{特征值只检查齐次方程 $(T-\lambda I)x=0$ 是否有非零解；谱还检查算子是否满射以及逆是否有界，因此即使核为零，仍可能属于谱。}{An eigenvalue checks whether the homogeneous equation has a nonzero solution. The spectrum also checks surjectivity and boundedness of the inverse, so a value may be spectral even when the kernel is zero.}
+\section{范数等价与函数空间的比较 | Equivalent norms and function spaces}
+\noindent 在同一个向量空间上可以有不同范数。若存在常数 $c,C>0$ 使
+\[
+c\|x\|_a\le \|x\|_b\le C\|x\|_a\qquad(\text{for all }x),
+\]
+称两范数等价。等价范数给出相同的收敛列和开集，但具体数值和误差常数可以不同。有限维空间中所有范数等价；无限维空间中通常不成立。
+\EN{Different norms may be defined on the same vector space. They are equivalent when they bound each other by two positive constants. Equivalent norms give the same convergent sequences and topology, although numerical error constants may differ. All norms on a finite-dimensional space are equivalent, but this is generally false in infinite dimensions.}
+
+\EX{在 $\mathbb R^2$ 中，$\|x\|_1=|x_1|+|x_2|$、$\|x\|_2=(x_1^2+x_2^2)^{1/2}$、$\|x\|_\infty=\max(|x_1|,|x_2|)$ 满足
+\[
+\|x\|_\infty\le\|x\|_2\le\|x\|_1\le2\|x\|_\infty.
+\]
+所以它们描述同样的拓扑。对 $(3,4)$，三种范数分别为 $7,5,4$，数值不同但收敛概念相同。}{In $\mathbb R^2$, the one, two, and infinity norms satisfy the displayed inequalities. They define the same topology. For $(3,4)$ their values are seven, five, and four: different numbers, but the same notion of convergence.}
+
+\noindent 选择范数会影响“什么样的误差算小”。$C[0,1]$ 的上确界范数控制每一点的最大误差；$L^2$ 范数控制平均平方误差，却允许少数点误差较大。由此同一个函数序列可能在一种范数下收敛，在另一种范数下不收敛。
+\EN{The norm determines what counts as a small error. The supremum norm controls the largest pointwise error, whereas the $L^2$ norm controls mean-square error and may allow large errors on a small set. The same sequence may converge in one norm but not another.}
+
+\EX{在 $L^2[0,1]$ 中，$f_n=\sqrt n\mathbf1_{[0,1/n]}$ 满足 $\|f_n\|_2=1$，所以不收敛到零；但它在每个固定 $x>0$ 处最终为零。这个例子说明点态信息和范数信息回答的是不同问题。}{In $L^2[0,1]$, $f_n=\sqrt n\mathbf1_{[0,1/n]}$ has norm one and therefore does not converge to zero in $L^2$, although it is eventually zero at every fixed $x>0$. Pointwise and norm convergence answer different questions.}
+
+\section{紧性与不动点：存在性方法 | Compactness and fixed points}
+\noindent 度量空间中，紧集的一个实用判据是：每个序列都有收敛子列，且极限仍在集合内。紧集一定闭且有界；在 $\mathbb R^n$ 中，Heine--Borel 定理给出闭且有界的反向结论。紧性常用于从一列近似解中抽取收敛子列，而不是直接给出收敛速度。
+\EN{In a metric space, compactness means that every sequence has a subsequence converging to a point of the set. Compact sets are closed and bounded; in $\mathbb R^n$, the converse is Heine--Borel. Compactness is often used to extract a convergent subsequence of approximate solutions, rather than to give a convergence rate.}
+
+\EX{闭单位圆盘 $K=\{x\in\mathbb R^2:\|x\|_2\le1\}$ 是紧的。若连续映射 $F:K\to K$，Brouwer 不动点定理保证存在 $x^*\in K$ 使 $F(x^*)=x^*$；这里不要求 $F$ 是压缩映射，因此不能直接保证迭代从任意初值收敛。}{The closed unit disk is compact. Brouwer's fixed-point theorem says that every continuous map from the disk to itself has a fixed point. It need not be a contraction, so the theorem does not by itself guarantee convergence of iteration from every initial point.}
+
+\noindent Banach 不动点定理与 Brouwer/Schauder 类型定理要区分：Banach 需要压缩条件，结论包括唯一性和迭代收敛；Schauder 主要要求非空闭有界凸集 $K$，以及连续映射 $F:K\to K$ 的像 $F(K)$ 相对紧，结论通常只是存在不动点。无限维空间中 $K$ 本身一般不紧，不能把这两个条件混同。APS 追问时先判断题目要的是“存在”还是“唯一且可计算”。
+\EN{The Banach theorem differs from Brouwer or Schauder fixed-point theorems. Banach requires a contraction and gives uniqueness and convergence of iteration. Schauder assumes a nonempty closed bounded convex set $K$ and a continuous map whose image $F(K)$ is relatively compact; it usually gives existence only. In infinite dimensions, $K$ itself is generally not compact, so these conditions must not be confused.}
+
+\section{正交系与 Fourier 系数 | Orthonormal systems}
+\noindent Hilbert 空间中的向量系 $\{e_k\}$ 若满足 $\langle e_j,e_k\rangle=0$（$j\ne k$）且 $\|e_k\|=1$，称为标准正交系。给定 $x$，沿 $e_k$ 的 Fourier 系数为 $c_k=\langle x,e_k\rangle$。Bessel 不等式为
+\[
+\sum_{k=1}^{\infty}|\langle x,e_k\rangle|^2\le\|x\|^2.
+\]
+若标准正交系完备，等号成立，即 Parseval 等式；此时 $x$ 可以由其 Fourier 系数在 Hilbert 范数意义下恢复。
+\EN{An orthonormal system consists of unit vectors that are pairwise orthogonal. The Fourier coefficient of $x$ in the direction $e_k$ is $\langle x,e_k\rangle$. Bessel's inequality gives the displayed bound. If the system is complete, equality holds by Parseval's identity, and the vector is recovered in the Hilbert-space norm from its coefficients.}
+
+\EX{在 $\mathbb R^2$ 中取 $e_1=(1,0)$、$e_2=(0,1)$，对 $x=(3,4)$ 有系数 $3,4$，且 $3^2+4^2=25=\|x\|_2^2$。若只使用 $e_1$，投影为 $(3,0)$，误差为 $(0,4)$；增加 $e_2$ 后误差变为零。这个有限维计算就是 Fourier 投影的基本图像。}{In $\mathbb R^2$, take $e_1=(1,0)$ and $e_2=(0,1)$. For $x=(3,4)$ the coefficients are three and four, and their squared sum is $25=\|x\|_2^2$. Using only $e_1$ gives projection $(3,0)$; adding $e_2$ removes the error. This is the finite-dimensional picture of Fourier projection.}
+
+\section{Hahn--Banach 与定理条件 | Theorem hypotheses}
+\noindent Hahn--Banach 的实际作用是把一个容易定义的线性测量延拓成整个空间上的连续泛函。在赋范空间中，若 $M$ 是子空间、$\ell_0$ 在 $M$ 上有界，则存在 $\ell$ 在整个 $X$ 上延拓 $\ell_0$ 且 $\|\ell\|=\|\ell_0\|$。几何形式可以分离点与闭子空间：若 $x_0\notin M$ 且 $M$ 闭，存在 $\ell\in X^*$ 使 $\ell|_M=0$、$\ell(x_0)\ne0$。
+\EN{The practical role of Hahn--Banach is to extend an easily defined linear measurement to a continuous functional on the whole space. A bounded functional on a subspace extends without increasing its norm. In geometric form, a point outside a closed subspace can be separated from that subspace by a continuous functional.}
+
+\EX{在 $\mathbb R^2$ 中，子空间 $M=\operatorname{span}\{(1,0)\}$，点 $x_0=(0,1)$ 不在 $M$。泛函 $\ell(x_1,x_2)=x_2$ 在 $M$ 上恒为零，而 $\ell(x_0)=1$，因此它把点和子空间分开。无限维情形中 Hahn--Banach 保证同类“检测泛函”仍然存在。}{In $\mathbb R^2$, let $M$ be the horizontal axis and let $x_0=(0,1)$. The functional $\ell(x_1,x_2)=x_2$ vanishes on $M$ but takes value one at $x_0$, separating the point from the subspace. Hahn--Banach guarantees an analogous separating functional in infinite dimensions.}
+
+\noindent 四个基本定理的条件应分开记忆：开映射定理要求两个空间都是 Banach 且算子有界、满射；有界逆定理还需要双射。闭图像定理要求算子线性、定义域和值域都是 Banach，并且图像闭。一致有界原理要求定义域 Banach，且算子族逐点有界。它们不是无条件结论。
+\EN{Keep the hypotheses separate. The open mapping theorem requires Banach spaces and a bounded surjective operator; bounded invertibility additionally requires bijectivity. The closed graph theorem requires a linear operator between Banach spaces with a closed graph. Uniform boundedness requires a Banach domain and pointwise boundedness of the operator family.}
+
+\ASK{为什么导数算子可能无界？}{Why can the differentiation operator be unbounded?}{取 $D:C^1[0,1]\to C[0,1]$，$Df=f'$，并在定义域使用上确界范数。令 $f_n(x)=\sin(nx)/n$，则 $\|f_n\|_\infty\le1/n$，但 $\|Df_n\|_\infty=1$。如果存在统一常数 $C$，就会有 $1\le C/n$，矛盾。}{Let $D:C^1[0,1]\to C[0,1]$ be differentiation with the supremum norm on the domain. For $f_n(x)=\sin(nx)/n$, the input norm is at most $1/n$ but the derivative norm is one. A uniform bound would give $1\le C/n$, which is impossible.}
+\ASK{Banach 不动点定理和 Schauder 不动点定理有什么区别？}{What is the difference between Banach and Schauder fixed-point theorems?}{Banach 要求压缩映射，给出唯一不动点及迭代收敛；Schauder 在非空闭有界凸集上要求连续映射的像相对紧，主要给出存在性，通常不保证唯一性和迭代收敛。}{Banach requires a contraction and gives a unique fixed point with iterative convergence. Schauder assumes a continuous map on a nonempty closed bounded convex set whose image is relatively compact; it mainly gives existence and usually gives neither uniqueness nor convergence of simple iteration.}
+\ASK{弱收敛为什么在偏微分方程中有用？}{Why is weak convergence useful in PDEs?}{近似解的范数可能有统一界，却不一定有强收敛子列；弱收敛允许先对所有连续泛函取极限，再通过弱形式传递方程。它把有界性转化为提取极限的工具。}{Approximate solutions may be uniformly bounded without having a strongly convergent subsequence. Weak convergence allows one to pass to limits after testing with continuous functionals and is natural for weak formulations of PDEs.}
+\end{document}

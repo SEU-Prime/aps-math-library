@@ -1,0 +1,261 @@
+\documentclass[UTF8,11pt,a4paper]{ctexart}
+\usepackage{amsmath,amssymb,amsthm,enumitem,geometry,hyperref}
+\geometry{margin=2.15cm}
+\setlist{itemsep=2pt,topsep=4pt}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
+\newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\EX}[2]{\par\noindent\textbf{例子 / Example.} #1\par\EN{#2}}
+\newcommand{\ASK}[4]{\par\noindent\textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent\textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
+\title{抽象代数 APS 面试准备\\[4pt]\large 群、环与模 | Groups, Rings and Modules}
+\author{中英双语知识梳理与口试题库}
+\date{}
+\begin{document}
+\maketitle
+\section*{课程概述 | Course overview}
+\noindent\textbf{中文口述稿。} 在抽象代数课上，我学习用运算的共同规则研究不同对象。例如整数加法构成群，而偶数 $2\mathbb Z$ 构成它的子群；把相差偶数的整数看作同一类，就得到商群 $\mathbb Z/2\mathbb Z$，其中只有偶数类和奇数类。这个例子也能说明同态：取余映射 $\phi(n)=n\bmod2$ 的核恰好是偶数。对于环，我用整数说明加法和乘法如何一起工作；模则类似向量空间，但标量可以取自环，例如任意阿贝尔群都可以看作 $\mathbb Z$-模。这里 $3m$ 表示把 $m$ 加三次。
+
+\EN{In abstract algebra, I studied common rules behind different operations. The integers under addition form a group, and the even integers form a subgroup. If I identify integers whose difference is even, I obtain the quotient group $\mathbb Z/2\mathbb Z$, with an even class and an odd class. The parity map $\phi(n)=n\bmod2$ has the even integers as its kernel. A ring has compatible addition and multiplication, as the integers do. A module resembles a vector space, but its scalars can come from a ring. For example, any abelian group is a $\mathbb Z$-module: $3m$ means adding $m$ three times.}
+
+\noindent\textbf{学科联系与现实应用（拓展口述）。} 群论把几何变换、分子构型或晶体中的对称操作组织成代数对象；例如正方形的旋转和反射构成二面体群 $D_4$。环中的模运算是数论算法和公钥密码学的重要基础，例如 RSA 使用模 $n$ 的乘法与幂运算；面试时应说明这是环与数论的应用，不是本课程已经推导过 RSA 安全性的意思。有限域上的线性码是 $\mathbb F_q^n$ 的子空间，因此连接了模、线性代数、组合设计与通信中的纠错。一个可以贯穿群、环、模的回答是：它们分别提供对称、算术运算和线性组合的语言，再通过同态研究这些结构如何作用于几何对象、编码或计算。
+\EN{\textbf{Connections and applications (extension for an interview).} Group theory organizes geometric transformations and symmetry operations of molecules or crystals; for example, the rotations and reflections of a square form the dihedral group $D_4$. Modular arithmetic in rings is important in number-theoretic algorithms and public-key cryptography; RSA, for instance, uses multiplication and exponentiation modulo $n$. This is an application of rings and number theory, not a claim that the course proved RSA's security. A linear code over a finite field is a subspace of $\mathbb F_q^n$, connecting modules and linear algebra to combinatorial design and error correction in communications. A concise connection across groups, rings, and modules is that they provide languages for symmetry, arithmetic, and linear combinations, while homomorphisms describe how these structures act on geometric objects, codes, and computations.}
+
+\ASK{抽象代数与现实问题有什么联系？}{How can abstract algebra connect to real-world problems?}{群可以描述几何对象的对称；模运算和有限环用于数论算法；有限域上的线性码用向量空间结构纠正通信错误。我会先说明这些是群、环、模的后续应用，再准确解释所用的代数结构，不会把应用例子说成课上做过的项目。}{Groups describe symmetries of geometric objects, modular arithmetic supports number-theoretic algorithms, and linear codes over finite fields use vector-space structure to correct communication errors. I would identify these as applications of groups, rings, and modules, then explain the relevant structure without presenting them as projects completed in class.}
+
+\noindent\textbf{口述稿提示。} 这段概述按第一人称组织；请根据你实际上过的章节调整内容。下面的定义采用教材约定：环有乘法单位元且 $1\ne0$；若环不交换，需区分左模与右模。
+
+\EN{This overview is written in the first person. Adjust it to match the topics you actually covered. The definitions below follow the textbook's convention: rings have a multiplicative identity and $1\ne0$. For a noncommutative ring, left and right modules must be distinguished.}
+
+\section{群 | Groups}
+\subsection{群与基本例子 | Groups and basic examples}
+\noindent\textbf{定义。} 群是非空集合 $G$ 连同二元运算 $\cdot:G\times G\to G$，满足：对所有 $a,b,c\in G$，$(ab)c=a(bc)$；存在单位元 $e\in G$ 使 $ea=ae=a$；每个 $a\in G$ 都有逆元 $a^{-1}$ 使 $aa^{-1}=a^{-1}a=e$。若此外 $ab=ba$，称 $G$ 为阿贝尔群或交换群。
+
+\EN{A group is a nonempty set $G$ with a binary operation $\cdot:G\times G\to G$ such that $(ab)c=a(bc)$ for all $a,b,c\in G$, there is an identity $e$ with $ea=ae=a$, and every $a\in G$ has an inverse $a^{-1}$ with $aa^{-1}=a^{-1}a=e$. If $ab=ba$ for all $a,b\in G$, the group is abelian or commutative.}
+
+\EX{$(\mathbb Z,+)$ 是阿贝尔群，单位元为 $0$，$a$ 的逆元为 $-a$。可逆实矩阵在矩阵乘法下构成群 $\mathrm{GL}_n(\mathbb R)$；当 $n\ge2$ 时通常非交换，$n=1$ 时 $\mathrm{GL}_1(\mathbb R)=\mathbb R^\times$ 是阿贝尔群。}{The integers under addition form an abelian group with identity $0$ and inverse $-a$ for $a$. The invertible real matrices form $\mathrm{GL}_n(\mathbb R)$. It is non-abelian for $n\ge2$, whereas $\mathrm{GL}_1(\mathbb R)=\mathbb R^\times$ is abelian.}
+
+\noindent\textbf{基本唯一性。} 群的单位元唯一：若 $e,e'$ 都是单位元，则 $e=ee'=e'$。逆元也唯一：若 $b,c$ 都是 $a$ 的逆元，则 $b=b(ac)=(ba)c=c$。证明时只需使用结合律和单位元/逆元定义。
+\EN{The identity is unique: if $e$ and $e'$ are both identities, then $e=ee'=e'$. Inverses are unique as well: if $b$ and $c$ are both inverses of $a$, then $b=b(ac)=(ba)c=c$. Both proofs use associativity and the defining properties.}
+
+\ASK{群的三条公理是什么？}{What are the three group axioms?}{结合律、单位元存在、每个元素有逆元。封闭性来自二元运算 $G\times G\to G$ 的定义。}{Associativity, existence of an identity, and existence of an inverse for every element. Closure is part of the definition of a binary operation $G\times G\to G$.}
+
+\ASK{群与阿贝尔群有什么区别？}{What is the difference between a group and an abelian group?}{阿贝尔群还要求运算交换，即 $ab=ba$。}{An abelian group also requires commutativity: $ab=ba$.}
+
+\subsection{子群、生成元与元素阶 | Subgroups, generators and order}
+\noindent\textbf{定义。} 群 $G$ 的非空子集 $H$ 是子群，记作 $H\le G$，若其在 $G$ 的运算下本身构成群。常用判别法是：$H\ne\varnothing$ 且任意 $a,b\in H$ 都有 $ab^{-1}\in H$。由此也可写成三项条件：$e\in H$，对乘法封闭，对取逆封闭。
+
+\EN{A nonempty subset $H$ of a group $G$ is a subgroup, written $H\le G$, if it is itself a group under the operation inherited from $G$. A useful subgroup test is: $H\ne\varnothing$ and $ab^{-1}\in H$ for every $a,b\in H$. Equivalently, $e\in H$, $H$ is closed under multiplication, and it is closed under inverses.}
+
+\noindent\textbf{定义。} 子集 $S\subseteq G$ 生成的子群 $\langle S\rangle$ 是包含 $S$ 的最小子群；其元素是由 $S$ 中元素及其逆元组成的有限乘积。若 $G=\langle g\rangle=\{g^n:n\in\mathbb Z\}$，称 $G$ 为循环群。元素 $g$ 的阶 $|g|$ 是循环子群 $\langle g\rangle$ 的元素个数；若没有正整数 $n$ 使 $g^n=e$，则 $|g|=\infty$。
+
+\EN{The subgroup generated by $S\subseteq G$, denoted $\langle S\rangle$, is the smallest subgroup containing $S$. Its elements are finite products of elements of $S$ and their inverses. A group is cyclic if $G=\langle g\rangle=\{g^n:n\in\mathbb Z\}$ for some $g$. The order $|g|$ of an element is the number of elements in $\langle g\rangle$; it is infinite if no positive integer $n$ satisfies $g^n=e$.}
+
+\EX{在加法群 $\mathbb Z_{12}$ 中，$\langle\bar 4\rangle=\{\bar0,\bar4,\bar8\}$，所以 $\bar4$ 的阶为 $3$。}{In the additive group $\mathbb Z_{12}$, $\langle\bar4\rangle=\{\bar0,\bar4,\bar8\}$, so $\bar4$ has order $3$.}
+
+\noindent\textbf{循环群的子群。} 循环群的每个子群仍是循环群。对 $\mathbb Z_n$，每个正因子 $d\mid n$ 对应唯一一个阶为 $d$ 的子群
+\[
+\left\langle\overline{n/d}\right\rangle=\{\overline{k n/d}:k\in\mathbb Z\}.
+\]
+因此 $\mathbb Z_n$ 的子群与 $n$ 的正因子一一对应。
+\EN{Every subgroup of a cyclic group is cyclic. For each positive divisor $d$ of $n$, the cyclic group $\mathbb Z_n$ has a unique subgroup of order $d$, generated by $\overline{n/d}$. Thus its subgroups correspond exactly to the positive divisors of $n$.}
+
+\EX{$\mathbb Z_{12}$ 的因子 $1,2,3,4,6,12$ 分别给出相应阶的唯一子群；例如阶 $4$ 的子群是 $\langle\bar3\rangle=\{\bar0,\bar3,\bar6,\bar9\}$。}{The divisors $1,2,3,4,6,12$ of $12$ give the corresponding unique subgroups of $\mathbb Z_{12}$. For example, its subgroup of order $4$ is $\langle\bar3\rangle=\{\bar0,\bar3,\bar6,\bar9\}$.}
+
+\ASK{怎样检验一个子集是不是子群？}{How can you test whether a subset is a subgroup?}{可用单步判别法：验证非空，并对任意 $a,b\in H$ 验证 $ab^{-1}\in H$。例如 $\mathbb Z$ 的子集 $n\mathbb Z$ 在加法下是子群。}{Use the one-step subgroup test: check that the subset is nonempty and that $ab^{-1}\in H$ for all $a,b\in H$. For example, $n\mathbb Z$ is a subgroup of $\mathbb Z$ under addition.}
+
+\ASK{循环群是什么意思？给一个例子。}{What is a cyclic group? Give an example.}{一个元素的所有整数次幂生成整个群时，该群是循环群。例如 $\mathbb Z_{6}=\langle\bar1\rangle$。}{A group is cyclic if the integer powers of one element generate the whole group. For example, $\mathbb Z_6=\langle\bar1\rangle$.}
+
+\subsection{陪集与拉格朗日定理 | Cosets and Lagrange's theorem}
+\noindent\textbf{定义。} 若 $H\le G$、$g\in G$，左陪集为 $gH=\{gh:h\in H\}$，右陪集为 $Hg=\{hg:h\in H\}$。左陪集把 $G$ 划分成互不相交的等势子集。子群的指数 $[G:H]$ 是左陪集的个数。
+
+\EN{If $H\le G$ and $g\in G$, the left coset is $gH=\{gh:h\in H\}$ and the right coset is $Hg=\{hg:h\in H\}$. Left cosets partition $G$ into disjoint subsets of equal size. The index $[G:H]$ is the number of left cosets.}
+
+\noindent\textbf{定理。} 若 $G$ 是有限群且 $H\le G$，则
+\[
+|G|=[G:H]\,|H|,\qquad |H|\mid |G|.
+\]
+因此任意元素的阶整除群的阶。
+\READ{“The order of G equals the index of H in G times the order of H; therefore, the order of H divides the order of G.”}
+\EN{If $G$ is finite and $H\le G$, then the order of $G$ equals the number of left cosets times the order of $H$. Thus the order of $H$ divides the order of $G$. In particular, the order of every element divides the order of the group.}
+
+\EX{若 $|G|=12$，则任一子群的阶只能是 $1,2,3,4,6,12$。若 $|g|=5$，则 $5\mid |G|$。}{If $|G|=12$, the order of a subgroup can only be $1,2,3,4,6$, or $12$. If $|g|=5$, then $5$ divides $|G|$.}
+
+\noindent\textbf{逆命题不成立。} 拉格朗日定理只说明子群阶整除群阶，不能反推每个因子都对应一个子群。例如 $A_4$ 的阶为 $12$，但没有阶为 $6$ 的子群。
+\EN{The converse of Lagrange's theorem is false: not every divisor of a finite group's order must occur as a subgroup order. For example, $A_4$ has order $12$ but has no subgroup of order $6$.}
+
+\ASK{拉格朗日定理说什么？如何理解？}{What does Lagrange's theorem say, and what is its idea?}{有限群被子群的左陪集划分；每个陪集与子群等势。因此 $|G|=[G:H]|H|$，从而子群阶整除群阶。}{A finite group is partitioned into left cosets of a subgroup, and each coset has the same size as the subgroup. Hence $|G|=[G:H]|H|$, so the subgroup order divides the group order.}
+
+\subsection{正规子群、商群与同态 | Normal subgroups, quotients and homomorphisms}
+\noindent\textbf{定义。} 子群 $N\le G$ 若对所有 $g\in G$ 都有 $gNg^{-1}=N$，称为正规子群，记作 $N\trianglelefteq G$。阿贝尔群的每个子群都正规。只有当 $N$ 正规时，陪集集合 $G/N$ 才能按 $(aN)(bN)=(ab)N$ 定义成商群。
+
+\noindent\textbf{正规性的等价刻画。} 对子群 $N\le G$，以下条件等价：对所有 $g\in G$，$gNg^{-1}=N$；$gN=Ng$；每个左陪集都是右陪集；以及 $gNg^{-1}\subseteq N$ 对所有 $g$ 成立。共轭不变性是定义，陪集相等则直接解释商群运算为何不依赖代表元。
+
+\EN{A subgroup $N\le G$ is normal, written $N\trianglelefteq G$, if $gNg^{-1}=N$ for every $g\in G$. Equivalent conditions are $gN=Ng$, every left coset is a right coset, and $gNg^{-1}\subseteq N$ for every $g$. Every subgroup of an abelian group is normal. Normality makes the quotient product $(aN)(bN)=abN$ well-defined.}
+
+\EX{在 $S_3$ 中，$H=\langle(12)\rangle=\{e,(12)\}$ 不是正规子群，因为 $(123)(12)(123)^{-1}=(23)\notin H$。相反，$A_3=\{e,(123),(132)\}$ 是正规子群。}{In $S_3$, $H=\langle(12)\rangle=\{e,(12)\}$ is not normal because $(123)(12)(123)^{-1}=(23)\notin H$. In contrast, $A_3=\{e,(123),(132)\}$ is normal.}
+
+\noindent\textbf{定义。} 群同态 $\varphi:G\to H$ 满足 $\varphi(ab)=\varphi(a)\varphi(b)$。其核为 $\ker\varphi=\{g\in G:\varphi(g)=e_H\}$，像为 $\operatorname{im}\varphi=\varphi(G)$。核是正规子群；$\varphi$ 单射当且仅当 $\ker\varphi=\{e_G\}$。第一同构定理为
+\[
+G/\ker\varphi\cong\operatorname{im}\varphi.
+\]
+\READ{“G modulo the kernel of phi is isomorphic to the image of phi.”}
+\EN{A group homomorphism $\varphi:G\to H$ satisfies $\varphi(ab)=\varphi(a)\varphi(b)$. Its kernel is $\ker\varphi=\{g\in G:\varphi(g)=e_H\}$, and its image is $\operatorname{im}\varphi=\varphi(G)$. The kernel is a normal subgroup, and $\varphi$ is injective if and only if its kernel is trivial. The first isomorphism theorem states that $G/\ker\varphi$ is isomorphic to $\operatorname{im}\varphi$.}
+
+\noindent\textbf{证明思路。} 若 $n\in\ker\varphi$，则 $\varphi(gng^{-1})=\varphi(g)e\varphi(g)^{-1}=e$，故核在共轭下不变。第一同构定理中定义 $g\ker\varphi\mapsto\varphi(g)$；若两个陪集相同，则 $g^{-1}h\in\ker\varphi$，从而 $\varphi(g)=\varphi(h)$，所以映射良定义。它满射到像且核平凡，故为同构。
+\EN{If $n\in\ker\varphi$, then $\varphi(gng^{-1})=\varphi(g)e\varphi(g)^{-1}=e$, so the kernel is invariant under conjugation. For the first isomorphism theorem, define $g\ker\varphi\mapsto\varphi(g)$. If two cosets are equal, then $g^{-1}h\in\ker\varphi$, hence $\varphi(g)=\varphi(h)$ and the map is well-defined. It is surjective onto the image and injective, so it is an isomorphism.}
+
+\EX{$\varphi:\mathbb Z\to\mathbb Z_n$，$k\mapsto\bar k$ 是满同态，核为 $n\mathbb Z$。因此 $\mathbb Z/n\mathbb Z\cong\mathbb Z_n$。}{The map $\varphi:\mathbb Z\to\mathbb Z_n$ given by $k\mapsto\bar k$ is a surjective homomorphism with kernel $n\mathbb Z$. Therefore $\mathbb Z/n\mathbb Z\cong\mathbb Z_n$.}
+
+\ASK{为什么商群要求正规子群？}{Why do we need a normal subgroup to form a quotient group?}{需要陪集乘法与代表元选择无关。正规性等价于 $gN=Ng$，保证 $(aN)(bN)=abN$ 定义良好。}{The coset product must be independent of the representatives. Normality, equivalently $gN=Ng$, ensures that $(aN)(bN)=abN$ is well-defined.}
+
+\ASK{同态的核有什么作用？}{What role does the kernel of a homomorphism play?}{核记录映到单位元的元素；核平凡等价于单射。第一同构定理说明，商掉核后，定义域与像同构。}{The kernel consists of elements mapped to the identity; it is trivial exactly when the map is injective. The first isomorphism theorem says that quotienting by the kernel gives a group isomorphic to the image.}
+
+\ASK{举例说明陪集和商群。}{Give an example of cosets and a quotient group.}{在加法群 $\mathbb Z$ 中，$n\mathbb Z$ 是正规子群，其陪集是模 $n$ 的剩余类，商群 $\mathbb Z/n\mathbb Z$ 有 $n$ 个元素。}{In the additive group $\mathbb Z$, $n\mathbb Z$ is normal. Its cosets are residue classes modulo $n$, and the quotient group $\mathbb Z/n\mathbb Z$ has $n$ elements.}
+
+\section{环 | Rings}
+\subsection{环、公理与基本概念 | Rings, axioms and basic notions}
+\noindent\textbf{定义。} 本教材约定的环 $R$ 满足：$(R,+)$ 是阿贝尔群，加法单位元记为 $0$；乘法结合；乘法对加法左右分配；存在乘法单位元 $1\ne0$。环不一定交换；若 $ab=ba$，则称交换环。
+
+\EN{Under the textbook's convention, a ring $R$ satisfies: $(R,+)$ is an abelian group with additive identity $0$; multiplication is associative; multiplication distributes over addition on both sides; and there is a multiplicative identity with $1\ne0$. This excludes the zero ring. A ring need not be commutative; if $ab=ba$ for all $a,b\in R$, it is commutative.}
+
+\EX{$\mathbb Z$ 是交换环但不是域，因为非零整数通常没有整数乘法逆元。$\mathbb Q$ 是域。$M_n(\mathbb R)$ 是有单位元的非交换环（$n\ge2$）。}{The integers form a commutative ring but not a field, since most nonzero integers have no multiplicative inverse in $\mathbb Z$. The rationals form a field. For $n\ge2$, $M_n(\mathbb R)$ is a unital, noncommutative ring.}
+
+\noindent\textbf{定义。} 环中元素 $u$ 若存在 $v$ 使 $uv=vu=1$，称为单位，所有单位记为 $R^\times$。非零元素 $a$ 若能与某个非零 $b$ 相乘得到 $ab=0$ 或 $ba=0$，称为零因子。无非零零因子的交换环称为整环。每个非零元素都有乘法逆元的交换环称为域。
+
+\EN{An element $u$ in a ring is a unit if there is a $v$ such that $uv=vu=1$; the set of units is denoted $R^\times$. A nonzero element $a$ is a zero divisor if $ab=0$ or $ba=0$ for some nonzero $b$. A commutative ring with no nonzero zero divisors is an integral domain. A commutative ring in which every nonzero element is invertible is a field.}
+
+\noindent 在交换环中左右零因子没有区别；非交换环中可分别称 $ab=0$ 的 $a$ 为左零因子、$ba=0$ 的 $a$ 为右零因子，具体约定随教材而异。本课程的主要例子为交换环。
+\EN{In a commutative ring there is no distinction between left and right zero divisors. In a noncommutative ring, terminology for $ab=0$ and $ba=0$ is distinguished and conventions vary. The main examples in this course are commutative.}
+
+\EX{在 $\mathbb Z_{12}$ 中，$\bar3\cdot\bar4=\bar0$，所以 $\bar3,\bar4$ 是零因子；$\bar5^2=\overline{25}=\bar1$，所以 $\bar5$ 是自身的逆元。一般地，$\bar a\in\mathbb Z_n$ 是单位当且仅当 $\gcd(a,n)=1$；非零非单位是零因子。于是 $\mathbb Z_n$ 是域（等价地，是整环）当且仅当 $n$ 为素数。}{In $\mathbb Z_{12}$, $\bar3\cdot\bar4=\bar0$, so $\bar3$ and $\bar4$ are zero divisors. Also $\bar5^2=\overline{25}=\bar1$, so $\bar5$ is its own inverse. In general, $\bar a$ is a unit in $\mathbb Z_n$ exactly when $\gcd(a,n)=1$; every nonzero nonunit is a zero divisor. Thus $\mathbb Z_n$ is a field, equivalently an integral domain, exactly when $n$ is prime.}
+
+\ASK{单位、零因子、整环和域如何区分？}{How do units, zero divisors, integral domains, and fields differ?}{单位有乘法逆元；零因子与某个非零元素相乘为零；整环是无非零零因子的交换环；域是每个非零元素都是单位的交换环。域一定是整环。}{A unit has a multiplicative inverse. A zero divisor annihilates a nonzero element. An integral domain is a commutative ring with no nonzero zero divisors. A field is a commutative ring in which every nonzero element is a unit. Every field is an integral domain.}
+
+\subsection{理想与商环 | Ideals and quotient rings}
+\noindent\textbf{定义。} 交换环 $R$ 的理想 $I\subseteq R$ 是加法子群，并且对所有 $r\in R,a\in I$ 都有 $ra\in I$。由 $a_1,\ldots,a_n$ 生成的理想为
+\[
+(a_1,\ldots,a_n)=\left\{\sum_{i=1}^n r_i a_i:r_i\in R\right\}.
+\]
+\READ{“The ideal generated by a one through a n consists of all sums r i a i, where each r i belongs to R.”}
+\EN{An ideal $I\subseteq R$ in a commutative ring is an additive subgroup such that $ra\in I$ for every $r\in R$ and $a\in I$. The ideal generated by $a_1,\ldots,a_n$ is the set of all finite sums $\sum_{i=1}^n r_i a_i$ with $r_i\in R$.}
+
+\noindent\textbf{理想与子环。} 子环只要求自身在加法、乘法下封闭并满足环公理；理想还要求被整个环的任意元素乘后仍留在理想中，即 $rI\subseteq I$。正是这个“吸收”条件保证商集上的乘法定义良好。
+\EN{A subring is closed under its own addition and multiplication. An ideal has the additional absorption property $rI\subseteq I$ for every $r$ in the full ring. This extra condition makes multiplication on the quotient well-defined.}
+
+\EX{在 $\mathbb Z$ 中，$(4,6)=\{4x+6y:x,y\in\mathbb Z\}=2\mathbb Z=(2)$。}{In $\mathbb Z$, $(4,6)=\{4x+6y:x,y\in\mathbb Z\}=2\mathbb Z=(2)$.}
+
+\noindent\textbf{定义与公式。} 若 $I$ 是环 $R$ 的理想，商环 $R/I$ 由陪集 $a+I$ 构成，运算为
+\[
+(a+I)+(b+I)=(a+b)+I,\qquad (a+I)(b+I)=ab+I.
+\]
+自然投影 $\pi:R\to R/I$，$a\mapsto a+I$ 是满同态且 $\ker\pi=I$。若 $\varphi:R\to S$ 是保单位环同态，则 $\ker\varphi$ 是理想，并有第一同构定理
+\[
+R/\ker\varphi\cong\operatorname{im}\varphi.
+\]
+\READ{“R modulo the kernel of phi is isomorphic to the image of phi.”}
+\EN{If $I$ is an ideal of a ring $R$, the quotient ring $R/I$ consists of cosets $a+I$, with addition and multiplication induced from $R$. The natural projection $\pi:R\to R/I$, $a\mapsto a+I$, is surjective and has kernel $I$. For a unital ring homomorphism $\varphi:R\to S$, the kernel is an ideal and the first isomorphism theorem gives $R/\ker\varphi\cong\operatorname{im}\varphi$.}
+
+\noindent \textbf{约定提醒。} 若 $I=R$，商只有一个元素，满足 $1=0$，因此是零环；本讲义的 $1\ne0$ 约定把它排除在所称的环之外。若要商环仍符合此约定，应取真理想 $I\ne R$。保单位映射到非零环时，其核必为真理想。
+\EN{If $I=R$, the quotient has only one element and is the zero ring, with $1=0$. Our convention excludes it; to keep the quotient within this convention, require a proper ideal $I\ne R$. The kernel of a unital homomorphism into a nonzero ring is proper.}
+
+\noindent\textbf{良定义的核对。} 若 $a+I=a'+I$ 且 $b+I=b'+I$，则 $a-a',b-b'\in I$，而
+$ab-a'b'=a(b-b')+(a-a')b'\in I$。因此 $ab+I=a'b'+I$，乘法不依赖代表元。一般子环不保证最后一步成立。
+\EN{To check well-definedness, suppose $a-a'\in I$ and $b-b'\in I$. Then $ab-a'b'=a(b-b')+(a-a')b'\in I$, so $ab+I=a'b'+I$. A general subring need not make this argument work.}
+
+\EX{$\mathbb Z/n\mathbb Z\cong\mathbb Z_n$。设 $k$ 为域且 $a\in k$，评价同态 $\operatorname{ev}_a:k[x]\to k$，$f\mapsto f(a)$ 的核是 $(x-a)$，因此 $k[x]/(x-a)\cong k$。}{We have $\mathbb Z/n\mathbb Z\cong\mathbb Z_n$. Let $k$ be a field and $a\in k$. The evaluation homomorphism $\operatorname{ev}_a:k[x]\to k$, $f\mapsto f(a)$, has kernel $(x-a)$, so $k[x]/(x-a)\cong k$.}
+
+\noindent\textbf{补充联系（若课程讲过）。} 在交换含幺环中，理想 $I$ 极大当且仅当商环 $R/I$ 是域；$I$ 为素理想当且仅当 $R/I$ 是整环。若课程没有讲极大理想和素理想，把这两条当作后续代数的联系即可，不必作为已学内容陈述。
+\EN{As an optional connection, in a commutative unital ring, $I$ is maximal exactly when $R/I$ is a field, and prime exactly when $R/I$ is an integral domain. If maximal and prime ideals were not covered in the course, treat these as later connections rather than course material.}
+
+\ASK{什么是理想？为什么定义商环要用理想？}{What is an ideal, and why do we use ideals to form quotient rings?}{理想是对环乘法封闭的加法子群。这个吸收性质保证陪集乘法与代表元选择无关；一般子环不一定满足这一点。}{An ideal is an additive subgroup that absorbs multiplication by ring elements. This absorption property makes multiplication of cosets independent of the choice of representatives; a general subring need not have this property.}
+
+\ASK{理想 $(a_1,\ldots,a_n)$ 表示什么？}{What does the ideal $(a_1,\ldots,a_n)$ mean?}{它由生成元的所有环系数线性组合组成。例如 $\mathbb Z$ 中 $(4,6)=(2)$。}{It consists of all ring-linear combinations of the generators. For example, $(4,6)=(2)$ in $\mathbb Z$.}
+
+\ASK{环同态的核是什么？第一同构定理是什么？}{What is the kernel of a ring homomorphism, and what does the first isomorphism theorem state?}{核是映到零元的元素集合，它是理想；商掉核后与同态的像同构，即 $R/\ker\varphi\cong\operatorname{im}\varphi$。}{The kernel is the set of elements mapped to zero, and it is an ideal. The quotient by the kernel is isomorphic to the image: $R/\ker\varphi\cong\operatorname{im}\varphi$.}
+
+\section{模 | Modules}
+\subsection{模的定义与例子 | Definition and examples}
+\noindent\textbf{定义。} 设 $R$ 为含单位元的环。左 $R$-模 $M$ 是一个阿贝尔群（加法记作 $+$），配有标量作用 $R\times M\to M$，满足对任意 $r,s\in R$ 及 $m,n\in M$：
+\[
+1m=m,\quad (r+s)m=rm+sm,\quad r(m+n)=rm+rn,\quad r(sm)=(rs)m.
+\]
+\READ{“One times m equals m; r plus s acting on m equals r m plus s m; r acting on m plus n equals r m plus r n; r acting on s m equals r s acting on m.”}
+\EN{Let $R$ be a unital ring. A left $R$-module $M$ is an abelian group under addition, together with an action $R\times M\to M$ satisfying, for all $r,s\in R$ and $m,n\in M$, $1m=m$, $(r+s)m=rm+sm$, $r(m+n)=rm+rn$, and $r(sm)=(rs)m$.}
+
+\EX{域 $F$ 上的模正是 $F$-向量空间。任意阿贝尔群都是 $\mathbb Z$-模，其中 $n\cdot m$ 表示把 $m$ 加 $n$ 次；负整数对应加法逆元。环 $R$ 本身可通过左乘成为左 $R$-模。}{A module over a field $F$ is exactly an $F$-vector space. Every abelian group is a $\mathbb Z$-module, where $n\cdot m$ means adding $m$ to itself $n$ times, with negative integers acting through additive inverses. The ring $R$ itself is a left $R$-module via left multiplication.}
+
+\noindent\textbf{左模与右模。} 若 $R$ 交换，左模和右模没有区别。若 $R$ 不交换，左作用和右作用需要分别定义；左模满足 $r(sm)=(rs)m$，右模满足 $(mr)s=m(rs)$。
+
+\EN{For a commutative ring, left and right modules agree. Over a noncommutative ring, the two actions must be distinguished: a left module satisfies $r(sm)=(rs)m$, while a right module satisfies $(mr)s=m(rs)$.}
+
+\ASK{模与向量空间有什么关系？}{What is the relationship between modules and vector spaces?}{模是向量空间的推广：把标量所在的域换成环。域上的模与向量空间相同；一般环上的模不一定有基，也不一定能像向量空间一样分类。}{A module generalizes a vector space by replacing its scalar field with a ring. Modules over fields are vector spaces, but modules over general rings need not have bases or behave like vector spaces in classification.}
+
+\ASK{为什么非交换环需要区分左模和右模？}{Why do we distinguish left and right modules over a noncommutative ring?}{标量乘法顺序会影响结合律。左模要求 $r(sm)=(rs)m$；右模要求 $(mr)s=m(rs)$，交换环中两者自然一致。}{The order of scalar multiplication matters. A left module requires $r(sm)=(rs)m$, while a right module requires $(mr)s=m(rs)$. They agree naturally when the ring is commutative.}
+
+\subsection{子模、模同态与商模 | Submodules, homomorphisms and quotients}
+\noindent\textbf{定义。} $R$-模 $M$ 的子集 $N$ 是子模，若它是加法子群且对所有 $r\in R,n\in N$ 都有 $rn\in N$。模同态 $\varphi:M\to N$ 满足
+\[
+\varphi(x+y)=\varphi(x)+\varphi(y),\qquad \varphi(rx)=r\varphi(x).
+\]
+核 $\ker\varphi=\{x:\varphi(x)=0\}$ 是子模；同态单射当且仅当核为 $\{0\}$。
+\READ{“Phi of x plus y equals phi of x plus phi of y; phi of r x equals r phi of x.”}
+\EN{A subset $N$ of an $R$-module $M$ is a submodule if it is an additive subgroup and $rn\in N$ for every $r\in R$ and $n\in N$. An $R$-module homomorphism $\varphi:M\to N$ satisfies $\varphi(x+y)=\varphi(x)+\varphi(y)$ and $\varphi(rx)=r\varphi(x)$. Its kernel $\{x:\varphi(x)=0\}$ is a submodule, and the map is injective exactly when its kernel is $\{0\}$.}
+
+\noindent 像 $\operatorname{im}\varphi$ 也是陪域中的子模。对 $\mathbb Z$-模，标量作用只是重复加法，所以子模恰为底层阿贝尔群的子群。
+\EN{The image $\operatorname{im}\varphi$ is also a submodule of the codomain. For $\mathbb Z$-modules, scalar multiplication is repeated addition, so submodules are exactly subgroups of the underlying abelian group.}
+
+\noindent\textbf{定义。} 若 $N\le M$ 是子模，则商模 $M/N$ 的元素为陪集 $m+N$，作用定义为 $r(m+N)=rm+N$。模的第一同构定理与群、环的形式相似：$M/\ker\varphi\cong\operatorname{im}\varphi$。
+
+\EN{If $N\le M$ is a submodule, the quotient module $M/N$ consists of cosets $m+N$, with action $r(m+N)=rm+N$. The first isomorphism theorem for modules has the same form as for groups and rings: $M/\ker\varphi\cong\operatorname{im}\varphi$.}
+
+\noindent\textbf{商模作用良定义。} 若 $m+N=m'+N$，则 $m-m'\in N$。因为 $N$ 是子模，对每个 $r\in R$ 都有 $r(m-m')\in N$，所以 $rm+N=rm'+N$；标量作用与陪集代表元无关。
+\EN{If $m+N=m'+N$, then $m-m'\in N$. Since $N$ is a submodule, $r(m-m')\in N$ for every $r\in R$, so $rm+N=rm'+N$. The scalar action is therefore independent of the coset representative.}
+
+\EX{$\mathbb Z$-模同态正是阿贝尔群同态。映射 $\varphi:\mathbb Z\to\mathbb Z_n$，$k\mapsto\bar k$ 的核为 $n\mathbb Z$，故 $\mathbb Z/n\mathbb Z\cong\mathbb Z_n$ 也可看作 $\mathbb Z$-模同构。}{Homomorphisms of $\mathbb Z$-modules are exactly homomorphisms of abelian groups. The map $\varphi:\mathbb Z\to\mathbb Z_n$, $k\mapsto\bar k$, has kernel $n\mathbb Z$, so $\mathbb Z/n\mathbb Z\cong\mathbb Z_n$ is also an isomorphism of $\mathbb Z$-modules.}
+
+\ASK{怎样验证一个子集是子模？}{How do you check whether a subset is a submodule?}{检查它是加法子群，并且对环中任意标量乘法封闭。对 $\mathbb Z$-模而言，子模就是阿贝尔群的子群。}{Check that it is an additive subgroup and is closed under multiplication by every scalar from the ring. For a $\mathbb Z$-module, a submodule is simply a subgroup of the abelian group.}
+
+\ASK{模同态要保持什么结构？}{What structure must a module homomorphism preserve?}{它既保持加法，也与标量作用相容：$\varphi(x+y)=\varphi(x)+\varphi(y)$ 且 $\varphi(rx)=r\varphi(x)$。}{It must preserve addition and commute with scalar multiplication: $\varphi(x+y)=\varphi(x)+\varphi(y)$ and $\varphi(rx)=r\varphi(x)$.}
+
+\subsection{生成模与自由模 | Generated and free modules}
+\noindent\textbf{定义。} 子集 $X\subseteq M$ 生成的子模由所有有限和 $r_1x_1+\cdots+r_kx_k$ 构成，其中 $r_i\in R,x_i\in X$。若 $X$ 有限，则称 $M$ 有限生成。若存在 $x_1,\ldots,x_n$ 使每个 $m\in M$ 都能唯一表示成 $m=\sum_{i=1}^n r_i x_i$，称 $x_1,\ldots,x_n$ 为一组基，$M$ 为秩 $n$ 的自由模；唯一表示同时表达了张成性与线性无关性，此时 $M\cong R^n$。在一般环上，不同基的基数未必都相同；本课程使用的交换含幺环具有秩唯一性。自由模也可以有无限基，例如 $R^{(I)}$。
+
+\EN{The submodule generated by $X\subseteq M$ consists of all finite sums $r_1x_1+\cdots+r_kx_k$. A finite generating set makes $M$ finitely generated. A free module has a basis: every element has a unique linear expression in that basis, expressing both spanning and linear independence. Then $M\cong R^n$ for a finite basis. Over a general ring, basis cardinalities need not agree; the commutative unital rings used here have invariant basis number. Free modules may also have infinite bases, as in $R^{(I)}$.}
+
+\EX{$R^n$ 是秩 $n$ 的自由 $R$-模，标准基为 $e_1,\ldots,e_n$。$\mathbb Z_6$ 作为 $\mathbb Z$-模有限生成（由 $\bar1$ 生成）但不是自由模：其非零元素都被 $6$ 消去，而非零自由 $\mathbb Z$-模没有非零挠元。}{The module $R^n$ is free of rank $n$ with standard basis $e_1,\ldots,e_n$. As a $\mathbb Z$-module, $\mathbb Z_6$ is finitely generated by $\bar1$ but is not free: every element is annihilated by $6$, whereas a nonzero free $\mathbb Z$-module has no nonzero torsion elements.}
+
+\ASK{有限生成模和自由模有什么区别？}{What is the difference between a finitely generated module and a free module?}{有限生成只要求存在有限个生成元；自由模还要求有一组基，使线性表示唯一。有限生成模未必自由，例如 $\mathbb Z_6$ 作为 $\mathbb Z$-模。}{Finitely generated means that a finite set of elements spans the module. A free module additionally has a basis giving unique expressions. A finitely generated module need not be free; for example, $\mathbb Z_6$ is not free as a $\mathbb Z$-module.}
+
+\ASK{为什么 $\mathbb Z_6$ 有限生成却不是自由 $\mathbb Z$-模？}{Why is $\mathbb Z_6$ finitely generated but not a free $\mathbb Z$-module?}{它由 $\bar1$ 生成，所以有限生成；但 $6\bar1=0$ 且 $\bar1\ne0$，因此有非零挠元。非零自由 $\mathbb Z$-模同构于 $\mathbb Z^n$，没有非零挠元。}{It is generated by $\bar1$, so it is finitely generated. But $6\bar1=0$ while $\bar1\ne0$, so it has nonzero torsion. A nonzero free $\mathbb Z$-module is isomorphic to $\mathbb Z^n$ and has no nonzero torsion.}
+
+\ASK{$\mathbb Z$-模和阿贝尔群有什么关系？}{What is the relationship between $\mathbb Z$-modules and abelian groups?}{每个阿贝尔群自然成为 $\mathbb Z$-模，整数作用由重复加法定义；反过来，每个 $\mathbb Z$-模在加法下是阿贝尔群。}{Every abelian group is naturally a $\mathbb Z$-module, with integer multiplication defined by repeated addition. Conversely, the additive group of every $\mathbb Z$-module is abelian.}
+
+\section*{口试练习 | Oral practice}
+\ASK{请比较群、环和模。}{Could you compare groups, rings, and modules?}{群研究一个运算下的可逆结构；环有加法和乘法，乘法对加法分配；模是阿贝尔群加上环的标量作用。它们分别通过子群/正规子群、理想、子模形成子结构和商结构。}{A group studies invertible structure under one operation. A ring has addition and multiplication, with multiplication distributing over addition. A module is an abelian group with an action by a ring. Their substructures are subgroups and normal subgroups, ideals, and submodules, respectively; each also admits suitable quotient structures.}
+
+\ASK{这三类结构中同态和核的共同思想是什么？}{What is the common idea of homomorphisms and kernels in these three structures?}{同态保持相应的运算或作用；核收集映到单位元或零元的元素。核描述映射丢失的信息，商掉核后得到与像同构的对象。}{A homomorphism preserves the relevant operations or action. The kernel collects elements mapped to the identity or zero. It records the information lost by the map, and quotienting by it produces an object isomorphic to the image.}
+
+\ASK{商结构为什么自然地出现在群、环和模中？}{Why do quotient structures arise naturally for groups, rings, and modules?}{我们把某个正规子群、理想或子模中的元素视为等价于单位元或零元。相应的吸收/不变条件保证运算与代表元选择无关；同态的第一同构定理说明，商掉核后得到的对象与像同构。}{We identify elements of a normal subgroup, ideal, or submodule with the identity or zero. The corresponding invariance or absorption property makes operations independent of representatives. The first isomorphism theorem says that quotienting by a kernel produces an object isomorphic to the image.}
+
+\noindent\textbf{英文术语速查。}
+\begin{center}
+\begin{tabular}{ll|ll}
+陪集 & coset & 正规子群 & normal subgroup\\
+商群/商环/商模 & quotient group/ring/module & 核 & kernel\\
+像 & image & 理想 & ideal\\
+零因子 & zero divisor & 整环 & integral domain\\
+域 & field & 子模 & submodule\\
+自由模 & free module & 挠元 & torsion element\\
+有限生成 & finitely generated & 良定义 & well-defined\\
+单射/满射/双射 & injective/surjective/bijective & 共轭 & conjugation
+\end{tabular}
+\end{center}
+
+\noindent\textbf{英文短答模板。} “A normal subgroup is stable under conjugation. This condition makes coset multiplication independent of representatives, so the quotient group is well-defined. For a homomorphism, the kernel is normal, and the first isomorphism theorem identifies the quotient by the kernel with the image.”
+\EN{A normal subgroup is stable under conjugation. This condition makes coset multiplication independent of representatives, so the quotient group is well-defined. For a homomorphism, the kernel is normal, and the first isomorphism theorem identifies the quotient by the kernel with the image.}
+
+\section*{来源与范围 | Source and scope}
+本讲义依据目录中的《Honors Abstract Algebra at Peking University, Fall 2023》相关内容整理：群与子群、陪集和拉格朗日定理、正规子群与群同态（第 1--3 节）；环、理想与商环（第 9 节）；模、子模、模同态、生成模与自由模（第 13 节）。只纳入群、环、模的基础主线，未展开 Sylow 定理、PID 上有限生成模分类、域扩张与 Galois 理论。定义和符号以该讲义为准；面试时应优先使用本人课程实际讲授的版本。
+
+\EN{This handout is based on the relevant sections of Honors Abstract Algebra at Peking University, Fall 2023: groups and subgroups, cosets and Lagrange's theorem, normal subgroups and group homomorphisms (Sections 1--3); rings, ideals and quotient rings (Section 9); modules, submodules, module homomorphisms, generated modules and free modules (Section 13). It focuses on the basic group-ring-module material and does not develop Sylow theory, the classification of finitely generated modules over a PID, field extensions, or Galois theory. Definitions and notation follow these notes; in an interview, prioritize the conventions and material actually taught in your own courses.}
+\end{document}

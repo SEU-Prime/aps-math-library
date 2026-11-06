@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7f4">
+    <meta name="description" content="APS 数学课程双语复习讲义，包含课程概述、定义、公式、例题和口试问题。">
+    <title>APS 数学课程资料库</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="APS 数学课程资料库首页">
+        <span class="brand-mark" aria-hidden="true">A</span>
+        <span>APS 数学课程资料库</span>
+      </a>
+      <span class="topbar-note">双语讲义 · PDF 与 LaTeX 源文件</span>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div class="intro-copy">
+          <p class="eyebrow">MATHEMATICS · ORAL EXAM PREPARATION</p>
+          <h1 id="page-title">课程资料</h1>
+          <p class="intro-text">按课程查阅 APS 面试准备讲义。每份材料围绕课程主线整理定义、公式、具体例子与可能的追问，并附中文和英文表述。</p>
+        </div>
+        <dl class="library-stats" aria-label="资料库概况">
+          <div><dt id="course-total">14</dt><dd>门课程</dd></div>
+          <div><dt>中英</dt><dd>双语讲义</dd></div>
+          <div><dt>PDF</dt><dd>在线阅读</dd></div>
+        </dl>
+      </section>
+
+      <section class="catalog" aria-label="课程目录">
+        <div class="catalog-tools">
+          <div class="filters" role="group" aria-label="按学科筛选">
+            <button class="filter-button is-active" type="button" data-filter="all" aria-pressed="true">全部</button>
+            <button class="filter-button" type="button" data-filter="algebra" aria-pressed="false">代数与拓扑</button>
+            <button class="filter-button" type="button" data-filter="analysis" aria-pressed="false">分析</button>
+            <button class="filter-button" type="button" data-filter="probability" aria-pressed="false">概率与统计</button>
+            <button class="filter-button" type="button" data-filter="applied" aria-pressed="false">计算与应用</button>
+          </div>
+          <label class="search-box">
+            <span class="visually-hidden">搜索课程</span>
+            <input id="course-search" type="search" placeholder="搜索课程、主题或公式" autocomplete="off">
+            <span class="search-shortcut" aria-hidden="true">⌕</span>
+          </label>
+        </div>
+
+        <div class="results-line">
+          <p id="result-count" aria-live="polite">显示 14 门课程</p>
+          <p>每门课程提供 PDF 和可编辑的 TeX 源文件</p>
+        </div>
+        <div id="course-list" class="course-grid" aria-live="polite"></div>
+        <p id="empty-state" class="empty-state" hidden>没有找到匹配的课程，请调整搜索词或筛选条件。</p>
+      </section>
+    </main>
+
+    <footer class="page-footer">
+      <span>APS Math Library</span>
+      <span>由 LaTeX 编译 · 适用于桌面与移动设备</span>
+    </footer>
+
+    <dialog id="reader" class="reader" aria-labelledby="reader-title">
+      <div class="reader-bar">
+        <div class="reader-heading">
+          <p class="eyebrow">PDF READER</p>
+          <h2 id="reader-title">课程讲义</h2>
+        </div>
+        <button class="close-button" type="button" data-close aria-label="关闭阅读器" title="关闭">关闭</button>
+      </div>
+      <iframe id="pdf-frame" title="课程 PDF 阅读器" src="about:blank"></iframe>
+      <div class="reader-actions">
+        <a id="reader-download" class="action-button action-primary" href="#" download>下载 PDF</a>
+        <a id="reader-tex" class="action-button action-secondary" href="#" download>下载 TeX 源文件</a>
+        <a id="reader-new-tab" class="reader-new-tab" href="#" target="_blank" rel="noreferrer">新标签页打开</a>
+      </div>
+    </dialog>
+  </body>
+</html>

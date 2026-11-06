@@ -1,0 +1,123 @@
+\documentclass[UTF8,11pt,a4paper]{ctexart}
+\usepackage{amsmath,amssymb,geometry,enumitem,hyperref}
+\geometry{margin=2.1cm}\setlist{itemsep=2pt,topsep=3pt}
+\hypersetup{colorlinks=true,linkcolor=blue}
+\newcommand{\EN}[1]{\par\noindent \textbf{English.} #1\par}
+\newcommand{\READ}[1]{\par\noindent \textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\EX}[2]{\par\noindent \textbf{例子 / Example.} #1\par\EN{#2}}
+\newcommand{\ASK}[4]{\par\noindent \textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent \textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
+\title{复变函数 APS 面试准备\\[4pt]\large 第 1--7 章范围：解析函数、积分、级数与留数}
+\author{Complex Analysis: Bilingual Review}
+\date{}
+\begin{document}\maketitle
+\section*{课程概述 | Course overview}
+\noindent \textbf{中文口述稿。} 我在复变函数课研究复数上的函数及其积分。一个特别之处是复可微要求从所有复方向得到相同导数，因此条件比单变量实可微强。例如 $f(z)=z^2$ 的实部是 $u(x,y)=x^2-y^2$；直接计算可得 $u_{xx}+u_{yy}=2-2=0$，所以它满足二维 Laplace 方程。这样的调和函数可以用来描述适当条件下的稳态温度。课程还用留数计算围道积分，例如原点被逆时针圆周包围时，$\oint dz/z=2\pi i$。
+\EN{In complex analysis, I studied functions and integrals over the complex numbers. Complex differentiability requires the same derivative from every complex direction, making it more restrictive than ordinary real differentiability. For $f(z)=z^2$, the real part is $u(x,y)=x^2-y^2$. Since $u_{xx}+u_{yy}=2-2=0$, it solves the two-dimensional Laplace equation and can represent a steady temperature under suitable conditions. I also studied contour integration: for a counterclockwise circle enclosing the origin, $\oint dz/z=2\pi i$.}
+
+\noindent \textbf{具体应用联系。} 二维稳态无源热传导或静电势满足 Laplace 方程 $u_{xx}+u_{yy}=0$。若 $f(z)=u(x,y)+iv(x,y)$ 解析，Cauchy--Riemann 方程保证 $u$ 与 $v$ 都是调和函数；已知边界条件时，可通过幂级数、Poisson 积分或保角映射把几何简单区域上的解转移到目标区域。积分留数也可用于计算频率响应中的实积分。模型适用于二维、稳态且满足相应无源假设的情形。
+\EN{A two-dimensional steady temperature or electrostatic potential without sources satisfies Laplace's equation $u_{xx}+u_{yy}=0$. If $f(z)=u(x,y)+iv(x,y)$ is analytic, the Cauchy--Riemann equations imply that both $u$ and $v$ are harmonic. Boundary-value solutions can be built from power series or Poisson integrals, and conformal maps transfer solutions from simple domains to more complicated ones. Residues also evaluate real integrals arising in frequency-response calculations. These models assume a two-dimensional steady source-free setting.}
+
+\section{复数与解析性 | Complex numbers and analyticity}
+\noindent 复数 $z=x+iy$ 的模为 $|z|=\sqrt{x^2+y^2}$，辐角 $\arg z$ 是从正实轴到向量 $(x,y)$ 的角。极形式为 $z=re^{i\theta}$，其中 $r=|z|$；Euler 公式 $e^{i\theta}=\cos\theta+i\sin\theta$ 把乘法转为模长相乘、辐角相加。函数 $f$ 在 $z_0$ 复可微，若复差商 $[f(z_0+h)-f(z_0)]/h$ 在所有复方向趋于同一极限；在开集上处处复可微称解析。
+\EN{A complex number $z=x+iy$ has modulus $|z|=\sqrt{x^2+y^2}$ and an argument $\arg z$. Its polar form is $z=re^{i\theta}$, where Euler's formula $e^{i\theta}=\cos\theta+i\sin\theta$ turns multiplication into multiplication of moduli and addition of arguments. A function is complex differentiable at $z_0$ if its difference quotient has the same limit from every complex direction; it is analytic if it is complex differentiable throughout an open set.}
+
+\noindent 若 $f=u+iv$ 且一阶偏导连续，Cauchy--Riemann 方程为
+\[
+u_x=v_y,\qquad u_y=-v_x.
+\]
+它是复可微的必要条件；配合适当光滑性也充分。对解析函数，再求导可得 $u_{xx}+u_{yy}=0$ 与 $v_{xx}+v_{yy}=0$，即实部、虚部都是调和函数。
+\EN{If $f=u+iv$ has continuous first partial derivatives, complex differentiability is characterized by the Cauchy--Riemann equations. With the required smoothness, they are also sufficient. Differentiating them shows that both $u$ and $v$ satisfy Laplace's equation, so they are harmonic.}
+\READ{“The partial derivative of u with respect to x equals the partial derivative of v with respect to y, and u sub y equals negative v sub x.”}
+
+\EX{令 $f(z)=z^2=(x^2-y^2)+i(2xy)$。于是 $u_x=2x=v_y$、$u_y=-2y=-v_x$，满足 Cauchy--Riemann 方程；并且 $\Delta u=(2)+(-2)=0$。因此 $u=x^2-y^2$ 是调和函数，可作为二维稳态势函数的局部解。}{For $f(z)=z^2$, we have $u=x^2-y^2$ and $v=2xy$. Then $u_x=v_y=2x$ and $u_y=-v_x=-2y$, so the Cauchy--Riemann equations hold. Also $\Delta u=2-2=0$, making $u$ a harmonic function and a local model for a two-dimensional steady potential.}
+
+\section{复积分与 Cauchy 公式 | Contour integrals and Cauchy's formula}
+\noindent 沿分段光滑曲线 $\gamma$ 的复积分定义为 $\int_\gamma f(z)\,dz$；若 $z=z(t)$，则为 $\int f(z(t))z'(t)\,dt$。若 $f$ 在单连通区域解析，则区域内任意分段光滑闭曲线的积分为零（Cauchy 积分定理）。若 $f$ 在分段光滑的简单闭曲线 $C$ 及其内部的某个开邻域内解析，$C$ 逆时针取正向，且 $a$ 在内部，则
+\[
+f(a)=\frac{1}{2\pi i}\oint_C\frac{f(z)}{z-a}\,dz,
+\qquad
+f^{(n)}(a)=\frac{n!}{2\pi i}\oint_C\frac{f(z)}{(z-a)^{n+1}}\,dz.
+\]
+\READ{“F of a equals one over two pi i times the contour integral of f of z over z minus a.”}
+\EN{If $f$ is analytic in a simply connected domain, its integral around any piecewise smooth closed curve in that domain is zero. For a positively oriented, piecewise smooth simple closed contour $C$, assume $f$ is analytic on an open neighborhood of $C$ and its interior. Cauchy's integral formula recovers the value and derivatives of $f$ at an interior point from values on $C$.}
+
+\EX{取 $f(z)=e^z$，$C$ 为以 $0$ 为中心的正向圆，半径任意大于 $1$。Cauchy 积分公式给出 $\oint_C e^z/(z-1)\,dz=2\pi i e$。积分结果只由被包围点 $z=1$ 处的函数值决定，而不依赖圆的具体半径。}{For $f(z)=e^z$ and a positively oriented circle centered at zero with radius greater than one, Cauchy's formula gives $\oint_C e^z/(z-1)\,dz=2\pi i e$. The result depends on the value at $z=1$, not on the particular radius.}
+
+\section{Taylor 与 Laurent 级数、奇点 | Series and singularities}
+\noindent 解析函数在收敛圆盘内有 Taylor 展开 $f(z)=\sum_{n=0}^\infty a_n(z-z_0)^n$。在不含奇点的圆环区域中，允许出现负次幂的 Laurent 展开
+\[
+f(z)=\sum_{n=-\infty}^{\infty}a_n(z-z_0)^n.
+\]
+孤立奇点按 Laurent 主部分类：主部为零是可去奇点；只有有限多个负次幂项是极点；有无限多个负次幂项是本性奇点。Taylor/Laurent 系数由围道积分给出，因而局部级数与全局积分理论相连。
+\EN{An analytic function has a Taylor series in a disk. In an annulus, its Laurent series may contain negative powers. An isolated singularity is removable if the principal part vanishes, a pole if it has finitely many negative-power terms, and essential if it has infinitely many. The coefficients are given by contour integrals.}
+
+\EX{函数 $1/z$ 在 $0$ 有一个一阶极点，Laurent 展开只有一个负次幂项；$e^{1/z}$ 在 $0$ 的展开含有无限多个负次幂项，因此有本性奇点；$\sin z/z$ 在 $0$ 的表面分母为零，但级数 $1-z^2/3!+\cdots$ 显示它可补定义为解析函数，故为可去奇点。}{The function $1/z$ has a simple pole at zero. The Laurent series of $e^{1/z}$ has infinitely many negative powers, so zero is an essential singularity. Although $\sin z/z$ appears undefined at zero, its series $1-z^2/3!+\cdots$ extends analytically there, making the singularity removable.}
+
+\section{留数定理与实积分 | Residues and real integrals}
+\noindent 孤立奇点 $a$ 处 Laurent 展开中 $(z-a)^{-1}$ 的系数称留数，记作 $\operatorname{Res}(f,a)$。设 $C$ 是逆时针、分段光滑的简单闭曲线，$f$ 在 $C$ 及其内部的某个开邻域中除有限个内部孤立奇点 $a_k$ 外解析，且 $C$ 上无奇点，则留数定理为
+\[
+\oint_C f(z)\,dz=2\pi i\sum_k\operatorname{Res}(f,a_k).
+\]
+对一阶极点，$\operatorname{Res}(f,a)=\lim_{z\to a}(z-a)f(z)$。计算实轴反常积分时，选取合适半圆围道，把实积分变成围道积分，再利用留数定理；必须检查大圆弧积分是否趋于零以及极点是否落在围道上。
+\EN{The residue at an isolated singularity is the coefficient of $(z-a)^{-1}$ in the Laurent series. For a positively oriented piecewise smooth simple closed contour, assume analyticity on a neighborhood of the contour and its interior except for finitely many isolated singularities inside. The integral equals $2\pi i$ times the sum of the enclosed residues. For a simple pole, the limit formula above computes the residue. For real improper integrals, check the arc contribution and poles on the contour.}
+\READ{“The contour integral equals two pi i times the sum of the residues inside the contour.”}
+
+\EX{计算 $\int_{-\infty}^{\infty}\frac{dx}{x^2+1}$。令 $f(z)=1/(z^2+1)$，在上半平面取半圆围道，内部唯一极点为 $i$，其留数为 $1/(2i)$。大圆弧积分趋于 $0$，所以实积分等于 $2\pi i\cdot1/(2i)=\pi$。}{To evaluate $\int_{-\infty}^{\infty}(x^2+1)^{-1}\,dx$, use an upper-half-plane semicircular contour. The only enclosed pole is $i$, with residue $1/(2i)$. The arc integral tends to zero, so the real integral is $2\pi i/(2i)=\pi$.}
+
+\section{零点、辐角原理与最大模原理 | Zeros and the maximum modulus principle}
+\noindent 若 $f$ 在区域内解析且不是恒零函数，它的零点是孤立的。若 $f(z)=(z-a)^m g(z)$、$g(a)\ne0$，则 $a$ 是 $m$ 阶零点；类似地，极点的阶数由主部最低次幂决定。辐角原理说：若亚纯函数 $f$ 在正向简单闭曲线 $C$ 上无零点与极点，则
+\[
+\frac{1}{2\pi i}\oint_C\frac{f'(z)}{f(z)}\,dz=N-P,
+\]
+其中 $N,P$ 分别是曲线内零点、极点的个数，都按重数计。左侧也是 $f(C)$ 绕原点的绕数；它把解析函数的零极点数量与映射曲线的几何绕转联系起来。
+\EN{Zeros of a nonzero analytic function are isolated. If $f(z)=(z-a)^m g(z)$ with $g(a)\ne0$, then $a$ is a zero of order $m$. For a meromorphic function with no zero or pole on a positively oriented simple contour, the argument principle states that the displayed integral equals the number of enclosed zeros minus poles, both counted with multiplicity. It is also the winding number of $f(C)$ around zero.}
+\READ{“One over two pi i times the contour integral of f prime over f equals the number of zeros minus the number of poles, counted with multiplicity.”}
+
+\noindent\textbf{Rouché 定理。} 若 $f,g$ 在简单闭曲线及其内部解析，并且曲线上 $|g|<|f|$，则 $f$ 与 $f+g$ 在内部有相同数目的零点，按重数计。它可用于无需求出根的精确表达式，也能确定根的个数。
+\EN{Rouchet's theorem says that if $|g|<|f|$ on the contour and both functions are analytic inside and on it, then $f$ and $f+g$ have the same number of zeros inside, counted with multiplicity. This counts roots without explicitly solving for them.}
+
+\EX{在 $|z|=2$ 上，$|z^3|=8>|z+1|$，因为 $|z+1|\le3$。令 $f=z^3$、$g=z+1$，Rouché 定理说明 $z^3+z+1$ 在 $|z|<2$ 内恰有三个零点，按重数计。}{On $|z|=2$, $|z^3|=8>|z+1|$, since $|z+1|\le3$. Rouchet's theorem therefore shows that $z^3+z+1$ has three zeros inside the disk, counted with multiplicity.}
+
+\noindent\textbf{最大模原理。} 若非常数函数 $f$ 在连通开集内解析，则 $|f|$ 不可能在内部取得局部最大值。若 $f$ 在有界区域内解析且在闭区域连续，其最大模在边界达到。它常用来从边界估计内部，而不是逐点求解。
+\EN{The maximum modulus principle says that a nonconstant analytic function cannot attain a local maximum of its modulus at an interior point. If it is analytic in a bounded domain and continuous on the closure, its maximum modulus is attained on the boundary.}
+
+\section{解析延拓与共形映射 | Analytic continuation and conformal maps}
+\noindent\textbf{解析延拓。} 若 $f$ 在区域 $D_1$ 解析，$F$ 在更大的连通区域 $D_2$ 解析、$D_1\subset D_2$，且 $F=f$ 在 $D_1$ 上成立，则 $F$ 是 $f$ 的解析延拓。恒等定理说明：若两个解析函数在连通区域中某个有内部聚点的集合上相等，它们在整个区域相等，因此延拓一旦存在就唯一。延拓不是把原来的幂级数机械地用到收敛圆以外，而是找到在更大区域相容的解析表达。
+\EN{An analytic continuation extends an analytic function from a domain to a larger connected domain while agreeing with it on the original domain. The identity theorem makes such an extension unique when it exists. Continuation does not mean using the original power series outside its radius of convergence; it means finding a compatible analytic expression on a larger domain.}
+
+\EX{几何级数 $1+z+z^2+\cdots$ 只在 $|z|<1$ 收敛，且在该圆盘中等于 $1/(1-z)$。后者在 $\mathbb C\setminus\{1\}$ 解析，因此是原函数的解析延拓；例如 $z=2$ 处延拓值为 $-1$，但原级数在该点发散，两件事并不矛盾。}{The geometric series converges only for $|z|<1$, where it equals $1/(1-z)$. The latter is analytic on $\mathbb C\setminus\{1\}$ and continues the function. At $z=2$, the continuation equals $-1$, even though the original series diverges there.}
+
+\noindent\textbf{共形映射。} 解析函数在 $f'(z_0)\ne0$ 时局部保持有向角，称在该点共形；若要在两个区域之间得到双向对应，还需映射一一且满射。Riemann 映射定理说，非整个复平面的单连通区域可共形映到单位圆盘；它给出存在性，并不自动给出具体公式。Möbius 变换 $w=(az+b)/(cz+d)$（$ad-bc\ne0$）是常用构造工具。
+\EN{An analytic map is conformal at a point where its derivative is nonzero: it locally preserves oriented angles. A conformal equivalence between domains also requires a one-to-one onto map. The Riemann mapping theorem states that every simply connected proper subdomain of the complex plane is conformally equivalent to the unit disk, but the theorem does not automatically give an explicit formula. Mobius maps provide common explicit examples.}
+
+\EX{映射 $w=(z-i)/(z+i)$ 把上半平面 $\operatorname{Im}z>0$ 映到单位圆盘：写 $z=x+iy$ 且 $y>0$，则 $|z-i|^2=x^2+(y-1)^2< x^2+(y+1)^2=|z+i|^2$，所以 $|w|<1$。实轴映到单位圆边界。该映射可把上半平面的边值问题转换为圆盘上的问题，但边界数据也必须随映射转换。}{The map $w=(z-i)/(z+i)$ takes the upper half-plane to the unit disk. For $z=x+iy$ with $y>0$, $|z-i|^2<|z+i|^2$, so $|w|<1$. The real axis maps to the unit circle. This can transfer a boundary-value problem to the disk, provided the boundary data are transformed too.}
+
+\ASK{幂级数不能收敛到某点时，函数还能在那里有定义吗？}{Can a function be defined at a point where its original power series diverges?}{可以。幂级数有自己的收敛半径，但它定义的解析函数可能有更大区域的解析延拓；几何级数和 $1/(1-z)$ 是最简单的例子。}{Yes. A power series has its own radius of convergence, but the function it defines may admit analytic continuation to a larger domain. The geometric series and $1/(1-z)$ provide a standard example.}
+
+\section{与二维势场的联系 | Link to two-dimensional potential fields}
+\noindent 在无源稳态热传导中，温度 $u(x,y)$ 满足 Laplace 方程 $\Delta u=0$；静电势在没有电荷的区域也满足同一方程。若找到解析函数 $f=u+iv$，其实部 $u$ 自动调和。保角映射会保持角度并将一个区域变到另一个区域，可把矩形、圆盘等简单区域的边值解转移到复杂边界附近。实际建模仍需给定边界温度/电势，并确认材料均匀、二维和稳态等假设。
+\EN{In source-free steady heat conduction, temperature satisfies Laplace's equation. Electrostatic potential satisfies the same equation in a charge-free region. The real part of an analytic function is automatically harmonic. A conformal map preserves angles and can transfer boundary-value solutions from a disk or rectangle to a more complicated domain. The model still requires boundary data and assumptions such as homogeneity, two-dimensionality, and steady state.}
+
+\ASK{Cauchy--Riemann 方程为什么会导出 Laplace 方程？}{Why do the Cauchy--Riemann equations imply Laplace's equation?}{由 $u_x=v_y$、$u_y=-v_x$ 再对变量求导，并在二阶偏导连续时利用混合偏导相等，得 $u_{xx}+u_{yy}=v_{yx}-v_{xy}=0$；对 $v$ 同理。}{Differentiate the Cauchy--Riemann equations and use equality of mixed partial derivatives. Then $u_{xx}+u_{yy}=v_{yx}-v_{xy}=0$, and the same argument applies to $v$.}
+\ASK{计算围道积分时留数定理比直接参数化曲线方便在哪里？}{Why can residues be easier than direct parametrization of a contour?}{如果曲线包围的奇点有限，积分只需计算这些奇点的 $(z-a)^{-1}$ 系数，不必逐段参数化整条曲线。但要验证解析性区域、曲线方向、极点位置和弧积分极限。}{When only finitely many singularities are enclosed, the integral is determined by their $(z-a)^{-1}$ coefficients, without parametrizing the entire contour. One must still check analyticity, orientation, pole locations, and any limiting arc integral.}
+\ASK{解析函数与实际势函数之间是什么关系？}{How are analytic functions related to physical potentials?}{解析函数的实部和虚部满足 Cauchy--Riemann 关系并且都是调和函数，因此可分别表示二维势函数与其共轭流函数。它提供求解 Laplace 边值问题的工具；是否对应具体物理量还取决于边界条件和建模假设。}{The real and imaginary parts of an analytic function satisfy the Cauchy--Riemann equations and are harmonic, so they can represent a two-dimensional potential and its conjugate stream function. This helps solve Laplace boundary-value problems, subject to the physical boundary conditions and assumptions.}
+\section{从定义计算复导数 | Computing a complex derivative}
+\noindent 令 $z=x+iy$，其中 $i^2=-1$。复导数要求
+\[
+f'(z_0)=\lim_{h\to0,\,h\in\mathbb C}\frac{f(z_0+h)-f(z_0)}{h}
+\]
+沿任意复方向都存在且相同。若 $f=u+iv$，而 $u,v$ 的一阶偏导在邻域连续，则 Cauchy--Riemann 条件 $u_x=v_y,\ u_y=-v_x$ 在该邻域成立可保证解析；仅在一点成立不能直接得出邻域内解析。
+\EN{Write $z=x+iy$ with $i^2=-1$. The complex derivative is the limit above, and it must be the same from every complex direction. If the first partial derivatives of $u$ and $v$ are continuous in a neighborhood, the Cauchy--Riemann equations there guarantee analyticity. Equations at only one point do not establish analyticity in a neighborhood.}
+\EX{对 $f(z)=z^2$，$u=x^2-y^2,v=2xy$，所以 $u_x=2x=v_y$、$u_y=-2y=-v_x$，并且 $f'(z)=2z$。反例 $f(z)=\bar z$ 在任何点的差商沿实方向等于 $1$，沿纯虚方向等于 $-1$，故处处不可复微。}{For $f(z)=z^2$, the Cauchy--Riemann equations hold and $f'(z)=2z$. In contrast, for $f(z)=\bar z$, the difference quotient is $1$ along real increments and $-1$ along purely imaginary increments, so it is nowhere complex differentiable.}
+\ASK{为什么复可微比实变量可微严格？}{Why is complex differentiability more restrictive?}{增量可以从平面中所有方向趋于零，差商必须得到同一个值；共轭函数显示不同方向可能产生不同结果。}{The increment may approach zero from any direction in the plane, and all directions must give the same limit. Complex conjugation shows that directional limits can differ.}
+
+\section{一步步计算留数 | A residue calculation}
+\noindent 考虑 $f(z)=1/[z(z-1)]$，沿圆 $|z|=2$ 逆时针积分。它在 $0$ 和 $1$ 有简单极点，均位于圆内。简单极点 $a$ 处的留数是 $\lim_{z\to a}(z-a)f(z)$，因此两个留数分别为 $-1$ 和 $1$。留数定理给出
+\[
+\oint_{|z|=2}\frac{dz}{z(z-1)}=2\pi i(-1+1)=0.
+\]
+若把圆换为 $|z|=\tfrac12$，只有 $0$ 在内部，积分变成 $-2\pi i$。边界上不能有极点；方向反转时积分变号。
+\EN{For $f(z)=1/[z(z-1)]$ on the counterclockwise circle $|z|=2$, both simple poles lie inside. Their residues are $-1$ and $1$, so the integral is zero. On $|z|=1/2$, only zero is enclosed and the integral is $-2\pi i$. No pole may lie on the contour; reversing orientation changes the sign.}
+\READ{``The contour integral equals two pi i times the sum of the residues inside the contour.''}
+\ASK{为什么两个极点都在里面时积分反而为零？}{Why is the integral zero when both poles are enclosed?}{积分取决于内部留数之和，而不是极点数量；这里两个留数相加抵消。}{It depends on the sum of the enclosed residues, not the number of poles. Here the two residues cancel.}
+\end{document}

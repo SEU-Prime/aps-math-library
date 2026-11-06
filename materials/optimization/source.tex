@@ -1,0 +1,288 @@
+\documentclass[UTF8,11pt,a4paper]{ctexart}
+\usepackage{amsmath,amssymb,geometry,enumitem,booktabs,hyperref}
+\geometry{margin=2.1cm}\setlist{itemsep=2pt,topsep=3pt}
+\hypersetup{colorlinks=true,linkcolor=blue}
+\newcommand{\EN}[1]{\par\noindent \textbf{English.} #1\par}
+\newcommand{\READ}[1]{\par\noindent \textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\EX}[2]{\par\noindent \textbf{例子 / Example.} #1\par\EN{#2}}
+\newcommand{\ASK}[4]{\par\noindent \textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent \textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
+\title{最优化理论与算法 APS 面试准备\\[4pt]\large 主要范围：陈宝林《最优化理论与算法》第 3--4 章}
+\author{Optimization Theory and Algorithms: Bilingual Review}
+\date{}
+\begin{document}\maketitle
+
+\section*{课程概述 | Course overview}
+\noindent\textbf{中文口述稿。} 我在最优化课程中学习怎样把“在满足限制的情况下让目标最好”写成数学问题，并用算法求解。第 3 章的核心是线性规划的单纯形法：目标函数和约束都是线性的，最优解若存在通常可以在可行域的顶点找到；算法沿着相邻顶点移动，并用检验数判断是否值得换基。第 4 章学习对偶理论：每个原问题都有一个对偶问题，对偶变量可以解释为资源的边际价值。比如工厂用两种资源生产两种产品，原问题最大化利润；对偶问题最小化资源的估计成本。弱对偶说明任何可行的资源估价都不会低估产品利润，原对偶都有最优解时两者相等。灵敏度分析进一步回答资源增加一点、利润系数改变一点时最优方案是否改变。
+\EN{In optimization, I learned how to formulate “make an objective as good as possible under constraints” and solve it algorithmically. The central topic of Chapter 3 is the simplex method for linear programming: when the objective and constraints are linear, an optimum, if it exists, can usually be found at a vertex of the feasible polyhedron. The algorithm moves between adjacent vertices and uses reduced costs to decide whether a change can improve the objective. Chapter 4 introduces duality. Dual variables can be interpreted as marginal values of resources. Weak duality says a feasible resource valuation cannot underestimate the primal profit; at optimality the two values are equal. Sensitivity analysis asks how much the solution changes when a resource or profit coefficient is perturbed.}
+
+\noindent\textbf{一个可以写在纸上的模型。} 某工厂生产产品 $x_1,x_2$，每件利润分别为 $3,2$。资源约束为
+\[
+\max z=3x_1+2x_2,\qquad
+2x_1+x_2\le4,\quad x_1+2x_2\le4,\quad x_1,x_2\ge0.
+\]
+交点 $(4/3,4/3)$ 给出 $z=20/3$，比两个坐标顶点的利润都高。这个小例子可以引出可行域、基可行解、单纯形移动、对偶变量和互补松弛。
+\EN{A factory produces $x_1$ and $x_2$ with profits three and two. The two resource constraints are displayed above. The intersection $(4/3,4/3)$ gives profit $20/3$, higher than the axis vertices. This example introduces the feasible region, basic feasible solutions, simplex moves, dual variables, and complementary slackness.}
+
+\section{从模型到标准形式 | From a model to standard form}
+\noindent 线性规划的基本形式为
+\[
+\max\;c^{\mathsf T}x\quad\text{s.t.}\quad Ax\le b,\quad x\ge0.
+\]
+$x$ 是决策变量，$c$ 是收益系数，$A$ 是资源消耗矩阵，$b$ 是资源上限。可行解满足全部约束；最优解是在可行解中使目标值最大者。最小化问题可以把目标乘以 $-1$ 变成最大化问题。
+\EN{A linear program has a linear objective and linear constraints. The vector $x$ contains decisions, $c$ contains profits or costs, $A$ records resource use, and $b$ gives resource bounds. A feasible solution satisfies every constraint; an optimal solution has the best objective value among feasible solutions.}
+\EX{上面的工厂模型中，$x_1,x_2$ 不能为负；点 $(1,1)$ 可行，因为两项资源消耗都是 $3\le4$，但它的利润只有 $5$。点 $(3,0)$ 不可行，因为 $2x_1+x_2=6>4$。}{In the factory model, $(1,1)$ is feasible because both resource uses are three, but its profit is only five. The point $(3,0)$ is infeasible because it violates the first resource constraint.}
+
+\noindent\textbf{松弛变量。} 对 $a_i^{\mathsf T}x\le b_i$，加入 $s_i\ge0$ 得 $a_i^{\mathsf T}x+s_i=b_i$。$s_i$ 是剩余资源；若 $s_i=0$，约束是紧的。等式和非负性使线性规划可以写成单纯形表需要的标准形式。
+\EN{For a constraint $a_i^{\mathsf T}x\le b_i$, add a slack variable $s_i\ge0$ and write $a_i^{\mathsf T}x+s_i=b_i$. The slack is unused resource. A zero slack means that the constraint is binding.}
+\EX{工厂模型加入 $s_1,s_2$ 后为 $2x_1+x_2+s_1=4$、$x_1+2x_2+s_2=4$。在原点，$s_1=s_2=4$；在 $(4/3,4/3)$，两个松弛量均为零。}{After adding slacks, the constraints are $2x_1+x_2+s_1=4$ and $x_1+2x_2+s_2=4$. At the origin both slacks are four; at $(4/3,4/3)$ both are zero.}
+
+\section{可行域、顶点与基可行解 | Feasible vertices and basic feasible solutions}
+\noindent 线性约束的可行域是凸集：若 $x,y$ 可行，则 $\lambda x+(1-\lambda)y$ 也可行，$0\le\lambda\le1$。线性目标在非空有界多面体上一定取得最优值，并且至少有一个最优顶点。顶点在代数上对应一个基可行解：在 $Ax=b,x\ge0$ 中选取 $m$ 个线性无关列组成基矩阵 $B$，令非基变量为零，解 $x_B=B^{-1}b$；若 $x_B\ge0$，就得到基可行解。
+\EN{A feasible region defined by linear inequalities is convex. A linear objective attains an optimum on a nonempty bounded polyhedron, and at least one optimum is a vertex. Algebraically, a basic feasible solution is obtained by choosing a nonsingular basis matrix $B$, setting nonbasic variables to zero, and solving $x_B=B^{-1}b$.}
+\EX{标准形式 $x_1+x_2+s=2$ 的基可以选 $s$，得到 $(x_1,x_2,s)=(0,0,2)$；也可以选 $x_1$，令 $x_2=s=0$，得到 $(2,0,0)$。二者都是顶点。}{For $x_1+x_2+s=2$, choosing $s$ as the basis gives $(0,0,2)$; choosing $x_1$ gives $(2,0,0)$. Both are basic feasible solutions and vertices.}
+
+\noindent\textbf{为什么只看顶点？} 对任意可行点，如果它不是顶点，通常可以写为两个不同可行点的凸组合；线性目标在这两个点上的值的加权平均等于原值，因此至少有一个端点不差于原点。不断沿此方向移动，最终可以找到顶点最优解。若最优值沿一条边相同，可能有多个最优解。
+\EN{If a feasible point is not a vertex, it can be represented as a convex combination of two different feasible points. The linear objective is the same convex combination of their objective values, so one endpoint is at least as good. Repeating this argument leads to an optimal vertex. An entire edge may be optimal when the objective is parallel to that edge.}
+
+\section{单纯形法：换基的逻辑 | The simplex method}
+\noindent 单纯形法从一个基可行解开始，先计算当前基的对偶价格 $y^{\mathsf T}=c_B^{\mathsf T}B^{-1}$，再计算非基变量 $x_j$ 的检验数（约化成本）
+\[
+\bar c_j=c_j-y^{\mathsf T}a_j=c_j-c_B^{\mathsf T}B^{-1}a_j.
+\]
+对最大化问题，若所有 $\bar c_j\le0$，当前基可行解已经最优；若某个 $\bar c_j>0$，增加 $x_j$ 会提高目标值，选择它入基，再用最小比值检验选择出基变量，以保持可行性。
+\EN{Starting from a basic feasible solution, the simplex method computes the dual prices $y^{\mathsf T}=c_B^{\mathsf T}B^{-1}$ and reduced costs $\bar c_j=c_j-y^{\mathsf T}a_j$. For a maximization problem, if every reduced cost is nonpositive, the current solution is optimal. A positive reduced cost identifies an entering variable; the minimum-ratio test chooses the leaving variable and preserves feasibility.}
+\READ{“c bar j equals c j minus c B transpose B inverse a j.” “All reduced costs are nonpositive, so the current basic feasible solution is optimal.”}
+\EX{在模型的交点 $(4/3,4/3)$，两个资源约束都紧。若把一个变量增加而保持另一个约束满足，至少有一个资源会先达到边界；这就是最小比值检验的几何含义。}{At $(4/3,4/3)$ both resource constraints are binding. If one variable is increased, some resource reaches its boundary first. This is the geometric meaning of the minimum-ratio test.}
+
+\noindent\textbf{停止与异常。} 若进入变量的方向列在所有约束中都不能限制其增加，目标可以无限提高，问题无界。若初始没有可行基，需用两阶段法或大 $M$ 法寻找可行解。若某一步出现多个相同最小比值，可能发生退化；若目标值不增加而基改变，可能循环，通常用 Bland 规则避免循环。
+\EN{If an entering direction is not restricted by any constraint, the problem is unbounded. If no feasible basis is known, Phase I or the Big-M method finds one. Ties in the ratio test cause degeneracy. A basis may change without improving the objective, and anti-cycling rules such as Bland's rule can be used.}
+\EX{约束 $x_1-x_2\le1$、$x_1,x_2\ge0$ 下最大化 $x_1+x_2$ 是无界的：取 $x_1=t+1,x_2=t$，目标为 $2t+1\to\infty$。}{Maximizing $x_1+x_2$ subject to $x_1-x_2\le1$ and nonnegativity is unbounded: $x_1=t+1,x_2=t$ is feasible and the objective tends to infinity.}
+
+\section{两阶段法与大 $M$ 法 | Phase I and the Big-M method}
+\noindent 对 $\ge$ 约束先减去剩余变量；由于得到的列不适合作为初始单位列，需要加入人工变量。两阶段法第一阶段最小化人工变量之和 $w=\sum a_i$。若第一阶段最优值大于零，原问题无可行解；若最优值为零，再删除人工变量并进入第二阶段优化原目标。大 $M$ 法把 $-M\sum a_i$ 加入最大化目标，$M$ 是很大的正数，迫使人工变量离开基；实践中两阶段法通常更清晰稳定。
+\EN{For a greater-than constraint, subtract a surplus variable. Artificial variables are then added to create an initial basis. Phase I minimizes the sum of artificial variables. A positive optimum means the original problem is infeasible; a zero optimum allows Phase II to optimize the original objective. The Big-M method penalizes artificial variables by a large negative coefficient in a maximization objective.}
+\EX{若约束为 $x_1+x_2\ge2$，写成 $x_1+x_2-s+a=2$，其中 $s,a\ge0$。第一阶段会尽量使 $a=0$；如果无论如何都不能让 $a$ 为零，就不存在满足原约束的解。}{For $x_1+x_2\ge2$, write $x_1+x_2-s+a=2$ with $s,a\ge0$. Phase I tries to make $a=0$. If this is impossible, the original constraints are infeasible.}
+
+\section{对偶问题与经济解释 | The dual problem}
+\noindent 原问题
+\[
+\max\{c^{\mathsf T}x:Ax\le b,\ x\ge0\}
+\]
+的对偶为
+\[
+\min\{b^{\mathsf T}y:A^{\mathsf T}y\ge c,\ y\ge0\}.
+\]
+原变量 $x_j$ 对应对偶约束，原约束对应对偶变量 $y_i$。$y_i$ 可以理解为第 $i$ 项资源的单位估价；对偶约束要求每种产品的资源估价至少覆盖其单位利润。
+\EN{The dual of the displayed primal maximization problem is the displayed minimization problem. Each primal constraint corresponds to a dual variable, and each primal variable corresponds to a dual constraint. A dual variable is a unit price for a resource. The dual constraints require the resource value of a product to cover its profit.}
+\EX{工厂模型的对偶为
+\[
+\min w=4y_1+4y_2,\quad 2y_1+y_2\ge3,\quad y_1+2y_2\ge2,\quad y_1,y_2\ge0.
+\]
+取 $y_1=4/3,y_2=1/3$，两项约束取等号，且 $w=20/3$，与原问题交点的利润相同。}{The dual of the factory model is shown above. The choice $y_1=4/3,y_2=1/3$ satisfies both dual constraints at equality and gives $w=20/3$, the same value as the primal optimum.}
+
+\noindent\textbf{弱对偶定理。} 若 $x$ 是原问题可行解、$y$ 是对偶可行解，则
+\[
+c^{\mathsf T}x\le y^{\mathsf T}Ax\le y^{\mathsf T}b=b^{\mathsf T}y.
+\]
+因此任意对偶可行解都给原问题目标值一个上界。证明只用 $A^{\mathsf T}y\ge c$、$x\ge0$、$Ax\le b$ 和 $y\ge0$。
+\EN{If $x$ is primal feasible and $y$ is dual feasible, then $c^{\mathsf T}x\le b^{\mathsf T}y$. Thus every dual feasible point is an upper bound on every primal feasible profit. The proof follows directly from the sign conditions and matrix inequalities.}
+\READ{“The primal objective is less than or equal to the dual objective.”}
+
+\noindent\textbf{强对偶定理。} 若线性规划有有限最优解，则对偶也有最优解，并且
+\[
+\max c^{\mathsf T}x=\min b^{\mathsf T}y.
+\]
+这解释了单纯形法表中的最优检验数与资源价格：最优时原、对偶两种评价完全一致。
+\EN{The strong duality theorem says that if a linear program has a finite optimum, the dual also has an optimum and the two optimal objective values are equal. This explains why the simplex tableau contains both a primal solution and resource prices.}
+
+\section{互补松弛与最优性判别 | Complementary slackness}
+\noindent 原问题和对偶问题的可行解 $x,y$ 同时最优，当且仅当
+\[
+y_i\bigl(b_i-a_i^{\mathsf T}x\bigr)=0\quad\text{for every }i,
+\qquad
+x_j\bigl((A^{\mathsf T}y)_j-c_j\bigr)=0\quad\text{for every }j.
+\]
+第一组说明资源有剩余时其影子价格为零；第二组说明产品有正产量时其资源估价恰好等于利润。它是验证候选解最优和解释哪些约束重要的快捷方法。
+\EN{Complementary slackness says that feasible primal and dual solutions are both optimal exactly when the two products in the displayed formula are zero. A resource with positive slack has zero shadow price. A product with positive output has a dual constraint that is tight.}
+\EX{工厂最优解 $x_1=x_2=4/3$ 使两项资源松弛量为零；对偶解 $y_1=4/3,y_2=1/3$ 都为正，所以两个资源约束必须紧。若某资源有剩余，则互补松弛会迫使对应 $y_i=0$。}{At the factory optimum, both resource slacks are zero and both dual prices are positive, so both constraints are binding. If a resource has positive slack, complementary slackness forces its dual price to be zero.}
+
+\section{灵敏度分析 | Sensitivity analysis}
+\noindent 对偶最优变量 $y_i^*$ 是右端资源 $b_i$ 的影子价格：在当前最优基保持不变的范围内，$b_i$ 增加一个小量 $\Delta b_i$ 时最优目标值近似改变 $y_i^*\Delta b_i$。这个结论是局部的，超过允许范围后最优基可能改变，不能无限外推。目标系数的约化成本表示非基变量要改善多少才可能进入最优基。
+\EN{The optimal dual variable $y_i^*$ is the shadow price of resource $b_i$. While the current basis remains optimal, a small change $\Delta b_i$ changes the optimal value approximately by $y_i^*\Delta b_i$. This is local; a larger change may alter the optimal basis. The reduced cost of a nonbasic variable measures how much its objective coefficient must improve before it can enter.}
+\EX{在工厂模型中，最优对偶价格为 $y_1=4/3,y_2=1/3$。在允许范围内，第一项资源增加 $0.1$ 单位，利润约增加 $(4/3)(0.1)=0.1333$；这不是重新求解后的全球保证。}{The shadow prices are $4/3$ and $1/3$. Within the allowable range, adding $0.1$ unit of the first resource increases profit by approximately $0.1333$. This is a local sensitivity statement, not a global guarantee.}
+
+\noindent\textbf{常见结论。} 右端项改变会影响可行性和基解；目标系数改变会影响最优性；增加约束可能缩小可行域，减少约束可能扩大可行域。若原问题不可行，对偶可能无界；若原问题无界，对偶不可行，这是线性规划对偶的异常情形之一。实际回答时必须先说明是在“当前基不变”的敏感性范围内。
+\EN{Changing the right-hand side can affect feasibility and the basic solution. Changing objective coefficients can affect optimality. Adding a constraint can shrink the feasible region, while removing one can enlarge it. Infeasibility and unboundedness are related through duality. Sensitivity statements must specify the range in which the current basis remains unchanged.}
+
+\section{面试追问与口述模板 | Oral questions}
+\ASK{为什么线性规划可以用单纯形法沿顶点移动？}{Why can the simplex method move between vertices?}{线性目标在凸多面体上若有有限最优值，至少有一个最优顶点。一个基可行解对应一个顶点，换基就是沿可行域的一条边移动。}{A finite optimum of a linear objective over a convex polyhedron occurs at a vertex. A basic feasible solution represents a vertex, and a pivot moves along an edge to an adjacent vertex.}
+\ASK{弱对偶和强对偶分别说明什么？}{What do weak and strong duality say?}{弱对偶给出任意原可行值不超过任意对偶可行值；强对偶说两边都有有限最优解时，最优值相等。}{Weak duality says every primal feasible value is no larger than every dual feasible value. Strong duality says the optimal values are equal when finite optima exist.}
+\ASK{影子价格怎么解释？}{How do you interpret a shadow price?}{它是资源约束右端在当前最优基不变时对最优目标值的边际贡献；资源有剩余时，其价格通常由互补松弛判为零。}{It is the marginal contribution of one more unit of a resource while the current basis remains optimal. A slack resource usually has zero shadow price by complementary slackness.}
+\ASK{单纯形法可能遇到什么问题？}{What difficulties can the simplex method encounter?}{可能没有初始可行基、问题无界、出现退化或循环；两阶段法处理初始可行性，最小比值检验保持可行性，Bland 规则可以避免循环。}{There may be no initial feasible basis, the problem may be unbounded, or degeneracy and cycling may occur. Phase I finds feasibility, the ratio test preserves feasibility, and Bland's rule prevents cycling.}
+
+\section{单纯形法完整手算 | A complete simplex calculation}
+\noindent 对生产模型加入松弛变量：
+\[
+2x_1+x_2+s_1=4,\qquad x_1+2x_2+s_2=4,
+\qquad z=3x_1+2x_2.
+\]
+初始令非基变量 $x_1=x_2=0$，得到基变量 $s_1=s_2=4$，目标值 $z=0$。将方程写成字典形式：
+\[
+x_1=2-\tfrac12x_2-\tfrac12s_1,
+\quad s_2=2-\tfrac32x_2+\tfrac12s_1,
+\quad z=6+\tfrac12x_2-\tfrac32s_1.
+\]
+目标式中 $x_2$ 的系数为正，所以增加 $x_2$ 可以提高目标。由 $x_1\ge0$ 得 $x_2\le4$，由 $s_2\ge0$ 得 $x_2\le4/3$，最小比值为 $4/3$，因此 $s_2$ 出基、$x_2$ 入基。
+\EN{After adding slacks, the initial basis is $s_1,s_2$. The dictionary above gives the first pivot. Since the coefficient of $x_2$ in the objective is positive, $x_2$ enters. The ratio test compares the bounds from $x_1\ge0$ and $s_2\ge0$; the smaller ratio is $4/3$, so $s_2$ leaves.}
+
+\noindent 由第二行解出
+\[
+x_2=\frac43+\frac13s_1-\frac23s_2,
+\]
+代回另外两行，得到
+\[
+x_1=\frac43-\frac23s_1+\frac13s_2,qquad
+z=\frac{20}{3}-\frac43s_1-\frac13s_2.
+\]
+此时非基变量是 $s_1,s_2$，它们在可行方向上增加都会使 $z$ 不增加。因此 $s_1=s_2=0$ 给出最优解
+\[
+x_1=x_2=\frac43,qquad z^*=\frac{20}{3}.
+\]
+这一次计算同时展示了四个动作：选入基变量、比值检验、换基、检查所有约化成本的符号。
+\EN{Solving the leaving row for $x_2$ and substituting gives the final dictionary. Both nonbasic slacks have nonpositive improvement coefficients, so setting them to zero is optimal. The solution is $x_1=x_2=4/3$ with value $20/3$. The calculation shows entering choice, the ratio test, pivoting, and the optimality test.}
+\READ{“The optimal solution is x one equals x two equals four thirds, and the optimal value is twenty over three.”}
+
+\section{单纯形法为什么给出最优性 | Why the simplex test proves optimality}
+\noindent 在任意基下，令 $y^{\mathsf T}=c_B^{\mathsf T}B^{-1}$。对每个非基变量 $x_j$，约化成本为 $\bar c_j=c_j-y^{\mathsf T}a_j$。若最大化问题中所有 $\bar c_j\le0$，则对任意可行解 $x$，由对偶可行性 $A^{\mathsf T}y\ge c$ 和 $x\ge0$ 有
+\[
+c^{\mathsf T}x\le y^{\mathsf T}Ax\le y^{\mathsf T}b
+=c_B^{\mathsf T}B^{-1}b=c^{\mathsf T}x^B.
+\]
+所以当前基解 $x^B$ 的目标值不低于任何可行解。这就是“所有检验数满足最优符号”背后的证明，而不是单纯的表格规则。
+\EN{If every reduced cost is nonpositive in a maximization problem, the vector $y$ is dual feasible. Weak duality then shows that the current basic feasible solution has an objective value at least as large as any feasible point. Thus the tableau optimality test is a direct application of duality.}
+
+\section{退化、多个最优解与无界 | Degeneracy, multiple optima, and unboundedness}
+\noindent 基可行解退化，是指某个基变量等于零。退化时换基可能不改变当前点和目标值；若连续发生这种情况，算法可能循环。Bland 规则通常选编号最小的入基和出基变量来排除循环。多个最优解常表现为某个非基变量的约化成本等于零：沿相应边移动，目标值保持不变。
+\EN{A basic feasible solution is degenerate when a basic variable is zero. A pivot may then change the basis without changing the point or objective value, and cycling is possible. Bland's rule avoids cycling. A zero reduced cost for a nonbasic variable often indicates alternative optimal solutions.}
+\EX{最大化 $z=x_1+x_2$，约束 $x_1+x_2\le1$、$x_1,x_2\ge0$。线段 $x_1+x_2=1$ 上每个点的目标值都为 $1$，所以最优解不唯一，两个端点只是其中两个基可行最优解。}{For $z=x_1+x_2$ subject to $x_1+x_2\le1$ and nonnegativity, every point on the segment $x_1+x_2=1$ has value one. The optimum is not unique; the endpoints are only two basic optimal solutions.}
+
+\noindent 若入基变量的方向不会使任何基变量下降到零，则它可以无限增加，目标也无限增加，问题无界。若第一阶段最小化人工变量之和的最优值大于零，则原问题不可行。必须区分“无界”与“没有最优解”：无界表示目标可无限改善；不可行表示根本没有满足约束的点。
+\EN{If an entering variable can increase without forcing any basic variable to zero, the objective is unbounded. If Phase I has a positive optimum, the original problem is infeasible. Unboundedness means the objective can improve indefinitely; infeasibility means no feasible point exists at all.}
+
+\section{对偶的代数推导 | Algebraic derivation of the dual}
+\noindent 对原问题 $Ax\le b,x\ge0$，取非负向量 $y\ge0$ 左乘约束：$y^{\mathsf T}Ax\le y^{\mathsf T}b$。为了使左侧一定大于等于原目标 $c^{\mathsf T}x$，需要
+\[
+ y^{\mathsf T}A\ge c^{\mathsf T},\quad\text{即 }A^{\mathsf T}y\ge c.
+\]
+于是所有这样的 $y$ 都给原目标一个上界；在所有上界中寻找最小者，就得到对偶问题 $\min b^{\mathsf T}y$。这解释了对偶目标和约束的方向，而不是死记矩阵转置。
+\EN{Multiply each primal resource inequality by a nonnegative price vector $y$. To make the resulting left side dominate the primal profit for every $x\ge0$, require $A^{\mathsf T}y\ge c$. Minimizing the resulting upper bound gives the dual. This derives the transpose and inequality direction.}
+\EX{在工厂模型中，若给两项资源价格 $y_1,y_2$，产品 $1$ 的资源成本是 $2y_1+y_2$，必须至少为利润 $3$；产品 $2$ 的资源成本是 $y_1+2y_2$，必须至少为利润 $2$。}{With resource prices $y_1,y_2$, product one consumes resources worth $2y_1+y_2$ and this must cover profit three. Product two requires $y_1+2y_2\ge2$. These are exactly the dual constraints.}
+
+\section{互补松弛的逐项解释 | Interpreting complementary slackness}
+\noindent 弱对偶的差值可以写成
+\[
+b^{\mathsf T}y-c^{\mathsf T}x
+=y^{\mathsf T}(b-Ax)+x^{\mathsf T}(A^{\mathsf T}y-c).
+\]
+对可行的 $x,y$，右侧每一项都非负。两者达到相同目标值，当且仅当每一项都为零，于是得到互补松弛条件。第一项对应原约束的松弛量，第二项对应对偶约束的松弛量。
+\EN{The duality gap decomposes into the two nonnegative sums shown above. The gap is zero exactly when every complementary product is zero. The first products pair resource slack with resource price; the second pair primal output with dual constraint slack.}
+\EX{若某资源没有用完，即 $b_i-a_i^{\mathsf T}x>0$，则必须有 $y_i=0$。若某产品产量 $x_j>0$，则其对偶约束必须等号成立，不能有额外的资源估价。}{If a resource is not fully used, its shadow price must be zero. If a product has positive output, its dual constraint must be tight; otherwise its resource valuation would exceed its profit.}
+
+\section{灵敏度分析的完整例子 | A complete sensitivity calculation}
+\noindent 在工厂模型最优基 $B=\begin{pmatrix}2&1\\1&2\end{pmatrix}$ 下，若第一项资源从 $4$ 变为 $4+\Delta$，第二项仍为 $4$，则
+\[
+B^{-1}=\frac13\begin{pmatrix}2&-1\\-1&2\end{pmatrix},\qquad
+x_B=B^{-1}\binom{4+\Delta}{4}
+=\binom{(4+2\Delta)/3}{(4-\Delta)/3}.
+\]
+同一基保持可行需要 $\Delta\ge-2$ 且 $\Delta\le4$，即第一项资源可在 $[2,8]$ 内变化。目标值为
+\[
+z^*(\Delta)=\frac{20}{3}+\frac43\Delta.
+\]
+斜率 $4/3$ 正是第一项资源的影子价格；超过这个区间，虽然最优值仍可求，但原来的基不能直接沿用。
+\EN{Keeping the same basis, changing the first resource from four to $4+\Delta$ gives the basic variables and objective shown above. Feasibility requires $-2\le\Delta\le4$, so the same basis remains feasible while the resource is between two and eight. The objective slope $4/3$ is the first shadow price. Beyond this interval, the basis may change.}
+
+\noindent 若改变利润系数 $c_1$ 为 $3+\delta$，保持同一基最优需要其对偶价格仍非负：
+\[
+y_1=\frac{4+2\delta}{3}\ge0,\qquad y_2=\frac{1-\delta}{3}\ge0,
+\]
+因此 $-2\le\delta\le1$ 是一个保持该基对偶可行的区间。灵敏度分析必须同时检查基解可行性和约化成本/对偶可行性。
+\EN{If the first profit coefficient changes to $3+\delta$, the same basis remains optimal when its dual prices stay nonnegative, giving $-2\le\delta\le1$. Sensitivity analysis checks both primal feasibility of the basis and dual feasibility of the reduced costs.}
+
+\section{Farkas 引理与不可行性证书 | Farkas' lemma and infeasibility certificates}
+\noindent 一个常见形式的 Farkas 引理是：对给定矩阵 $A$ 和向量 $b$，恰有一个系统有解：
+\[
+Ax=b,\ x\ge0;
+\qquad\text{或}\qquad
+A^{\mathsf T}y\ge0,\ b^{\mathsf T}y<0.
+\]
+第二个系统中的 $y$ 是不可行性证书：若同时存在 $x,y$，则 $b^{\mathsf T}y\ge y^{\mathsf T}Ax\ge0$，与 $b^{\mathsf T}y<0$ 矛盾。它把“没有可行解”转化为一个可以验证的向量，连接线性规划、分离定理和对偶理论。
+\EN{A form of Farkas' lemma says that exactly one of the two systems above has a solution. The vector $y$ in the second system certifies infeasibility, because a feasible $x$ would imply $b^{\mathsf T}y\ge y^{\mathsf T}Ax\ge0$, contradicting $b^{\mathsf T}y<0$. This connects linear programming with separation and duality.}
+\EX{若要求 $x\ge0$ 且 $x=-1$，显然无解。可取 $A=1,b=-1,y=1$，则 $A^{\mathsf T}y=1\ge0$、$b^{\mathsf T}y=-1<0$，$y$ 就是不可行性证书。}{The system $x\ge0$ and $x=-1$ is infeasible. Taking $A=1$, $b=-1$, and $y=1$ gives $A^{\mathsf T}y\ge0$ and $b^{\mathsf T}y<0$, which certifies infeasibility.}
+
+\section{优化问题的口述模板 | A reliable oral structure}
+\noindent 面试时可以按五步说：第一，说明决策变量和实际含义；第二，写目标函数并解释最大化还是最小化；第三，说明每条约束和非负条件；第四，指出可行域、顶点或基可行解；第五，再选择单纯形法、对偶或灵敏度分析，并明确假设。若考官追问公式，先说符号含义，再写式子，最后解释式子如何用于当前例子。
+\EN{For an oral answer, use five steps: define the decision variables, write and interpret the objective, explain every constraint and sign condition, identify feasible vertices or basic feasible solutions, and then choose simplex, duality, or sensitivity analysis. When writing a formula, define its symbols first and explain how it applies to the example.}
+
+\section{从零建模：把实际问题翻译成线性规划 | Building a model from scratch}
+\noindent 建模时先问三个问题：\textbf{决定什么}、\textbf{想让什么最好}、\textbf{受到什么限制}。决定的量写成变量 $x_j$；目标函数写成 $c^{\mathsf T}x$；限制写成 $Ax\le b$、$Ax\ge b$ 或等式。这里“线性”意味着变量只以一次幂出现，不能有 $x_1x_2$、$x_1^2$ 或 $\sin x_1$。这一步很重要，因为单纯形法只直接处理线性模型。
+\EN{To build a model, ask three questions: what decisions are made, what should be optimized, and what restrictions must be respected. Decision quantities are variables, the objective is $c^{\mathsf T}x$, and the restrictions are linear inequalities or equations. Linearity means that variables occur only to the first power; products such as $x_1x_2$ are not linear.}
+
+\EX{例如配餐问题中，$x_1$、$x_2$ 分别表示两种食品的份数，每份价格为 $2$ 和 $3$。如果每天至少需要 $12$ 单位热量和 $8$ 单位蛋白质，可以写成
+\[
+\min C=2x_1+3x_2,\qquad
+4x_1+3x_2\ge12,\quad 2x_1+4x_2\ge8,\quad x_1,x_2\ge0.
+\]
+目标是花费最少，两个不等式是营养下限，非负性表示不能购买负份数。这个模型和工厂模型的数学结构相同，只是目标从最大利润变成最小成本。}{In a diet problem, $x_1$ and $x_2$ are the numbers of portions of two foods. If their costs are two and three, and the requirements are twelve units of calories and eight units of protein, the displayed model minimizes cost subject to nutritional lower bounds. The same linear-programming structure also models production, transportation, staffing, and blending.}
+
+\noindent \textbf{标准形式的转换。} 单纯形法常把约束改写成等式。$\le$ 约束加松弛变量，$\ge$ 约束先减剩余变量，若还没有单位列则加入人工变量；自由变量可写为 $x_j=x_j^+-x_j^-$，其中 $x_j^+,x_j^-\ge0$；最小化 $\min C$ 可改成最大化 $\max(-C)$。转换后必须保留原来的变量含义，不能把人工变量当成真实决策量。
+\EN{For simplex calculations, inequalities are converted to equations. Add a slack variable to a less-than constraint; subtract a surplus variable from a greater-than constraint and add an artificial variable when an initial basis is needed. A free variable is written as the difference of two nonnegative variables. A minimization can be changed into maximization by multiplying the objective by minus one. Artificial variables are computational devices, not real decisions.}
+
+\EX{配餐模型中的第一条约束可写为 $4x_1+3x_2-s_1+a_1=12$，其中 $s_1\ge0$ 是剩余量，$a_1\ge0$ 是人工变量。第一阶段最小化 $a_1$；如果最小值不能降到 $0$，说明原配餐要求不可行。}{The first diet constraint can be written as $4x_1+3x_2-s_1+a_1=12$. The surplus variable and the artificial variable are introduced for the algorithm. Phase I minimizes $a_1$; if its minimum cannot reach zero, the original diet requirements are infeasible.}
+
+\section{单纯形表中每个量的来源 | Where tableau quantities come from}
+\noindent 在标准形式 $Ax=b,x\ge0$ 中，$A$ 有 $m$ 行时，选出 $m$ 个线性无关列组成基矩阵 $B$。令非基变量为零，基变量就是
+\[
+x_B=B^{-1}b.
+\]
+若 $x_B\ge0$，这是基可行解。目标系数的基部分记为 $c_B$，则
+\[
+y^{\mathsf T}=c_B^{\mathsf T}B^{-1}
+\]
+是当前基产生的对偶价格；第 $j$ 列的约化成本为 $\bar c_j=c_j-y^{\mathsf T}a_j$。因此单纯形表中的数字不是孤立的算术，它们分别来自解方程、估价和比较实际收益与资源估价。
+\EN{In standard form, choose linearly independent columns of $A$ to form the basis matrix $B$. Setting nonbasic variables to zero gives $x_B=B^{-1}b$. The vector $y^{\mathsf T}=c_B^{\mathsf T}B^{-1}$ gives the prices associated with the current basis, and $\bar c_j=c_j-y^{\mathsf T}a_j$ is the reduced cost. Thus tableau entries come from solving equations and comparing actual profit with resource valuation.}
+
+\EX{在工厂模型的最优基中，$B=\begin{pmatrix}2&1\\1&2\end{pmatrix}$、$c_B=(3,2)^{\mathsf T}$。因为
+\[
+B^{-1}=\frac13\begin{pmatrix}2&-1\\-1&2\end{pmatrix},\qquad
+c_B^{\mathsf T}B^{-1}=\left(\frac43,\frac13\right),
+\]
+所以两种资源的影子价格为 $4/3$ 和 $1/3$。松弛变量的目标系数是 $0$，其约化成本分别为 $-4/3$、$-1/3$，都不为正，因此最大化问题不能通过增加松弛变量改善目标。}{For the factory model, the optimal basis gives the displayed inverse and prices. The shadow prices are four thirds and one third. The slack variables have zero profit coefficients, so their reduced costs are negative, which confirms the optimality test for the maximization problem.}
+
+\noindent \textbf{最小比值检验为什么这样做。} 假设某个非基变量 $x_j$ 入基，字典中基变量写成 $x_B=\beta-\bar a_jt$，其中 $t$ 表示增加 $x_j$ 的数量。为了保持 $x_B\ge0$，每个 $\bar a_{ij}>0$ 的行给出上界
+\[
+t\le\frac{\beta_i}{\bar a_{ij}}.
+\]
+取最小的上界，最先降到零的基变量出基。若没有正的 $\bar a_{ij}$，就没有约束阻止 $t$ 增大，若约化成本为正则目标无界。
+\EN{If a nonbasic variable enters, write the basic variables as $x_B=\beta-\bar a_jt$. Every positive coefficient gives an upper bound on $t$. The smallest ratio is reached first and determines the leaving variable. If no positive coefficient restricts $t$ and the reduced cost is positive, the objective is unbounded.}
+
+\section{灵敏度分析的具体读法 | Reading sensitivity results}
+\noindent 右端 $b$ 改变时，先用 $x_B=B^{-1}b$ 检查基解是否仍非负；目标系数 $c$ 改变时，先检查 $y^{\mathsf T}=c_B^{\mathsf T}B^{-1}$ 是否仍满足对偶可行性。前者决定“当前方案还能不能用”，后者决定“当前方案还是不是最优”。这两个检查不能混为一谈。
+\EN{When the right-hand side changes, use $x_B=B^{-1}b$ to check primal feasibility. When objective coefficients change, use $y^{\mathsf T}=c_B^{\mathsf T}B^{-1}$ or the reduced costs to check dual feasibility. One check asks whether the current plan is feasible; the other asks whether it is still optimal.}
+
+\EX{若工厂第一项资源减少 $1$，即 $\Delta=-1$，则
+\[
+x_1=\frac{4+2(-1)}3=\frac23,\qquad x_2=\frac{4-(-1)}3=\frac53,
+\quad z=\frac{20}3-\frac43=\frac{16}3.
+\]
+这仍在 $-2\le\Delta\le4$ 的允许范围内，所以原基仍可用。若 $\Delta=5$，则 $x_2=(4-5)/3<0$，原基失去可行性，必须重新换基。}{If the first resource decreases by one, the same basis remains feasible and gives the displayed solution and profit. If the change is five, the second basic variable becomes negative, so the old basis is no longer feasible and a new pivot is required.}
+
+\section{本章最容易被追问的判断 | Questions that require conditions}
+\ASK{为什么单纯形法不等于“把所有顶点都算一遍”？}{Why is the simplex method not simply checking every vertex?}{线性目标在可行多面体上有顶点最优解，但顶点可能很多。单纯形法从一个基可行解出发，用约化成本选择能改善目标的相邻方向，用比值检验保持可行，因此通常只访问其中一部分顶点。}{A linear objective has an optimal vertex when the optimum is finite, but there may be many vertices. The simplex method follows improving adjacent directions and uses the ratio test to keep feasibility, so it usually visits only a subset of vertices.}
+\ASK{改变资源数量和改变利润系数有什么区别？}{What is the difference between changing a resource and changing a profit coefficient?}{改变右端项 $b$ 首先影响基解的可行性；改变目标系数 $c$ 首先影响约化成本和对偶可行性。一个变化可能只改变最优值，也可能迫使最优基改变。}{Changing the right-hand side first affects primal feasibility. Changing an objective coefficient first affects reduced costs and dual feasibility. Either change may eventually require a new optimal basis.}
+\ASK{如何用一句话解释对偶？}{How would you explain duality in one sentence?}{原问题直接选择方案获得利润，对偶问题给资源定价并寻找所有利润的最小上界；在线性规划满足有限最优条件时，这个上界正好等于最大利润。}{The primal chooses activities to obtain profit, while the dual prices resources and finds the smallest valid upper bound on that profit; under finite optimality, the bound equals the maximum profit.}
+
+\section*{来源与范围 | Source and scope}
+本稿主要参考陈宝林《最优化理论与算法》（第 2 版）目录中第 3 章“单纯形方法”和第 4 章“对偶原理及灵敏度分析”，并参考“最优化方法”文件夹中的课程讲义、单纯形法材料、凸规划和 Farkas 引理资料。扫描教材文字提取有限，因此本稿按章节主题整理核心理论，不声称逐页转录；线性规划符号以本稿显示的最大化标准形式为准，其他教材的符号约定可能相反。
+\EN{This review is mainly based on Chapters 3 and 4 of Bao-Lin Chen's Optimization Theory and Algorithms, supplemented by the course materials on simplex methods, convex programming, and Farkas' lemma. The scanned book has limited text extraction, so this is a structured review of the main results rather than a page-by-page transcription. The displayed maximization convention fixes the signs; other textbooks may use different conventions.}
+\end{document}

@@ -1,0 +1,372 @@
+\documentclass[UTF8,11pt,a4paper]{ctexart}
+\usepackage{amsmath,amssymb,geometry,enumitem,hyperref}
+\geometry{margin=2.1cm}\setlist{itemsep=2pt,topsep=3pt}
+\hypersetup{colorlinks=true,linkcolor=blue}
+\newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
+\newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\EX}[2]{\par\noindent\textbf{例子 / Example.} #1\par\EN{#2}}
+\newcommand{\ASK}[4]{\par\noindent\textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent\textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
+\title{概率论 APS 面试准备\\[4pt]\large 双语课程概述、知识点与口试题}
+\author{Probability Theory: Bilingual Review}
+\date{}
+\begin{document}\maketitle
+\section*{课程概述 | Course overview}
+\noindent\textbf{中文口述稿。} 在概率论中，我学习用概率模型描述不确定事件。例如某零件独立地以 $p=0.1$ 的概率不合格，检查 $n=10$ 件时，不合格数 $X$ 服从二项分布。我可以写出 $P(X=0)=(1-p)^{10}=0.9^{10}$，所以至少有一件不合格的概率是 $1-0.9^{10}\approx0.651$。这里关键假设是各件结果独立且不合格率相同。测度论帮助我理解概率要定义在可讨论的事件集合上，而数理统计进一步用实际样本估计未知的 $p$。
+
+\EN{In probability, I learned to describe uncertainty with mathematical models. Suppose each of ten parts is independently defective with probability $p=0.1$. The number $X$ of defective parts is binomial. The probability of none is $P(X=0)=0.9^{10}$, so the chance of at least one is $1-0.9^{10}\approx0.651$. The key assumptions are independence and the same defect probability for each part. Measure theory explains why probability is defined on a suitable collection of events. Mathematical statistics then uses observations to estimate an unknown probability $p$.}
+
+\noindent\textbf{口述提示。} 这份概述依照文件中的 23 讲内容编写；面试时可按本人实际修读范围删减测度论细节。
+\EN{This overview follows the 23 lectures in the course file. In an interview, I can shorten the measure-theoretic details to match the material I personally covered.}
+
+\noindent\textbf{学科联系与现实应用（拓展口述）。} 概率论以概率空间为基础，把不确定事件赋予一致的概率，再通过随机变量、分布和期望描述数量的不确定性。它是数理统计的理论基础：统计推断利用概率模型解释样本波动；它也连接数学建模，用来处理需求、寿命、排队和风险中的随机因素。可靠性工程中，若一个系统由两个必须同时工作的独立部件串联组成，系统存活到时间 $t$ 的概率为 $P(T_1>t,T_2>t)=P(T_1>t)P(T_2>t)$；若寿命分别服从参数为 $\lambda_1,\lambda_2$ 的独立指数分布，则该概率是 $e^{-(\lambda_1+\lambda_2)t}$。这个公式依赖独立和指数寿命假设。队列模型可用到达与服务时间分布描述等待风险；保险可用损失分布和期望评估风险，但均需由数据验证假设。
+\EN{\textbf{Connections and applications (extension for an interview).} Probability starts with a probability space, assigns probabilities consistently to uncertain events, and uses random variables, distributions, and expectations to describe uncertainty in quantities. It provides the foundation for mathematical statistics, where probability models explain sample variation, and connects to mathematical modeling when demand, lifetimes, queues, or risk are uncertain. In reliability engineering, suppose a system has two independent components in series, both of which must work. Its survival probability at time $t$ is $P(T_1>t,T_2>t)=P(T_1>t)P(T_2>t)$. If their independent lifetimes are exponential with rates $\lambda_1$ and $\lambda_2$, this is $e^{-(\lambda_1+\lambda_2)t}$. The formula depends on the independence and exponential-lifetime assumptions. Queueing models use arrival and service-time distributions to describe waiting risk; insurance uses loss distributions and expectations to assess risk, with assumptions checked against data.}
+
+\ASK{概率论如何与数理统计及现实问题相连？}{How does probability connect to mathematical statistics and practical problems?}{概率论建立随机模型并推导样本或系统结果的分布；数理统计反过来利用观测数据估计这些分布的参数。在可靠性问题中，可以用部件寿命分布计算系统失效概率，但必须检查部件独立性和寿命模型是否合理。}{Probability builds random models and derives distributions for samples or systems. Mathematical statistics uses observed data to estimate the model parameters. In reliability, component-lifetime distributions can be used to calculate system failure probabilities, provided independence and lifetime assumptions are reasonable.}
+
+\section{测度、可测集与积分 | Measures, measurable sets and integration}
+\subsection{为什么需要测度 | Why measure is needed}
+\noindent 集合的基数只数元素个数，不能表示连续集合的长度或面积：任意两个非退化实数区间都有相同的不可数基数，但长度可能不同。测度是定义在一族指定集合上的“大小”函数；它把长度、面积、体积等概念推广到更一般的集合，并要求互不相交的部分可以相加。例如区间 $[a,b]$ 的长度是 $b-a$，平移不改变长度。测度不是给每一个子集都随意贴一个数字：先确定哪些集合可测，再在这些集合上定义测度。
+\EN{Cardinality counts elements but does not describe the length or area of a continuum. Any two nondegenerate real intervals have the same uncountable cardinality, even when their lengths differ. A measure is a size function defined on a specified family of sets. It extends length, area, and volume to more general sets, while requiring disjoint pieces to add. For example, the length of $[a,b]$ is $b-a$ and is unchanged by translation. A measure is not an arbitrary assignment to every subset: we first specify which sets are measurable, then define the measure on them.}
+
+\EX{有理数集 $\mathbb Q\cap[0,1]$ 是可数无限集，Lebesgue 测度为 $0$；区间 $[0,1]$ 不可数，测度为 $1$。基数与测度回答的是不同问题。}{The rationals in $[0,1]$ are countably infinite but have Lebesgue measure zero. The interval $[0,1]$ is uncountable and has measure one. Cardinality and measure answer different questions.}
+
+\subsection{Jordan 测度到 Lebesgue 测度 | From Jordan to Lebesgue measure}
+\noindent 在 $\mathbb R^d$ 中，矩形 $B=I_1\times\cdots\times I_d$ 的体积定义为各边长之积。有限个矩形的并构成基本集，可把基本集的测度定义为不相交矩形体积之和。Jordan 内测度用基本集从内部逼近一个集合，Jordan 外测度用基本集从外部覆盖它；两者相等时，集合的边界不会留下正的体积误差，集合称为 Jordan 可测。这个方法能处理许多边界规则的有界集合，但可测集对可数次并不一定封闭，因而不足以支撑概率论常用的极限事件和可列可加性。Lebesgue 的构造改用可数覆盖，正是为了处理这类可数运算。
+\EN{In $\mathbb R^d$, the volume of a rectangle $B=I_1\times\cdots\times I_d$ is the product of its side lengths. A finite union of rectangles is an elementary set, measured by a disjoint rectangular decomposition. Jordan inner measure approximates a set from inside by elementary sets; Jordan outer measure covers it from outside. When they agree, the boundary contributes no positive volume error, and the set is Jordan measurable. This handles many bounded sets with regular boundaries, but Jordan measurable sets need not be closed under countable unions. Lebesgue's construction uses countable covers to support the countable operations and limit events used in probability.}
+
+\noindent\textbf{Lebesgue 外测度。} 对任意集合 $E$，用有限个或可数个矩形覆盖它；每个覆盖的总代价是矩形体积之和。取所有覆盖总代价的下确界，得到
+\[
+m^*(E)=\inf\left\{\sum_{i=1}^{\infty}|B_i|:
+E\subseteq\bigcup_{i=1}^{\infty}B_i\right\}.
+\]
+这里取下确界表示：在所有可能的矩形覆盖中，找总代价能够任意接近的最小值。覆盖可以重叠，重叠只会造成多算，因此取下确界会尽量消除过量估计。若集合无界，外测度可以是 $+\infty$。例如把 $[0,1]$ 中可数多个有理数逐个放进很短的开区间，并令这些小区间长度之和小于任意给定的 $\varepsilon>0$，可得 $m^*(\mathbb Q\cap[0,1])=0$。\textbf{外测度还不是最终的测度：}它对所有子集都有定义，但通常只保证可列次可加；要得到可列可加的测度，必须再挑出合适的可测集合。
+\EN{The infimum means the smallest total covering volume that can be approached by a sequence of covers. Covers may overlap, which can overcount, so taking the infimum removes as much excess as possible. An unbounded set may have outer measure $+\infty$. To see why $m^*(\mathbb Q\cap[0,1])=0$, enumerate the rationals and cover the $k$th one by an interval of length less than $\varepsilon/2^k$. The total length is less than $\varepsilon$, for every $\varepsilon>0$. Outer measure is not yet the final measure: it is defined for every subset but in general is only countably subadditive. We must select measurable sets to obtain countable additivity.}
+
+\noindent Lebesgue 可测性用 Carath\'eodory 条件刻画：对任意集合 $S$，
+\[
+m^*(S)=m^*(S\cap E)+m^*(S\setminus E).
+\]
+外测度的次可加性总给出“左边不大于右边”。Carath\'eodory 条件要求对每个 $S$ 都恰好相等：把 $S$ 切成落在 $E$ 内和落在 $E$ 外的两块时，不能产生额外的测量损失或重叠误差。满足该条件的集合 $E$ 称为 Lebesgue 可测集；这些集合组成一个 $\sigma$-代数，在其上令 $m(E)=m^*(E)$，就得到 Lebesgue 测度。它与通常长度、面积和体积相容，并对可列个两两不交的可测集可列可加。不是所有实数子集都 Lebesgue 可测；限制定义域使这些性质能够同时成立。
+\EN{Subadditivity of outer measure always gives the left-hand side less than or equal to the right-hand side. The Caratheodory condition requires equality for every set $S$: splitting $S$ into the part inside $E$ and the part outside $E$ must introduce no extra loss or overlap in measured size. Such a set $E$ is Lebesgue measurable. These sets form a sigma-algebra; defining $m(E)=m^*(E)$ on them gives Lebesgue measure. It agrees with ordinary length, area, and volume, and is countably additive over disjoint measurable sets. Not every subset of the real line is Lebesgue measurable; restricting the domain allows these properties to hold together.}
+
+\subsection{\texorpdfstring{$\sigma$}{sigma}-代数与可测空间 | Sigma-algebras and measurable spaces}
+\noindent\textbf{直观理解：} $\Omega$ 是所有可能结果，$\mathcal F$ 是我们允许讨论并赋予概率的事件清单。$\mathcal F$ 是“集合的集合”，其中每个元素本身都是 $\Omega$ 的一个子集。设 $\Omega$ 为全集，$\mathcal F\subseteq2^\Omega$。若
+\[
+\Omega\in\mathcal F,\qquad
+A\in\mathcal F\Rightarrow A^c\in\mathcal F,\qquad
+A_1,A_2,\ldots\in\mathcal F\Rightarrow\bigcup_{i=1}^{\infty}A_i\in\mathcal F,
+\]
+则 $\mathcal F$ 是 $\Omega$ 上的 $\sigma$-代数，称其中的集合为可测集或事件。三个条件分别保证：必然事件 $\Omega$ 可讨论；事件的反面 $A^c$ 仍可讨论；可数个事件中“至少一个发生”这一事件 $\bigcup_iA_i$ 仍可讨论。这里的 $\sigma$ 强调可数次并，而不只是有限次并。由补集和 De Morgan 定律，$\mathcal F$ 也对可列交、有限并、有限交及差集封闭；并且 $\varnothing\in\mathcal F$。
+\READ{“A sigma-algebra contains omega, is closed under complements, and is closed under countable unions.”}
+\EN{Intuitively, $\Omega$ is the set of all possible outcomes, and $\mathcal F$ is the collection of events that we are allowed to discuss and assign probabilities to. Thus $\mathcal F$ is a collection of sets, and each of its members is itself a subset of $\Omega$. A family $\mathcal F\subseteq2^\Omega$ is a sigma-algebra if it contains $\Omega$, is closed under complements, and is closed under countable unions. These conditions ensure that the certain event, the opposite of an event, and the event that at least one among countably many events occurs are all still events. The word sigma emphasizes countable, rather than only finite, unions. Closure under countable intersections, finite unions, intersections, and differences follows from complements and De Morgan's laws; in particular, the empty set belongs to it.}
+
+\noindent\textbf{它和测度有什么关系？} $\sigma$-代数回答“哪些集合可以测”，测度回答“这些集合有多大”。先有可测空间 $(\Omega,\mathcal F)$，再定义 $\mu:\mathcal F\to[0,\infty]$。Carath\'eodory 构造中，可测集合恰好组成一个 $\sigma$-代数；概率论中我们也先选定事件 $\sigma$-代数，再在上面定义概率测度。使用 $\sigma$-代数，是因为补集、可列并和可列交会出现在极限事件中；若只对有限运算封闭，极限得到的集合可能不在定义域里，概率便无从谈起。
+\EN{The sigma-algebra answers, “Which sets can be measured?” The measure answers, “How large are those sets?” We first have a measurable space $(\Omega,\mathcal F)$, then define $\mu:\mathcal F\to[0,\infty]$. In the Caratheodory construction, the measurable sets form a sigma-algebra. In probability, we likewise choose an event sigma-algebra before defining a probability measure. Countable unions and intersections occur in limit events; closure only under finite operations could leave a limit event outside the domain, where its probability would not be defined.}
+
+\noindent 两个极端例子是平凡 $\sigma$-代数 $\{\varnothing,\Omega\}$ 和幂集 $2^\Omega$：前者只区分“必然发生”与“不可能发生”，后者允许讨论每一个子集。若 $\Omega=\{HH,HT,TH,TT\}$ 表示抛两次硬币的完整结果，但只观察第一次，则事件族可取
+\[
+\mathcal F=\{\varnothing,\{HH,HT\},\{TH,TT\},\Omega\}.
+\]
+它把第一次正面与第一次反面的结果分开，却不能区分 $HH$ 和 $HT$；所以单点集 $\{HH\}$ 不是可观察事件，不能仅凭“只观察第一次”给它赋概率。这个例子说明 $\sigma$-代数也记录了实验中可获得的信息。若改为观察完整结果，则可取幂集。在 $\mathbb R$ 上，由开集生成的 Borel $\sigma$-代数包含所有开区间和闭区间，是实值随机变量常用的可测集合族。可测空间记作 $(\Omega,\mathcal F)$。
+\EN{The two extreme examples are the trivial sigma-algebra $\{\varnothing,\Omega\}$ and the power set $2^\Omega$. The first distinguishes only the impossible and certain events; the second allows every subset to be considered. Let $\Omega=\{HH,HT,TH,TT\}$ describe two coin tosses, but suppose we observe only the first toss. Then we may use $\mathcal F=\{\varnothing,\{HH,HT\},\{TH,TT\},\Omega\}$. This family distinguishes a first head from a first tail, but it cannot distinguish $HH$ from $HT$; the singleton $\{HH\}$ is not an observable event. Thus a sigma-algebra also records the information available in an experiment. If we observe the full outcome, we can use the power set. On $\mathbb R$, the Borel sigma-algebra generated by open sets contains all open and closed intervals. The pair $(\Omega,\mathcal F)$ is called a measurable space.}
+
+\EX{若只观察三次掷硬币中正面次数，样本空间可取 $\Omega=\{0,1,2,3\}$，事件“至少两次正面”为 $\{2,3\}$。该事件及其补集都必须属于事件 $\sigma$-代数，才能分别赋予概率。}{If we record only the number of heads in three coin tosses, take $\Omega=\{0,1,2,3\}$. The event of at least two heads is $\{2,3\}$. It and its complement must belong to the event sigma-algebra so that both can receive probabilities.}
+
+\ASK{$\sigma$-代数是什么？为什么概率论要用它？}{What is a sigma-algebra, and why does probability theory use one?}{它是包含全集、对补集和可列并封闭的集合族。它规定哪些子集是可讨论并赋予概率的事件，同时保证可列极限运算产生的集合仍是事件。测度论中 Lebesgue 可测集也组成 $\sigma$-代数。}{It is a family of sets that contains the whole space and is closed under complements and countable unions. It specifies which subsets are events and ensures that sets formed by countable limiting operations remain events. The Lebesgue measurable sets also form a sigma-algebra.}
+
+\subsection{测度及其基本性质 | Measures and basic properties}
+\noindent 在可测空间 $(\Omega,\mathcal F)$ 上，测度是集合函数 $\mu:\mathcal F\to[0,\infty]$，满足
+\[
+\mu(\varnothing)=0,\qquad
+\mu\left(\bigcup_{i=1}^{\infty}A_i\right)=\sum_{i=1}^{\infty}\mu(A_i)
+\quad\text{若 }A_i\text{ 两两不交}.
+\]
+非负性由值域保证。可列可加性说的是：若集合互不相交，就可以把它们的测度逐项相加；这是把有限可加推广到可数多个部分的关键公理。若 $A\subseteq B$，把 $B$ 写成不交并 $A\cup(B\setminus A)$，便得单调性 $\mu(A)\le\mu(B)$。对任意集合列，可由可列可加性得到次可加性 $\mu(\bigcup_iA_i)\le\sum_i\mu(A_i)$。若 $A_n\uparrow A$，可把极限集合分解为首项及每一步新增的互不相交部分，因此 $\mu(A_n)\to\mu(A)$。若 $A_n\downarrow A$ 且 $\mu(A_1)<\infty$，则由补集和下方连续性得到 $\mu(A_n)\to\mu(A)$；有限测度条件不可随意省略。这些连续性性质让我们能把概率传递到递增或递减的极限事件。
+\READ{“A measure of a countable disjoint union equals the sum of the measures of the individual sets.”}
+\EN{A measure on $(\Omega,\mathcal F)$ is a set function $\mu:\mathcal F\to[0,\infty]$ that assigns zero to the empty set and is countably additive over pairwise disjoint sets. Countable additivity extends finite additivity to countably many disjoint pieces. If $A\subseteq B$, writing $B=A\cup(B\setminus A)$ gives monotonicity. For any sequence of sets, countable additivity implies countable subadditivity. If $A_n$ increases to $A$, decompose $A$ into the first set and the disjoint pieces added at each step; this gives $\mu(A_n)\to\mu(A)$. If $A_n$ decreases to $A$ and $\mu(A_1)<\infty$, continuity from below applied to complements gives $\mu(A_n)\to\mu(A)$. The finite-measure condition matters. These properties let us pass to increasing or decreasing limit events.}
+
+\EX{Lebesgue 测度下，$m([a,b])=b-a$，单点集的测度为 $0$；有限或可数个单点的并仍为零测集。对互不相交区间 $I_i$，$m(\bigcup_i I_i)=\sum_i m(I_i)$，只要这些区间可测。}{Under Lebesgue measure, $m([a,b])=b-a$ and a singleton has measure zero; a finite or countable union of singletons still has measure zero. The measure of a disjoint countable union of measurable intervals is the sum of their lengths.}
+
+\subsection{Lebesgue 积分的基本思想 | Basic idea of the Lebesgue integral}
+\noindent 黎曼积分主要按定义域分割，再累加小区间上的函数值；Lebesgue 积分按函数值分层，测量每一层对应的集合有多大。若非负简单函数
+\[
+f=\sum_{i=1}^{n}a_i\mathbf1_{A_i},\qquad A_i\text{ 两两不交},
+\]
+则定义
+\[
+\int_\Omega f\,d\mu=\sum_{i=1}^{n}a_i\mu(A_i).
+\]
+一般非负可测函数可由简单函数从下方逼近并取积分极限。特别地，$\int\mathbf1_A\,d\mu=\mu(A)$；这正是把集合测度和函数积分接起来的公式。Lebesgue 积分能处理一些黎曼不可积但可测的函数，例如 $[0,1]$ 上有理数集的示性函数，其 Lebesgue 积分为 $0$。
+\READ{“The integral of a simple function is the sum of each function value times the measure of the set where it takes that value.”}
+\EN{Riemann integration partitions the domain and adds contributions from small intervals. Lebesgue integration groups points by function value and measures the corresponding level sets. The integral of a simple function is the sum of each value times the measure of its set. General nonnegative measurable functions are approximated from below by simple functions. In particular, the integral of an indicator is the measure of its set.}
+
+\ASK{黎曼积分和 Lebesgue 积分的直观区别是什么？}{What is the intuitive difference between Riemann and Lebesgue integration?}{黎曼积分切分定义域，Lebesgue 积分切分值域并测量各层对应集合的大小。后者依赖测度，适用于更广的可测函数；对简单函数，积分就是函数值乘对应集合测度再求和。}{Riemann integration partitions the domain. Lebesgue integration partitions the range and measures the sets corresponding to each level. The latter uses measure and applies to a broader class of measurable functions; for a simple function, integrate by summing each value times the measure of its level set.}
+
+\section{概率空间与事件 | Probability spaces and events}
+\noindent\textbf{定义。} 概率空间是三元组 $(\Omega,\mathcal F,P)$：$\Omega$ 是样本空间，$\mathcal F$ 是事件构成的 $\sigma$-代数，$(\Omega,\mathcal F)$ 是可测空间；$P$ 是其上的概率测度，即
+\[
+P(\varnothing)=0,\qquad P(A)\ge0,\qquad P(\Omega)=1,
+\]
+并且对两两互不相交的 $A_i\in\mathcal F$，
+\[
+P\left(\bigcup_{i=1}^{\infty}A_i\right)=\sum_{i=1}^{\infty}P(A_i).
+\]
+因此概率是总质量为 $1$ 的测度。它的有限可加性、单调性和连续性直接继承自测度。
+
+\EN{A probability space $(\Omega,\mathcal F,P)$ consists of a sample space $\Omega$, an event sigma-algebra $\mathcal F$, and a probability measure $P$ on the measurable space $(\Omega,\mathcal F)$. The probability measure is nonnegative, assigns zero to the empty set, assigns one to $\Omega$, and is countably additive over disjoint events. Thus probability is a measure with total mass one.}
+
+\noindent\textbf{常用公式。} 对事件 $A,B$：
+\[
+P(A^c)=1-P(A),\quad P(A\cup B)=P(A)+P(B)-P(A\cap B).
+\]
+若古典概型有有限个等可能基本结果，则 $P(A)=|A|/|\Omega|$。几何概型中，在均匀性和可测条件成立时，$P(A)$ 等于区域 $A$ 的长度、面积或体积与样本空间相应度量之比。
+\READ{“The probability of A complement equals one minus the probability of A. The probability of A union B equals the probability of A plus the probability of B minus the probability of A intersection B.”}
+\EN{For events $A$ and $B$, the complement and addition rules are given above. In a finite classical model with equally likely outcomes, the probability of $A$ is the number of favorable outcomes divided by the total number of outcomes. In a geometric model with a uniformity assumption, probability is the relevant length, area, or volume ratio.}
+
+\EX{掷一枚公平骰子，令 $A=\{2,4,6\}$，则 $P(A)=3/6=1/2$。若 $B=\{1,2,3\}$，则 $A\cap B=\{2\}$，所以 $P(A\cup B)=1/2+1/2-1/6=5/6$。}{For a fair die, let $A=\{2,4,6\}$, so $P(A)=3/6=1/2$. If $B=\{1,2,3\}$, then $A\cap B=\{2\}$ and $P(A\cup B)=1/2+1/2-1/6=5/6$.}
+
+\ASK{什么是概率空间？}{What is a probability space?}{概率空间 $(\Omega,\mathcal F,P)$ 包含样本空间、可测事件的 $\sigma$-代数和概率测度。$\sigma$-代数说明哪些子集可作为事件，概率测度给这些事件赋予概率。}{A probability space $(\Omega,\mathcal F,P)$ consists of a sample space, a sigma-algebra of measurable events, and a probability measure. The sigma-algebra specifies which subsets are events, and the measure assigns probabilities to them.}
+
+\ASK{古典概型需要什么条件？}{What conditions are required for a classical probability model?}{结果空间有限，并且所有基本结果等可能；此时概率是有利结果数除以总结果数。}{The sample space must be finite and all elementary outcomes must be equally likely. Then probability is the number of favorable outcomes divided by the total number of outcomes.}
+
+\section{条件概率、全概率与独立性 | Conditioning and independence}
+\noindent\textbf{定义与公式。} 当 $P(B)>0$ 时，
+\[
+P(A\mid B)=\frac{P(A\cap B)}{P(B)}.
+\]
+若 $A_1,\ldots,A_n$ 构成样本空间的划分且 $P(A_i)>0$，则
+\[
+P(B)=\sum_{i=1}^nP(B\mid A_i)P(A_i),\qquad
+P(A_j\mid B)=\frac{P(B\mid A_j)P(A_j)}{\sum_iP(B\mid A_i)P(A_i)}.
+\]
+\READ{“The probability of A given B equals the probability of A intersection B divided by the probability of B.” For total probability: “P of B equals the sum over i of P of B given A i times P of A i.” For Bayes: “P of A j given B equals P of B given A j times P of A j, divided by the sum over i of P of B given A i times P of A i.”}
+\EN{When $P(B)>0$, the conditional probability of $A$ given $B$ is $P(A\cap B)/P(B)$. If $A_1,\ldots,A_n$ partition the sample space, the law of total probability and Bayes' theorem are given above.}
+
+\noindent\textbf{独立性。} 事件 $A,B$ 独立当且仅当 $P(A\cap B)=P(A)P(B)$。若条件概率有定义，这等价于 $P(A\mid B)=P(A)$。互斥事件通常不独立；若两个互斥事件都具有正概率，则它们不独立。三个及以上事件的相互独立需要验证每个子集的联合概率都等于边际概率之积，逐对独立本身不够。
+
+\EN{Events $A$ and $B$ are independent if and only if $P(A\cap B)=P(A)P(B)$. When conditional probability is defined, this is equivalent to $P(A\mid B)=P(A)$. Disjoint events with positive probabilities are not independent. For three or more events, mutual independence requires the product rule for every subcollection; pairwise independence alone is insufficient.}
+
+\EX{某病患病率为 $0.01$，检测灵敏度为 $0.99$，健康者假阳性率为 $0.05$。阳性后的患病概率为 $0.99(0.01)/[0.99(0.01)+0.05(0.99)]\approx0.167$，说明必须结合基准患病率。}{Suppose prevalence is $0.01$, sensitivity is $0.99$, and the false-positive rate is $0.05$. The probability of disease after a positive result is $0.99(0.01)/[0.99(0.01)+0.05(0.99)]\approx0.167$. The base rate matters.}
+
+\ASK{全概率公式和贝叶斯公式分别解决什么问题？}{What are the law of total probability and Bayes' theorem used for?}{全概率公式按互斥且完备的情形分解目标事件概率；贝叶斯公式在观察到证据后更新这些情形的条件概率。}{The law of total probability decomposes an event according to an exhaustive partition. Bayes' theorem updates the probabilities of those cases after observing evidence.}
+
+\ASK{独立和互斥有什么区别？}{What is the difference between independence and disjointness?}{独立表示一个事件不改变另一个事件的概率；互斥表示两者不能同时发生。正概率的互斥事件不独立。}{Independence means that one event does not change the probability of the other. Disjointness means they cannot occur together. Disjoint events with positive probabilities are not independent.}
+
+\section{随机变量与常见分布 | Random variables and common distributions}
+\noindent\textbf{定义。} 随机变量 $X$ 是从概率空间到实数的可测函数。分布函数为 $F_X(x)=P(X\le x)$，单调不减、右连续，且 $F_X(-\infty)=0,F_X(+\infty)=1$。离散型变量由概率质量函数 $p_X(x)=P(X=x)$ 描述；连续型变量若有密度 $f_X$，则 $P(a<X\le b)=\int_a^bf_X(x)\,dx$，且 $F_X(x)=\int_{-\infty}^xf_X(t)\,dt$。
+
+\EN{A random variable $X$ is a measurable function from a probability space to the real numbers. Its cumulative distribution function is $F_X(x)=P(X\le x)$; it is nondecreasing and right-continuous, with limits zero and one at negative and positive infinity. A discrete random variable is described by a probability mass function. A continuous random variable with density $f_X$ satisfies $P(a<X\le b)=\int_a^b f_X(x)\,dx$.}
+
+\subsection{先看随机机制，再选分布 | Choose a distribution from the random mechanism}
+分布不是一串可互换的公式；它是对“随机结果怎样产生”的数学假设。建模时先说清观察单位是什么，再确定随机变量记录什么，之后检查重复试验是否独立、成功率或发生率是否恒定、是否有放回，最后才选分布。若模型假设不符合实验机制，公式计算再准确也回答不了现实问题。
+\EN{A distribution is not just a formula that can be swapped for another one; it is an assumption about how random outcomes are generated. First specify the observational unit and what the random variable records. Then check independence, whether a success or event rate is constant, and whether sampling is with or without replacement. Only then choose a distribution. Accurate calculations under a mismatched model do not answer the real question.}
+
+\subsection{伯努利与二项分布：固定次数中的成功数 | Bernoulli and binomial models}
+一次只有“成功/失败”两种结果的试验用伯努利变量表示。令 $X=1$ 表示成功、$X=0$ 表示失败，成功概率为 $p$，则 $X\sim\operatorname{Bernoulli}(p)$，$P(X=1)=p$、$P(X=0)=1-p$。其均值 $E(X)=p$，方差 $\operatorname{Var}(X)=p(1-p)$；方差最大值在 $p=1/2$ 时为 $1/4$。例如一件产品是否合格、一位用户是否点击，都可编码为伯努利结果，但应先固定“成功”的定义。
+\EN{A Bernoulli variable represents one trial with two outcomes. Set $X=1$ for success and $X=0$ for failure, with success probability $p$. Then $X$ has mean $p$ and variance $p(1-p)$. The variance is largest at $p=1/2$. Examples include whether one item passes inspection or whether one user clicks, after defining exactly what counts as success.}
+
+若做 $n$ 次相互独立、成功概率相同为 $p$ 的伯努利试验，并令 $X=\sum_{i=1}^nX_i$ 记录总成功数，则 $X\sim\operatorname{Bin}(n,p)$。出现 $k$ 次成功的概率为
+\[
+P(X=k)=\binom nkp^k(1-p)^{n-k},\qquad k=0,1,\ldots,n.
+\]
+这里 $\binom nk=n!/[k!(n-k)!]$ 数的是哪些 $k$ 次试验成功；每一种指定排列的概率是 $p^k(1-p)^{n-k}$。均值为 $np$，方差为 $np(1-p)$。关键条件是试验次数预先固定、结果独立、每次成功率相同；若从有限批次不放回抽样，通常应考虑超几何分布。
+\EN{If we conduct $n$ independent Bernoulli trials with the same success probability $p$, their total number of successes $X=\sum_iX_i$ follows a binomial distribution. In the formula, $\binom nk$ counts the choices of which $k$ trials succeed, and each such pattern has probability $p^k(1-p)^{n-k}$. The mean is $np$ and the variance is $np(1-p)$. The number of trials must be fixed, trials independent, and the success probability constant. Sampling without replacement from a finite batch usually calls for a hypergeometric model instead.}
+
+\EX{一台设备每个零件独立地以 $p=0.02$ 的概率不合格，抽检 $n=10$ 个。恰有一个不合格的概率为 $\binom{10}{1}(0.02)(0.98)^9\approx0.1667$；至少一个不合格的概率为 $1-(0.98)^{10}\approx0.1830$。平均不合格数是 $np=0.2$。}{Suppose each part is independently defective with probability $p=0.02$, and we inspect $10$ parts. The probability of exactly one defective part is $\binom{10}{1}(0.02)(0.98)^9\approx0.1667$. The probability of at least one is $1-(0.98)^{10}\approx0.1830$. The expected number of defectives is $np=0.2$.}
+
+\subsection{几何与负二项分布：等到成功需要多久 | Geometric and negative-binomial waiting counts}
+若每次独立试验成功率为 $p$，令 $T$ 为“第一次成功发生在第几次试验”，则几何分布采用从 $1$ 开始计数：
+\[
+P(T=k)=(1-p)^{k-1}p,\quad k=1,2,\ldots,\qquad E(T)=\frac1p.
+\]
+前 $k-1$ 次必须失败、第 $k$ 次成功，便得到该概率。它有离散无记忆性 $P(T>m+n\mid T>m)=P(T>n)$。有些教材把“第一次成功前的失败次数”定义为几何变量，取值从 $0$ 开始；使用时必须声明约定。
+\EN{Let $T$ be the trial number on which the first success occurs in independent trials with success probability $p$. Under the convention used here, $T$ starts at $1$. The first $k-1$ trials fail and trial $k$ succeeds, giving the mass function above and mean $1/p$. The geometric distribution is memoryless. Some books instead count the number of failures before the first success, starting at zero, so state the convention.}
+
+若要等到第 $r$ 次成功，令 $Y$ 记录此前失败次数，则
+\[
+P(Y=k)=\binom{k+r-1}{r-1}p^r(1-p)^k,\quad k=0,1,\ldots,
+\]
+因为最后一次试验必须成功，而前 $k+r-1$ 次中须安排 $r-1$ 次成功。其均值为 $r(1-p)/p$，方差为 $r(1-p)/p^2$。它适合“固定成功次数、随机等待时间”的问题；这和二项分布“固定试验次数、随机成功数”正好相反。
+\EN{If we wait for the $r$th success and let $Y$ count failures before it, then the first $k+r-1$ trials contain $r-1$ successes and $k$ failures, and the last trial is a success. This gives the negative-binomial mass function above. Its mean and variance are $r(1-p)/p$ and $r(1-p)/p^2$. It models a fixed target number of successes with a random waiting count, the reverse setup from a binomial model.}
+
+\EX{客服每次联系到客户时独立地以 $p=0.25$ 的概率得到有效答复。第一次有效答复出现在第 3 次的概率为 $(0.75)^2(0.25)=0.140625$；平均要联系 $1/p=4$ 次。若目标是收集 3 个有效答复，达到目标前的平均失败次数为 $3(0.75)/0.25=9$。}{Suppose each independent customer contact yields a useful response with probability $0.25$. The probability that the first useful response comes on contact 3 is $(0.75)^2(0.25)=0.140625$, and the mean number of contacts is $1/0.25=4$. To collect 3 useful responses, the expected number of failures before the target is $3(0.75)/0.25=9$.}
+
+\subsection{超几何与多项分布：抽样数类别计数 | Hypergeometric and multinomial counts}
+一批共有 $N$ 件，其中 $K$ 件具有某特征；不放回随机抽取 $n$ 件，令 $X$ 为抽到的特征件数，则
+\[
+P(X=k)=\frac{\binom Kk\binom{N-K}{n-k}}{\binom Nn},
+\quad \max(0,n-N+K)\le k\le\min(n,K).
+\]
+分母数所有大小为 $n$ 的样本，分子数恰含 $k$ 件特征品的样本。令 $p=K/N$，则 $E(X)=np$，$\operatorname{Var}(X)=np(1-p)(N-n)/(N-1)$。最后的有限总体修正因子 $(N-n)/(N-1)$ 小于 $1$，表示不放回抽样比独立抽样波动更小。若抽样占总体比例很小，二项分布常可近似超几何分布。
+\EN{A batch contains $N$ items, $K$ of which have a feature. We sample $n$ items without replacement and count featured items. The denominator counts all size-$n$ samples; the numerator counts samples with exactly $k$ featured and $n-k$ other items. With $p=K/N$, the mean is $np$ and the variance includes the finite-population correction $(N-n)/(N-1)$. This factor is below one because sampling without replacement has less variation than independent sampling. When the sampling fraction is small, a binomial model often approximates the hypergeometric model.}
+
+\EX{一盒 $20$ 个零件中有 $4$ 个不合格，不放回抽 $5$ 个。至少抽到一个不合格的概率为 $1-\binom{16}{5}/\binom{20}{5}\approx0.7183$。若误当作独立抽样，则会算成 $1-(16/20)^5\approx0.6723$；总体不大时这种差别不可忽略。}{A box has $20$ parts, including $4$ defective ones. We draw $5$ without replacement. The chance of at least one defective part is $1-\binom{16}{5}/\binom{20}{5}\approx0.7183$. Treating draws as independent would give $1-(16/20)^5\approx0.6723$, a noticeable difference for this small batch.}
+
+若每次独立试验有 $m$ 类结果，类别概率为 $p_1,\ldots,p_m$（总和为 $1$），固定做 $n$ 次并记录各类次数 $X_1,\ldots,X_m$，则向量服从多项分布：
+\[
+P(X_1=x_1,\ldots,X_m=x_m)=\frac{n!}{x_1!\cdots x_m!}\prod_{j=1}^mp_j^{x_j},\quad \sum_jx_j=n.
+\]
+每类次数的均值为 $np_j$，方差为 $np_j(1-p_j)$；不同类别次数的协方差为 $-np_ip_j$，因为总次数固定，一类次数增多会挤占其他类别名额。$m=2$ 时它退化为二项分布。
+\EN{In $n$ independent trials with $m$ possible categories of probabilities $p_1,\ldots,p_m$, the vector of category counts follows a multinomial distribution. The multinomial coefficient counts arrangements of the observed categories. Each count has mean $np_j$ and variance $np_j(1-p_j)$. Counts in different categories have negative covariance because their total is fixed. With two categories, the model reduces to the binomial distribution.}
+
+\subsection{泊松分布：单位时间或区域中的事件数 | Poisson counts}
+若随机变量 $N$ 记录固定时间、面积或体积内发生的事件数，常用 $N\sim\operatorname{Poisson}(\lambda)$：
+\[
+P(N=k)=e^{-\lambda}\frac{\lambda^k}{k!},\quad k=0,1,\ldots,\qquad E(N)=\operatorname{Var}(N)=\lambda.
+\]
+$\lambda$ 是该观察区间中的平均事件数，不是每次试验的成功概率；若事件率为每小时 $r$ 次，观察 $t$ 小时，则 $\lambda=rt$。经典 Poisson 过程还假设不相交时间段的计数独立、短时间段内多次事件的概率可忽略，且速率恒定。若事件会成群出现或速率随时段变化，简单 Poisson 模型可能低估波动。
+\EN{A Poisson variable counts events in a fixed interval of time, area, or volume. Its parameter $\lambda$ is the expected count over that interval, not a per-trial success probability. If the event rate is $r$ per hour and we observe $t$ hours, then $\lambda=rt$. A homogeneous Poisson process assumes independent counts in disjoint intervals, negligible probability of multiple events in a very short interval, and a constant rate. Clustering or changing rates can make the simple model underestimate variability.}
+
+\EX{呼叫中心平均每小时接到 $3$ 个电话，并假定电话到达符合恒定速率 Poisson 过程。半小时内的均值为 $\lambda=1.5$；零个电话的概率是 $e^{-1.5}\approx0.2231$，至少两个电话的概率为 $1-e^{-1.5}(1+1.5)\approx0.4422$。}{A call center receives an average of 3 calls per hour and assumes a constant-rate Poisson process. The mean count in half an hour is $\lambda=1.5$. The probability of no calls is $e^{-1.5}\approx0.2231$, and the probability of at least two is $1-e^{-1.5}(1+1.5)\approx0.4422$.}
+
+\subsection{均匀分布：区间内等密度 | Uniform distribution}
+若连续变量 $X$ 在 $[a,b]$ 上等密度分布，记 $X\sim U(a,b)$，则密度在区间内为 $1/(b-a)$、区间外为 $0$。密度是单位长度上的概率质量，必须积分才得到概率：对 $a\le c<d\le b$，$P(c\le X\le d)=(d-c)/(b-a)$。均值为 $(a+b)/2$，方差为 $(b-a)^2/12$。均匀假设表示区间中每个等长小段概率相等，不能仅因变量有上下界就使用均匀分布。
+\EN{A continuous variable is uniform on $[a,b]$ when its density is constant there and zero outside. A density is probability per unit length; integrate it to obtain interval probability. The mean is the midpoint $(a+b)/2$ and the variance is $(b-a)^2/12$. Uniformity means equal-length subintervals have equal probability. Bounded support alone does not justify a uniform model.}
+
+\EX{公交车每 $10$ 分钟一班，乘客到站时刻相对班次周期可近似看作在 $[0,10]$ 上均匀。忽略其他因素，等车超过 $7$ 分钟意味着到站周期位置落在前 $3$ 分钟，因此概率为 $3/10=0.3$；平均等待时间为 $5$ 分钟。若乘客会按时刻表安排到站，这个均匀假设可能不成立。}{If a bus comes every 10 minutes and passenger arrival time is approximately uniform within the bus cycle, waiting more than 7 minutes means arriving during the first 3 minutes of the cycle. The probability is $3/10=0.3$, and mean waiting time is 5 minutes. Passengers who schedule their arrival using the timetable may violate the uniformity assumption.}
+
+\subsection{指数与伽马分布：等待事件 | Exponential and gamma waiting times}
+在恒定率 $\lambda$ 的 Poisson 过程中，两次相邻事件之间的等待时间 $T$ 服从指数分布：
+\[
+f_T(t)=\lambda e^{-\lambda t}\ (t\ge0),\qquad P(T>t)=e^{-\lambda t},
+\qquad E(T)=1/\lambda,\quad \operatorname{Var}(T)=1/\lambda^2.
+\]
+$\lambda$ 的单位是“事件数/时间”，所以均值 $1/\lambda$ 的单位是时间。指数分布的无记忆性为 $P(T>s+t\mid T>s)=P(T>t)$：已经等待了 $s$ 时间，不改变还需再等 $t$ 时间以上的概率。这只适用于恒定危险率/Poisson 到达等模型，不代表所有寿命都有无记忆性。
+\EN{In a constant-rate Poisson process, the waiting time $T$ between events is exponential. The rate $\lambda$ is measured in events per unit time, so the mean waiting time $1/\lambda$ has units of time. The memoryless property says that having already waited $s$ units does not change the chance of waiting at least another $t$ units. This property belongs to the constant-rate model and does not describe every lifetime.}
+
+等待第 $r$ 个 Poisson 事件的时间是 $r$ 个独立指数等待时间之和，服从伽马分布。采用“形状 $\alpha$、率 $\beta$”参数化时，密度为
+\[
+f(t)=\frac{\beta^\alpha}{\Gamma(\alpha)}t^{\alpha-1}e^{-\beta t},\quad t>0,
+\qquad E(T)=\frac{\alpha}{\beta},\quad \operatorname{Var}(T)=\frac{\alpha}{\beta^2}.
+\]
+这里 $\Gamma(\alpha)$ 是 Gamma 函数；正整数 $r$ 时 $\Gamma(r)=(r-1)!$。伽马模型适合等待多个事件或正值右偏量；指数分布是 $\alpha=1$ 的特例。文献有时用尺度 $\theta=1/\beta$ 参数化，均值会写成 $\alpha\theta$，不可混淆率与尺度。
+\EN{The waiting time to the $r$th event in a Poisson process is the sum of $r$ independent exponential waiting times and follows a gamma distribution. We use shape $\alpha$ and rate $\beta$. The Gamma function satisfies $\Gamma(r)=(r-1)!$ for positive integers. Gamma models can describe waiting for several events or other positive, right-skewed quantities. The exponential distribution is the special case $\alpha=1$. Some references use scale $\theta=1/\beta$ instead of rate, so check the parameterization.}
+
+\EX{设备的故障可近似为速率 $\lambda=0.001$ 次/小时的恒定 Poisson 过程，则单次故障间隔平均为 $1000$ 小时。已运行 $500$ 小时仍未故障后，再连续 $500$ 小时不故障的条件概率仍为 $e^{-0.5}\approx0.6065$。若实际故障率随设备老化上升，这个无记忆模型不合适。}{If failures are approximated by a constant-rate Poisson process with rate $0.001$ per hour, the mean time between failures is 1000 hours. Given that a unit has already operated for 500 hours without failure, the chance of surviving another 500 hours is still $e^{-0.5}\approx0.6065$. If failure risk rises with age, the memoryless model is inappropriate.}
+
+\subsection{正态分布：许多小误差的合成 | Normal distribution}
+若连续变量围绕中心值 $\mu$ 对称、偏差由许多近似独立的小因素相加，可考虑正态模型 $X\sim N(\mu,\sigma^2)$，其密度为
+\[
+f_X(x)=\frac{1}{\sqrt{2\pi}\sigma}\exp\!\left[-\frac{(x-\mu)^2}{2\sigma^2}\right],\qquad -\infty<x<\infty.
+\]
+$\mu$ 是均值和对称中心，$\sigma>0$ 是标准差，$\sigma^2$ 是方差；约 $68\%$、$95\%$、$99.7\%$ 的质量分别位于 $\mu\pm\sigma$、$\mu\pm2\sigma$、$\mu\pm3\sigma$ 内（后两者是近似经验法则）。标准化 $Z=(X-\mu)/\sigma$ 将任意正态变量转换为 $N(0,1)$，以便查标准正态表。正态模型允许负值，因此对严格正值、强偏态数据需评估其合理性。
+\EN{A normal model is useful for a variable that is symmetric around a center and results from many approximately independent small contributions. The mean $\mu$ is the center, $\sigma$ is the standard deviation, and $\sigma^2$ is the variance. Approximately 68\%, 95\%, and 99.7\% of its probability lie within one, two, and three standard deviations of the mean. Standardization converts $X$ to a standard normal variable. Since a normal model allows negative values, it may be unsuitable for strictly positive or strongly skewed data.}
+
+\EX{机器加工直径近似服从 $N(10,0.2^2)$ 毫米。直径落在 $9.6$ 到 $10.4$ 毫米内等价于 $|Z|\le2$，概率约为 $0.9545$；落在规格外的概率约为 $0.0455$。这可用于估算不合格率，但前提是正态模型和参数经生产数据检查。}{Suppose a machined diameter is approximately $N(10,0.2^2)$ millimeters. Falling between 9.6 and 10.4 millimeters is equivalent to $|Z|\le2$, with probability about $0.9545$. The probability outside the specification is about $0.0455$. This estimates the defect rate only if production data support the normal model and its parameters.}
+
+\subsection{常用扩展：贝塔分布与泊松近似 | Common extensions: beta and Poisson approximation}
+贝塔分布定义在 $0<p<1$ 上，密度为 $f(p)=p^{a-1}(1-p)^{b-1}/B(a,b)$，其中 $a,b>0$ 控制形状，$B(a,b)$ 是归一化常数；均值为 $a/(a+b)$。它适合描述概率、比例等未知的 $[0,1]$ 参数。在贝叶斯二项模型中，若先验 $p\sim\operatorname{Beta}(a,b)$，观察 $n$ 次中 $x$ 次成功后，后验为 $\operatorname{Beta}(a+x,b+n-x)$。先验并非额外观测数据；应解释其来源并做敏感性分析。
+\EN{The beta distribution has support $0<p<1$. Its shape parameters $a,b>0$ determine the density, while $B(a,b)$ normalizes its integral to one. Its mean is $a/(a+b)$. It is useful for an unknown probability or proportion. In a Bayesian binomial model, a beta prior updates to $\operatorname{Beta}(a+x,b+n-x)$ after observing $x$ successes in $n$ trials. A prior is not additional observed data; explain its source and check sensitivity to it.}
+
+当 $n$ 较大、$p$ 较小且 $np$ 保持中等时，$\operatorname{Bin}(n,p)$ 可由 $\operatorname{Poisson}(np)$ 近似；这来自大量稀有且独立事件的总数。近似必须结合所求尾部和精度判断，不是“只要 $n$ 大”就成立。另一方面，Poisson 过程在观察时间加倍时，平均计数也加倍。
+\EN{When $n$ is large, $p$ is small, and $np$ remains moderate, $\operatorname{Bin}(n,p)$ can be approximated by $\operatorname{Poisson}(np)$. This represents the total of many rare, independent events. Accuracy depends on the probability being computed; a large $n$ alone is not enough. In a Poisson process, doubling the observation time also doubles the expected count.}
+
+\EX{一批 $1000$ 件产品每件不合格率为 $0.002$，用二项模型计算恰有两个不合格的概率为 $\binom{1000}{2}(0.002)^2(0.998)^{998}$；Poisson 近似取 $\lambda=np=2$，得到 $e^{-2}2^2/2!\approx0.2707$。两者数值接近，但最终是否采用近似应看所需精度。}{For $1000$ items with independent defect probability $0.002$, the exact binomial probability of two defectives is $\binom{1000}{2}(0.002)^2(0.998)^{998}$. The Poisson approximation uses $\lambda=np=2$ and gives $e^{-2}2^2/2!\approx0.2707$. They are close here, but the required accuracy should determine whether approximation is acceptable.}
+
+\subsection{快速选模与易混点 | Model-selection guide and common confusions}
+\begin{center}
+\begin{tabular}{p{0.27\linewidth}p{0.31\linewidth}p{0.32\linewidth}}
+随机问题 & 先问什么 & 常用模型及条件\\
+一次成败 & 只做一次吗？ & Bernoulli$(p)$\\
+固定次数的成功总数 & 次数固定、成功率固定且独立吗？ & Binomial$(n,p)$\\
+抽样直到达到若干成功 & 目标成功数固定吗？ & Geometric / negative binomial\\
+有限批次不放回抽样 & 总体数量能列出吗？ & Hypergeometric$(N,K,n)$\\
+固定曝光量的事件数 & 事件率大致恒定且事件独立吗？ & Poisson$(\lambda)$\\
+相邻事件等待时间 & 是否来自恒定率 Poisson 过程？ & Exponential$(\lambda)$\\
+等待第 $r$ 次事件 & 是否累加 $r$ 个指数间隔？ & Gamma$(r,\lambda)$\\
+有界区间内等可能 & 等长子区间概率真的相等吗？ & Uniform$(a,b)$\\
+对称连续测量/误差 & 分布是否近似钟形且允许实数全域？ & Normal$(\mu,\sigma^2)$\\
+未知概率/比例 & 参数只在 $(0,1)$ 内吗？ & Beta$(a,b)$（常作先验）
+\end{tabular}
+\end{center}
+二项分布计数“固定次数中的成功”；几何/负二项计数“等到成功前的试验或失败”；超几何来自不放回；泊松数事件，指数量事件间隔，伽马量等多个事件的总等待时间。正态的概率由密度积分得到，不能把密度值本身当作区间概率。各符号的参数化和假设应随模型一起陈述。
+\EN{A binomial variable counts successes in a fixed number of trials. Geometric and negative-binomial variables count trials or failures until a success target. Hypergeometric sampling is without replacement. Poisson counts events; exponential models time between events; gamma models the total wait for several events. For a normal variable, interval probability is an integral of the density, not the density value itself. State parameter conventions and assumptions with every model.}
+
+\ASK{随机变量和分布函数是什么？}{What are a random variable and its distribution function?}{随机变量把随机结果映射为实数；分布函数 $F_X(x)=P(X\le x)$ 描述变量不超过任意阈值 $x$ 的概率。}{A random variable maps outcomes to real numbers. Its distribution function $F_X(x)=P(X\le x)$ gives the probability that it does not exceed a threshold $x$.}
+
+\ASK{概率质量函数和概率密度函数有何区别？}{What is the difference between a probability mass function and a density?}{离散型变量的点概率由质量函数直接给出；连续型变量单点概率为零，区间概率由密度积分得到。}{A mass function gives point probabilities for a discrete variable. A continuous variable has zero probability at a single point; interval probabilities are integrals of its density.}
+
+\subsection{完整应用：排队前的到达模型 | A complete arrival-model example}
+\noindent 假设营业窗口每小时平均有 $12$ 人到达，并且在观察期内到达可近似为恒定速率 Poisson 过程。令 $N(t)$ 表示 $t$ 小时内的到达人数，则 $N(t)\sim\operatorname{Poisson}(12t)$；令 $T$ 表示从现在到下一次到达的等待时间，则 $T\sim\operatorname{Exp}(12)$，单位是小时。人数与时间是两个不同随机变量，分别使用离散和连续分布。
+\EN{Suppose customers arrive at a service counter at an average rate of twelve per hour and arrivals can be modeled as a constant-rate Poisson process. If $N(t)$ counts arrivals in $t$ hours, then $N(t)\sim\operatorname{Poisson}(12t)$. If $T$ is the time until the next arrival, then $T\sim\operatorname{Exp}(12)$ when time is measured in hours. The count and the waiting time are different random variables with discrete and continuous distributions.}
+
+\EX{问五分钟内至少两人到达的概率。五分钟为 $1/12$ 小时，所以 $N(1/12)$ 的参数为 $12\cdot(1/12)=1$。从总概率减去零人和一人的概率，得 $P(N\ge2)=1-e^{-1}(1+1)\approx0.2642$。下一位顾客等待超过十分钟的概率为 $P(T>1/6)=e^{-12/6}=e^{-2}\approx0.1353$；平均等待下一人 $1/12$ 小时，即五分钟。}{The number of arrivals in five minutes has mean $12(1/12)=1$. The probability of at least two is $1-e^{-1}(1+1)\approx0.2642$. The probability of waiting over ten minutes for the next arrival is $e^{-12/6}=e^{-2}\approx0.1353$. The mean wait for the next arrival is $1/12$ hour, or five minutes.}
+
+\noindent 以上算的是\textbf{到达间隔}，不是排队等待服务时间；后者还需要服务时间分布、服务台数量、排队规则及当前队列状态。若午间与夜间到达率差异很大、顾客常成团抵达，恒定率及独立增量假设可能不合适，需分时段估计或换模型。
+\EN{These calculations describe arrival gaps, not the time spent waiting in a queue. Queueing delay also depends on service times, number of servers, queue discipline, and the current queue. Strong time-of-day variation or customers arriving in groups can violate the constant-rate and independent-increments assumptions.}
+
+\ASK{为什么泊松到达的数量对应指数等待时间？}{Why do Poisson arrival counts lead to exponential waiting times?}{等待时间超过 $t$ 当且仅当这段时间内零次到达。因此 $P(T>t)=P(N(t)=0)=e^{-\lambda t}$，这正是参数为 $\lambda$ 的指数分布的生存函数。}{The waiting time exceeds $t$ exactly when no event occurs during that interval. Therefore $P(T>t)=P(N(t)=0)=e^{-\lambda t}$, the survival function of an exponential distribution with rate $\lambda$.}
+
+\section{多维分布与随机变量函数 | Joint distributions and transformations}
+\noindent\textbf{定义。} 随机向量 $(X,Y)$ 的联合分布函数为 $F_{X,Y}(x,y)=P(X\le x,Y\le y)$。离散情形有联合质量 $p_{X,Y}(x,y)$；连续情形有联合密度 $f_{X,Y}$。边际密度通过积分得到 $f_X(x)=\int f_{X,Y}(x,y)\,dy$。连续变量独立当且仅当 $f_{X,Y}(x,y)=f_X(x)f_Y(y)$（几乎处处）。
+
+\EN{The joint distribution function of $(X,Y)$ is $F_{X,Y}(x,y)=P(X\le x,Y\le y)$. A joint mass function or density describes the pair. In the continuous case, the marginal density is obtained by integrating the joint density over the other variable. Independence is equivalent to factorization of the joint density into marginal densities, almost everywhere.}
+
+\noindent\textbf{条件分布与卷积。} 若 $f_Y(y)>0$，则 $f_{X\mid Y}(x\mid y)=f_{X,Y}(x,y)/f_Y(y)$。若 $X,Y$ 独立且 $Z=X+Y$，则 $f_Z(z)=\int_{-\infty}^{\infty}f_X(x)f_Y(z-x)\,dx$。离散情形对满足 $x_i+y_j=z$ 的概率求和。
+\READ{“The density of X given Y equals y is the joint density divided by the marginal density of Y.” For convolution: “The density of the sum at z is the integral of f X at x times f Y at z minus x.”}
+\EN{The conditional density is the joint density divided by the marginal density of the conditioning variable. For independent continuous variables, the density of their sum is the convolution shown above. For discrete variables, sum the probabilities of all pairs that produce the desired sum.}
+
+\EX{若 $X$ 以 $1/2$ 的概率取 $-1$，以 $1/2$ 的概率取 $1$，令 $Z=X^2$，则 $P(Z=1)=1$。求函数分布时，可先写出 $\{Z=z\}=\{f(X)=z\}$ 并合并所有原像。}{If $X$ equals $-1$ or $1$ with probability $1/2$ each and $Z=X^2$, then $P(Z=1)=1$. To find a transformed distribution, identify all preimages of each value and combine their probabilities.}
+
+\ASK{怎样由联合分布求边际分布？}{How do you obtain a marginal distribution from a joint distribution?}{离散情形对另一变量求和；连续情形对联合密度积分。边际化就是把不关心的坐标累加或积分掉。}{For a discrete pair, sum over the other variable. For a continuous pair, integrate the joint density over the other variable. Marginalization sums or integrates out the coordinate of no interest.}
+
+\ASK{随机变量函数的分布通常怎样求？}{How do you usually find the distribution of a function of a random variable?}{可先求 $P(g(X)\le z)$；离散情形合并映到同一结果的概率，连续且单调可微时可用变量变换并乘雅可比因子。}{First compute $P(g(X)\le z)$. For a discrete variable, combine probabilities that map to the same value. For a differentiable monotone transformation, use the change-of-variables formula with its Jacobian factor.}
+
+\section{期望、方差与相关性 | Expectation, variance and dependence}
+\noindent\textbf{定义与公式。} 离散变量 $E(X)=\sum_xxp_X(x)$；连续变量 $E(X)=\int_{-\infty}^{\infty}xf_X(x)\,dx$，前提是相应期望存在。更一般地，$E[g(X)]=\sum_xg(x)p_X(x)$ 或 $\int g(x)f_X(x)\,dx$。方差、协方差和相关系数为
+\[
+\begin{aligned}
+\operatorname{Var}(X)&=E[(X-EX)^2]=E(X^2)-(EX)^2,\\
+\operatorname{Cov}(X,Y)&=E[(X-EX)(Y-EY)],\\
+\rho_{XY}&=\frac{\operatorname{Cov}(X,Y)}{\sigma_X\sigma_Y}.
+\end{aligned}
+\]
+若变量独立且期望存在，$E(XY)=E(X)E(Y)$，故协方差为零；反向一般不成立。
+\READ{“The variance of X equals the expected value of X squared minus the square of the expected value of X.” “The covariance of X and Y equals the expected value of the product of their centered values.”}
+\EN{Expectation is the probability-weighted average, or the integral of the value against its density. The variance is $E(X^2)-(EX)^2$. Covariance measures joint linear variation, and correlation is normalized covariance. Independence implies zero covariance when moments exist, but zero covariance does not generally imply independence.}
+
+\EX{若 $X$ 取值 $0,1$，成功概率为 $p$，则 $EX=p$，$E(X^2)=p$，从而 $\operatorname{Var}(X)=p-p^2=p(1-p)$。}{For a Bernoulli variable with success probability $p$, $EX=p$ and $E(X^2)=p$, so $\operatorname{Var}(X)=p-p^2=p(1-p)$.}
+
+\ASK{期望和方差分别描述什么？}{What do expectation and variance describe?}{期望描述分布的平均位置，方差描述围绕期望的离散程度。计算方差可用 $E(X^2)-(EX)^2$。}{Expectation describes the average location of a distribution, while variance describes its spread around the mean. A useful formula is $E(X^2)-(EX)^2$.}
+
+\ASK{不相关是否意味着独立？}{Does uncorrelatedness imply independence?}{一般不意味着。独立且二阶矩存在可推出协方差为零；零协方差只排除了线性相关。对联合正态变量，不相关才可推出独立。}{Not in general. Independence with finite second moments implies zero covariance, but zero covariance only rules out linear correlation. For jointly normal variables, uncorrelatedness does imply independence.}
+
+\subsection{条件期望与变换函数 | Conditional expectation and transforms}
+\noindent\textbf{条件期望。} 对事件 $B$ 且 $P(B)>0$，$E(X\mid B)=E[X\mathbf1_B]/P(B)$。对离散 $Y$，$E(X\mid Y=y)=\sum_xxP(X=x\mid Y=y)$；连续情形用条件密度积分。全期望公式为 $E(X)=E[E(X\mid Y)]$。
+\READ{“The expected value of X equals the expected value of the conditional expectation of X given Y.”}
+\EN{For an event $B$ with positive probability, conditional expectation is $E[X\mathbf 1_B]/P(B)$. For a discrete conditioning variable, average using the conditional probabilities; for a continuous one, integrate against the conditional density. The law of total expectation states that the expectation of $X$ equals the expectation of its conditional expectation given $Y$.}
+
+\noindent\textbf{母函数与特征函数。} 矩母函数 $M_X(t)=E(e^{tX})$ 在其有限的邻域内可用导数求矩；特征函数 $\phi_X(t)=E(e^{itX})$ 对所有实数 $t$ 存在，并唯一决定分布。复数形式可拆成 $\phi_X(t)=E(\cos tX)+iE(\sin tX)$。
+\READ{“M sub X of t equals the expected value of e to the power t X.” “Phi sub X of t equals the expected value of e to the power i t X.”}
+\EN{The moment-generating function is $M_X(t)=E(e^{tX})$ where it is finite near zero, and its derivatives give moments. The characteristic function $\phi_X(t)=E(e^{itX})$ exists for every real $t$ and uniquely determines the distribution.}
+
+\ASK{矩母函数和特征函数有什么区别？}{What is the difference between a moment-generating function and a characteristic function?}{母函数在零点附近存在时可通过导数生成矩，但不一定对所有分布都存在；特征函数总存在且唯一确定分布。}{A moment-generating function yields moments by differentiation when it exists near zero, but it does not exist for every distribution. A characteristic function always exists and uniquely determines the distribution.}
+
+\section{收敛、大数定律与中心极限定理 | Convergence and limit theorems}
+\noindent\textbf{收敛方式。} 依概率收敛要求对每个 $\varepsilon>0$，$P(|X_n-X|>\varepsilon)\to0$；几乎必然收敛要求 $P(X_n\to X)=1$；$L^r$ 收敛要求 $E|X_n-X|^r\to0$；依分布收敛要求分布函数在极限分布函数的连续点收敛。常见蕴含为几乎必然收敛推出依概率收敛，$L^r$ 收敛推出依概率收敛；反向通常不成立。
+
+\EN{Convergence in probability means $P(|X_n-X|>\varepsilon)\to0$ for every $\varepsilon>0$. Almost-sure convergence means $P(X_n\to X)=1$. Convergence in $L^r$ means $E|X_n-X|^r\to0$. Convergence in distribution is convergence of distribution functions at continuity points of the limit distribution. Almost-sure and $L^r$ convergence each imply convergence in probability under the usual conditions; the converses generally fail.}
+
+\noindent\textbf{大数定律。} 若 $X_i$ 独立同分布且 $E|X_1|<\infty$，强大数定律给出
+\[
+\frac{1}{n}\sum_{i=1}^nX_i\xrightarrow{a.s.}E(X_1).
+\]
+它解释了样本平均值趋近总体均值。\textbf{中心极限定理。} 若 $X_i$ 独立同分布，均值 $\mu$、方差 $0<\sigma^2<\infty$，则
+\[
+\frac{\sum_{i=1}^nX_i-n\mu}{\sigma\sqrt n}\xrightarrow{d}N(0,1).
+\]
+\READ{“The sample average converges almost surely to the population mean.” “The sum of X i minus n mu, divided by sigma times the square root of n, converges in distribution to a standard normal random variable.”}
+\EN{The strong law says that the sample average converges almost surely to the population mean when the variables are independent and identically distributed with finite absolute mean. The central limit theorem says that the standardized sum converges in distribution to the standard normal when the variables are iid with finite positive variance.}
+
+\EX{若每日需求 $X_i$ 独立同分布且均值为 $\mu$、方差为 $\sigma^2$，则样本平均需求约为 $N(\mu,\sigma^2/n)$，可用正态近似估算平均需求落入给定区间的概率。}{If daily demands $X_i$ are iid with mean $\mu$ and variance $\sigma^2$, the sample mean is approximately normal with mean $\mu$ and variance $\sigma^2/n$. This approximates the probability that average demand lies in a given interval.}
+
+\ASK{大数定律与中心极限定理有什么不同？}{How do the law of large numbers and the central limit theorem differ?}{大数定律说明样本平均趋近总体均值；中心极限定理描述其误差经 $\sqrt n$ 缩放后近似服从标准正态分布。}{The law of large numbers says the sample average approaches the population mean. The central limit theorem describes the distribution of the centered error after scaling by $\sqrt n$.}
+
+\ASK{中心极限定理有哪些常见条件和用途？}{What are common conditions and uses of the central limit theorem?}{常见版本要求独立同分布、有限正方差。它使大量独立小影响之和可以用正态分布近似，从而进行概率计算和统计推断。}{A common version assumes iid variables with finite positive variance. It allows sums of many independent small effects to be approximated by a normal distribution, supporting probability calculations and statistical inference.}
+
+\ASK{几种随机变量收敛方式的区别是什么？}{How do common modes of convergence differ?}{依分布只比较分布函数；依概率控制偏差超过任意阈值的概率；几乎必然要求样本路径最终收敛；$L^r$ 控制偏差的 $r$ 阶矩。}{Convergence in distribution compares distribution functions. Convergence in probability controls the chance of an error exceeding any threshold. Almost-sure convergence concerns sample paths, while $L^r$ convergence controls the $r$th moment of the error.}
+
+\section*{来源与范围 | Source and scope}
+本讲义依据“概率论”文件夹中的 2024 年课程讲义 PDF（共 23 讲）整理，覆盖事件、古典与几何概型、概率公理、条件概率、独立性、随机变量分布、期望与变换函数、收敛及极限定理。测度扩张等理论细节按课程课件作为理解背景，面试回答可优先突出基础定义与计算。
+\EN{This handout follows the 2024 probability lecture file in the Probability Theory folder, which contains 23 lectures. It covers events, classical and geometric models, probability axioms, conditioning, independence, distributions, expectation and transformations, convergence, and limit theorems. Measure-extension details are included as course context; interview answers can prioritize core definitions and calculations.}
+\end{document}

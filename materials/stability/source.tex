@@ -1,0 +1,213 @@
+\documentclass[UTF8,11pt,a4paper]{ctexart}
+\usepackage{amsmath,amssymb,geometry,enumitem,hyperref}
+\geometry{margin=2.1cm}\setlist{itemsep=2pt,topsep=3pt}
+\hypersetup{colorlinks=true,linkcolor=blue}
+\newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
+\newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\EX}[2]{\par\noindent\textbf{例子 / Example.} #1\par\EN{#2}}
+\newcommand{\ASK}[4]{\par\noindent\textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent\textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
+\title{稳定性理论 APS 面试准备\\[4pt]\large 双语课程概述、知识点与口试题}
+\author{Stability Theory: Bilingual Review}
+\date{}
+\begin{document}\maketitle
+\section*{课程概述 | Course overview}
+\noindent\textbf{中文口述稿。} 在这门课里，我研究系统偏离平衡状态后会怎样变化。例如把 $x(t)$ 看作温度与目标值的偏差，若模型是 $\dot x=-x$，初始偏差为 $x_0$，则 $x(t)=x_0e^{-t}$。偏差始终减小并趋于零，所以平衡点 $x=0$ 渐近稳定。很多系统不能直接解出 $x(t)$，我会用 Lyapunov 方法：取 $V(x)=x^2/2$ 衡量偏差，再算出沿解的导数 $\dot V=x\dot x=-x^2\le0$。这里实际上除原点外严格小于零，因此可以证明这个平衡点渐近稳定。这也连接了微分方程和控制问题：控制目标常是让误差随时间衰减。
+
+\EN{In this course, I studied what happens when a system is disturbed from equilibrium. For example, let $x(t)$ be the difference between a temperature and its target. In the model $\dot x=-x$, an initial error $x_0$ gives $x(t)=x_0e^{-t}$. The error decreases to zero, so the equilibrium is asymptotically stable. When I cannot solve a system explicitly, I can use Lyapunov's method. For this example, choose $V(x)=x^2/2$ to measure the deviation. Along a solution, $\dot V=x\dot x=-x^2$, which is strictly negative away from zero. This proves asymptotic stability and illustrates a control objective: making an error decay over time.}
+
+\noindent\textbf{口述提示。} Lyapunov 稳定性理论是基础主线；Hopfield 网络属于同一文件夹中的应用专题，可在面试官追问课程应用或研究例子时补充。
+\EN{Lyapunov stability theory is the core course material. The Hopfield-network material is an application topic from the same folder and can be mentioned when asked about applications or examples.}
+
+\section{从零开始：系统模型、解与平衡点 | Systems, solutions, and equilibria from the beginning}
+稳定性理论研究的是一个动态系统受到初始偏差或外部扰动后，状态会怎样演化。状态 $x(t)=(x_1(t),\ldots,x_n(t))^{\mathsf T}\in\mathbb R^n$ 汇总了描述系统所需的变量；$t$ 是时间，$\dot x=dx/dt$ 表示状态变化率。常微分方程系统
+\[
+\dot x=f(t,x),\qquad x(t_0)=x_0
+\]
+给定变化规律 $f$ 和初始状态 $x_0$，其解 $x(t;t_0,x_0)$ 描述之后的运动轨迹。若变化规律不显含时间，即 $\dot x=f(x)$，称为自治系统；若 $f$ 显含 $t$，称为非自治系统。稳定性总是相对于指定的解或平衡状态而言，不能脱离系统方程和初值来谈。
+\EN{Stability theory asks how a dynamical system evolves after an initial deviation or external disturbance. The state $x(t)=(x_1(t),\ldots,x_n(t))^{\mathsf T}\in\mathbb R^n$ collects the variables needed to describe the system. Time is denoted by $t$, and $\dot x=dx/dt$ is the rate of change of the state. An ordinary differential equation with an initial condition specifies a trajectory $x(t;t_0,x_0)$. If the rule $f$ does not depend explicitly on time, the system is autonomous; otherwise it is nonautonomous. Stability is always a property relative to a specified solution or equilibrium and its governing equation.}
+
+\noindent\textbf{平衡点。} 对自治系统 $\dot x=f(x)$，若 $f(x^*)=0$，则 $x^*$ 是平衡点：从 $x(t_0)=x^*$ 出发，状态保持不变。平衡点可以有多个。令 $z=x-x^*$，便可把考察的平衡点平移到原点；平移后要同时改写微分方程。非自治系统中，固定状态 $x^*$ 是平衡解需满足 $f(t,x^*)=0$ 对所有相关时刻成立；更一般的参考解 $x^*(t)$ 则满足 $\dot x^*(t)=f(t,x^*(t))$，稳定性可通过误差 $e(t)=x(t)-x^*(t)$ 定义。
+\EN{For an autonomous system $\dot x=f(x)$, a point $x^*$ is an equilibrium if $f(x^*)=0$: a solution starting there remains there. A system may have several equilibria. The change of variables $z=x-x^*$ moves the equilibrium to the origin, while the differential equation must be shifted as well. In a nonautonomous system, a fixed state is an equilibrium only if $f(t,x^*)=0$ for every relevant time. More generally, a reference trajectory $x^*(t)$ satisfies $\dot x^*(t)=f(t,x^*(t))$, and stability is defined using the error $e(t)=x(t)-x^*(t)$.}
+
+\EX{对 $\dot x=-x$，平衡方程 $-x^*=0$ 给出 $x^*=0$，且解为 $x(t)=x_0e^{-(t-t_0)}$：任意初值都会衰减到零。对 $\dot x=x$，同样的平衡点却有解 $x(t)=x_0e^{t-t_0}$；任何非零偏差都会增长。因此“平衡”只表示状态不变，并不表示平衡点稳定。}{For $\dot x=-x$, solving $-x^*=0$ gives the equilibrium $0$, and the solution is $x(t)=x_0e^{-(t-t_0)}$, which decays to zero. For $\dot x=x$, the same equilibrium has solutions $x(t)=x_0e^{t-t_0}$, so every nonzero deviation grows. Being an equilibrium means that the state can remain fixed; it does not mean that the equilibrium is stable.}
+
+\noindent 讨论“附近”时需要给状态空间选定距离，通常使用欧几里得范数 $\|x-x^*\|$。若状态有不同单位或不同量级，也可使用加权范数；有限维空间中的任意两个范数给出相同的稳定性概念。自治系统的相轨线是状态随时间经过的点集；它显示运动方向和长期趋势，但稳定性还要量化初值偏差能否被限制。
+\EN{To make “nearby” precise, we choose a distance in state space, usually the Euclidean norm $\|x-x^*\|$. A weighted norm may be more appropriate when state variables have different units or scales; all norms in a finite-dimensional space define the same stability notion. A phase trajectory is the set of states visited over time. It displays direction and long-term behavior, while a stability definition quantifies how initial deviations are controlled.}
+
+\section{稳定性类型与严格定义 | Types and precise definitions of stability}
+设 $x^*$ 是平衡点。Lyapunov 稳定的定义为：对任意 $\varepsilon>0$，存在 $\delta>0$，使得只要初值满足 $\|x(t_0)-x^*\|<\delta$，解就对所有 $t\ge t_0$ 满足 $\|x(t)-x^*\|<\varepsilon$。先任取允许的误差范围 $\varepsilon$，再找到足够小的初值范围 $\delta$；要求是之后永远不离开误差范围。这里的 $\delta$ 可以依赖 $\varepsilon$，而且在非自治系统中还可能依赖初始时刻 $t_0$。
+
+\noindent\textbf{Lyapunov 稳定。} 平衡点 $x^*$ 稳定，若对任意 $\varepsilon>0$，存在 $\delta>0$，使得初值满足 $\|x(t_0)-x^*\|<\delta$ 时，对所有 $t\ge t_0$ 有 $\|x(t)-x^*\|<\varepsilon$。非自治系统中，若 $\delta$ 可选为与 $t_0$ 无关，称一致稳定。
+
+\EN{An equilibrium $x^*$ is Lyapunov stable if, for every $\varepsilon>0$, there is a $\delta>0$ such that $\|x(t_0)-x^*\|<\delta$ implies $\|x(t)-x^*\|<\varepsilon$ for all $t\ge t_0$. For a nonautonomous system, it is uniformly stable if $\delta$ can be chosen independently of the initial time $t_0$.}
+
+\noindent\textbf{吸引、渐近及指数稳定。} 若存在 $r>0$，使得所有满足 $\|x(t_0)-x^*\|<r$ 的解都满足 $\lim_{t\to\infty}x(t)=x^*$，则称 $x^*$ 局部吸引。稳定与局部吸引合起来称局部渐近稳定；局部吸引本身不包含“全过程保持接近”的要求。若对整个状态空间内任意初值，解都存在于所有 $t\ge t_0$ 并趋于 $x^*$，且 $x^*$ 稳定，则称全局渐近稳定。指数稳定要求存在 $C,\lambda,r>0$，使邻近初值满足
+\[
+\|x(t)-x^*\|\le C\|x(t_0)-x^*\|e^{-\lambda(t-t_0)}.
+\]
+指数稳定蕴含渐近稳定；渐近稳定本身不一定是指数稳定。
+\READ{“The norm of x of t minus x star is bounded by C times the initial error times e to the negative lambda times t minus t zero.”}
+\EN{An equilibrium is locally attractive if nearby trajectories converge to it. Stability together with local attractivity gives asymptotic stability. If this holds from every initial state, it is globally asymptotically stable. Exponential stability requires the error to decay at least as fast as the exponential bound above. It implies asymptotic stability, but the converse need not hold.}
+
+\noindent\textbf{非自治系统的一致性。} 对含时方程 $\dot x=f(t,x)$，普通稳定的 $\delta$ 可以依赖初始时刻 $t_0$；一致稳定要求对所有 $t_0$ 使用同一个 $\delta$。一致吸引还要求收敛所需时间可以统一控制：对给定误差 $\varepsilon$ 和一个有界初值范围，存在时间 $T$，无论从哪个 $t_0$ 出发，经过 $T$ 后误差都小于 $\varepsilon$。一致渐近稳定是局部一致稳定与局部一致吸引的结合。一致指数稳定则要求指数估计中的 $C,\lambda$ 不依赖 $t_0$。
+\EN{For a time-varying system $\dot x=f(t,x)$, the stability radius $\delta$ may depend on the initial time $t_0$. Uniform stability requires one $\delta$ to work for every $t_0$. Uniform attractivity also requires a uniform convergence time: for a given error $\varepsilon$ and a bounded set of initial states, there is a time $T$ that works for every initial time. Uniform asymptotic stability combines local uniform stability and local uniform attractivity. Uniform exponential stability requires the constants $C$ and $\lambda$ in the exponential bound to be independent of $t_0$.}
+
+\EX{考虑 $\dot x=-x/(1+t)$，$t\ge0$。解为 $x(t)=x(t_0)(1+t_0)/(1+t)$。因 $|x(t)|\le|x(t_0)|$，它一致稳定；对每个固定的 $t_0$，又有 $x(t)\to0$。但经过固定时间 $T$ 后，误差比例为 $(1+t_0)/(1+t_0+T)$，当 $t_0\to\infty$ 时趋于 $1$，所以不存在对所有初始时刻都有效的统一收敛时间。此系统渐近稳定，但不是一致渐近稳定。}{Consider $\dot x=-x/(1+t)$ for $t\ge0$. Its solution is $x(t)=x(t_0)(1+t_0)/(1+t)$. Since $|x(t)|\le|x(t_0)|$, it is uniformly stable, and for every fixed $t_0$ we have $x(t)\to0$. However, after any fixed elapsed time $T$, the error ratio is $(1+t_0)/(1+t_0+T)$, which approaches one as $t_0\to\infty$. Thus there is no convergence time that works uniformly for all initial times. The system is asymptotically stable but not uniformly asymptotically stable.}
+
+\EX{对 $\dot x=0$，所有解都是常数，所以原点稳定但不吸引；对 $\dot x=x$，非零解离开原点的任意小邻域，所以原点不稳定。对 $\dot x=-x^3$，分离变量得 $x(t)=x_0/\sqrt{1+2x_0^2(t-t_0)}$，因此原点渐近稳定，但误差按代数速度衰减而非指数速度，故不指数稳定。}{For $\dot x=0$, every solution is constant, so the origin is stable but not attractive. For $\dot x=x$, every nonzero solution eventually leaves any sufficiently small neighborhood of the origin, so it is unstable. For $\dot x=-x^3$, separation of variables gives $x(t)=x_0/\sqrt{1+2x_0^2(t-t_0)}$. The origin is asymptotically stable, but the error decays algebraically rather than exponentially, so it is not exponentially stable.}
+
+\ASK{稳定、渐近稳定和指数稳定有什么区别？}{What is the difference between stability, asymptotic stability, and exponential stability?}{稳定只要求初值足够近时解始终保持接近；渐近稳定还要求解趋近平衡点；指数稳定进一步给出指数速度的收敛估计。}{Stability requires nearby initial states to remain nearby. Asymptotic stability also requires convergence to the equilibrium. Exponential stability further gives an exponential rate of convergence.}
+
+\ASK{局部稳定和全局稳定如何区分？}{How do local and global stability differ?}{局部稳定只对平衡点附近的初值作保证；全局渐近稳定要求任意初值的解都存在并趋近平衡点，同时平衡点稳定。}{Local stability gives guarantees only for initial states near the equilibrium. Global asymptotic stability requires solutions from every initial state to exist and converge to the equilibrium, which must also be stable.}
+
+\ASK{一个解趋近平衡点，是否就说明平衡点渐近稳定？}{Does convergence of a solution to an equilibrium imply asymptotic stability?}{不能。渐近稳定要求两件事：附近解在全过程中保持接近（稳定），并且附近解最终趋近平衡点（局部吸引）。只证明某一个解收敛也不够。}{No. Asymptotic stability requires both stability, meaning nearby solutions remain nearby for all future time, and local attractivity, meaning nearby solutions converge to the equilibrium. Convergence of just one solution is insufficient.}
+
+\ASK{一致渐近稳定与渐近稳定有什么区别？}{How does uniform asymptotic stability differ from asymptotic stability?}{对非自治系统，渐近稳定可表示每个固定初始时刻下附近解都趋于平衡点；一致渐近稳定还要求稳定半径和收敛时间的估计不随初始时刻变化。$\dot x=-x/(1+t)$ 是渐近稳定但非一致渐近稳定的例子。}{For a nonautonomous system, asymptotic stability can mean that nearby solutions converge for each fixed initial time. Uniform asymptotic stability additionally requires stability radii and convergence-time bounds that do not vary with the initial time. The system $\dot x=-x/(1+t)$ is an example of asymptotic but nonuniform asymptotic stability.}
+
+\section{Lyapunov 直接法 | Lyapunov's direct method}
+\noindent\textbf{为什么构造 $V$。} 稳定性常常无法通过求出全部显式解来判断。Lyapunov 直接法改为找一个标量函数 $V(x)$，使它像“广义能量”一样衡量状态偏离平衡点的程度，并计算沿轨迹的变化率。若 $V$ 随距离增加而增加、且沿解不增加，状态就不会爬出相应的等值面或子水平集。这里的 $V$ 不必是真实物理能量，但每一步正定性和导数符号都必须验证。
+\EN{Explicit solutions are often unavailable, so Lyapunov's direct method looks for a scalar function $V(x)$ that measures deviation from equilibrium, much like a generalized energy. We compute how $V$ changes along a trajectory. If $V$ increases with distance from the equilibrium but does not increase over time, the state cannot move outside the corresponding level set or sublevel set. The function need not be physical energy, but its definiteness and derivative must be checked.}
+
+\noindent\textbf{正定与径向无界。} 以原点为平衡点，$V(0)=0$ 且某邻域内 $V(x)>0$（$x\ne0$）时，称 $V$ 局部正定；若对全空间每个 $x\ne0$ 都成立，则称全局正定。半正定只要求 $V(x)\ge0$，允许非零点取零。负定、半负定分别对 $-V$ 使用相应定义。若 $V(x)\to\infty$ 随 $\|x\|\to\infty$，称径向无界；这保证 $V$ 的有界子水平集不会向无穷远延伸。沿系统解的导数由链式法则给出：
+\[
+\dot V(x)=\nabla V(x)^{\mathsf T}f(x).
+\]
+\READ{“V dot equals the gradient of V transpose times f of x.”}
+\EN{A function $V$ is positive definite near the origin if $V(0)=0$ and $V(x)>0$ for nonzero nearby $x$. It is radially unbounded if it tends to infinity as $\|x\|$ tends to infinity. Its derivative along trajectories is the gradient of $V$ transposed times $f(x)$.}
+
+\noindent\textbf{判定思想。} 若 $V$ 正定且 $\dot V\le0$，可推出稳定；若 $V$ 正定且 $\dot V$ 负定，即 $\dot V(x)<0$ 对 $x\ne0$，则可推出局部渐近稳定。若 $V$ 径向无界且满足相应全局条件，可推出全局稳定/渐近稳定。注意：$\dot V\le0$ 单独通常只能保证稳定，不能保证收敛到原点；需要分析 $\dot V=0$ 集合中的轨迹或使用更强条件。
+
+\EN{If $V$ is positive definite and $\dot V\le0$, the equilibrium is stable. If $V$ is positive definite and $\dot V$ is negative definite, the equilibrium is locally asymptotically stable. A radially unbounded $V$ with the corresponding global conditions can establish global stability or asymptotic stability. A nonpositive derivative alone usually does not imply convergence to the origin; the trajectories in the set $\dot V=0$ must be analyzed, or stronger conditions are needed.}
+
+\noindent\textbf{判据要区分结论强弱。} 假设 $f$ 局部 Lipschitz、$V$ 连续可微。若在原点邻域内 $V$ 正定且 $\dot V\le0$，可推出稳定；若 $V$ 正定且 $\dot V$ 负定，可推出局部渐近稳定。若这些条件在全空间成立，$V$ 径向无界，并且解不会有限时间逃逸，则可推出全局渐近稳定。指数稳定还需要定量夹逼：存在 $c_1,c_2,c_3>0$ 使 $c_1\|x\|^2\le V(x)\le c_2\|x\|^2$ 且 $\dot V\le-c_3\|x\|^2$，由微分不等式得到指数衰减。只验证 $\dot V\le0$ 一般不能证明收敛；只验证 $\dot V<0$ 而没有检查 $V$ 正定，也不能应用上述判据。
+\EN{Assume that $f$ is locally Lipschitz and $V$ is continuously differentiable. If $V$ is positive definite near the origin and $\dot V\le0$, the equilibrium is stable. If $V$ is positive definite and $\dot V$ is negative definite, it is locally asymptotically stable. If these conditions hold globally, $V$ is radially unbounded, and solutions cannot escape in finite time, the equilibrium is globally asymptotically stable. Exponential stability requires quantitative bounds: for positive constants $c_1,c_2,c_3$, suppose $c_1\|x\|^2\le V(x)\le c_2\|x\|^2$ and $\dot V\le-c_3\|x\|^2$. A differential inequality then gives exponential decay. Checking only $\dot V\le0$ generally does not prove convergence, and checking $\dot V<0$ without positive definiteness of $V$ is insufficient.}
+
+\EX{对 $\dot x=-x$，取 $V=x^2/2$。则 $V>0$（$x\ne0$），且 $\dot V=x\dot x=-x^2<0$，所以原点渐近稳定；事实上解为 $x(t)=x(0)e^{-t}$，故指数稳定。}{For $\dot x=-x$, choose $V=x^2/2$. Then $V>0$ for $x\ne0$ and $\dot V=x\dot x=-x^2<0$. Thus the origin is asymptotically stable; the explicit solution $x(t)=x(0)e^{-t}$ also shows exponential stability.}
+
+\EX{课件中的二维系统为 $\dot x_1=-x_1+x_1x_2^2$、$\dot x_2=-2x_1^2x_2-x_2$。取 $V=(x_1^2+x_2^2)/2$，它全局正定且径向无界。逐项用链式法则计算：
+\[
+\dot V=x_1\dot x_1+x_2\dot x_2=-x_1^2-x_2^2-x_1^2x_2^2\le-(x_1^2+x_2^2)=-2V.
+\]
+由 Gronwall 不等式，$V(t)\le V(t_0)e^{-2(t-t_0)}$，所以 $\|(x_1(t),x_2(t))\|\le e^{-(t-t_0)}\|(x_1(t_0),x_2(t_0))\|$。这证明原点全局指数稳定。}{A planar system from the lecture slides is $\dot x_1=-x_1+x_1x_2^2$, $\dot x_2=-2x_1^2x_2-x_2$. Choose $V=(x_1^2+x_2^2)/2$, which is globally positive definite and radially unbounded. By the chain rule,
+\[
+\dot V=x_1\dot x_1+x_2\dot x_2=-x_1^2-x_2^2-x_1^2x_2^2\le-(x_1^2+x_2^2)=-2V.
+\]
+Gronwall's inequality gives $V(t)\le V(t_0)e^{-2(t-t_0)}$, hence $\|(x_1(t),x_2(t))\|\le e^{-(t-t_0)}\|(x_1(t_0),x_2(t_0))\|$. Thus the origin is globally exponentially stable.}
+
+\ASK{Lyapunov 直接法的核心是什么？}{What is the main idea of Lyapunov's direct method?}{不必先求出系统的显式解，而是构造一个类似能量的正定函数，并考察它沿解的变化。$V$ 不增表示解受控制；若 $V$ 严格下降，则可得到渐近稳定。}{One does not need an explicit solution. Instead, construct a positive-definite, energy-like function and study how it changes along trajectories. A nonincreasing $V$ controls the motion; strict decrease can establish asymptotic stability.}
+
+\ASK{若 $\dot V$ 只是半负定，能否推出渐近稳定？}{Does a negative-semidefinite $\dot V$ imply asymptotic stability?}{不能直接推出。半负定只说明 $V$ 不增加，轨迹可能停留在 $\dot V=0$ 的非零集合中；还需用 LaSalle 原理或其他条件证明收敛。}{Not by itself. Negative semidefiniteness only says that $V$ does not increase. Trajectories may remain in a nonzero subset where $\dot V=0$; LaSalle's principle or another condition is needed to prove convergence.}
+
+\subsection{LaSalle 不变性原理与吸引域 | LaSalle's principle and attraction regions}
+当 $\dot V$ 只有半负定时，$V$ 沿轨迹不增，但轨迹仍可能沿 $\dot V=0$ 的部分移动。LaSalle 不变性原理要求考虑包含轨迹的紧致正向不变集：轨迹趋近于 $E=\{x:\dot V(x)=0\}$ 中最大的正向不变子集。注意不是简单地检查 $E$ 里有哪些点，而要检查哪些点能组成一条始终留在 $E$ 内的系统轨迹。若该最大不变集只有原点，就可推出渐近收敛。吸引域是所有趋近平衡点的初值集合；若紧致正向不变的子水平集 $\{x:V(x)\le c\}$ 内，$E$ 的最大不变子集只有原点，则这个子水平集给出吸引域的估计。仅有唯一平衡点不够，还须排除其他不变轨迹。
+
+\EN{If trajectories are bounded and $\dot V\le0$, LaSalle's invariance principle says that trajectories approach the largest positively invariant subset of $E=\{x:\dot V(x)=0\}$. If this invariant subset contains only the equilibrium, trajectories converge to it. The region of attraction is the set of initial states whose solutions approach the equilibrium. A bounded positively invariant sublevel set of $V$ can provide an estimate of that region when the origin is its only invariant set.}
+
+\EX{课件还给出如下判定套路：$\dot x_1=x_2$，$\dot x_2=-x_2^3-x_2^5-f(x_1)$，其中 $f(0)=0$ 且 $x f(x)>0$（$x\ne0$）。令 $F(x_1)=\int_0^{x_1}f(u)\,du$，则 $F(0)=0$ 且 $F(x_1)>0$（$x_1\ne0$）；取 $V=F(x_1)+x_2^2/2$，得到
+\[
+\dot V=f(x_1)x_2+x_2[-x_2^3-x_2^5-f(x_1)]=-x_2^4-x_2^6\le0.
+\]
+零导数集合是 $x_2=0$。但在该集合上要想轨迹始终留在集合内，还必须有 $\dot x_2=-f(x_1)=0$，故 $x_1=0$。\mbox{若相关}子水平集紧致（例如 $F(x_1)\to\infty$ 当 $|x_1|\to\infty$），LaSalle 原理推出原点渐近稳定；若缺少有界性条件，就不能直接下全局结论。}{The slides also use the system $\dot x_1=x_2$, $\dot x_2=-x_2^3-x_2^5-f(x_1)$, where $f(0)=0$ and $xf(x)>0$ for $x\ne0$. Let $F(x_1)=\int_0^{x_1}f(u)\,du$. Then $F(0)=0$ and $F(x_1)>0$ away from zero. With $V=F(x_1)+x_2^2/2$,
+\[
+\dot V=f(x_1)x_2+x_2[-x_2^3-x_2^5-f(x_1)]=-x_2^4-x_2^6\le0.
+\]
+The zero-derivative set is $x_2=0$. For a trajectory to remain in that set, it must also satisfy $\dot x_2=-f(x_1)=0$, hence $x_1=0$. If the relevant sublevel sets are compact, for example when $F(x_1)\to\infty$ as $|x_1|\to\infty$, LaSalle's principle gives asymptotic stability. Without boundedness, a global conclusion does not follow automatically.}
+
+\noindent\textbf{怎样寻找 Lyapunov 函数？} 没有对所有系统都适用的固定公式，但可以按结构试探并逐项验证：线性系统先试二次型 $V=x^{\mathsf T}Px$；力学系统试动能加势能；若方程按坐标分量拆开，可试 $V=\sum_i\phi_i(x_i)$，选择 $\phi_i$ 使 $\dot V$ 中的交叉项抵消。课件中的 $V=\int_0^{x_1}f(u)\,du+x_2^2/2$ 就利用了这一思路。候选函数找到后，必须依次检查 $V$ 是否正定、$\dot V$ 的符号、子水平集是否有界/正向不变，以及最终能推出局部还是全局结论。
+\EN{There is no formula that works for every system, but the structure suggests useful candidates. For a linear system, try a quadratic form $V=x^{\mathsf T}Px$. For a mechanical system, try kinetic plus potential energy. If the equations separate by coordinates, try $V=\sum_i\phi_i(x_i)$ and choose the functions so that cross terms in $\dot V$ cancel. The lecture example $V=\int_0^{x_1}f(u)\,du+x_2^2/2$ uses this idea. After finding a candidate, check positive definiteness, the sign of $\dot V$, boundedness and forward invariance of sublevel sets, and whether the resulting conclusion is local or global.}
+
+\ASK{LaSalle 原理解决了什么问题？}{What problem does LaSalle's invariance principle address?}{它处理 $\dot V$ 半负定但不严格为负的情况。通过找出 $\dot V=0$ 集合内最大的正向不变集，判断轨迹是否仍会趋于平衡点。}{It handles cases where $\dot V$ is negative semidefinite but not strictly negative. It identifies the largest positively invariant set within $\dot V=0$ and determines whether trajectories still converge to the equilibrium.}
+
+\subsection{Lyapunov 不稳定性判据 | Lyapunov instability criterion}
+Lyapunov 函数也可用于证明不稳定。设 $V(0)=0$，并且在任意小的原点邻域内都能找到 $V(x)>0$ 的点；若在局部区域中沿解有 $\dot V\ge\lambda V$，其中 $\lambda>0$，则从这些点出发的 $V$ 至少按 $e^{\lambda t}$ 增长。若原点稳定，足够近的解应一直留在一个小邻域，连续函数 $V$ 在该邻域内有界；指数增长最终与有界性矛盾，因此原点不稳定。常见形式是 $\dot V=\lambda V+W(x)$ 且 $W(x)\ge0$。
+\EN{A Lyapunov function can also prove instability. Suppose $V(0)=0$, there are points with $V(x)>0$ arbitrarily close to the origin, and $\dot V\ge\lambda V$ locally for some $\lambda>0$. Along solutions starting at those points, $V$ grows at least as fast as $e^{\lambda t}$. If the origin were stable, sufficiently close trajectories would stay inside a small neighborhood where the continuous function $V$ is bounded. The exponential growth contradicts this bound, so the origin is unstable. A common form is $\dot V=\lambda V+W(x)$ with $W(x)\ge0$.}
+
+\EX{課件中的系统为 $\dot x_1=x_1+2x_2+x_1x_2^2$，$\dot x_2=2x_1+x_2-x_1^2x_2$。取不定号函数 $V=x_1^2-x_2^2$，则 $V>0$ 的点（例如 $(x_1,0)$，$x_1\ne0$）任意接近原点，且
+\[
+\dot V=2x_1\dot x_1-2x_2\dot x_2=2V+4x_1^2x_2^2\ge2V.
+\]
+由不稳定性判据，原点不稳定。这里 $V$ 不正定；不稳定性判据需要的是附近存在 $V>0$ 的点及 $\dot V$ 的增长条件，不能误用稳定性定理的假设。}{A lecture example is $\dot x_1=x_1+2x_2+x_1x_2^2$, $\dot x_2=2x_1+x_2-x_1^2x_2$. Choose the indefinite function $V=x_1^2-x_2^2$. Points with $V>0$, such as $(x_1,0)$ for $x_1\ne0$, occur arbitrarily close to the origin, and
+\[
+\dot V=2x_1\dot x_1-2x_2\dot x_2=2V+4x_1^2x_2^2\ge2V.
+\]
+The instability criterion shows that the origin is unstable. Here $V$ is not positive definite. The instability test requires positive values arbitrarily near the origin and a growth condition on $\dot V$; it does not use the assumptions of the stability theorem.}
+
+\section{线性系统与 Lyapunov 方程 | Linear systems and the Lyapunov equation}
+对非线性系统 $\dot x=f(x)$，若 $f$ 在原点可微且 $f(0)=0$，在原点附近可写成 $\dot x=Ax+r(x)$，其中 $A=Df(0)$、$r(x)=o(\|x\|)$。线性化定理给出局部判别：若 $A$ 的所有特征值实部为负，则非线性系统原点局部指数渐近稳定；若有特征值实部为正，则原点不稳定；若存在实部为零的特征值，线性化不能判定，需要高阶项或 Lyapunov 方法。线性化只描述局部行为，不能单独证明全局稳定。
+\EN{For a nonlinear system $\dot x=f(x)$ with differentiable $f$ and $f(0)=0$, the dynamics near the origin can be written as $\dot x=Ax+r(x)$, where $A=Df(0)$ and $r(x)=o(\|x\|)$. The linearization theorem gives a local test: if all eigenvalues of $A$ have negative real parts, the nonlinear equilibrium is locally exponentially asymptotically stable; if any eigenvalue has positive real part, it is unstable. Eigenvalues with zero real part make the test inconclusive, so higher-order terms or Lyapunov methods are needed. Linearization describes local behavior and does not by itself prove global stability.}
+
+\EX{标量系统 $\dot x=-x+x^2$ 在原点的线性化为 $\dot x=-x$，所以原点局部指数稳定。但原系统还有平衡点 $x=1$，且初值 $x_0>1$ 的解不会趋于零；因此局部线性化不能推出原点全局稳定。}{For $\dot x=-x+x^2$, the linearization at zero is $\dot x=-x$, so the origin is locally exponentially stable. The nonlinear system also has an equilibrium at $x=1$, and solutions starting above one do not converge to zero. Thus local linearization does not imply global stability.}
+
+\noindent 在线性系统 $\dot x=Ax$ 中，特征值给出每个模态的增长、衰减或振荡趋势。若所有特征值实部为负，则 $A$ 是 Hurwitz 矩阵，原点指数渐近稳定；若至少一个特征值实部为正，则存在增长模态并导致不稳定。存在零实部特征值时，必须检查 Jordan 块和非线性项，不能只看实部非正。
+
+\EN{For $\dot x=Ax$, if every eigenvalue of $A$ has strictly negative real part, then $A$ is Hurwitz and the origin is exponentially asymptotically stable. An eigenvalue with positive real part implies instability. Eigenvalues on the imaginary axis require further analysis of the Jordan structure and the particular system; nonpositive real parts alone do not imply asymptotic stability.}
+
+\noindent\textbf{Lyapunov 方程。} 对任意给定正定矩阵 $Q$，$A$ 为 Hurwitz 当且仅当存在正定矩阵 $P$ 满足
+\[
+A^{\mathsf T}P+PA=-Q.
+\]
+取 $V(x)=x^{\mathsf T}Px$，则 $\dot V=-x^{\mathsf T}Qx<0$。此法把稳定性分析转化为矩阵方程求解。
+\READ{“A transpose P plus P A equals negative Q.” “V of x equals x transpose P x, and its derivative equals negative x transpose Q x.”}
+\EN{A matrix $A$ is Hurwitz if and only if, for any positive-definite $Q$, there is a positive-definite $P$ solving the Lyapunov equation above. With $V(x)=x^{\mathsf T}Px$, its derivative is $-x^{\mathsf T}Qx<0$, reducing stability analysis to a matrix equation.}
+
+\EX{若 $A=-I$，取 $P=I,Q=2I$，则 $A^{\mathsf T}P+PA=-Q$。对 $V=x^{\mathsf T}Px=\|x\|^2$，有 $\dot V=-2\|x\|^2$，因此解指数衰减。}{If $A=-I$, choose $P=I$ and $Q=2I$, so $A^{\mathsf T}P+PA=-Q$. Then $V=x^{\mathsf T}Px=\|x\|^2$ has derivative $\dot V=-2\|x\|^2$, and solutions decay exponentially.}
+
+\ASK{Hurwitz 矩阵与稳定性有什么关系？}{How is a Hurwitz matrix related to stability?}{Hurwitz 矩阵的所有特征值实部为负；对连续时间线性系统 $\dot x=Ax$，这等价于原点指数渐近稳定。}{A Hurwitz matrix has all eigenvalues with negative real parts. For the continuous-time linear system $\dot x=Ax$, this is equivalent to exponential asymptotic stability of the origin.}
+
+\ASK{Lyapunov 方程怎样帮助证明线性系统稳定？}{How does the Lyapunov equation help prove stability of a linear system?}{求解 $A^{\mathsf T}P+PA=-Q$ 且 $P,Q$ 正定，再取 $V=x^{\mathsf T}Px$，即可得到 $\dot V=-x^{\mathsf T}Qx<0$。}{Solve $A^{\mathsf T}P+PA=-Q$ with positive-definite $P$ and $Q$, then choose $V=x^{\mathsf T}Px$. This gives $\dot V=-x^{\mathsf T}Qx<0$.}
+
+\section{非自治系统与扰动 | Nonautonomous systems and perturbations}
+非自治线性系统 $\dot x=A(t)x$ 的稳定性取决于时间变化和状态转移矩阵；周期系统可借助基本矩阵和 Floquet 理论分析。对扰动系统 $\dot x=Ax+g(t,x)$，若 $A$ 为 Hurwitz 且非线性扰动在原点附近相对较小，通常可由变参数公式、Gronwall 不等式或 Lyapunov 函数证明局部稳定性对小扰动具有鲁棒性。具体结论依赖课件给定的有界性和 Lipschitz 等条件。
+
+\EN{For a nonautonomous linear system $\dot x=A(t)x$, stability depends on time variation and the state-transition matrix; periodic systems can be analyzed using a fundamental matrix and Floquet theory. For a perturbed system $\dot x=Ax+g(t,x)$, if $A$ is Hurwitz and the nonlinear perturbation is sufficiently small near the origin, variation of constants, Gronwall's inequality, or a Lyapunov function can often establish local robustness. The exact result depends on assumptions such as boundedness and Lipschitz conditions.}
+
+\noindent\textbf{含时 Lyapunov 函数。} 对非自治系统，候选函数可以显含时间 $V=V(t,x)$。沿解求导时必须同时对时间和状态求导：
+\[
+\dot V(t,x)=\frac{\partial V}{\partial t}+\nabla_xV^{\mathsf T}f(t,x).
+\]
+漏掉 $\partial V/\partial t$ 会算错稳定性。若存在与时间无关的正定界 $\alpha_1(\|x\|)\le V(t,x)\le\alpha_2(\|x\|)$ 且 $\dot V\le0$，可得一致稳定；再有一致严格下降条件（例如 $\dot V\le-\alpha_3(\|x\|)$，其中 $\alpha_3$ 正定）时，可在相应有界性条件下推出一致渐近稳定。对全局结论还要确保 $V$ 的子水平集有界并排除有限时间逃逸。
+\EN{For a nonautonomous system, a candidate Lyapunov function may depend explicitly on time: $V=V(t,x)$. Its derivative along a solution must include both time and state derivatives. Omitting $\partial V/\partial t$ gives an incorrect stability calculation. If time-independent positive-definite bounds $\alpha_1(\|x\|)\le V(t,x)\le\alpha_2(\|x\|)$ hold and $\dot V\le0$, the equilibrium is uniformly stable. A uniform strict-decrease condition such as $\dot V\le-\alpha_3(\|x\|)$, with positive-definite $\alpha_3$, gives uniform asymptotic stability under the corresponding boundedness conditions. A global conclusion also requires bounded sublevel sets and forward existence.}
+
+\noindent\textbf{稳定性与鲁棒性。} 实际模型中的参数、测量和控制输入通常有误差。扰动分析问的是：当方程从 $\dot x=f(x)$ 变成 $\dot x=f(x)+d(t,x)$ 后，原有稳定性结论是否仍成立，状态偏差会不会被放大，以及能否给出最终误差界。这与控制理论中的鲁棒控制直接相关；若持续外力不为零，状态一般不再收敛到原平衡点，而可能只保证进入一个小邻域。
+\EN{In applications, parameters, measurements, and control inputs have errors. Perturbation analysis asks whether stability persists when $\dot x=f(x)$ is changed to $\dot x=f(x)+d(t,x)$, whether deviations are amplified, and whether a final error bound can be given. This is closely related to robust control. Under a persistent nonzero disturbance, the state may approach only a neighborhood of the original equilibrium rather than the equilibrium itself.}
+
+课件还介绍了能量函数、分离变量和变梯度等 Lyapunov 函数构造思路。构造函数后必须逐项检查：$V$ 的正定性、$\dot V$ 的符号、定义域与解的有界性。函数形式看起来像能量并不足以构成证明。
+
+\EN{The slides also introduce energy, separation-of-variables, and variable-gradient methods for constructing Lyapunov functions. After proposing a function, verify its positive definiteness, the sign of its derivative, the domain, and boundedness of solutions. Resembling an energy function is not by itself a proof.}
+
+\ASK{为什么非自治系统特别强调一致稳定？}{Why is uniform stability emphasized for nonautonomous systems?}{非自治系统的方程显式依赖时间。普通稳定性的 $\delta$ 可能随初始时刻变化；一致稳定要求一个共同的 $\delta$ 适用于所有初始时刻。}{A nonautonomous system depends explicitly on time. The stability radius $\delta$ may vary with the initial time; uniform stability requires one common $\delta$ for all initial times.}
+
+\section{学科联系与现实应用 | Connections and applications}
+稳定性理论以常微分方程描述状态随时间的变化，以线性代数的特征值分析局部增长和衰减，再用 Lyapunov 函数把轨迹行为转化为一个可验证的不等式。因此它与微分方程、线性代数、控制理论和优化相连。工程控制中，设计反馈律后常需检查闭环平衡点是否稳定；电路和机械系统需要判断振荡是否衰减；种群或生态模型会用稳定性分析判断平衡数量受到小扰动后是否恢复。稳定性分析给出模型的长期行为结论，但实际应用仍依赖模型参数和假设是否合理。
+\EN{Stability theory uses ordinary differential equations to describe changing states, eigenvalues from linear algebra to analyze local growth and decay, and Lyapunov functions to turn trajectory behavior into verifiable inequalities. It therefore connects differential equations, linear algebra, control theory, and optimization. In engineering, feedback controllers are checked for stability at closed-loop equilibria; circuit and mechanical models are analyzed to see whether oscillations decay; and population or ecological models use stability to test whether populations recover after small disturbances. Conclusions about long-term behavior still depend on whether the model and its parameters are appropriate.}
+
+\EX{考虑带位置误差 $q$ 和速度 $v$ 的阻尼质量块：$\dot q=v$，$m\dot v=-kq-cv$，其中质量 $m>0$、弹簧刚度 $k>0$、阻尼 $c>0$。总能量 $V=(kq^2+mv^2)/2$ 为正定，且 $\dot V=-cv^2\le0$。零导数集合是 $v=0$；若轨迹要一直留在其中，还需 $\dot v=-kq/m=0$，所以 $q=0$。由 LaSalle 原理，原点全局渐近稳定。该例说明 Lyapunov 方法如何把力学问题变成能量和耗散的分析。}{Consider a damped mass with position error $q$ and velocity $v$: $\dot q=v$, $m\dot v=-kq-cv$, where mass $m>0$, spring stiffness $k>0$, and damping $c>0$. Its energy $V=(kq^2+mv^2)/2$ is positive definite, and $\dot V=-cv^2\le0$. The zero-derivative set is $v=0$; for a trajectory to remain there, it must also satisfy $\dot v=-kq/m=0$, so $q=0$. LaSalle's principle then gives global asymptotic stability of the origin. This example shows how Lyapunov analysis converts a mechanical problem into an energy-dissipation argument.}
+
+\ASK{稳定性理论在实际工程中有什么作用？}{What role does stability theory play in engineering?}{例如对阻尼机械系统，稳定性保证小的位移和速度误差不会持续放大；对反馈控制系统，它用于验证闭环状态能否回到期望平衡点。分析通常从微分方程和线性化开始，再用特征值或 Lyapunov 函数证明，并说明结论是局部还是全局。}{For a damped mechanical system, stability ensures that small position and velocity errors do not grow. For feedback control, it checks whether the closed-loop state returns to a desired equilibrium. The analysis often starts from differential equations and linearization, then uses eigenvalues or a Lyapunov function, with the conclusion stated as local or global.}
+
+\section{Hopfield 神经网络应用专题 | Hopfield-network application}
+文件夹中的课件讨论带 Sigmoid 或分段线性激活函数、以及切换激活函数的 Hopfield 网络。典型连续模型写为
+\[
+\dot x=-Dx+W\phi(x)+I,
+\]
+其中 $D$ 描述泄漏项，$W$ 是连接矩阵，$\phi$ 为逐分量激活函数，$I$ 为外部输入。平衡点满足 $0=-Dx^*+W\phi(x^*)+I$。多稳态表示系统存在多个稳定平衡点，其吸引域可以对应不同的网络记忆状态。
+\READ{“X dot equals negative D x plus W phi of x plus I.”}
+\EN{The Hopfield-network slides consider sigmoid, piecewise-linear, and switching activation functions. A typical continuous model is shown above, where $D$ represents leakage, $W$ is the connection matrix, $\phi$ is the componentwise activation function, and $I$ is the external input. Equilibria solve $0=-Dx^*+W\phi(x^*)+I$. Multistability means that the system has several stable equilibria, with different attraction regions that can represent distinct memory states.}
+
+在某个平衡点附近，线性化矩阵为 $J=-D+W\,\operatorname{diag}(\phi'(x^*))$（在可微点）。若 $J$ 的特征值实部均为负，可判该平衡点局部渐近稳定。激活函数不可微或有切换面时，需要采用课件中的分区分析、不变区域或相应 Lyapunov 方法，不能直接套用光滑线性化结论。
+
+\EN{Where the activation function is differentiable, the Jacobian at an equilibrium is $J=-D+W\operatorname{diag}(\phi'(x^*))$. If all eigenvalues have negative real parts, the equilibrium is locally asymptotically stable. At nondifferentiable activation functions or switching surfaces, use the slides' region-based analysis, invariant sets, or an appropriate Lyapunov method rather than applying a smooth linearization result without checking its assumptions.}
+
+\ASK{Hopfield 网络中的多稳态是什么意思？}{What does multistability mean in a Hopfield network?}{多稳态指同一系统有多个稳定平衡点。系统最终到达哪一个平衡点取决于初值所在的吸引域，因此可呈现多种稳定状态。}{Multistability means that one system has multiple stable equilibria. The equilibrium reached depends on which attraction region contains the initial state, so the network can exhibit several stable states.}
+
+\ASK{怎样分析一个平衡点的局部稳定性？}{How do you analyze local stability of an equilibrium?}{先求平衡点，再求向量场的 Jacobian 并代入平衡点；若所有特征值实部为负，可推出局部渐近稳定。若有零实部特征值或向量场不光滑，则需额外分析。}{First solve for the equilibrium, then evaluate the Jacobian of the vector field there. If every eigenvalue has negative real part, the equilibrium is locally asymptotically stable. Zero-real-part eigenvalues or nonsmooth vector fields require further analysis.}
+
+\section*{口试表达 | Oral response structure}
+讨论具体系统时，先说明平衡点与稳定性类型，再给出所选 Lyapunov 函数、正定性和 $\dot V$ 计算，最后说明结论是局部还是全局、稳定还是渐近稳定。若使用 LaSalle 原理，应明确 $\dot V=0$ 集合和其中的最大不变集。
+
+\EN{For a specific system, state the equilibrium and the type of stability first. Then give the Lyapunov function, verify positive definiteness, compute $\dot V$, and specify whether the conclusion is local or global and stable or asymptotically stable. When using LaSalle's principle, identify the set $\dot V=0$ and its largest invariant subset.}
+
+\section*{来源与范围 | Source and scope}
+本讲义依据“稳定性”文件夹中的 Lyapunov 稳定性 PPT（4 月 13 日、4 月 26 日）整理，并将 4 月 27 日 Hopfield 神经网络课件作为应用案例。核心内容从状态方程、平衡点和稳定性定义开始，依次包括 Lyapunov 直接法、LaSalle 原理、吸引域、线性化、Hurwitz 判据、Lyapunov 方程、非自治系统与扰动。拓展应用用于解释学科联系，不应说成自己在课堂上完成过的工程项目；所有判据均须满足文中列出的光滑性、有界性和正定性等条件。
+\EN{This handout follows the Lyapunov stability slides dated April 13 and April 26 in the Stability folder, and uses the April 27 Hopfield-network slides as an application. It begins with state equations, equilibria, and definitions of stability, then covers Lyapunov's direct method, LaSalle's principle, regions of attraction, linearization, the Hurwitz criterion, the Lyapunov equation, nonautonomous systems, and perturbations. Applications explain connections between subjects; they should not be presented as engineering projects personally completed in class. Each criterion requires the smoothness, boundedness, and definiteness assumptions stated in the text.}
+\end{document}

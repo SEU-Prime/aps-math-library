@@ -1,0 +1,184 @@
+\documentclass[UTF8,11pt,a4paper]{ctexart}
+\usepackage{amsmath,amssymb,geometry,enumitem,hyperref}
+\geometry{margin=2.1cm}\setlist{itemsep=2pt,topsep=3pt}
+\hypersetup{colorlinks=true,linkcolor=blue}
+\newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
+\newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\EX}[2]{\par\noindent\textbf{例子 / Example.} #1\par\EN{#2}}
+\newcommand{\ASK}[4]{\par\noindent\textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent\textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
+\title{数学建模与数学实验 APS 面试准备\\[4pt]\large 双语课程概述、模型知识点与口试题}
+\author{Mathematical Modeling: Bilingual Review}
+\date{}
+\begin{document}\maketitle
+\section*{课程概述 | Course overview}
+\noindent\textbf{中文口述稿。} 在数学建模课上，我学习把现实问题转化为可计算的模型。例如描述药物浓度时，先假设药物在体内充分混合，且单位时间清除量与当前浓度成正比。若 $C(t)$ 是浓度、$k>0$ 是清除速率，我可以写出 $C'(t)=-kC(t)$，由初始浓度 $C(0)=C_0$ 得到 $C(t)=C_0e^{-kt}$。这说明浓度随时间衰减，半衰期为 $\ln2/k$。再用观测数据估计 $k$，并比较预测与实际浓度；如果清除速率并不恒定，就需要修改模型。这个例子把微分方程、数据拟合和模型检验联系起来。
+
+\EN{In mathematical modeling, I learned to turn a practical question into a model that can be computed and checked. For drug concentration, suppose the drug is well mixed and the elimination rate is proportional to the current concentration. If $C(t)$ is concentration and $k>0$ is the elimination rate, then $C'(t)=-kC(t)$. Starting from $C(0)=C_0$, the solution is $C(t)=C_0e^{-kt}$, with half-life $\ln2/k$. I can estimate $k$ from observations and compare predictions with measured concentrations. If the elimination rate is not constant, the model needs to change. This example connects differential equations, data fitting, and model validation.}
+
+\noindent\textbf{课程与其他数学领域的联系及应用（拓展口述）。} 数学建模不是单独的一种公式，而是把实际问题和数学工具组织起来的流程：微积分和微分方程描述连续变化，差分方程与马氏链描述离散演化，概率论处理不确定性，优化选择成本最低或效益最高的方案，图论表达网络关系，数值分析负责计算复杂模型。文件夹中的课件给出了人口增长、药物体内分布、传染病传播、多种群生态、Leslie 年龄结构、运输网络和零件预防性更换等应用。以传染病为例，先把人群划分为易感、感染和康复等状态，说明接触率、传染率等参数的含义与假设，再写成微分方程并求解，最后用数据或基本极限行为检查预测。模型结论只在其假设和参数适用的范围内成立。
+\EN{\textbf{Connections and applications (extension for an interview).} Mathematical modeling is not a single formula but a process that organizes real questions and mathematical tools. Calculus and differential equations describe continuous change; difference equations and Markov chains describe discrete evolution; probability represents uncertainty; optimization selects a low-cost or high-benefit decision; graph theory represents networks; and numerical analysis computes models that are too complex for hand calculation. The lecture files include population growth, pharmacokinetics, epidemics, interacting populations, Leslie age structures, transport networks, and preventive replacement of components. For an epidemic model, divide the population into states such as susceptible, infectious, and recovered; define parameters such as contact and transmission rates and state the assumptions; formulate and solve differential equations; then check predictions against data or limiting behavior. Conclusions apply only within the scope of the assumptions and parameters.}
+
+\ASK{数学建模怎样把不同课程知识连接起来？}{How does mathematical modeling connect different mathematical subjects?}{例如传染病模型用微分方程描述人数变化，用概率或数据估计参数，用数值分析求解复杂方程，再用统计方法比较预测与观测。建模者必须说明变量、参数、假设和验证方式；计算出一个解并不等于模型已经可靠。}{An epidemic model can use differential equations for population changes, probability or data to estimate parameters, numerical analysis to solve complex equations, and statistics to compare predictions with observations. A modeler must state variables, parameters, assumptions, and validation methods. Computing a solution does not by itself make the model reliable.}
+
+\noindent\textbf{口述提示。} 本概述依据文件夹内课程讲义和“复习2025”整理；若面试官问你实际做过的实验或项目，应换成自己的真实案例。
+\EN{This overview follows the lecture files and the 2025 review slides. If asked about a specific experiment or project, I should describe one I actually completed.}
+
+\section{建模步骤与初等模型 | Modeling process and elementary models}
+\noindent\textbf{建模流程。} 明确问题和目标；作出并说明假设；定义变量、参数、单位与数据；建立关系式或约束；选择解析、数值或优化方法求解；检验量纲、边界情况和数据拟合；进行敏感性分析；解释结论及适用范围。模型是对现实问题的数学表达，模型求解只是流程中的一个环节。
+
+\EN{A typical workflow is to define the question and objective; state assumptions; identify variables, parameters, units, and data; formulate relations or constraints; solve analytically, numerically, or by optimization; check dimensions, limiting cases, and data fit; perform sensitivity analysis; and explain the result and its scope. A model is the mathematical representation of a real problem; solving it is only one stage.}
+
+\ASK{数学建模通常有哪些步骤？}{What are the usual steps in mathematical modeling?}{先明确问题，再作假设、定义变量参数、建立模型、求解、检验和解释结果；若检验不合适，应调整假设或模型。}{Define the problem, make assumptions, define variables and parameters, formulate and solve the model, then validate and interpret it. If validation fails, revise the assumptions or the model.}
+
+\subsection{实物交换与抢渡长江 | Exchange and river-crossing models}
+实物交换模型把不同参与者拥有的物品数量记为状态变量，以效用或满意度函数表示偏好。无差别曲线是效用相同的组合；在可微的内部帕累托有效交换点，两方的边际替代率相等：
+\[
+\frac{MU_{Ax}}{MU_{Ay}}=\frac{MU_{Bx}}{MU_{By}}.
+\]
+实际可行的交换方案还需满足资源总量守恒。
+
+\EN{The exchange model represents each participant's holdings as state variables and uses utility or satisfaction functions to describe preferences. An indifference curve contains bundles with the same utility. At a differentiable interior Pareto-efficient exchange, the two participants' marginal rates of substitution are equal. Feasible exchanges must also respect the total resource constraints.}
+
+\noindent\textbf{抢渡长江模型。} 以位置 $r(t)=(x(t),y(t))$ 表示游泳者轨迹，将游泳速度和水流速度作向量合成：$\dot r=v_{\rm swim}(t)+v_{\rm current}(r,t)$。游泳者控制方向 $\theta(t)$，在给定起点、终点、游速及水流条件下，选择策略使渡河时间最短。若河宽为 $L$、游速大小 $u$、方向与垂直岸边方向夹角为 $\theta$，横向速度为 $u\cos\theta$，横渡时间满足 $T=L/(u\cos\theta)$（$\cos\theta>0$）；顺流位移还要计入水流速度。速度变化时应建立微分方程或变分优化模型。
+\READ{“The position derivative equals the swimming-velocity vector plus the current-velocity vector.” “The crossing time equals L divided by u cosine theta.”}
+\EN{For the Yangtze crossing problem, let $r(t)=(x(t),y(t))$ be the swimmer's position. The ground velocity is the vector sum of swimming velocity and current velocity. The swimmer chooses the heading $\theta(t)$ to minimize crossing time subject to the start point, destination, swimming speed, and current. With river width $L$, swimming speed $u$, and heading angle $\theta$ measured from the direction perpendicular to the bank, the cross-river speed is $u\cos\theta$ and the crossing time is $L/(u\cos\theta)$ when $\cos\theta>0$; downstream drift also includes the current. If velocities vary, formulate a differential-equation or variational optimization problem.}
+
+\ASK{抢渡长江问题为什么要考虑水流？}{Why must the river-crossing model account for the current?}{游泳者相对水的速度不等于对岸观察到的实际速度。地面速度是游泳速度向量与水流速度向量之和，因此水流会改变轨迹和到达时间。}{The swimmer's velocity relative to the water differs from the ground velocity. The ground velocity is the vector sum of swimming velocity and current, so the current changes both the path and arrival time.}
+
+\section{量纲分析与层次分析法 | Dimensional analysis and AHP}
+\noindent\textbf{量纲分析。} 量纲齐次原则要求物理等式两边量纲一致。Buckingham $\Pi$ 定理：若物理问题涉及 $n$ 个有量纲变量，且其基本量纲矩阵秩为 $k$，则关系可改写为 $n-k$ 个无量纲组合 $\Pi_1,\ldots,\Pi_{n-k}$ 之间的关系。它可减少变量数量、揭示相似性，但不能单独确定所有模型常数或函数形式。
+\READ{“A problem with n dimensional variables and k independent base dimensions can be expressed using n minus k dimensionless pi groups.”}
+\EN{Dimensional homogeneity requires both sides of a physical equation to have the same dimensions. Buckingham's Pi theorem says that a relation involving $n$ dimensional variables and $k$ independent base dimensions can be rewritten using $n-k$ dimensionless groups. This reduces the number of variables and reveals similarity, but it does not determine every model constant or functional form.}
+
+\noindent\textbf{AHP 步骤与公式。} 建立目标层、准则层和方案层；用两两比较构造判断矩阵 $A=(a_{ij})$，其中 $a_{ii}=1$、$a_{ij}>0$ 且 $a_{ji}=1/a_{ij}$；求最大特征值对应的正特征向量并归一化为权重 $w$；逐层合成排序；最后进行一致性检验：
+\[
+CI=\frac{\lambda_{\max}-n}{n-1},\qquad CR=\frac{CI}{RI}.
+\]
+通常 $CR<0.1$ 视为一致性可接受（具体按课件使用的 $RI$ 表）。
+\READ{“The consistency index is lambda max minus n, divided by n minus one. The consistency ratio is the consistency index divided by the random index.”}
+\EN{AHP builds a hierarchy of goal, criteria, and alternatives; forms a positive reciprocal pairwise-comparison matrix; finds and normalizes its principal eigenvector as the priority weights; aggregates priorities; and checks consistency using the formulas above. A consistency ratio below 0.1 is commonly considered acceptable, subject to the random-index table used in the course.}
+
+\EX{两方案仅按成本比较时，若方案 A 相对方案 B 的判断值为 $3$，则互反矩阵为 $\begin{pmatrix}1&3\\1/3&1\end{pmatrix}$。对更复杂的多准则选择，应先分别计算局部权重和一致性，再做总排序。}{If two alternatives are compared only by cost and A is judged three times as preferable to B, the reciprocal matrix is $\begin{pmatrix}1&3\\1/3&1\end{pmatrix}$. For a larger multi-criteria problem, calculate local priorities and consistency before aggregating the overall ranking.}
+
+\ASK{AHP 为什么要做一致性检验？}{Why does AHP require a consistency check?}{成对比较来自人的判断，可能互相矛盾。一致性比率衡量判断矩阵偏离传递一致性的程度；若过大，应复查比较值。}{Pairwise comparisons are human judgments and may contradict one another. The consistency ratio measures deviation from transitive consistency; if it is too large, the comparisons should be reviewed.}
+
+\section{拟合、插值与数值求根 | Fitting, interpolation and root finding}
+\noindent\textbf{最小二乘拟合。} 给定数据 $(x_i,y_i)$ 和模型 $y\approx\sum_{j=1}^p\beta_j\phi_j(x)$，最小二乘法选择参数使残差平方和最小。矩阵形式为
+\[
+\hat\beta=\arg\min_\beta\|X\beta-y\|_2^2,\qquad X^{\mathsf T}X\hat\beta=X^{\mathsf T}y.
+\]
+正规方程有唯一解需 $X$ 满列秩。拟合用于处理含误差观测并概括趋势；插值要求函数通过给定节点数据。
+\READ{“Beta hat minimizes the squared two-norm of X beta minus y.” “X transpose X beta hat equals X transpose y.”}
+\EN{Given data $(x_i,y_i)$ and a model $y\approx\sum_j\beta_j\phi_j(x)$, least squares chooses coefficients minimizing the sum of squared residuals. In matrix form it gives the normal equations above; a unique solution requires full column rank. Fitting summarizes noisy observations, while interpolation passes through the given data nodes.}
+
+\noindent\textbf{插值公式。} 对互异节点 $x_0,\ldots,x_n$，Lagrange 插值多项式为
+\[
+P_n(x)=\sum_{i=0}^{n}y_i\prod_{j\ne i}\frac{x-x_j}{x_i-x_j},\qquad
+f(x)-P_n(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}\prod_{i=0}^{n}(x-x_i).
+\]
+Newton 差商形式便于增加节点；高次等距节点插值可能出现 Runge 现象，故课件还介绍分段插值和三次样条。插值精度不一定随次数单调提高。
+\READ{“P n of x equals the sum from i equals zero to n of y i times the product over j not equal to i of x minus x j over x i minus x j.”}
+\EN{For distinct nodes, the Lagrange polynomial and its remainder are given above. Newton divided differences make it easy to add nodes. High-degree interpolation on equally spaced nodes may exhibit Runge's phenomenon, so the course also covers piecewise interpolation and cubic splines. Increasing degree does not guarantee increasing accuracy.}
+
+\noindent\textbf{求根方法。} 二分法要求连续函数在区间端点异号，迭代保持根被夹在区间内；区间长度每步减半。固定点迭代 $x_{k+1}=g(x_k)$ 在邻域内若 $|g'(x)|\le q<1$，可收敛。Newton 法为
+\[
+x_{k+1}=x_k-\frac{f(x_k)}{f'(x_k)}.
+\]
+在单根附近、初值充分接近且 $f'$ 不为零等条件下，Newton 法通常二次收敛；远离根时可能不收敛或跳出目标区域。
+\READ{“X k plus one equals x k minus f of x k divided by f prime of x k.”}
+\EN{Bisection requires a continuous function with opposite signs at the endpoints and keeps the root bracketed while halving the interval. Fixed-point iteration $x_{k+1}=g(x_k)$ converges locally if $|g'|\le q<1$. Newton's method is given above and is typically quadratically convergent near a simple root with a sufficiently close initial value and nonzero derivative; it may fail from a poor starting point.}
+
+\ASK{拟合与插值有什么不同？}{What is the difference between fitting and interpolation?}{插值要求近似函数通过全部给定节点；拟合在含噪数据上优化整体残差，不要求通过每个点。}{Interpolation requires the approximating function to pass through every data node. Fitting optimizes overall residuals for potentially noisy data and need not pass through each point.}
+
+\ASK{为什么高次插值不一定更准确？}{Why is higher-degree interpolation not always more accurate?}{节点分布不合适时，高次多项式可能在区间端部振荡，出现 Runge 现象；分段低次插值或样条可能更稳定。}{With unsuitable node distributions, high-degree polynomials may oscillate near the interval endpoints, causing Runge's phenomenon. Piecewise low-degree interpolation or splines may be more stable.}
+
+\section{常微分与差分模型 | Dynamic models}
+\noindent\textbf{人口模型。} Malthus 指数增长模型 $\dot x=rx$，解为 $x(t)=x_0e^{rt}$。Logistic 阻滞增长模型为
+\[
+\dot x=rx\left(1-\frac{x}{K}\right),\qquad
+x(t)=\frac{K}{1+(K/x_0-1)e^{-rt}}.
+\]
+其中 $K$ 为环境容纳量；增长率在 $x=K/2$ 达到最大，拐点代表增长速度由增转减。
+\READ{“X dot equals r x times one minus x over K.” “X of t equals K divided by one plus K over x zero minus one, times e to the negative r t.”}
+\EN{The Malthus model has exponential growth. The Logistic model includes a carrying capacity $K$; its growth rate is maximal at $x=K/2$, the inflection point where growth changes from accelerating to decelerating.}
+
+\noindent\textbf{传染病模型。} 归一化人群中 SIR 模型为
+\[
+\dot s=-\beta si,\qquad \dot i=\beta si-\gamma i,\qquad \dot r=\gamma i,
+\quad s+i+r=1.
+\]
+基本再生数 $R_0=\beta/\gamma$；初期当 $\beta s_0-\gamma>0$（等价于 $R_0s_0>1$）时感染比例增长。SIS 模型允许康复者重新易感，SIR 模型假设永久免疫，SIRS 模型考虑免疫消退。
+\READ{“S dot equals negative beta s i; i dot equals beta s i minus gamma i; r dot equals gamma i.”}
+\EN{The normalized SIR model is given above. Its basic reproduction number is $R_0=\beta/\gamma$. At the beginning, infections grow if $\beta s_0-\gamma>0$, equivalently $R_0s_0>1$. SIS allows recovered people to become susceptible again; SIR assumes permanent immunity; SIRS includes waning immunity.}
+
+\noindent\textbf{捕食者--被捕食者模型。} 课件复习提纲中的 Volterra 模型可写为
+\[
+\dot x=ax-bxy,\qquad \dot y=-cy+dxy,
+\]
+其中 $x$ 是被捕食者、$y$ 是捕食者，$a,b,c,d>0$。无相互作用时被捕食者增长、捕食者衰减；相互作用项 $xy$ 分别降低被捕食者、增加捕食者。正平衡点为 $(c/d,a/b)$，解的变化体现两种群之间的周期性耦合。
+\READ{“X dot equals a x minus b x y; y dot equals negative c y plus d x y.”}
+\EN{The Volterra predator-prey model from the course review is shown above. Here $x$ is the prey population and $y$ is the predator population, with positive parameters. Without interaction, prey grow and predators decline. The interaction term decreases prey and increases predators. The positive equilibrium is $(c/d,a/b)$, and the trajectories reflect the coupled population dynamics.}
+
+\noindent\textbf{药物动力学模型。} 在单房室、一级排除的简化情形下，药物浓度满足 $\dot C=-kC$，故 $C(t)=C_0e^{-kt}$。多房室模型还需表示中心室与周边室之间的转移；不同给药方式对应不同输入项，参数通常由浓度观测估计。
+\EN{In a simplified one-compartment model with first-order elimination, concentration satisfies $\dot C=-kC$, so $C(t)=C_0e^{-kt}$. A multi-compartment model also represents transfer between central and peripheral compartments. Different dosing methods give different input terms, and parameters are typically estimated from concentration measurements.}
+
+\noindent\textbf{差分方程稳定性。} 线性系统 $x_{k+1}=Ax_k+b$ 的平衡点满足 $(I-A)x^*=b$。平衡点附近的扰动满足 $z_{k+1}=Az_k$；若矩阵谱半径 $\rho(A)<1$，则扰动趋于零。标量仿射模型 $x_{k+1}=ax_k+b$ 的平衡点为 $x^*=b/(1-a)$（$a\ne1$），当 $|a|<1$ 时渐近稳定。
+\READ{“X k plus one equals A x k plus b.” “The equilibrium is b over one minus a, and it is asymptotically stable if the absolute value of a is less than one.”}
+\EN{For the linear difference equation, equilibria solve $(I-A)x^*=b$. Perturbations decay if the spectral radius $\rho(A)<1$. In the scalar affine case, the equilibrium is $b/(1-a)$ and is asymptotically stable when $|a|<1$.}
+
+\noindent\textbf{正则马氏链。} 转移矩阵 $P$ 的元素非负且每行和为 $1$。若状态分布按行向量 $p_n$ 表示，则 $p_{n+1}=p_nP$。平稳分布满足 $\pi=\pi P$ 且分量和为 $1$。正则链（某个 $P^m$ 的元素全正）有唯一平稳分布，并在常见有限状态设定下从初始分布收敛至该分布。
+\READ{“P n plus one equals P n times P.” “Pi equals pi times P.”}
+\EN{A transition matrix has nonnegative entries and each row sums to one. State distributions evolve by $p_{n+1}=p_nP$. A stationary distribution satisfies $\pi=\pi P$ and sums to one. A regular chain has a positive power of its transition matrix; for a finite chain this gives a unique stationary distribution and convergence to it from common initial distributions.}
+
+\noindent\textbf{Leslie 人口模型。} 按年龄组建立列向量 $x_t$，其转移关系为 $x_{t+1}=Lx_t$。Leslie 矩阵首行放各年龄组生育率，次对角线放存活率，其余项通常为零。主特征值决定长期增长率，主特征向量经归一化给出稳定年龄结构（需满足相应正性/本原条件）。
+\EN{The Leslie model groups a population by age and evolves the age vector by $x_{t+1}=Lx_t$. The first row contains fertility rates, and the subdiagonal contains survival rates. The dominant eigenvalue determines long-term growth, and its normalized eigenvector gives the stable age structure under suitable positivity or primitivity conditions.}
+
+\EX{若每期人口按 $x_{k+1}=0.9x_k+10$ 变化，平衡点为 $x^*=10/(1-0.9)=100$；因 $|0.9|<1$，任意初值的偏差逐期缩小。}{If population follows $x_{k+1}=0.9x_k+10$, the equilibrium is $10/(1-0.9)=100$. Since $|0.9|<1$, deviations from equilibrium shrink each period.}
+
+\ASK{Malthus 和 Logistic 模型有何区别？}{How do the Malthus and Logistic models differ?}{Malthus 模型假设人均增长率恒定，产生指数增长；Logistic 模型加入环境承载量，种群接近 $K$ 时增长率下降。}{The Malthus model assumes a constant per-capita growth rate and gives exponential growth. The Logistic model includes a carrying capacity, so growth slows as the population approaches $K$.}
+
+\ASK{差分系统平衡点稳定性的谱半径判据是什么？}{What is the spectral-radius criterion for stability of a difference system?}{线性化扰动按矩阵幂 $A^k$ 演化；若 $\rho(A)<1$，矩阵幂趋于零，平衡点局部渐近稳定。}{Linearized perturbations evolve through powers of the matrix $A$. If $\rho(A)<1$, these powers tend to zero and the equilibrium is locally asymptotically stable.}
+
+\ASK{Leslie 矩阵各部分代表什么？}{What do the parts of a Leslie matrix represent?}{首行表示各年龄组生育贡献，次对角线表示个体存活到下一年龄组的比例；乘以当前年龄分布得到下一期分布。}{The first row represents fertility contributions from age groups, and the subdiagonal represents survival into the next age group. Multiplying by the current age distribution gives the next period's distribution.}
+
+\section{优化、变分与图论网络 | Optimization, variational methods and networks}
+\noindent\textbf{函数优化模型。} 标准约束优化形式为
+\[
+\min_{x\in\mathbb R^n} f(x)\quad\text{subject to }g_i(x)\le0,\ h_j(x)=0.
+\]
+根据目标和约束可分为线性规划、二次规划、非线性规划、整数规划、多目标和极大极小问题。模型需明确决策变量、目标、可行域和单位，再讨论最优解是否存在及求解器的适用条件。
+\READ{“Minimize f of x subject to g i of x less than or equal to zero and h j of x equal to zero.”}
+\EN{A standard constrained optimization model minimizes an objective subject to inequality and equality constraints. Depending on the objective and constraints, it may be a linear, quadratic, nonlinear, integer, multiobjective, or minimax problem. Specify decision variables, objective, feasible set, and units, then consider existence and solver assumptions.}
+
+\noindent\textbf{变分问题。} 若目标是选取函数 $y(t)$ 以极小化泛函 $J[y]=\int_a^b L(t,y,y')\,dt$，固定端点下极值函数满足 Euler--Lagrange 方程
+\[
+\frac{d}{dt}\frac{\partial L}{\partial y'}-\frac{\partial L}{\partial y}=0.
+\]
+等周问题还包含积分约束，可引入拉格朗日乘子并对增广泛函写 Euler--Lagrange 方程。
+\READ{“The time derivative of the partial derivative of L with respect to y prime, minus the partial derivative of L with respect to y, equals zero.”}
+\EN{For a functional $J[y]=\int_a^bL(t,y,y')dt$, an extremal with fixed endpoints satisfies the Euler--Lagrange equation above. An isoperimetric problem adds an integral constraint; a Lagrange multiplier can be used to form an augmented functional.}
+
+\noindent\textbf{图论与优化。} 图用顶点和边描述关系，可用邻接矩阵或关联矩阵表示。最短路问题在边权非负时可用 Dijkstra 算法；最小生成树可用 Kruskal 或 Prim 算法。项目网络中的关键路径由决定总工期的最长路径给出，PERT/CPM 用于时间安排和资源分析。
+
+\EN{A graph represents relationships through vertices and edges and can be encoded by adjacency or incidence matrices. Dijkstra's algorithm solves shortest paths with nonnegative edge weights. Kruskal's or Prim's algorithm finds a minimum spanning tree. In a project network, the critical path is the longest-duration path that determines the project completion time; PERT/CPM supports scheduling and resource analysis.}
+
+\ASK{Dijkstra 算法有什么适用条件？}{When is Dijkstra's algorithm appropriate?}{用于边权非负的图；若存在负权边，标准 Dijkstra 算法可能给出错误结果。}{It applies to graphs with nonnegative edge weights. With negative-weight edges, the standard Dijkstra algorithm may return an incorrect result.}
+
+\ASK{最短路和最小生成树的目标有什么不同？}{How do shortest paths and minimum spanning trees differ?}{最短路寻找指定起点到其他顶点的最低权路径；最小生成树连接所有顶点并使树边总权重最小。}{A shortest-path problem finds minimum-weight routes from a specified source to other vertices. A minimum spanning tree connects all vertices while minimizing the total weight of its tree edges.}
+
+\section{随机模型与更换策略 | Stochastic models and replacement}
+随机模型用概率分布描述需求、寿命或不确定参数。期望可用于比较长期平均成本或收益。报童/库存类模型需要平衡缺货成本与剩余库存成本；零件预防性更换模型依据寿命分布比较“预防更换成本”和“失效后更换成本”，选择长期平均成本较低的更换周期。课件还以 Weibull 分布讨论磨损失效寿命，建模时需说明寿命分布与成本假设。
+
+\EN{Stochastic models represent uncertain demand, lifetimes, or parameters through probability distributions. Expectations compare long-run average costs or returns. Inventory models balance shortage cost against leftover-stock cost. Preventive replacement models use a lifetime distribution to compare planned replacement cost with replacement after failure and choose a low long-run average cost policy. The slides also use the Weibull distribution for wear-related lifetimes; the lifetime and cost assumptions must be stated.}
+
+\ASK{随机模型和确定性模型有什么区别？}{How does a stochastic model differ from a deterministic model?}{确定性模型在给定参数和初值后给出单一结果；随机模型显式描述不确定性，输出分布、概率或期望。}{A deterministic model gives one outcome for fixed parameters and initial conditions. A stochastic model explicitly represents uncertainty and produces distributions, probabilities, or expectations.}
+
+\section*{口试表达 | Oral response structure}
+介绍任何一个模型时，可依次说明现实问题、关键假设、变量与参数、模型方程或优化目标、求解方法、主要结论和验证方式。解释预测结果时说明参数敏感性与模型局限，不把相关关系直接说成因果关系。
+
+\EN{When presenting a model, explain the real problem, key assumptions, variables and parameters, equations or objective, solution method, main result, and validation. Discuss parameter sensitivity and limitations, and do not interpret correlation as causation without justification.}
+
+\section*{来源与范围 | Source and scope}
+本讲义依据“数学建模”文件夹中的讲义 PDF 和《复习2025》整理，覆盖初等模型、量纲分析、AHP、拟合插值、非线性求根、常微分与差分模型、马氏链、Leslie 模型、优化、图论和随机模型。抢渡长江等模型按课件问题背景概括；具体数据、参数和边界条件须以题目为准。
+\EN{This handout follows the lecture PDFs and 2025 review slides in the Mathematical Modeling folder. It covers elementary models, dimensional analysis, AHP, fitting and interpolation, nonlinear root finding, ODE and difference models, Markov chains, the Leslie model, optimization, graph theory, and stochastic models. The Yangtze crossing and other applications are summarized from their course context; use the exact data, parameters, and boundary conditions given in a specific problem.}
+\end{document}
