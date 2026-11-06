@@ -206,6 +206,30 @@ h1 { margin-bottom: 14px; font-size: 34px; line-height: 1.2; }
 .empty-state { padding: 54px 12px; color: var(--muted); text-align: center; font-size: 13px; }
 .page-footer { display: flex; justify-content: space-between; gap: 16px; padding: 19px max(24px, calc((100vw - 1200px) / 2)); border-top: 1px solid var(--line); background: #fff; }
 
+.reader {
+  width: min(1060px, calc(100% - 28px));
+  max-width: none;
+  height: min(92dvh, 920px);
+  max-height: none;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #d4ddd7;
+  border-radius: 8px;
+  background: #f7f9f7;
+  box-shadow: 0 25px 80px rgb(10 30 20 / 25%);
+}
+
+.reader::backdrop { background: rgb(18 31 25 / 68%); }
+.reader[open] { display: flex; flex-direction: column; }
+.reader-bar, .reader-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 17px; }
+.reader-bar { border-bottom: 1px solid var(--line); background: white; }
+.reader-heading .eyebrow { margin: 0 0 2px; font-size: 9px; }
+.reader-heading h2 { margin: 0; font-size: 16px; }
+.close-button { min-width: 58px; min-height: 34px; border: 1px solid var(--line); border-radius: 5px; color: var(--ink); background: white; cursor: pointer; font-size: 11px; }
+.close-button:hover { border-color: var(--coral); color: #9e3f2f; }
+#pdf-frame { flex: 1; width: 100%; min-height: 0; border: 0; background: #e8ece9; }
+.reader-actions { justify-content: flex-start; flex-wrap: wrap; border-top: 1px solid var(--line); background: white; }
+.reader-new-tab { margin-left: auto; color: var(--green); font-size: 11px; text-underline-offset: 3px; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; clip-path: inset(50%); }
 
 :focus-visible { outline: 3px solid rgb(203 93 73 / 55%); outline-offset: 2px; }
@@ -238,6 +262,10 @@ h1 { margin-bottom: 14px; font-size: 34px; line-height: 1.2; }
   .course-formula { margin-bottom: 10px; padding: 6px 7px; font-size: 12px; }
   .action-button { min-height: 30px; padding: 0 8px; font-size: 9px; }
   .page-footer { flex-direction: column; gap: 7px; padding: 16px; font-size: 10px; }
+  .reader { width: calc(100% - 16px); height: 96dvh; border-radius: 6px; }
+  .reader-bar, .reader-actions { padding: 10px; }
+  .reader-actions { gap: 6px; }
+  .reader-new-tab { width: 100%; margin: 2px 0 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

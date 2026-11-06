@@ -3,6 +3,10 @@ const search = document.querySelector("#course-search");
 const count = document.querySelector("#result-count");
 const empty = document.querySelector("#empty-state");
 const filters = [...document.querySelectorAll("[data-filter]")];
+const reader = document.querySelector("#reader");
+const frame = document.querySelector("#pdf-frame");
+const readerTitle = document.querySelector("#reader-title");
+const readerNewTab = document.querySelector("#reader-new-tab");
 
 let courses = [];
 let activeFilter = "all";
@@ -19,11 +23,10 @@ function escapeHtml(value) {
 }
 
 function courseCard(course) {
-  const readerUrl = course.pdf.replace(/\/[^/]+$/, "/read.html");
-  const href = `./${escapeHtml(readerUrl)}`;
+  const searchable = `${course.title} ${course.subtitle} ${course.scope} ${course.summary} ${course.keywords}`.toLocaleLowerCase();
   return `
-    <article class="course-card" data-group="${escapeHtml(course.group)}">
-      <a class="cover-link" href="${href}" aria-label="阅读${escapeHtml(course.title)}">
+    <article class="course-card" data-group="${escapeHtml(course.group)}" data-search="${escapeHtml(searchable)}">
+      <a class="cover-link" href="./${escapeHtml(course.pdf)}" data-read="${escapeHtml(course.id)}" aria-label="阅读${escapeHtml(course.title)} PDF">
         <img src="./${escapeHtml(course.cover)}" alt="${escapeHtml(course.title)}讲义封面" loading="lazy" width="600" height="800">
       </a>
       <div class="course-content">
@@ -32,7 +35,7 @@ function courseCard(course) {
         <p class="course-summary">${escapeHtml(course.summary)}</p>
         <div class="course-formula" aria-label="代表公式"><span>\\(${escapeHtml(course.formula)}\\)</span></div>
         <div class="course-actions">
-          <a class="action-button action-primary" href="${href}">在线阅读</a>
+          <button class="action-button action-primary" type="button" data-read="${escapeHtml(course.id)}">在线阅读</button>
         </div>
       </div>
     </article>`;
@@ -62,6 +65,14 @@ function updateCourses() {
   empty.hidden = filtered.length !== 0;
 }
 
+function openReader(course) {
+  readerTitle.textContent = `${course.title} · ${course.subtitle}`;
+  const pdfUrl = `./${course.pdf}`;
+  frame.src = `${pdfUrl}#view=FitH`;
+  readerNewTab.href = pdfUrl;
+  reader.showModal();
+}
+
 async function initialize() {
   try {
     const response = await fetch("./courses.json");
@@ -89,5 +100,20 @@ filters.forEach((button) => {
 });
 
 search.addEventListener("input", updateCourses);
+
+list.addEventListener("click", (event) => {
+  const target = event.target.closest("[data-read]");
+  if (!target) return;
+  const course = courses.find((item) => item.id === target.dataset.read);
+  if (!course) return;
+  event.preventDefault();
+  openReader(course);
+});
+
+document.querySelector("[data-close]").addEventListener("click", () => reader.close());
+reader.addEventListener("close", () => { frame.src = "about:blank"; });
+reader.addEventListener("click", (event) => {
+  if (event.target === reader) reader.close();
+});
 
 initialize();

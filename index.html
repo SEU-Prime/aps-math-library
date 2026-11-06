@@ -23,7 +23,7 @@
         <span class="brand-mark" aria-hidden="true">A</span>
         <span>APS 数学课程资料库</span>
       </a>
-      <span class="topbar-note">双语讲义 · 网页全文阅读</span>
+      <span class="topbar-note">双语讲义 · 网页在线阅读</span>
     </header>
 
     <main>
@@ -36,7 +36,7 @@
         <dl class="library-stats" aria-label="资料库概况">
           <div><dt id="course-total">14</dt><dd>门课程</dd></div>
           <div><dt>中英</dt><dd>双语讲义</dd></div>
-          <div><dt>HTML</dt><dd>全文阅读</dd></div>
+          <div><dt>PDF</dt><dd>在线阅读</dd></div>
         </dl>
       </section>
 
@@ -58,7 +58,7 @@
 
         <div class="results-line">
           <p id="result-count" aria-live="polite">显示 14 门课程</p>
-          <p>完整讲义以网页文字和公式呈现</p>
+          <p>完整讲义可直接在网页内翻页阅读</p>
         </div>
         <div id="course-list" class="course-grid" aria-live="polite"></div>
         <p id="empty-state" class="empty-state" hidden>没有找到匹配的课程，请调整搜索词或筛选条件。</p>
@@ -70,5 +70,18 @@
       <span>由 LaTeX 编译 · 适用于桌面与移动设备</span>
     </footer>
 
+    <dialog id="reader" class="reader" aria-labelledby="reader-title">
+      <div class="reader-bar">
+        <div class="reader-heading">
+          <p class="eyebrow">PDF READER</p>
+          <h2 id="reader-title">课程讲义</h2>
+        </div>
+        <button class="close-button" type="button" data-close aria-label="关闭阅读器" title="关闭">关闭</button>
+      </div>
+      <iframe id="pdf-frame" title="课程 PDF 阅读器" src="about:blank"></iframe>
+      <div class="reader-actions">
+        <a id="reader-new-tab" class="reader-new-tab" href="#" target="_blank" rel="noreferrer">在新标签页阅读</a>
+      </div>
+    </dialog>
   </body>
 </html>
