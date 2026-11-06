@@ -6,6 +6,8 @@ const filters = [...document.querySelectorAll("[data-filter]")];
 const reader = document.querySelector("#reader");
 const frame = document.querySelector("#pdf-frame");
 const readerTitle = document.querySelector("#reader-title");
+const readerDownload = document.querySelector("#reader-download");
+const readerTex = document.querySelector("#reader-tex");
 const readerNewTab = document.querySelector("#reader-new-tab");
 
 let courses = [];
@@ -35,7 +37,8 @@ function courseCard(course) {
         <p class="course-summary">${escapeHtml(course.summary)}</p>
         <div class="course-formula" aria-label="代表公式"><span>\\(${escapeHtml(course.formula)}\\)</span></div>
         <div class="course-actions">
-          <button class="action-button action-primary" type="button" data-read="${escapeHtml(course.id)}">在线阅读</button>
+          <button class="action-button action-primary" type="button" data-read="${escapeHtml(course.id)}">阅读 PDF</button>
+          <a class="action-button action-secondary" href="./${escapeHtml(course.tex)}" download>TeX 源文件</a>
         </div>
       </div>
     </article>`;
@@ -69,6 +72,10 @@ function openReader(course) {
   readerTitle.textContent = `${course.title} · ${course.subtitle}`;
   const pdfUrl = `./${course.pdf}`;
   frame.src = `${pdfUrl}#view=FitH`;
+  readerDownload.href = pdfUrl;
+  readerDownload.download = `${course.id}-aps.pdf`;
+  readerTex.href = `./${course.tex}`;
+  readerTex.download = `${course.id}-source.tex`;
   readerNewTab.href = pdfUrl;
   reader.showModal();
 }
