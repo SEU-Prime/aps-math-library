@@ -1,194 +1,222 @@
 \documentclass[UTF8,11pt,a4paper]{ctexart}
 \usepackage{amsmath,amssymb,geometry,enumitem,hyperref}
-\geometry{margin=2.1cm}\setlist{itemsep=2pt,topsep=3pt}
+\geometry{margin=2.1cm}
+\setlist{itemsep=2pt,topsep=3pt}
 \hypersetup{colorlinks=true,linkcolor=blue}
-\newcommand{\EN}[1]{\par\noindent \textbf{English.} #1\par}
-\newcommand{\READ}[1]{\par\noindent \textbf{公式英文读法 / How to read it.} #1\par}
-\newcommand{\EX}[2]{\par\noindent \textbf{例子 / Example.} #1\par\EN{#2}}
-\newcommand{\ASK}[4]{\par\noindent \textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent \textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
+\newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
+\newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\FORMULA}[2]{\par\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
+\newcommand{\EX}[2]{\par\noindent\textbf{例子 / Example.} #1\par\EN{#2}}
+\newcommand{\ASK}[4]{\par\noindent\textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent\textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
 \title{代数拓扑 APS 面试准备\\[4pt]\large Croom《Basic Concepts of Algebraic Topology》第 1--5 章}
 \author{Algebraic Topology: Bilingual Review}
 \date{}
-\begin{document}\maketitle
+\begin{document}
+\maketitle
+
 \section*{课程概述 | Course overview}
-\noindent \textbf{中文口述稿。} 在代数拓扑课上，我学习用代数方法区分形状。比如一个三角形边框由三个点和三条边组成，沿边走一圈会回到起点；如果没有填入三角面，这个环不能被已有的面填满。它的一维同调群是 $H_1\cong\mathbb Z$，整数可以理解为绕环的次数。填入三角面后，这个环成为面的边界，一维同调变为零。这个例子说明同调怎样把几何中的“洞”变成可以计算的代数信息；它也联系了群论和几何。
-\EN{In algebraic topology, I learned to distinguish shapes using algebra. A triangular frame has three vertices and three edges. Following the edges once gives a closed loop, and without a triangular face that loop cannot be filled by the available simplices. Its first homology group is $H_1\cong\mathbb Z$, where integers correspond to multiples of the loop. After filling the triangle, the loop becomes the boundary of the face and the first homology is zero. This shows how homology turns a geometric hole into an algebraic object that can be computed, connecting group theory and geometry.}
+\noindent\textbf{中文口述稿。} 我按教材顺序学习了几何复形、单纯同调、单纯逼近、基本群和覆盖空间。主线是先把空间剖分成顶点、边、三角形等简单部分，再用边界算子判断闭合链能否被高一维的面填充；随后研究连续映射怎样由有限的单纯映射近似；最后用闭路的拼接定义基本群，并借助覆盖空间把闭路的同伦类转化为提升路径的终点信息。例如，未填充的三角形边框有一个独立的一维洞，故 $H_1\cong\mathbb Z$；填入三角面后该圈成为边界，$H_1=0$。这说明同调是可计算的代数不变量，而基本群保留更精细的闭路拼接信息。
+\EN{Following the textbook, I studied geometric complexes, simplicial homology, simplicial approximation, the fundamental group, and covering spaces. The main idea is to decompose a space into vertices, edges, triangles, and higher-dimensional pieces, then use boundary maps to decide which cycles can be filled by higher-dimensional faces. Simplicial approximation turns continuous maps into finite combinatorial maps. The fundamental group records loops and their concatenation, while covering spaces encode loop classes through the endpoints of lifted paths. For example, an unfilled triangular frame has one independent one-dimensional hole, so $H_1\cong\mathbb Z$. Filling its triangular face makes that loop a boundary and gives $H_1=0$. Homology is a computable algebraic invariant, while the fundamental group retains finer information about loop concatenation.}
 
-\noindent \textbf{具体应用联系。} 拓扑数据分析把传感器点云、三维扫描或分子构形近似成 simplicial complex，再计算连通分支和环洞。若数据来自一个圆环形状，理想情况下应有一个连通分支和一个一维洞；测量噪声会制造很小、很短暂的假洞，因此实践中常比较不同尺度下拓扑特征是否持续存在。同调在同伦等价下不变；任意连续映射却可能压缩掉一个环，所以不能说任何连续变形都保持洞的数量。
-\EN{Topological data analysis approximates sensor point clouds, 3D scans, or molecular configurations by a simplicial complex and computes components and loops. An ideal circle has one connected component and one one-dimensional hole. Noise can create small, short-lived false holes, so practical methods compare features across scales. Homology is invariant under homotopy equivalence, but an arbitrary continuous map can collapse a loop and need not preserve holes.}
+\noindent\textbf{具体应用联系。} 在拓扑数据分析中，可以把传感器或三维扫描得到的点云按距离阈值连接成边，并在三点两两相连时加入三角形，得到随尺度变化的单纯复形。计算 $H_0$ 可观察数据簇何时合并，计算 $H_1$ 可观察环形空隙何时出现或被填掉。若一个洞只在极窄的尺度范围存在，它可能来自测量噪声；持续跨越多个尺度的特征通常更值得进一步检查。这个过程分析的是有限点云构成的模型，结论仍要结合采样密度和噪声判断。
+\EN{In topological data analysis, a point cloud from sensors or a 3D scan can be turned into a simplicial complex at each distance scale: connect nearby points by edges and add a triangle when all three edges are present. The group $H_0$ tracks when data clusters merge, and $H_1$ tracks when loop-shaped gaps appear or are filled. A feature that exists only over a very narrow range of scales may be caused by measurement noise, while a feature persisting across scales deserves closer attention. The calculation concerns a finite model of the point cloud, so conclusions still depend on sampling density and noise.}
 
-\section{几何复形与方向 | Geometric complexes and orientation}
-\noindent $k$-单形是 $k+1$ 个仿射独立点的凸包：$0$-单形是顶点，$1$-单形是边，$2$-单形是三角形，$3$-单形是四面体。单纯复形由一组单形组成，并满足任意面的面仍在其中、两个单形的交是共同的面或空集。几何复形的并称多面体。给边或三角形定向，是为了在边界公式中保留符号。
-\EN{A $k$-simplex is the convex hull of $k+1$ affinely independent points: vertices, edges, triangles, and tetrahedra are the cases $k=0,1,2,3$. A simplicial complex contains the faces of each simplex and has intersections that are common faces or empty. Orientations assign signs so that boundary terms can cancel correctly.}
+\section{第 1 章：几何复形与多面体 | Chapter 1: Geometric complexes and polyhedra}
+\subsection{单形、面与仿射独立 | Simplices, faces, and affine independence}
+\noindent 在欧氏空间中，$k$-单形是 $k+1$ 个仿射独立顶点的凸包。仿射独立表示顶点不落在一个维数更低的仿射子空间内。于是 $0$-单形是点，$1$-单形是闭线段，$2$-单形是实心三角形，$3$-单形是实心四面体。单形的面由它的任意一组顶点的凸包给出，空面通常也作为面处理。
+\EN{A geometric $k$-simplex is the convex hull of $k+1$ affinely independent vertices. Affine independence means that the vertices do not lie in a lower-dimensional affine subspace. Thus a zero-simplex is a point, a one-simplex is a closed line segment, a two-simplex is a filled triangle, and a three-simplex is a solid tetrahedron. A face is the convex hull of any subset of the vertices; the empty face is usually included by convention.}
+\EX{顶点 $(0,0),(1,0),(0,1)$ 张成的二维单形是 $\{(x,y):x\ge0,\ y\ge0,\ x+y\le1\}$。它的三条边是三个一维面；只保留这三条边时得到三角形边框，保留整个凸包时得到填充三角形。两者的顶点和边相同，但同调不同。}{The vertices $(0,0)$, $(1,0)$, and $(0,1)$ span the simplex $\{(x,y):x\ge0, y\ge0, x+y\le1\}$. Its three edges are one-dimensional faces. Keeping only those edges gives a triangular frame; keeping the whole convex hull gives a filled triangle. They have the same vertices and edges but different homology.}
 
-\section{链、圈、边界与同调 | Chains, cycles, boundaries, and homology}
-\noindent 在系数域或整数环 $R$ 上，$C_k(K)$ 是由有向 $k$-单形生成的自由模，元素称 $k$-链。边界算子 $\partial_k:C_k\to C_{k-1}$ 对有向单形定义为
+\subsection{单纯复形、几何实现与三角剖分 | Complexes, realizations, and triangulations}
+\noindent 单纯复形 $K$ 是一族单形，并满足两个条件：每个单形的所有面也属于 $K$；任意两个单形的交为空，或是它们共同的面。它的几何实现 $|K|$ 是这些单形按规定粘合后形成的空间。若空间 $X$ 同胚于某个 $|K|$，则 $K$ 是 $X$ 的一个三角剖分。三角剖分把连续几何对象转换成有限组合数据，但同一个空间可以有不同的三角剖分。
+\EN{A simplicial complex $K$ is a collection of simplices satisfying two conditions: every face of each simplex also belongs to $K$, and two simplices intersect only in a common face or not at all. Its geometric realization $|K|$ is the space obtained by gluing these simplices along their prescribed faces. If a space $X$ is homeomorphic to $|K|$, then $K$ is a triangulation of $X$. Triangulation converts a geometric space into finite combinatorial data, although the same space can have different triangulations.}
+\EX{三个顶点及其三条边组成、但不含二维单形的复形实现为圆周 $S^1$。加入由这三个顶点张成的二维单形后，几何实现变成闭圆盘。新增的只是一个面，却改变了边界闭路是否能被填充。}{The complex consisting of three vertices and their three edges, but no two-simplex, realizes the circle $S^1$. Adding the two-simplex spanned by those vertices changes the realization into a closed disk. Only a face has been added, but whether the boundary loop can be filled has changed.}
+
+\subsection{定向与边界符号 | Orientation and boundary signs}
+\noindent 对单形顶点排序 $[v_0,\ldots,v_k]$ 指定一个方向。交换两个顶点会反转方向，因此有 $[v_1,v_0]=-[v_0,v_1]$。计算链时，方向用正负号记录；相邻面共享的边界部分以相反方向出现，因而相消。这是后面边界公式中交替符号的几何来源。
+\EN{An ordering $[v_0,\ldots,v_k]$ of the vertices specifies an orientation. Swapping two vertices reverses the orientation, so $[v_1,v_0]=-[v_0,v_1]$. In chain calculations, orientation is recorded by signs. A shared face of adjacent simplices appears with opposite orientations and cancels; this is the geometric reason for the alternating signs in the boundary formula.}
+\EX{将三角形边界定向为 $v_0\to v_1\to v_2\to v_0$。若把最后一条边写成 $[v_0,v_2]$，它的方向与沿边界行走的 $[v_2,v_0]$ 相反，所以应使用 $-[v_0,v_2]$。}{Orient the triangle boundary as $v_0\to v_1\to v_2\to v_0$. If the last edge is written as $[v_0,v_2]$, its direction is opposite to the boundary direction $[v_2,v_0]$, so it must appear as $-[v_0,v_2]$.}
+\ASK{为什么单纯复形必须包含每个单形的所有面？}{Why must a simplicial complex contain every face of each simplex?}{边界算子要把一个单形送到它的面组成的链中。若这些面不在复形里，边界就不属于该复形的链群，后续的链复形和同调也无法定义。}{The boundary map sends a simplex to a chain made of its faces. If those faces were absent, the boundary would not belong to the chain group of the complex, so the chain complex and its homology could not be defined.}
+
+\section{第 2 章：单纯同调群 | Chapter 2: Simplicial homology groups}
+\subsection{链群与边界算子 | Chain groups and boundary maps}
+\noindent 选定系数 $\mathbb Z$ 后，$C_k(K;\mathbb Z)$ 是由 $K$ 的定向 $k$-单形生成的自由阿贝尔群；一个 $k$-链是有限个 $k$-单形的整数线性组合。反转单形方向等同于将相应生成元乘以 $-1$。边界算子 $\partial_k:C_k\to C_{k-1}$ 对一个有序单形定义如下，并按线性性扩张到所有链：
+\FORMULA{单纯边界公式（交替删点公式）}{the simplicial boundary formula, or the alternating face formula}
 \[
-\partial_k[v_0,\ldots,v_k]=\sum_{j=0}^k(-1)^j[v_0,\ldots,\widehat v_j,\ldots,v_k].
+\partial_k[v_0,\ldots,v_k]=\sum_{j=0}^{k}(-1)^j[v_0,\ldots,\widehat v_j,\ldots,v_k].
 \]
-帽号表示删去该顶点。每个面以交替符号出现，故 $\partial_{k-1}\partial_k=0$：边界的边界为零。圈是满足 $\partial_k c=0$ 的链；边界是形如 $\partial_{k+1}b$ 的链。因为边界都是圈，商群
+\READ{“The boundary of the simplex with vertices v zero through v k is the sum, from j equals zero to k, of minus one to the j times the face obtained by omitting v j.” The hat means that the marked vertex is omitted.}
+\EN{With integer coefficients, $C_k(K;\mathbb Z)$ is the free abelian group generated by oriented $k$-simplices. A $k$-chain is a finite integer linear combination of these simplices. Reversing orientation multiplies a generator by $-1$. The boundary map is defined by the alternating face formula above and extended linearly to every chain.}
+\EX{对有向边，$\partial_1[v_0,v_1]=[v_1]-[v_0]$，即终点减起点。对三角形，$\partial_2[v_0,v_1,v_2]=[v_1,v_2]-[v_0,v_2]+[v_0,v_1]$。中间的负号来自删去第二个顶点时的 $(-1)^1$。}{For an oriented edge, $\partial_1[v_0,v_1]=[v_1]-[v_0]$, terminal endpoint minus initial endpoint. For a triangle, the boundary is the alternating sum shown above. The middle minus sign comes from the factor $(-1)^1$ when the second vertex is omitted.}
+
+\subsection{边界的边界为零 | The boundary of a boundary is zero}
+\noindent 对一个 $k$-单形连续取两次边界时，每个余维二的面会出现两次：一次先删去顶点 $v_i$ 再删去 $v_j$，另一次按相反顺序删去。两项的符号相反，故逐项相消。于是得到\textbf{边界复形恒等式}：
+\FORMULA{边界的边界为零}{the boundary of a boundary is zero}
 \[
-H_k(K)=\ker\partial_k/\operatorname{im}\partial_{k+1}
+\partial_{k-1}\circ\partial_k=0.
 \]
-有定义。它把“没有边界的闭合对象”按“本身是某个更高维对象的边界”视为平凡。
-\EN{With integer or field coefficients, $C_k(K)$ consists of finite linear combinations of oriented $k$-simplices. The boundary map is the alternating sum shown above; the hat means that a vertex is omitted. Applying the boundary twice gives zero. A cycle lies in the kernel, while a boundary lies in the image of the next boundary map. Every boundary is a cycle, so the homology group is the quotient of cycles by boundaries.}
+\READ{“The boundary in dimension k minus one, composed with the boundary in dimension k, is the zero map.”}
+\EN{Applying the boundary twice to a simplex gives each codimension-two face twice: once by omitting $v_i$ and then $v_j$, and once in the reverse order. The two signs are opposite, so the terms cancel. This gives the identity above, often called “the boundary of a boundary is zero.”}
+\noindent 这个恒等式保证每个边界都是圈：若 $b=\partial_{k+1}c$，则 $\partial_kb=\partial_k\partial_{k+1}c=0$。因此 $\operatorname{im}\partial_{k+1}\subseteq\ker\partial_k$，后面才能把边界群作为圈群的子群取商。
+\EX{有向三角形的边界是 $z=[v_0,v_1]+[v_1,v_2]+[v_2,v_0]$。再取一次边界得到 $(v_1-v_0)+(v_2-v_1)+(v_0-v_2)=0$，因为每个顶点一次以正号、一次以负号出现。}{The oriented boundary of a triangle is $z=[v_0,v_1]+[v_1,v_2]+[v_2,v_0]$. Taking its boundary gives $(v_1-v_0)+(v_2-v_1)+(v_0-v_2)=0$, since each vertex occurs once with each sign.}
+
+\subsection{圈、边界与同调群 | Cycles, boundaries, and homology}
+\noindent $k$-圈是边界为零的 $k$-链，组成 $Z_k=\ker\partial_k$；$k$-边界是某个 $(k+1)$-链的边界，组成 $B_k=\operatorname{im}\partial_{k+1}$。因为 $B_k\subseteq Z_k$，定义第 $k$ 个同调群为圈群除以边界群：
+\FORMULA{第 $k$ 个同调群的定义}{the definition of the k-th homology group}
+\[
+H_k(K;\mathbb Z)=Z_k/B_k=\ker\partial_k/\operatorname{im}\partial_{k+1}.
+\]
 \READ{“H k is the kernel of the boundary map in dimension k, modulo the image of the boundary map in dimension k plus one.”}
+\EN{A $k$-cycle is a $k$-chain with zero boundary; the cycle group is $Z_k=\ker\partial_k$. A $k$-boundary is the boundary of a $(k+1)$-chain; the boundary group is $B_k=\operatorname{im}\partial_{k+1}$. Since every boundary is a cycle, the $k$-th homology group is the quotient of cycles by boundaries.}
+\noindent 为什么要取这个商？圈是闭合的候选“洞边界”，但若它恰好是某个面或高维链的边界，就能在空间内部填掉，不应算作非平凡洞。同调类 $[z]$ 把相差一个边界的圈视为等价；$[z]=0$ 当且仅当 $z$ 本身是边界。$H_0$ 记录连通分支，$H_1$ 记录不能由二维面填掉的一维圈，$H_2$ 则记录不能由三维链填掉的二维闭合表面。
+\EN{Why take this quotient? A cycle is a candidate boundary of a hole, but if it is itself the boundary of a face or a higher-dimensional chain, it can be filled inside the space and should not count as a nontrivial hole. Homology identifies cycles that differ by a boundary. A class $[z]$ is zero exactly when $z$ is a boundary. The group $H_0$ records connected components, $H_1$ records loops not filled by two-dimensional faces, and $H_2$ records closed surfaces not filled by three-dimensional chains.}
 
-\EX{把三角形边界定向为 $[v_0,v_1]+[v_1,v_2]+[v_2,v_0]$。三个顶点的边界项成对抵消，所以该链是 $1$-圈；若填入三角形面，它正是该 $2$-单形的边界，因而在同调群中代表零。圆周只由边组成而没有填充面，其绕一圈的 $1$-圈不是边界，因此保留一个洞。}{Orient the boundary of a triangle as $[v_0,v_1]+[v_1,v_2]+[v_2,v_0]$. Its vertex terms cancel, so it is a 1-cycle. If the triangular face is included, that cycle is a boundary and represents zero in homology. A circle has no filling face, so its loop is not a boundary and detects a hole.}
-
-\noindent\textbf{完整计算：三角形边界。} 以整数为系数，令 $e_{01}=[v_0,v_1]$、$e_{12}=[v_1,v_2]$、$e_{20}=[v_2,v_0]$，则 $\partial e_{01}=v_1-v_0$，其余两条边同理。对任意 $1$-链 $c=ae_{01}+be_{12}+ce_{20}$，令 $\partial c=0$ 等价于 $a=b=c$，故 $\ker\partial_1$ 由 $e_{01}+e_{12}+e_{20}$ 生成。由于没有 $2$-单形，$\operatorname{im}\partial_2=0$，因此 $H_1\cong\mathbb Z$。三个顶点连在一起，所以 $H_0\cong\mathbb Z$。填入三角形后这个圈成为面的边界，$H_1$ 变为零。
-\EN{For the boundary of a triangle, orient the edges cyclically. An arbitrary 1-chain has zero boundary exactly when all three edge coefficients are equal, so the cycle group is generated by the loop around the triangle. There is no 2-simplex, so the boundary group in dimension one is zero and $H_1\cong\mathbb Z$. All vertices are connected, so $H_0\cong\mathbb Z$. Filling the triangle makes the loop a boundary and changes $H_1$ to zero.}
-
-\noindent\textbf{Betti 数。} 当使用域系数时，$\beta_k=\dim H_k$ 记录第 $k$ 维独立同调类个数：$\beta_0$ 是连通分支数，$\beta_1$ 常解释为独立环洞数，$\beta_2$ 在常见三维模型中可检测被包围的空腔。解释依赖空间及系数；整数同调还可能有有限阶挠子群，单靠 Betti 数看不到。
-\EN{With field coefficients, the Betti number $\beta_k=\dim H_k$ counts independent homology classes in dimension $k$. The zeroth counts connected components; the first often counts independent loops; the second can detect enclosed voids in familiar three-dimensional spaces. The interpretation depends on the space and coefficients. Integer homology can also contain torsion that Betti numbers do not detect.}
-
-\noindent 有限单纯复形的 Euler 特征为 $\chi(K)=\sum_k(-1)^k f_k$，其中 $f_k$ 是 $k$-单形个数；Euler--Poincaré 公式给出 $\chi(K)=\sum_k(-1)^k\operatorname{rank}H_k(K)$（使用合适的系数并计入 Betti 数）。它让容易数出的顶点、边、面与拓扑洞数产生联系，但 Euler 特征相同不保证空间同胚。
-\EN{For a finite simplicial complex, the Euler characteristic is the alternating sum of the numbers $f_k$ of simplices. The Euler--Poincare formula expresses it as the alternating sum of the ranks of the homology groups, or Betti numbers. It connects a combinatorial count of vertices, edges, and faces to topological holes, although equal Euler characteristics do not imply that spaces are homeomorphic.}
-\EX{四面体表面有 $f_0=4,f_1=6,f_2=4$，所以 $\chi=4-6+4=2$，与球面相同。环面有 $\chi=0$，并有两个独立的一维基本环方向。}{The boundary of a tetrahedron has four vertices, six edges, and four faces, so $\chi=4-6+4=2$, as for a sphere. A torus has Euler characteristic zero and two independent one-dimensional loop directions.}
-
-\section{单纯映射与基本群 | Simplicial maps and the fundamental group}
-\noindent 单纯映射把顶点送到顶点，并把每个单形送到某个单形（允许维数下降），因此诱导链映射并保持同调。连续映射常可在足够细分后由单纯映射近似，这就是单纯逼近思想：先把连续几何问题转成有限组合数据，再证明代数不变量不依赖所选细分。
-\EN{A simplicial map sends vertices to vertices and each simplex to a simplex, possibly of lower dimension. It induces maps on chains and homology. After sufficient subdivision, continuous maps can often be approximated by simplicial maps, converting geometric questions into finite combinatorial ones.}
-
-\noindent 以点 $x_0$ 为基点，基于 $x_0$ 的闭路按保持基点的同伦分类；闭路同伦类在路径拼接下构成基本群 $\pi_1(X,x_0)$。它记录空间中不能连续缩成常值路的环。圆周的基本群同构于 $\mathbb Z$，整数表示绕圈次数；球面 $S^2$ 的基本群平凡。若空间路径连通，改变基点会得到同构群，但同构通常依赖选取的路径。
-\READ{“The fundamental group consists of based loops modulo based homotopy, with path concatenation as its operation.”}
-
-\section{覆盖空间 | Covering spaces}
-\noindent 映射 $p:\widetilde X\to X$ 是覆盖映射，若每个 $x\in X$ 都有邻域 $U$，使 $p^{-1}(U)$ 是若干互不相交开集的并，且每一片在 $p$ 下同胚到 $U$。局部看，覆盖空间与底空间相同；全局上，一个底空间点可以有多个原像。路径提升与同伦提升把底空间中的闭路信息转成覆盖空间中的端点变化，因此覆盖空间与基本群的子群结构相连。
-\EN{A covering map is locally a disjoint union of copies: each point has a neighborhood whose inverse image consists of disjoint open sets mapped homeomorphically onto it. Locally the covering space looks like the base, while globally a point can have several preimages. Path and homotopy lifting connect loops in the base to endpoint changes upstairs and relate coverings to subgroups of the fundamental group.}
-
-\EX{指数映射 $p:\mathbb R\to S^1$，$p(t)=e^{2\pi it}$，是实直线对圆周的覆盖。圆周上绕一圈的闭路从 $t=0$ 提升到实线后终点为 $1$，没有回到起点；绕 $n$ 圈则终点为 $n$。因此提升记录了绕数，并显示 $\pi_1(S^1)\cong\mathbb Z$。}{The map $p:\mathbb R\to S^1$ given by $p(t)=e^{2\pi it}$ covers the circle. A loop going once around the circle lifts from $0$ to $1$ in the real line, so its lift does not return to its starting point. A loop going around $n$ times ends at $n$. This records the winding number and explains why $\pi_1(S^1)\cong\mathbb Z$.}
-
-\noindent\textbf{路径提升如何用。} 固定提升起点 $\widetilde x_0$ 后，底空间的每条路径都有唯一提升。若底空间的两个基点闭路保持端点同伦，则它们从同一提升起点出发的提升终点相同。因此圆周中绕一圈和常值路不可能基点同伦：前者提升终点是 $1$，后者是 $0$。
-\EN{After fixing a starting point in the covering space, a path in the base has a unique lift. Based-homotopic loops have lifts with the same endpoint when started at the same point. On the circle, a once-around loop and the constant loop therefore cannot be based-homotopic: their lifts from zero end at one and zero, respectively.}
-
-\ASK{为什么要把圈除以边界来定义同调群？}{Why is homology defined as cycles modulo boundaries?}{圈满足边界为零，表示闭合结构；若它是某个高一维链的边界，就视为可填充。取 $\ker\partial_k/\operatorname{im}\partial_{k+1}$，并把相差边界的圈视为同一个同调类。}{Cycles are closed chains. A cycle that bounds a chain one dimension higher is fillable and represents zero. The quotient identifies cycles whose difference is a boundary.}
-\ASK{圆周的基本群为什么是整数群？}{Why is the fundamental group of the circle the integers?}{闭路可按绕圆周的有向次数分类，绕数是整数；路径拼接对应绕数相加，零次绕数的闭路可缩为一点。因此群运算对应整数加法。}{Loops are classified by their signed winding number, an integer. Concatenation adds winding numbers, and a loop with winding number zero is contractible, so the group operation is integer addition.}
-\ASK{同调群与基本群有什么区别？}{How do homology and the fundamental group differ?}{基本群记录基点闭路及其可能非交换的拼接结构；同调群把链线性化并取商，通常更容易计算，但会丢失部分非交换信息。两者在同伦等价下不变；基本群还要适当处理基点。}{The fundamental group records based loops with a possibly noncommutative concatenation law. Homology linearizes chains and takes a quotient, losing some noncommutative information. Both are invariant under homotopy equivalence, with appropriate basepoints for the fundamental group.}
-\section{从零开始：同胚、同伦与拓扑不变量 | Homeomorphism, homotopy, and invariants}
-\noindent \textbf{同胚。} 若 $f:X\to Y$ 是连续双射且逆映射也连续，则 $X,Y$ 同胚。它允许拉伸和弯曲，但不能撕开或粘接；例如圆周与正方形边界同胚。仅有连续双射一般不够，还需要逆连续。
-\EN{A homeomorphism is a continuous bijection with a continuous inverse. It permits bending and stretching but preserves the topological structure. For example, a circle is homeomorphic to the boundary of a square. A continuous bijection alone need not be a homeomorphism.}
-\noindent \textbf{同伦。} 两个连续映射 $f,g:X\to Y$ 若存在连续 $H:X\times[0,1]\to Y$ 满足 $H(x,0)=f(x)$、$H(x,1)=g(x)$，则它们同伦。$t$ 是连续变形参数，不必解释为物理时间。若存在 $f:X\to Y$、$g:Y\to X$，使 $gf\simeq\mathrm{id}_X$、$fg\simeq\mathrm{id}_Y$，则 $X,Y$ 同伦等价。同胚蕴含同伦等价，反之不一定。
-\EN{Maps $f,g:X\to Y$ are homotopic if a continuous $H:X\times[0,1]\to Y$ deforms one into the other. Spaces are homotopy equivalent if maps in both directions compose to maps homotopic to the respective identities. Homeomorphism implies homotopy equivalence, but not conversely.}
-\EX{实直线 $\mathbb R$ 与一点不是同胚：它们的点数不同；但 $H(x,t)=(1-t)x$ 把恒等映射连续收缩到常值 $0$，所以 $\mathbb R$ 与一点同伦等价。圆周不能这样收缩，因为绕圆一圈的闭路有非零绕数。}{The real line is not homeomorphic to a point, but $H(x,t)=(1-t)x$ contracts it to zero, making it homotopy equivalent to a point. A circle cannot be contracted in the same way because a loop around it has nonzero winding number.}
-\ASK{为什么比较基本群能证明两个空间不等价？}{How can fundamental groups distinguish spaces?}{同伦等价的空间有同构的基本群（基点按路径相应处理）。若基本群不同构，则它们不同伦等价，更不可能同胚。例如一点的基本群平凡，而圆周的基本群是 $\mathbb Z$。}{Homotopy-equivalent spaces have isomorphic fundamental groups, with compatible basepoints. If the groups are not isomorphic, the spaces are not homotopy equivalent and cannot be homeomorphic. A point has trivial fundamental group, while a circle has fundamental group $\mathbb Z$.}
-
-\section{单形、链与边界：逐项计算 | Simplices, chains, and boundaries}
-\noindent 有向边 $[v_i,v_j]$ 的边界是终点减起点：$\partial_1[v_i,v_j]=[v_j]-[v_i]$。有向三角形的边界为
-\[\partial_2[v_0,v_1,v_2]=[v_1,v_2]-[v_0,v_2]+[v_0,v_1].\]
-改变单形的方向会改变符号。对上式再取边界，每个顶点出现两次且符号相反，因此 $\partial_1\partial_2=0$。推广到任意维数，每个低两维的面因删去两个顶点的先后次序不同出现两次，符号相反。
-\EN{The boundary of an oriented edge is endpoint minus starting point. The boundary of an oriented triangle is the alternating sum shown above. Applying the boundary operator again makes every vertex cancel. In all dimensions, every face of codimension two occurs twice with opposite signs, giving $\partial^2=0$.}
-\READ{“The boundary of the oriented triangle v zero, v one, v two is the edge v one to v two minus the edge v zero to v two plus the edge v zero to v one.”}
-\EX{只有一条边 $[v_0,v_1]$ 的复形中，$C_1\cong\mathbb Z$、$C_0\cong\mathbb Z^2$。$\partial_1(a[v_0,v_1])=a(v_1-v_0)$，所以 $\ker\partial_1=0$，$H_1=0$。在 $H_0$ 中商去 $v_1-v_0$ 后两个顶点代表同一个连通分支，故 $H_0\cong\mathbb Z$。}{For a complex with one edge and its two endpoints, $C_1\cong\mathbb Z$ and $C_0\cong\mathbb Z^2$. The boundary of $a[v_0,v_1]$ is $a(v_1-v_0)$, so $\ker\partial_1=0$ and $H_1=0$. Quotienting $C_0$ by the image identifies the endpoints, leaving $H_0\cong\mathbb Z$ for one connected component.}
-
-\section{算同调时的五个步骤 | Five steps for computing homology}
-\noindent 实际计算可按以下顺序：列出各维有向单形及链群 $C_k$；写出每个边界算子 $\partial_k$；解线性方程求圈群 $Z_k=\ker\partial_k$；由高一维单形求边界群 $B_k=\operatorname{im}\partial_{k+1}$；最后计算商 $H_k=Z_k/B_k$。用域系数时，可对边界矩阵做行变换；用整数系数时，还要考虑挠，不能仅靠普通实数矩阵的秩。
-\EN{To compute homology, list the oriented simplices and chain groups, write the boundary maps, find cycles as kernels, find boundaries as images from the next dimension, and form the quotient. Over a field, row reduction gives dimensions. With integer coefficients, torsion must also be considered, so real-matrix ranks alone are insufficient.}
-\EX{系数取 $\mathbb R$，三角形边界有三个顶点和三条边、没有面。$\dim C_1=3$，边界矩阵的秩为 $2$，所以 $\dim Z_1=3-2=1$；由于 $C_2=0$，有 $B_1=0$，得 $\beta_1=1$。同时 $\beta_0=3-2=1$。若填入一个三角面，则 $\partial_2$ 的像正好张成原有那个圈，$\beta_1$ 变为 $0$。}{Over $\mathbb R$, the triangular boundary has three vertices and three edges and no faces. The edge-boundary matrix has rank two, so its kernel has dimension $3-2=1$. Since $C_2=0$, $\beta_1=1$, and $\beta_0=3-2=1$. Adding the triangular face makes the cycle a boundary, so $\beta_1$ becomes zero.}
-
-\section{基本群：闭路的组合与绕数 | Fundamental group and winding number}
-\noindent 以 $x_0$ 为基点的闭路是连续映射 $\gamma:[0,1]\to X$，且 $\gamma(0)=\gamma(1)=x_0$。两条闭路可先走第一条再走第二条；取保持端点的同伦等价类后，拼接在同伦类层面满足结合律。常值路是单位元，反向走的路径给逆元。群可能非交换，取决于空间结构。
-\EN{A based loop is a continuous map $\gamma:[0,1]\to X$ with both endpoints at $x_0$. Concatenating loops gives the group operation on based-homotopy classes. The constant loop is the identity and the reversed loop gives an inverse. The group can be noncommutative.}
-\EX{在 $S^1$ 上取 $\gamma_n(t)=e^{2\pi int}$。$n=2$ 表示逆时针绕两圈，$n=-1$ 表示顺时针绕一圈。先走 $\gamma_2$ 再走 $\gamma_{-1}$，总绕数为 $1$，所以其同伦类对应整数 $1$。通过 $\mathbb R\to S^1$ 的路径提升可证明绕数在基点同伦下不变。}{On $S^1$, $\gamma_n(t)=e^{2\pi int}$ winds $n$ times. The loop with $n=2$ followed by the loop with $n=-1$ has total winding one. Lifting paths to $\mathbb R$ proves that winding number is unchanged under based homotopy.}
-
-\section{覆盖空间：从局部复制到全局信息 | Coverings and lifting}
-\noindent 覆盖映射的每个底空间点附近都有\emph{均匀覆盖邻域} $U$：$p^{-1}(U)$ 分成互不相交的开集，每一片都通过 $p$ 同胚到 $U$。取圆周上不绕满一整圈的小弧，它在实线覆盖 $t\mapsto e^{2\pi it}$ 下的原像是相隔整数距离的一列小区间。一个点上方的原像集合称纤维。
-\EN{An evenly covered neighborhood $U$ has inverse image equal to a disjoint union of open sets, each mapped homeomorphically onto $U$. For the covering $t\mapsto e^{2\pi it}$ of the circle, a small arc has inverse-image intervals separated by integers. The inverse image of a single point is called its fiber.}
-\EX{映射 $p:S^1\to S^1$、$p(z)=z^2$ 是双层覆盖：对任意点 $w\in S^1$，其原像恰有两个平方根。底空间沿圆周绕一圈的闭路提升到上层圆周后，会从一个平方根走到另一个；绕两圈才回到原来的提升起点。}{The map $p:S^1\to S^1$, $p(z)=z^2$, is a two-sheeted covering: each $w\in S^1$ has two square roots on the circle. A loop going once around the base lifts to a path from one root to the other. Going around twice returns to the starting lift.}
-\ASK{为什么覆盖空间能帮助计算基本群？}{Why do coverings help compute fundamental groups?}{固定提升起点后，闭路的提升终点记录绕行信息；基点同伦保持该终点。覆盖空间可能更简单，例如实线可收缩，而它覆盖的圆周有非平凡闭路。}{With a fixed lift starting point, the endpoint of a lifted loop records winding information and is unchanged by based homotopy. The covering space can be simpler: the real line is contractible even though its base circle has nontrivial loops.}
-\section{零基础预备：集合、映射、群与商 | Prerequisites}
-\noindent \textbf{集合与映射。} 集合是对象的整体，$x\in X$ 表示 $x$ 属于 $X$。映射 $f:X\to Y$ 给每个 $x\in X$ 指定唯一一个 $f(x)\in Y$；$f$ 单射表示不同输入不会有同一输出，满射表示 $Y$ 中每个点都是某个输入的输出。双射同时满足两者。
-\EN{A set is a collection of objects, and $x\in X$ means that $x$ belongs to $X$. A map $f:X\to Y$ assigns exactly one output in $Y$ to every input in $X$. It is injective if distinct inputs have distinct outputs, surjective if every element of $Y$ is reached, and bijective if both hold.}
-\EX{令 $X=\{1,2,3\}$、$Y=\{a,b\}$，取 $f(1)=a$、$f(2)=a$、$f(3)=b$。该映射满射，因为 $a,b$ 都被取到；它不是单射，因为 $1,2$ 的输出相同。}{Let $X=\{1,2,3\}$ and $Y=\{a,b\}$, with $f(1)=a$, $f(2)=a$, and $f(3)=b$. The map is surjective because both elements of $Y$ are reached, but it is not injective because one and two have the same output.}
-
-\noindent \textbf{群。} 群 $G$ 是带有运算的集合，该运算满足结合律、存在单位元、每个元素有逆元。若还满足交换律，称阿贝尔群。群同态 $h:G\to H$ 保持运算：$h(ab)=h(a)h(b)$；核是映到单位元的元素，像是实际取到的元素。同构是双射同态，表示两个群的运算结构相同。
-\EN{A group is a set with an associative operation, an identity element, and inverses. If its operation is commutative, it is abelian. A group homomorphism preserves the operation. Its kernel consists of elements mapped to the identity, and its image consists of all outputs. A bijective homomorphism is an isomorphism.}
-\EX{整数集合 $\mathbb Z$ 在加法下是阿贝尔群：单位元是 $0$，$n$ 的逆元是 $-n$。映射 $h:\mathbb Z\to\mathbb Z_2$ 定义为 $h(n)=n\bmod2$，它把加法映成模 $2$ 加法，核为偶整数 $2\mathbb Z$，像为 $\mathbb Z_2$。}{The integers under addition form an abelian group: the identity is zero and the inverse of $n$ is $-n$. The map $h:\mathbb Z\to\mathbb Z_2$ sending an integer to its parity is a homomorphism. Its kernel is the even integers $2\mathbb Z$, and its image is all of $\mathbb Z_2$.}
-
-\noindent \textbf{等价关系与商。} 等价关系是满足自反、对称和传递性的关系。$x$ 的等价类 $[x]$ 是所有与 $x$ 等价的对象；商集由这些等价类组成。在阿贝尔群 $G$ 中，子群 $H$ 给出关系 $a\sim b\Leftrightarrow a-b\in H$，商群 $G/H$ 的元素是陪集 $a+H$。
-\EN{An equivalence relation is reflexive, symmetric, and transitive. The equivalence class $[x]$ contains all elements equivalent to $x$, and the quotient set consists of these classes. For an abelian group $G$ and subgroup $H$, define $a\sim b$ when $a-b\in H$; the quotient group consists of cosets $a+H$.}
-\EX{在 $\mathbb Z$ 中按相差偶数分类，得到两类：$0+2\mathbb Z$ 是所有偶数，$1+2\mathbb Z$ 是所有奇数。因此 $\mathbb Z/2\mathbb Z$ 有两个元素，奇数类加奇数类得到偶数类。同调群中的“圈模去边界”使用相同的商思想。}{Classify integers by whether their difference is even. The two classes are $0+2\mathbb Z$, the even integers, and $1+2\mathbb Z$, the odd integers. Their quotient has two elements, and odd plus odd is even. Homology uses the same quotient idea with cycles modulo boundaries.}
-
-\section{几何单形与复形：逐个画出来 | Building a simplicial complex}
-\noindent \textbf{单形。} 从几何上看，零维单形是一个点 $[v_0]$；一维单形是两点间整条线段 $[v_0,v_1]$，包含端点；二维单形是实心三角形 $[v_0,v_1,v_2]$，包含三条边及其端点；三维单形是实心四面体。其维数比顶点数少一。面由选取部分顶点得到。
-\EN{A zero-simplex is a vertex, a one-simplex is a filled line segment including its endpoints, a two-simplex is a filled triangle including its edges, and a three-simplex is a filled tetrahedron. Its dimension is one less than its number of vertices. Faces are obtained by selecting subsets of vertices.}
-\EX{设 $v_0=(0,0)$、$v_1=(1,0)$、$v_2=(0,1)$。二维单形是 $\{(x,y):x\ge0,y\ge0,x+y\le1\}$；它的三个一维面分别是 $x=0$、$y=0$、$x+y=1$ 上的相应线段。只取三条边得到三角形边界，加入内部才得到实心三角形。}{For vertices $(0,0)$, $(1,0)$, and $(0,1)$, the filled triangle is $\{(x,y):x\ge0,y\ge0,x+y\le1\}$. Its three one-dimensional faces are its edges. Keeping only the edges gives the boundary; including the interior gives the filled triangle.}
-
-\noindent \textbf{单纯复形。} 一组单形构成单纯复形，要求每个单形的每个面也在复形中，且两个单形的交只能是共同面或空集。记它的几何实现为 $|K|$，即把这些单形视为几何图形后的并。该条件防止两个三角形以不沿公共面的方式交叉。
-\EN{A simplicial complex is a collection of simplices containing every face of each simplex, where any two simplices intersect only in a common face or not at all. Its geometric realization $|K|$ is the union of the geometric simplices.}
-\EX{复形 $K=\{[v_0],[v_1],[v_2],[v_0,v_1],[v_1,v_2],[v_2,v_0]\}$ 包含三个顶点和三条边，不包含三角面，其几何实现是一个环。若把 $[v_0,v_1,v_2]$ 加入，原有各面都已经在 $K$ 中，得到实心三角形。}{The complex consisting of three vertices and their three edges, without a triangular face, has a loop as its realization. Adding the two-simplex gives a filled triangle; all its faces are already present.}
-
-\section{链群到同调群：每一步代表什么 | From chain groups to homology}
-\noindent \textbf{链群。} $C_k(K;\mathbb Z)$ 是所有有向 $k$-单形的有限整数线性组合。系数 $2$ 表示该单形取两次，系数 $-1$ 表示反向取一次，系数 $0$ 表示不使用；相加时相同单形的系数相加。它是一个阿贝尔群。
-\EN{The chain group $C_k(K;\mathbb Z)$ consists of finite integer linear combinations of oriented $k$-simplices. A coefficient two means two copies, minus one reverses orientation, and zero omits the simplex. Chains add by adding coefficients and form an abelian group.}
-\EX{如果 $K$ 的边只有 $e_1,e_2$，则 $C_1(K;\mathbb Z)=\{ae_1+be_2:a,b\in\mathbb Z\}\cong\mathbb Z^2$。例如 $2e_1-e_2$ 是一条 $1$-链；它是否是圈还要计算边界。}{If the only edges are $e_1,e_2$, then $C_1(K;\mathbb Z)=\{ae_1+be_2:a,b\in\mathbb Z\}\cong\mathbb Z^2$. The chain $2e_1-e_2$ is a valid one-chain; whether it is a cycle requires computing its boundary.}
-
-\noindent \textbf{边界算子。} $\partial_k:C_k\to C_{k-1}$ 先对每个有向单形取带符号的面，再按线性性扩展。$\partial^2=0$ 使每个边界自动是圈，即 $B_k=\operatorname{im}\partial_{k+1}\subseteq Z_k=\ker\partial_k$。
-\EN{The boundary map $\partial_k:C_k\to C_{k-1}$ takes the signed faces of each simplex and extends linearly. Because $\partial^2=0$, every boundary is automatically a cycle: $B_k=\operatorname{im}\partial_{k+1}$ is contained in $Z_k=\ker\partial_k$.}
-\EX{三条定向边 $e_{01}=[v_0,v_1]$、$e_{12}=[v_1,v_2]$、$e_{20}=[v_2,v_0]$ 的和 $z=e_{01}+e_{12}+e_{20}$ 满足 $\partial z=(v_1-v_0)+(v_2-v_1)+(v_0-v_2)=0$，所以 $z$ 是圈。如果复形包含三角面，则 $z=\partial[v_0,v_1,v_2]$，它同时是边界。}{For cyclic edges $e_{01},e_{12},e_{20}$, the chain $z=e_{01}+e_{12}+e_{20}$ has boundary $(v_1-v_0)+(v_2-v_1)+(v_0-v_2)=0$, so it is a cycle. If the triangular face is present, it is also the boundary of that face.}
-
-\noindent \textbf{同调类。} 两个 $k$-圈 $z,z'$ 若相差一个边界，即 $z-z'=\partial_{k+1}c$，就视为同一个同调类；$H_k=Z_k/B_k$。零类包括所有边界。直观地，同调忽略可以由更高维单形填掉的差别，保留不能这样填掉的闭合结构。
-\EN{Two $k$-cycles represent the same homology class if their difference is a boundary. The homology group is $H_k=Z_k/B_k$, and its zero class consists of the boundaries. Intuitively, homology ignores changes that can be filled by higher-dimensional simplices.}
-\EX{只含三角形边界时，绕环一次的圈 $z$ 不是边界，故 $[z]\ne0$；$2z$ 绕两次，代表 $2[z]$。若加入三角面，$z$ 成为边界，所以 $[z]=0$，并且 $[2z]=0$。两个空间仅差一个面，却有不同的一维同调。}{For the unfilled triangular boundary, the once-around cycle $z$ is not a boundary, so $[z]\ne0$, and twice around gives $2[z]$. After adding the face, $z$ is a boundary, so both $[z]$ and $[2z]$ are zero. Adding one face changes the first homology.}
-
-\section{典型空间同调：怎样回答一个洞 | Homology of familiar spaces}
-\noindent \textbf{连通分支与 $H_0$。} 对非空有限单纯复形，整数系数 $H_0\cong\mathbb Z^c$，其中 $c$ 是连通分支数。每个分支贡献一个独立生成元：边的边界把同一分支内的顶点识别起来，不会把两个互不相连的分支识别起来。
-\EN{For a nonempty finite simplicial complex, $H_0\cong\mathbb Z^c$, where $c$ is the number of connected components. Edge boundaries identify vertices in the same component, while vertices in separate components remain independent.}
-\EX{两个互不相连的点没有边，故 $C_0\cong\mathbb Z^2$、$\operatorname{im}\partial_1=0$，因此 $H_0\cong\mathbb Z^2$。如果加一条连接它们的边，则边界是两点之差，商掉这条关系后 $H_0\cong\mathbb Z$。}{Two isolated points have $C_0\cong\mathbb Z^2$ and no edge boundaries, so $H_0\cong\mathbb Z^2$. Adding an edge makes the difference of the two vertices a boundary, leaving $H_0\cong\mathbb Z$.}
-
-\noindent \textbf{圆周、圆盘和球面。} 对整数系数，圆周有 $H_0(S^1)\cong\mathbb Z$、$H_1(S^1)\cong\mathbb Z$，更高维同调为零；实心圆盘可收缩，有 $H_0\cong\mathbb Z$、$H_k=0$（$k\ge1$）；二维球面有 $H_0(S^2)\cong\mathbb Z$、$H_2(S^2)\cong\mathbb Z$、$H_1(S^2)=0$。球面的一维圈可以在球面上缩到一点，但球面整体给出一个非平凡二维类。
-\EN{With integer coefficients, the circle has $H_0\cong\mathbb Z$ and $H_1\cong\mathbb Z$. A filled disk is contractible, so its positive-dimensional homology is zero. The sphere $S^2$ has $H_0\cong\mathbb Z$, $H_2\cong\mathbb Z$, and $H_1=0$. Loops on a sphere contract, but the whole oriented sphere represents a two-dimensional class.}
-\EX{把四面体表面看作球面的三角剖分：顶点数 $4$、边数 $6$、面数 $4$，Euler 特征 $4-6+4=2$。它的一维洞数为 $0$，二维基本类为 $1$，因此 Betti 数满足 $\beta_0-\beta_1+\beta_2=1-0+1=2$，与单形计数吻合。}{The tetrahedron boundary triangulates a sphere, with four vertices, six edges, and four faces. Its Euler characteristic is $4-6+4=2$. Its Betti numbers give $\beta_0-\beta_1+\beta_2=1-0+1=2$, agreeing with the simplex count.}
-
-\section{单纯映射与连续变形：一个具体例子 | Simplicial maps}
-\noindent \textbf{单纯映射定义。} 给定复形 $K,L$，顶点映射 $f$ 若把 $K$ 中每个单形的顶点集合映到 $L$ 中某个单形的顶点集合，就称单纯映射；不同顶点允许映到同一顶点，因此维数可以下降。它在线性延拓后给出连续映射，并诱导同调群之间的同态。
-\EN{A simplicial map sends vertices of $K$ to vertices of $L$ so that the vertices of every simplex map into a simplex of $L$. Vertices may be identified, reducing dimension. Linear extension gives a continuous map and induces homomorphisms on homology.}
-\EX{把三角形边界的三个顶点都映到单点复形中的唯一顶点，三条边都被压成这个点。原先绕一圈的非零 $H_1$ 类被送到单点的 $H_1=0$。这具体展示了连续映射如何诱导同调映射，也展示映射不一定保留所有洞。}{Map every vertex of the triangular boundary to the unique vertex of a one-point complex. All edges collapse to the point, and the nonzero loop class maps to zero in the point's $H_1$. An induced map on homology need not preserve every hole.}
-
-\section{面试追问：先说定义，再举例 | Oral questions}
-\ASK{圈一定是边界吗？}{Is every cycle a boundary?}{不一定。边界一定是圈，因为 $\partial^2=0$；但只含边的三角形边界中，绕一圈是圈，由于没有三角面，它不是边界。填入三角面后它才成为边界。}{No. Every boundary is a cycle because $\partial^2=0$, but the loop around an unfilled triangle is a cycle and is not a boundary. Adding the triangular face makes it a boundary.}
-\ASK{圆周和圆盘都是连通的，为什么不同胚？}{Both a circle and a disk are connected. Why are they not homeomorphic?}{它们的 $H_0$ 都是 $\mathbb Z$，但圆周的 $H_1\cong\mathbb Z$，圆盘的 $H_1=0$。同胚会诱导同构的同调群，所以它们不同胚。}{Their $H_0$ groups are both $\mathbb Z$, but the circle has $H_1\cong\mathbb Z$ and the disk has $H_1=0$. Homeomorphic spaces have isomorphic homology groups, so these spaces are not homeomorphic.}
-\ASK{如何向非数学背景的人解释同调？}{How would you explain homology to someone without a mathematics background?}{先把形状拆成点、边和面，再寻找闭合的边或面。若一个闭合边界可以用已有的面填满，就不把它算成洞；若不能填满，它会留下一个可计算的同调类。三角形边框与填满的三角形是最简单的对照。}{First break a shape into vertices, edges, and faces, then look for closed loops or surfaces. A loop that is filled by available faces does not count as a hole; an unfilled loop can represent a nonzero homology class. An empty triangular frame and a filled triangle are simple contrasting examples.}
-\section{把链群写成矩阵：圆周与填充三角形 | Chain matrices for a circle and a disk}
-\noindent 把圆周剖分为顶点 $v_0,v_1,v_2$ 和按环向定向的边 $e_{01},e_{12},e_{20}$。边界映射按公式 $\partial_1[v_i,v_j]=v_j-v_i$ 计算：
+\subsection{完整计算：三角形边框与填充三角形 | Worked computation: a triangular frame and a filled triangle}
+\noindent 先看未填充的三角形边框。令顶点为 $v_0,v_1,v_2$，边按环向定向为 $e_{01},e_{12},e_{20}$。链群为 $C_1\cong\mathbb Z^3$、$C_0\cong\mathbb Z^3$，而 $C_2=0$。按上述基底，边界矩阵为
+\FORMULA{三角形边框的一维边界矩阵}{the boundary matrix of the triangular frame}
 \[
-\partial_1e_{01}=v_1-v_0,\quad \partial_1e_{12}=v_2-v_1,\quad
-\partial_1e_{20}=v_0-v_2.
+[\partial_1]=
+\begin{pmatrix}
+-1&0&1\\
+1&-1&0\\
+0&1&-1
+\end{pmatrix}.
 \]
-三条边相加后边界为零，所以 $z=e_{01}+e_{12}+e_{20}$ 是一个 1-圈。矩阵 $\partial_1$ 的秩为 $2$，其核由 $z$ 生成；此复形没有 2-单形，故 $\operatorname{im}\partial_2=0$，于是 $H_1=\ker\partial_1/\operatorname{im}\partial_2\cong\mathbb Z$。这一个生成元正是绕圆一周的洞。
-\EN{Triangulate a circle with three vertices and three cyclically oriented edges. The boundary of each edge is its terminal vertex minus its initial vertex. Adding the three edges gives a cycle. The boundary matrix has rank two, so its kernel is generated by that cycle; there are no two-simplices to fill it. Thus $H_1\cong\mathbb Z$, generated by one trip around the circle.}
-\READ{“The first homology is the kernel of the first boundary map, modulo the image of the second boundary map.”}
-\noindent 若在同一三条边上填入一个面 $t=[v_0,v_1,v_2]$，则
-\[
-\partial_2t=[v_1,v_2]-[v_0,v_2]+[v_0,v_1]
-=e_{12}+e_{20}+e_{01}=z.
-\]
-原来的圈现在是一个边界，所以 $H_1=0$；填充三角形是可收缩的圆盘，且 $H_0\cong\mathbb Z$。符号中的负号来自面边界的交替定向，若把某条边方向反过来，其链系数也要反号。
-\EN{Filling the triangle adds a two-simplex whose oriented boundary is exactly the cycle $z$. The loop becomes a boundary, so $H_1=0$. The filled triangle is contractible and has $H_0\cong\mathbb Z$. The alternating sign in the simplex boundary records orientation; reversing an edge orientation also reverses its chain coefficient.}
-\EX{口试时可把区别说成：三角边框中有闭路，但没有面可填，故留下一个 $H_1$ 生成元；填满后同一闭路变成 $\partial_2t$，不再代表洞。两者顶点和边完全相同，差别只在是否加入二维面。}{A triangular frame has a closed loop but no face to fill it, so it gives a generator of $H_1$. Once filled, the same loop is the boundary of the face and no longer represents a hole. The vertex and edge data are unchanged; only the two-simplex is added.}
+\READ{“The boundary matrix has columns equal to the boundaries of e zero one, e one two, and e two zero, in that order.”}
+\EN{First consider the unfilled triangular frame. Let its vertices be $v_0,v_1,v_2$, and orient the edges cyclically as $e_{01},e_{12},e_{20}$. Then $C_1\cong\mathbb Z^3$, $C_0\cong\mathbb Z^3$, and $C_2=0$. The columns of the displayed matrix are the boundaries of the three oriented edges.}
+\noindent 若 $c=ae_{01}+be_{12}+ce_{20}$，则 $\partial_1c=0$ 等价于 $a=b=c$，所以 $Z_1$ 由 $e_{01}+e_{12}+e_{20}$ 生成。由于没有二维面，$B_1=0$，故 $H_1\cong\mathbb Z$。矩阵秩为 $2$，图连通，所以 $H_0\cong\mathbb Z$。这一个整数生成元表示沿边框绕行的次数；正整数和负整数分别表示两个方向的多次绕行。
+\EN{For $c=ae_{01}+be_{12}+ce_{20}$, the equation $\partial_1c=0$ is equivalent to $a=b=c$. Thus $Z_1$ is generated by $e_{01}+e_{12}+e_{20}$. There is no two-simplex, so $B_1=0$ and $H_1\cong\mathbb Z$. The matrix has rank two, and the graph is connected, so $H_0\cong\mathbb Z$. The integer generator records the number of turns around the frame; positive and negative integers indicate repeated turns in opposite directions.}
+\EX{现在在同一边框中加入定向三角面 $t=[v_0,v_1,v_2]$。按边的环向定向，$\partial_2t=e_{01}+e_{12}+e_{20}$，恰好是上面的圈生成元。因此 $B_1=Z_1$，$H_1=0$。填充三角形本身没有二维洞，所以 $H_2=0$；空间仍连通，$H_0=\mathbb Z$。两种复形的同调分别是边框：$H_0=\mathbb Z,H_1=\mathbb Z$；填充三角形：$H_0=\mathbb Z,H_1=H_2=0$。}{Now add the oriented face $t=[v_0,v_1,v_2]$. With the cyclic edge orientations, its boundary is $e_{01}+e_{12}+e_{20}$, exactly the generator of the cycle group. Hence $B_1=Z_1$ and $H_1=0$. The filled triangle has no two-dimensional hole, so $H_2=0$; it remains connected, so $H_0=\mathbb Z$. Thus the frame has $H_0=\mathbb Z,H_1=\mathbb Z$, whereas the filled triangle has $H_0=\mathbb Z$ and $H_1=H_2=0$.}
+\ASK{为什么三角形边框的 $H_1$ 是 $\mathbb Z$，填充后却变成零？}{Why is the first homology of the triangular frame $\mathbb Z$, but zero after filling it?}{边框中的环是圈，但没有二维面能以它为边界，所以它代表非零同调类。填入三角面后，同一个环成为该面的边界，在商群 $Z_1/B_1$ 中归零。}{The loop in the frame is a cycle, but no two-dimensional face has it as boundary, so it represents a nonzero homology class. After adding the triangle, the same loop is a boundary and becomes zero in $Z_1/B_1$.}
 
-\section{环面的一维洞与基本群 | The torus: homology and fundamental group}
-\noindent 环面可用一个顶点、两条有向边 $a,b$ 和一个面表示；沿面的边界行走时，边词为 $aba^{-1}b^{-1}$。在基本群中，这给出表示
+\subsection{Betti 数、边界矩阵秩与 Euler--Poincar\'e 公式 | Betti numbers, matrix ranks, and the Euler--Poincare formula}
+\noindent 若系数取域 $F$，第 $k$ 个 Betti 数定义为 $\beta_k=\dim_F H_k(K;F)$，表示独立的第 $k$ 维同调类数量。令 $f_k$ 为 $k$-单形数，$r_k=\operatorname{rank}\partial_k$，则由秩-零度定理得到常用的边界矩阵计算式：
+\FORMULA{Betti 数的秩公式}{the rank formula for Betti numbers}
+\[
+\beta_k=f_k-r_k-r_{k+1}.
+\]
+\READ{“The k-th Betti number equals the number of k-simplices minus the rank of the k-th boundary map minus the rank of the next boundary map.”}
+\EN{Over a field $F$, the $k$-th Betti number is $\beta_k=\dim_F H_k(K;F)$, the number of independent homology classes in dimension $k$. If $f_k$ is the number of $k$-simplices and $r_k=\operatorname{rank}\partial_k$, the rank-nullity theorem gives the displayed rank formula.}
+\noindent 对有限单纯复形，Euler 特征是单形数的交替和；Euler--Poincar\'e 公式说明它也等于 Betti 数的交替和：
+\FORMULA{Euler 特征与 Euler--Poincar\'e 公式}{the Euler characteristic and the Euler--Poincare formula}
+\[
+\chi(K)=\sum_{k\ge0}(-1)^k f_k=\sum_{k\ge0}(-1)^k\beta_k.
+\]
+\READ{“The Euler characteristic is the alternating sum of the numbers of simplices, and it equals the alternating sum of the Betti numbers.”}
+\EN{For a finite simplicial complex, the Euler characteristic is the alternating sum of the numbers of simplices. The Euler--Poincare formula states that it also equals the alternating sum of the Betti numbers.}
+\EX{四面体表面是球面 $S^2$ 的三角剖分，有 $f_0=4,f_1=6,f_2=4$，所以 $\chi=4-6+4=2$。球面的 Betti 数为 $\beta_0=1,\beta_1=0,\beta_2=1$，交替和也是 $1-0+1=2$。Euler 特征是有用的快速检查，但不同空间可能有相同 Euler 特征，因此它不能单独判定空间同胚。}{The boundary of a tetrahedron triangulates the sphere $S^2$. It has $f_0=4,f_1=6,f_2=4$, so $\chi=4-6+4=2$. The Betti numbers of the sphere are $\beta_0=1,\beta_1=0,\beta_2=1$, whose alternating sum is also two. Euler characteristic is a useful check, but different spaces can have the same Euler characteristic, so it cannot by itself determine homeomorphism.}
+\noindent 使用整数系数时，同调群可能还含有有限阶元素（挠元）；Betti 数只记录自由部分的秩。要报告完整的整数同调，必须说明挠部分，而不只是列出 Betti 数。
+\EN{With integer coefficients, homology groups may also contain finite-order elements called torsion. Betti numbers record only the rank of the free part. To state the full integer homology, one must include any torsion, not just the Betti numbers.}
+
+\section{第 3 章：单纯逼近 | Chapter 3: Simplicial approximation}
+\subsection{单纯映射与诱导同调映射 | Simplicial maps and induced maps on homology}
+\noindent 单纯映射 $\phi:K\to L$ 首先把顶点映到顶点，并要求每个单形的所有顶点像共同落在 $L$ 的某个单形中。不同顶点可以映到同一顶点，故单形维数可能下降。它在线性单形上延拓为几何实现之间的连续映射，并诱导链映射 $\phi_\#:C_k(K)\to C_k(L)$。边界与映射相容，即 $\partial\phi_\#=\phi_\#\partial$，因此圈映到圈、边界映到边界，进而得到同调同态 $\phi_*:H_k(K)\to H_k(L)$。
+\EN{A simplicial map $\phi:K\to L$ maps vertices to vertices and sends the vertices of each simplex into the vertices of a simplex of $L$. Distinct vertices may have the same image, so dimension can drop. Linear extension gives a continuous map between geometric realizations and a chain map $\phi_\#:C_k(K)\to C_k(L)$. It commutes with the boundary map, so it sends cycles to cycles and boundaries to boundaries and induces a homomorphism $\phi_*:H_k(K)\to H_k(L)$.}
+\EX{把三角形边框的三个顶点都映到单点复形的唯一顶点，是一个单纯映射。边框的生成圈被映成零链，因而诱导映射把 $H_1\cong\mathbb Z$ 的生成元送到零。这个例子说明连续映射可以消去洞；同调群在映射下并非总保持不变，而是由映射诱导一个同态。}{Map all three vertices of a triangular frame to the only vertex of a one-point complex. This is a simplicial map. The generating loop is mapped to the zero chain, so the induced map sends the generator of $H_1\cong\mathbb Z$ to zero. A continuous map can destroy a hole: homology is not necessarily unchanged, but the map induces a homomorphism between homology groups.}
+
+\subsection{重心细分与单纯逼近定理 | Barycentric subdivision and the simplicial approximation theorem}
+\noindent 一般连续映射不一定把原剖分的顶点和单形映成目标中的单形，所以需要先把定义域剖分得更细。重心细分把每个单形切成由其各级面的重心组成的小单形；反复细分会使最大单形直径趋于零。顶点 $v$ 的开星由所有含 $v$ 的单形的相对内部组成。
+\EN{A general continuous map need not send the vertices and simplices of the original triangulation to simplices in the target, so the domain may need a finer triangulation. Barycentric subdivision divides each simplex into smaller simplices whose vertices are barycenters of nested faces. Repeated subdivision makes the largest simplex diameter tend to zero. The open star of a vertex $v$ is the union of the relative interiors of simplices containing $v$.}
+\noindent\textbf{单纯逼近定理。} 若 $K,L$ 是有限单纯复形，且 $f:|K|\to|L|$ 连续，则对 $K$ 作足够多次重心细分后，可以找到单纯映射 $\phi$，使几何实现 $|\phi|$ 与 $f$ 同伦。常用的顶点选择条件是：对细分后每个顶点 $v$，选取目标顶点 $w$，使 $f(\operatorname{st}(v))\subseteq\operatorname{st}(w)$。有限性给出紧致性，连续性与紧致性保证细分足够细时可以满足该条件。这里的结论是“同伦于”，通常不是逐点相等。
+\EN{The simplicial approximation theorem says that if $K,L$ are finite simplicial complexes and $f:|K|\to|L|$ is continuous, then after sufficiently many barycentric subdivisions of $K$, there is a simplicial map $\phi$ whose realization is homotopic to $f$. A common vertex-selection condition is to choose, for each vertex $v$ of the subdivision, a target vertex $w$ such that $f(\operatorname{st}(v))\subseteq\operatorname{st}(w)$. Finiteness gives compactness, and continuity plus compactness ensures that sufficiently fine subdivisions can meet this condition. The conclusion is “homotopic to,” not usually pointwise equality.}
+\noindent 同伦映射诱导相同的同调同态，所以单纯逼近把连续问题转成有限顶点映射和边界矩阵计算。特别地，同伦等价的空间有同构的同调群；这解释了为什么三角剖分的选择不会改变所研究空间的同调。
+\EN{Homotopic maps induce the same homomorphism on homology. Simplicial approximation therefore converts a continuous problem into a finite vertex map and boundary-matrix calculation. In particular, homotopy-equivalent spaces have isomorphic homology groups, so changing a triangulation does not change the homology of the underlying space.}
+\EX{若 $f$ 是圆周三角剖分上的恒等映射，顶点可映回自身，单纯逼近就是原映射。对更一般的连续映射，先细分圆周，再按开星条件选目标顶点；得到的顶点映射可写成有限矩阵，并计算它对 $H_1$ 的作用。}{For the identity map on a triangulated circle, each vertex can be sent to itself, and the simplicial approximation is the original map. For a general continuous map, first subdivide the circle and then choose target vertices using the open-star condition. The resulting vertex map is finite and can be used to compute the induced map on $H_1$.}
+\ASK{单纯逼近为什么要先细分？}{Why may subdivision be needed before simplicial approximation?}{原来的单形可能太大，其像会跨过目标中的多个单形，无法由顶点像定义一个单纯映射。细分使顶点开星变小，连续性保证每个小开星的像可落进目标某个顶点的开星。}{An original simplex may be too large: its image can cross several target simplices, so its vertex images may not define a simplicial map. Subdivision makes the vertex stars smaller, and continuity ensures that each small star can map into an open star of a target vertex.}
+
+\section{第 4 章：基本群 | Chapter 4: The fundamental group}
+\subsection{路径、闭路同伦与群运算 | Paths, loop homotopy, and the group operation}
+\noindent 路径是连续映射 $\alpha:[0,1]\to X$。若 $\alpha(0)=\alpha(1)=x_0$，称它为基于 $x_0$ 的闭路。若两条端点相同的路径可以在始终固定端点的连续变形中互相变到，称它们端点固定同伦。基本群 $\pi_1(X,x_0)$ 是基于 $x_0$ 的闭路按端点固定同伦取等价类后得到的集合，运算是路径拼接。
+\EN{A path is a continuous map $\alpha:[0,1]\to X$. It is a loop based at $x_0$ if $\alpha(0)=\alpha(1)=x_0$. Two paths with the same endpoints are endpoint-fixed homotopic if one can be continuously deformed into the other while keeping both endpoints fixed. The fundamental group $\pi_1(X,x_0)$ consists of based loops modulo endpoint-fixed homotopy, with path concatenation as its operation.}
+\noindent 若 $\alpha(1)=\beta(0)$，先走完 $\alpha$ 再走 $\beta$ 的拼接定义为
+\FORMULA{路径拼接公式}{the path concatenation formula}
+\[
+(\alpha*\beta)(t)=
+\begin{cases}
+\alpha(2t),&0\le t\le\tfrac12,\\
+\beta(2t-1),&\tfrac12\le t\le1.
+\end{cases}
+\]
+\READ{“Alpha star beta at t equals alpha of two t for t from zero to one half, and beta of two t minus one for t from one half to one.”}
+\EN{When $\alpha(1)=\beta(0)$, the concatenation traverses $\alpha$ first and then $\beta$, using half of the parameter interval for each path.}
+\noindent 常值闭路是单位元，反向路径 $\bar\alpha(t)=\alpha(1-t)$ 给出逆元。拼接在路径本身层面依赖参数化，但结合律在同伦类层面成立，因此等价类构成群。基本群可能非交换，因为先走 $\alpha$ 再走 $\beta$，一般不能连续变成先走 $\beta$ 再走 $\alpha$。
+\EN{The constant loop is the identity, and the reversed path $\bar\alpha(t)=\alpha(1-t)$ gives an inverse. Concatenation depends on parametrization at the path level, but it is associative up to homotopy, so the equivalence classes form a group. The fundamental group need not be commutative: traversing $\alpha$ and then $\beta$ may not be homotopic to traversing them in the opposite order.}
+
+\subsection{圆周的基本群与绕数 | The fundamental group of the circle and winding number}
+\noindent 对基点为 $1$ 的圆周闭路 $\gamma:[0,1]\to S^1$，可以沿参数连续选取辐角 $\theta(t)$，使 $\gamma(t)=e^{i\theta(t)}$。由于起点和终点都映到 $1$，辐角变化量是 $2\pi$ 的整数倍。这个整数是闭路的绕数：
+\FORMULA{绕数公式}{the winding number formula}
+\[
+\operatorname{wind}(\gamma)=\frac{\theta(1)-\theta(0)}{2\pi}\in\mathbb Z.
+\]
+\READ{“The winding number of gamma is theta at one minus theta at zero, divided by two pi.”}
+\EN{For a loop $\gamma:[0,1]\to S^1$ based at $1$, choose a continuous argument $\theta(t)$ such that $\gamma(t)=e^{i\theta(t)}$. Since the endpoints of the loop are both $1$, the change in argument is an integer multiple of $2\pi$. That integer is its winding number, given by the displayed formula.}
+\noindent 绕数在端点固定同伦下不变，拼接路径时相加。绕数为零的圆周闭路可以缩成常值路；对每个整数 $n$，闭路 $\gamma_n(t)=e^{2\pi int}$ 的绕数为 $n$。因此绕数给出群同构 $\pi_1(S^1,1)\cong\mathbb Z$。相反，可缩空间（如圆盘或 $\mathbb R^m$）的所有闭路都能缩成常值路，其基本群平凡。
+\EN{Winding number is invariant under endpoint-fixed homotopy and adds under concatenation. A loop with winding number zero contracts to the constant loop. For every integer $n$, the loop $\gamma_n(t)=e^{2\pi int}$ has winding number $n$. Thus winding number gives an isomorphism $\pi_1(S^1,1)\cong\mathbb Z$. In a contractible space such as a disk or $\mathbb R^m$, every loop contracts, so the fundamental group is trivial.}
+\EX{沿圆周逆时针走两圈的闭路绕数为 $2$，顺时针走一圈的绕数为 $-1$。先走前者再走后者，拼接后的绕数为 $2+(-1)=1$。因此这两条路径的拼接类对应整数 $1$，而不是“走过的总路程”。}{A loop going twice counterclockwise has winding number $2$, while a clockwise loop has winding number $-1$. Concatenating them gives winding number $2+(-1)=1$. The integer records net winding, not the total distance travelled.}
+\ASK{为什么基本群可以证明圆周与圆盘不同胚？}{How can the fundamental group show that the circle and disk are not homeomorphic?}{圆周的基本群是 $\mathbb Z$，圆盘可缩所以基本群平凡。同胚会诱导基本群同构，而这两个群不同构，因此圆周与圆盘不同胚。}{The circle has fundamental group $\mathbb Z$, while the disk is contractible and has trivial fundamental group. A homeomorphism induces an isomorphism of fundamental groups, and these groups are not isomorphic. Hence the circle and disk are not homeomorphic.}
+
+\subsection{Seifert--van Kampen 定理与生成元、关系 | The Seifert--van Kampen theorem and presentations}
+\noindent 基本群的直接闭路计算有时很困难。\textbf{Seifert--van Kampen 定理}的作用是把空间拆成较简单的重叠部分再计算。若 $X=U\cup V$，$U,V,U\cap V$ 路径连通，且基点 $x_0\in U\cap V$，则 $\pi_1(X,x_0)$ 由 $\pi_1(U,x_0)$ 与 $\pi_1(V,x_0)$ 的自由积生成，并把交集中的同一闭路在两边的像识别起来。换言之，若 $i_U,i_V$ 是包含映射，需商去由 $i_{U*}(g)i_{V*}(g)^{-1}$ 生成的正规子群，其中 $g\in\pi_1(U\cap V,x_0)$。
+\EN{The Seifert--van Kampen theorem computes a fundamental group by decomposing a space into simpler overlapping pieces. If $X=U\cup V$, the sets $U,V,U\cap V$ are path-connected, and the basepoint lies in the intersection, then $\pi_1(X,x_0)$ is generated by the free product of $\pi_1(U,x_0)$ and $\pi_1(V,x_0)$, with loops from the intersection identified through the two inclusion maps. Equivalently, one quotients by the normal subgroup generated by $i_{U*}(g)i_{V*}(g)^{-1}$ for loops $g$ in the intersection.}
+\noindent 这一定理常把基本群写成\textbf{生成元与关系}。例如，环面可表示为一个顶点、两条边 $a,b$ 和一个二维面；一维骨架是两个圆周一点粘合，基本群为自由群 $F(a,b)$。二维面的边界按粘合顺序是 $aba^{-1}b^{-1}$，加入该面相当于令这个边界词为单位元。因此
+\FORMULA{环面基本群的表示}{the presentation of the fundamental group of the torus}
 \[
 \pi_1(T^2)=\langle a,b\mid aba^{-1}b^{-1}=1\rangle\cong\mathbb Z^2.
 \]
-关系式表示两条基本绕行可以交换。它们分别沿甜甜圈的经线和纬线绕行，任意闭路的同伦类由两个整数绕数记录。
-\EN{A cell structure for the torus has one vertex, two oriented edges $a,b$, and one face attached along $aba^{-1}b^{-1}$. Van Kampen's theorem gives the displayed presentation of the fundamental group. The relation says the two basic loops commute; a loop class is recorded by its two winding numbers.}
-\noindent 在整数同调中，$C_2\cong\mathbb Z$、$C_1\cong\mathbb Z^2$、$C_0\cong\mathbb Z$。唯一顶点使 $\partial_1=0$；面边界中 $a$ 和 $a^{-1}$、$b$ 和 $b^{-1}$ 的指数各自抵消，所以 $\partial_2=0$。故
-\[
-H_0(T^2)\cong\mathbb Z,\qquad H_1(T^2)\cong\mathbb Z^2,\qquad H_2(T^2)\cong\mathbb Z.
-\]
-$H_1$ 的两个生成元是经线和纬线；$H_2$ 的生成元是整个定向环面。Euler 特征由胞腔数计算为 $1-2+1=0$，由 Betti 数计算也为 $1-2+1=0$。
-\EN{For integer homology, the cellular chain groups are $C_2=\mathbb Z$, $C_1=\mathbb Z^2$, and $C_0=\mathbb Z$. The single vertex makes $\partial_1=0$, and the exponents of each edge cancel in the attaching word, so $\partial_2=0$. This gives two independent one-dimensional classes and one oriented surface class. The Euler characteristic is zero whether computed from cells or Betti numbers.}
-\ASK{基本群和 $H_1$ 为什么都得到两个整数？}{Why do both the fundamental group and $H_1$ record two integers for a torus?}{环面的两条基本闭路生成基本群，而且面附着关系要求它们交换，所以基本群是 $\mathbb Z^2$。一维同调把闭路群交换化，这里仍留下经线与纬线两个独立生成元，因此 $H_1\cong\mathbb Z^2$。}{The two basic loops generate the fundamental group, and the face relation makes them commute, giving $\mathbb Z^2$. First homology is the abelianized loop information; the meridian and longitude remain two independent generators, so $H_1\cong\mathbb Z^2$.}
+\READ{“The fundamental group of the torus is generated by a and b, subject to the relation a b a inverse b inverse equals the identity.”}
+\EN{The torus has a cell structure with one vertex, two edges $a,b$, and one two-dimensional face. Its one-dimensional skeleton is a wedge of two circles, with free fundamental group $F(a,b)$. The boundary of the face is the word $aba^{-1}b^{-1}$. Attaching the face makes this word trivial, giving the displayed presentation. The relation says that $a$ and $b$ commute, so the group is $\mathbb Z^2$.}
+\noindent 应用 van Kampen 时，不能只看图就猜关系式；必须给出满足定理条件的开集分解或等价的细胞粘合论证。基本群不同构足以说明空间不同伦等价，因而不同胚；基本群同构则通常不能反推出空间同胚。
+\EN{To use van Kampen, a diagram alone is not enough: one must provide an open-set decomposition satisfying the theorem or an equivalent cell-attachment argument. Nonisomorphic fundamental groups show that spaces are not homotopy equivalent and hence not homeomorphic. Isomorphic fundamental groups usually do not imply that spaces are homeomorphic.}
 
-\section{覆盖映射如何乘上绕数 | Covering maps and winding numbers}
-\noindent 对整数 $n\ge1$，圆周映射 $p_n:S^1\to S^1$ 可写成 $p_n(z)=z^n$。从角度参数看，它把角度 $\theta$ 送到 $n\theta$，每个目标点有 $n$ 个原像；一圈的提升路径在来源圆周上要绕 $n$ 圈才闭合。基本群映射因此是 $k\mapsto nk$，其像为 $n\mathbb Z$。
-\EN{For $p_n:S^1\to S^1$ given by $p_n(z)=z^n$, the angle is multiplied by $n$, and every point has $n$ preimages. A lifted loop closes only after the source circle has been traversed $n$ times. The induced map on fundamental groups is multiplication by $n$, with image $n\mathbb Z$.}
-\par\noindent\begin{minipage}{\linewidth}
-\EX{在 $p_3(z)=z^3$ 下，目标圆周的一次正向绕行不能提升为闭合路径；连续三次绕行后提升才闭合。相反，绕数为 $3$ 的闭路可提升为来源空间中的一次闭路。这是覆盖空间提升判据的具体版本：闭路能闭合提升，当且仅当其同伦类落在覆盖子群中。}{Under $p_3(z)=z^3$, one positive circuit in the target does not lift to a closed path, but three circuits do. A loop of winding number three lifts to one closed circuit in the source. This illustrates the lifting criterion: a loop has a closed lift exactly when its homotopy class belongs to the subgroup associated with the covering.}
-\end{minipage}
-\section*{来源与范围 | Source and scope}
-本稿参考 Fred H. Croom, \emph{Basic Concepts of Algebraic Topology} 第 1--5 章：几何复形与多面体、单纯同调、单纯逼近、基本群和覆盖空间。内容按 APS 口试需求重新组织，符号与计算例子在文中解释；第 6 章及以后不在本次范围内。
-\EN{This review follows Chapters 1--5 of Fred H. Croom's \emph{Basic Concepts of Algebraic Topology}: geometric complexes and polyhedra, simplicial homology, simplicial approximation, the fundamental group, and covering spaces. It is reorganized for oral review, with notation and computations explained in context; Chapter 6 and later material is outside this scope.}
+\subsection{基本群与第一同调 | The fundamental group and first homology}
+\noindent 对路径连通的空间，第一同调群是基本群的交换化：
+\FORMULA{第一同调与基本群交换化定理}{the theorem identifying first homology with the abelianization of the fundamental group}
+\[
+H_1(X;\mathbb Z)\cong\pi_1(X,x_0)^{\mathrm{ab}}
+=\pi_1(X,x_0)/[\pi_1(X,x_0),\pi_1(X,x_0)].
+\]
+\READ{“The first homology group is the fundamental group modulo its commutator subgroup.”}
+\EN{For a path-connected space, the first homology group is the abelianization of the fundamental group: quotient by the commutator subgroup generated by elements $aba^{-1}b^{-1}$.}
+\noindent 直观上，基本群保留闭路拼接的先后顺序，可能非交换；同调把闭路转成可线性相加的链，因此交换化并丢失一部分信息。两个圆周一点粘合成的花束有 $\pi_1=F(a,b)$，其中 $ab$ 与 $ba$ 不同；但 $H_1\cong\mathbb Z^2$。环面也有 $H_1(T^2;\mathbb Z)\cong\mathbb Z^2$，所以第一同调相同并不意味着基本群相同。
+\EN{The fundamental group retains the order of loop concatenation and may be noncommutative. Homology turns loops into chains that can be added, so it abelianizes the group and loses some information. The wedge of two circles has $\pi_1=F(a,b)$, where $ab$ and $ba$ differ, but $H_1\cong\mathbb Z^2$. The torus also has $H_1(T^2;\mathbb Z)\cong\mathbb Z^2$, so equal first homology does not imply equal fundamental groups.}
+\ASK{基本群与第一同调的主要区别是什么？}{What is the main difference between the fundamental group and first homology?}{基本群记录基点闭路的同伦类及其拼接，可能非交换；第一同调是基本群的交换化，只保留可交换的环信息。因而 $H_1$ 通常较容易计算，但信息比 $\pi_1$ 少。}{The fundamental group records based-loop homotopy classes and their concatenation, which may be noncommutative. First homology is its abelianization and retains only the commutative loop information. Thus $H_1$ is often easier to compute but contains less information than $\pi_1$.}
+
+\section{第 5 章：覆盖空间 | Chapter 5: Covering spaces}
+\subsection{覆盖映射与均匀覆盖邻域 | Covering maps and evenly covered neighborhoods}
+\noindent 连续满射 $p:\widetilde X\to X$ 称为覆盖映射，如果每个 $x\in X$ 都有开邻域 $U$，使得原像 $p^{-1}(U)$ 是互不相交开集 $V_\alpha$ 的并，且每个限制 $p|_{V_\alpha}:V_\alpha\to U$ 都是同胚。$U$ 称为均匀覆盖邻域；$p^{-1}(x)$ 称为 $x$ 上方的纤维。覆盖空间在每个足够小的邻域上看起来像若干份底空间，但全局的粘合方式可以不同。
+\EN{A continuous surjection $p:\widetilde X\to X$ is a covering map if every $x\in X$ has an open neighborhood $U$ such that $p^{-1}(U)$ is a disjoint union of open sets $V_\alpha$, each mapped homeomorphically onto $U$ by the restriction of $p$. Such a set $U$ is evenly covered, and $p^{-1}(x)$ is the fiber over $x$. Locally a covering looks like several copies of the base, although the global arrangement can differ.}
+\EX{映射 $p:\mathbb R\to S^1$，$p(t)=e^{2\pi i t}$，是圆周的覆盖。取圆周上一段不绕满一圈的小弧，它的原像是实线上相隔整数距离的一列互不相交区间；每个区间都通过 $p$ 同胚映到这段小弧。每个圆周点上方有无穷多个点。}{The map $p:\mathbb R\to S^1$, $p(t)=e^{2\pi i t}$, is a covering of the circle. A short arc that does not make a full turn has as its preimage a disjoint sequence of intervals in $\mathbb R$, separated by integer translations. Each interval maps homeomorphically onto the arc, and every point of the circle has infinitely many preimages.}
+
+\subsection{路径提升与同伦提升 | Path lifting and homotopy lifting}
+\noindent\textbf{路径提升性质。} 给定覆盖 $p:\widetilde X\to X$、路径 $\gamma:[0,1]\to X$ 和起点 $\widetilde x_0\in p^{-1}(\gamma(0))$，存在唯一连续路径 $\widetilde\gamma:[0,1]\to\widetilde X$ 满足 $p\circ\widetilde\gamma=\gamma$ 且 $\widetilde\gamma(0)=\widetilde x_0$。直观上，将区间 $[0,1]$ 分成若干小段，使每段路径落在某个均匀覆盖邻域中；从已选定的起始片开始，每一小段都只能继续到唯一相接的覆盖片。
+\EN{The path lifting property states that for a covering $p:\widetilde X\to X$, a path $\gamma:[0,1]\to X$, and a chosen starting point $\widetilde x_0$ above $\gamma(0)$, there is a unique path $\widetilde\gamma$ with $p\circ\widetilde\gamma=\gamma$ and $\widetilde\gamma(0)=\widetilde x_0$. To see why, subdivide the interval so that each piece of the path lies in an evenly covered neighborhood. Once the starting sheet is chosen, each successive piece has a unique compatible lift.}
+\noindent\textbf{同伦提升性质。} 若底空间中的路径随参数连续变形，并已给定初始路径的提升，则整个变形也能连续提升。特别地，端点固定同伦的两条闭路从同一覆盖点出发时，提升终点相同。因此，提升闭路后是否回到起点，以及落到纤维中的哪个点，能检测闭路的同伦信息。
+\EN{The homotopy lifting property says that a continuous deformation of paths lifts continuously once a lift of the initial path is fixed. In particular, endpoint-fixed homotopic loops starting from the same point of the cover have lifts with the same endpoint. Whether the lifted loop returns to its starting point, and which point of the fiber it reaches, detects information about the loop's homotopy class.}
+\EX{将圆周上正向绕一圈的闭路从实线上的 $0$ 提升，得到 $\widetilde\gamma(s)=s$，终点是 $1$，没有回到起点；绕 $n$ 圈时终点是 $n$。因此在 $\mathbb R\to S^1$ 这个覆盖下，提升终点正好记录绕数，且提升闭合当且仅当绕数为零。}{Lift a positively oriented loop around the circle from $0\in\mathbb R$. Its lift is $\widetilde\gamma(s)=s$, ending at $1$ rather than returning to its starting point. A loop making $n$ turns ends at $n$. Thus the endpoint of the lift under $\mathbb R\to S^1$ records the winding number, and the lift is closed exactly when the winding number is zero.}
+
+\subsection{覆盖与基本群子群的对应 | The correspondence between covers and subgroups}
+\noindent 设底空间 $X$ 连通、局部路径连通且半局部单连通。半局部单连通的意思是：每一点都有足够小的邻域，使其中的闭路在整个 $X$ 中可缩；它不是说这个邻域内的闭路必须在邻域自身中可缩。此条件保证标准的覆盖分类定理适用。固定基点 $x_0$ 后，带基点的连通覆盖（按保持基点的覆盖同构分类）与 $\pi_1(X,x_0)$ 的子群 $H$ 一一对应；不指定覆盖基点时，对应于子群的共轭类。
+\EN{Assume that the base space $X$ is connected, locally path-connected, and semilocally simply connected. Semilocal simple connectivity means that each point has a sufficiently small neighborhood whose loops contract in the whole space; the loops need not contract inside that neighborhood itself. These hypotheses ensure that the standard classification theorem applies. With a basepoint $x_0$, based connected covers, up to based isomorphism, correspond to subgroups $H$ of $\pi_1(X,x_0)$. Without a chosen point in the cover, they correspond to conjugacy classes of subgroups.}
+\noindent 对覆盖 $p:(\widetilde X,\widetilde x_0)\to(X,x_0)$，对应子群可写成
+\FORMULA{覆盖对应子群的刻画}{the subgroup associated with a based covering}
+\[
+H=p_*\bigl(\pi_1(\widetilde X,\widetilde x_0)\bigr)\le\pi_1(X,x_0).
+\]
+\READ{“H is the image of the fundamental group of the covering space under the homomorphism induced by p.”}
+\EN{The subgroup associated with a based cover is the image of its fundamental group under the homomorphism induced by the covering map. Equivalently, it consists of loop classes in the base whose lifts from $\widetilde x_0$ are closed.}
+\noindent 覆盖的片数等于子群指数 $[\pi_1(X,x_0):H]$。$H=\{1\}$ 对应的连通覆盖是普遍覆盖：它本身单连通。这个对应把“底空间中哪些闭路提升后闭合”转成基本群中的子群问题。
+\EN{The number of sheets of the cover equals the subgroup index $[\pi_1(X,x_0):H]$. The connected cover corresponding to the trivial subgroup is the universal cover, which is simply connected. This correspondence turns the question of which loops lift to closed loops into a subgroup problem in the fundamental group.}
+
+\subsection{圆周覆盖的完整例子 | A complete example: coverings of the circle}
+\noindent 圆周的基本群是 $\mathbb Z$，其子群只有 $n\mathbb Z$（$n\ge1$）和 $\{0\}$。对 $n\ge1$，映射 $p_n:S^1\to S^1$ 定义如下：
+\FORMULA{圆周的 $n$ 层覆盖}{the n-sheeted covering map of the circle}
+\[
+p_n(z)=z^n.
+\]
+\READ{“P sub n maps z to z to the n-th power.”}
+\EN{For each positive integer $n$, the map $p_n(z)=z^n$ is an $n$-sheeted covering of the circle.}
+\noindent 每个底空间点恰有 $n$ 个原像，所以这是 $n$ 层覆盖；它在基本群上诱导 $k\mapsto nk$，像子群为 $n\mathbb Z$，指数为 $n$。提升一圈的闭路不会闭合，必须绕底圆 $n$ 圈才回到原覆盖点。子群 $\{0\}$ 的指数无穷，对应普遍覆盖 $\mathbb R\to S^1$。这给出圆周全部连通覆盖的分类：有限层的圆周覆盖和实线普遍覆盖。
+\EN{Every point in the base circle has exactly $n$ preimages, so this is an $n$-sheeted cover. The induced map on fundamental groups is $k\mapsto nk$, whose image is $n\mathbb Z$ and whose index is $n$. A lift of one turn is not closed; the lift closes after the base loop makes $n$ turns. The trivial subgroup $\{0\}$ has infinite index and corresponds to the universal cover $\mathbb R\to S^1$. These are all connected covers of the circle: finite-sheeted circle covers and the universal cover by the real line.}
+\ASK{如何用覆盖空间读出圆周闭路的绕数？}{How can a covering space reveal the winding number of a loop in the circle?}{把闭路从实线覆盖中的指定点开始提升。若底圆绕 $k$ 圈，提升终点相对起点平移整数 $k$；因此终点位移就是绕数，提升闭合当且仅当 $k=0$。}{Lift the loop from a chosen point in the real-line cover. If it winds $k$ times around the base circle, its lift ends at the starting point translated by the integer $k$. This displacement is the winding number, and the lift closes exactly when $k=0$.}
+
 \end{document}
