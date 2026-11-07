@@ -12,8 +12,8 @@
 \begin{document}\maketitle
 
 \section*{课程概述 | Course overview}
-\noindent\textbf{中文口述稿。} 我在拓扑学中研究哪些性质在连续变形下保持不变。第一部分从度量空间推广到拓扑空间：开集定义了连续性，紧性可以保证极值存在，连通性描述空间是否能分成互不相交的两块。第二部分学习商拓扑和曲面，把多边形的边按规则粘合起来，例如把正方形相对边同向粘合得到环面，反向粘合可以得到 Klein 瓶或射影平面。最后用同伦、CW 复形和 Euler 特征区分曲面。Euler 特征是 $\chi=V-E+F$；球面为 $2$，环面为 $0$。这些例子让我理解拓扑学如何把“距离不重要、连接方式重要”的几何问题转成可计算的不变量。
-\EN{In topology, I studied which properties remain unchanged under continuous deformation. The first part generalizes metric spaces to topological spaces: open sets define continuity, compactness guarantees extrema for continuous functions, and connectedness describes whether a space can be split into two separated pieces. The second part studies quotient spaces and surfaces by gluing edges of polygons. Identifying opposite sides of a square in the same direction gives a torus, while reversing an identification can give a Klein bottle or a projective plane. Finally, homotopy, CW complexes, and Euler characteristic distinguish surfaces. The Euler characteristic is $\chi=V-E+F$: it is two for a sphere and zero for a torus.}
+\noindent\textbf{中文口述稿。} 我在拓扑学中研究哪些性质在连续变形下保持不变。第一部分从度量空间推广到拓扑空间：开集定义连续性，紧性帮助证明连续函数取得最大值和最小值，连通性描述空间能否分成两个互不相交的部分。第二部分学习商拓扑和曲面：把多边形的边按指定配对粘合，可以构造圆周、环面和 Klein 瓶。按多边形边界方向记录边的字母时，环面的边界词是 $aba^{-1}b^{-1}$，Klein 瓶的是 $aba^{-1}b$；射影平面可由圆盘边界上的对径点识别得到。最后我用同伦、CW 复形和 Euler 特征描述空间，例如 $\chi=V-E+F$，球面的 Euler 特征为 $2$，环面为 $0$。这让我看到，拓扑学能把几何形状转成可计算的不变量。
+\EN{In topology, I studied which properties remain unchanged under continuous deformation. Open sets define continuity, compactness helps prove that continuous functions attain extrema, and connectedness asks whether a space can be split into two separated pieces. Quotient spaces and surfaces can be built by gluing paired polygon edges. Reading edge labels along the polygon boundary gives $aba^{-1}b^{-1}$ for a torus and $aba^{-1}b$ for a Klein bottle; the projective plane can be obtained by identifying antipodal points on a disk boundary. Homotopy, CW complexes, and the Euler characteristic then describe spaces. For example, $\chi=V-E+F$ is two for a sphere and zero for a torus.}
 
 \section{度量空间与拓扑空间 | Metric and topological spaces}
 \noindent 度量空间 $(X,d)$ 中，$d$ 满足非负性、分离性、对称性和三角不等式。开球 $B(x,r)=\{y:d(x,y)<r\}$。拓扑空间 $(X,\mathcal T)$ 则直接指定哪些集合是开集：$\varnothing,X$ 开，任意并开，有限交开。度量会生成拓扑，但一个拓扑可能来自不同度量，也可能根本不能由度量产生。
@@ -48,10 +48,11 @@
 \section{商拓扑与识别 | Quotient topology}
 \noindent 给定满射 $q:X\to Y$，商拓扑定义为：$U\subseteq Y$ 开，当且仅当 $q^{-1}(U)$ 在 $X$ 中开。它把 $X$ 中被识别的点压成 $Y$ 中一个点。若 $f:X\to Z$ 连续且在每个纤维 $q^{-1}(y)$ 上取同一个值，则存在唯一映射 $\bar f:Y\to Z$ 使 $f=\bar f\circ q$；在商拓扑下 $\bar f$ 连续。
 \EN{For a surjection $q:X\to Y$, the quotient topology declares $U$ open when $q^{-1}(U)$ is open in $X$. It identifies points in the same fiber. A continuous map constant on every fiber factors uniquely through the quotient, and the induced map is continuous.}
-\EX{把区间 $[0,1]$ 的两个端点识别，得到一个圆周。把正方形的相对边按同向识别得到环面；把一对边反向识别则改变曲面的可定向性。}{Identifying the endpoints of $[0,1]$ produces a circle. Identifying opposite sides of a square in the same orientation produces a torus; reversing one identification changes orientability.}
+\EX{把区间 $[0,1]$ 的两个端点识别，得到一个圆周。正方形边界词 $aba^{-1}b^{-1}$ 给出环面，$aba^{-1}b$ 给出 Klein 瓶；这两个例子说明，必须说明边界行进方向和字母正负号，单说“同向粘合”容易产生歧义。}{Identifying the endpoints of $[0,1]$ produces a circle. The square boundary words $aba^{-1}b^{-1}$ and $aba^{-1}b$ give a torus and a Klein bottle, respectively. These examples show why edge directions and label signs must be specified; the phrase “glue in the same direction” is ambiguous on its own.}
 
 \section{多边形粘合与曲面 | Polygon gluing and surfaces}
-\noindent 多边形粘合时，先记录每条边的字母和方向，再判断顶点、边和面在商空间中的数量。一个紧致曲面的 Euler 特征为
+\noindent 下文的 $V-E+F$ 适用于有限胞腔分解；在三角剖分中，$V,E,F$ 分别是顶点、边和三角形的数目。不同有限胞腔分解会给出相同的 Euler 特征。
+\noindent 多边形粘合时，沿多边形边界绕行并依次记录边标签：若行进方向与给该边选定的箭头一致，记 $a$；相反则记 $a^{-1}$。每个标签出现两次，表示对应的两条边被粘合。标准边界词中，环面为 $aba^{-1}b^{-1}$，Klein 瓶为 $aba^{-1}b$，射影平面为 $aa$。闭曲面的单多边形表示里，每对标签一正一负对应可定向粘合；同号配对会导致不可定向。确定边配对后，再追踪顶点等价类并计数。一个紧致曲面的 Euler 特征为
 \[
 \chi=\#\{\text{vertices}\}-\#\{\text{edges}\}+\#\{\text{faces}\}.
 \]
@@ -59,8 +60,8 @@
 \EN{For a polygon gluing, record edge labels and orientations, then count the resulting vertices, edges, and faces. The Euler characteristic is vertices minus edges plus faces. A closed orientable surface of genus $g$ has $\chi=2-2g$; a closed nonorientable surface with $k$ crosscaps has $\chi=2-k$. Each boundary component decreases the characteristic by one.}
 \EX{正方形作为一个面，四个顶点全部识别为一个顶点，两对边识别为两条边，所以环面的 $\chi=1-2+1=0$。球面的四面体剖分有 $V=4,E=6,F=4$，所以 $\chi=2$。}{For the torus obtained from a square, all four vertices become one, the two edge pairs give two edges, and there is one face. Thus $\chi=1-2+1=0$. A tetrahedral decomposition of the sphere has $V=4,E=6,F=4$, giving $\chi=2$.}
 
-\noindent 曲面可定向，直观上表示可以在整个曲面一致选择“正面”；在多边形图中，若边的识别全部保持方向，可得到可定向曲面，出现反向识别可能导致 Möbius 带、Klein 瓶或射影平面。分类定理说，紧致连通无边界曲面由球面、带 $g$ 个把手的可定向曲面、或带 $k$ 个交叉帽的非可定向曲面确定；实际分类还需检查可定向性。
-\EN{A surface is orientable when a consistent choice of local orientation is possible. In a polygon scheme, orientation-reversing identifications can produce a Mobius band, a Klein bottle, or a projective plane. The classification theorem says that a compact connected boundaryless surface is a sphere, an orientable surface with handles, or a nonorientable surface with crosscaps; orientability must be checked separately.}
+\noindent 曲面可定向，直观上表示可以在整个曲面一致选择“正面”。在闭曲面的单多边形表示中，可用边界词检查：每个边标签恰好出现一次正号、一次负号时，可定向；例如环面词 $aba^{-1}b^{-1}$。Klein 瓶词 $aba^{-1}b$ 和射影平面词 $aa$ 含同号配对，表示不可定向。分类定理说，紧致、连通、无边界曲面同胚于球面、带 $g$ 个把手的可定向曲面，或带 $k$ 个交叉帽的非可定向曲面。
+\EN{A surface is orientable when a consistent choice of local orientation is possible. For a closed surface represented by one polygon, each edge label appearing once with each sign gives an orientable gluing, as in the torus word $aba^{-1}b^{-1}$. The Klein bottle word $aba^{-1}b$ and the projective-plane word $aa$ contain a same-sign pair and describe nonorientable surfaces. The classification theorem says that every compact, connected, boundaryless surface is homeomorphic to a sphere, an orientable surface with handles, or a nonorientable surface with crosscaps.}
 
 \section{同伦、变形收缩与 CW 复形 | Homotopy and CW complexes}
 \noindent 映射 $f,g:X\to Y$ 同伦，若存在连续 $H:X\times[0,1]\to Y$，满足 $H(x,0)=f(x)$、$H(x,1)=g(x)$。若两个空间之间的映射复合后分别同伦于恒等映射，则它们同伦等价。同伦比同胚弱：同胚要求可逆的连续结构，同伦等价允许连续压缩。空间可缩，若它同伦等价于一点。
@@ -147,9 +148,9 @@
 \end{enumerate}
 \EN{For a polygon gluing, record paired edges and orientations, track vertices to find $V$, count edges $E$ and faces $F$, compute $\chi=V-E+F$, and then determine orientability before applying the genus formula.}
 
-\EX{正方形相对边同向识别的环面：一个面 $F=1$，两对边给 $E=2$，四个顶点全部成为一个顶点 $V=1$，所以 $\chi=0$。它可定向，故 $0=2-2g$，得到 $g=1$。}{For the torus, one face remains, the two edge pairs give two edges, and all four vertices become one vertex. Thus $\chi=0$. The surface is orientable, so $0=2-2g$ gives genus one.}
+\EX{正方形边界词 $aba^{-1}b^{-1}$ 表示环面：一个面 $F=1$，两对边给 $E=2$，四个顶点全部成为一个顶点 $V=1$，所以 $\chi=0$。它可定向，故 $0=2-2g$，得到 $g=1$。}{The square boundary word $aba^{-1}b^{-1}$ gives a torus. One face remains, the two edge pairs give two edges, and all four vertices become one vertex, so $\chi=0$. The surface is orientable; hence $0=2-2g$ gives genus one.}
 
-\EX{射影平面可以由一个圆盘把边界上的对径点识别得到，也可以由正方形两对边反向粘合得到。它的胞腔分解有一个顶点、一条边和一个面，故 $\chi=1-1+1=1$；它不可定向，对应 $k=1$。}{The projective plane can be obtained from a disk by identifying opposite boundary points, or from a square with orientation-reversing edge identifications. Its cell structure has one vertex, one edge, and one face, so $\chi=1$. It is nonorientable and has one crosscap.}
+\EX{射影平面可由圆盘边界上的对径点识别得到，其正方形表示的边界词为 $aa$。它的胞腔分解有一个顶点、一条边和一个面，故 $\chi=1-1+1=1$；它不可定向，对应 $k=1$。}{The projective plane is obtained by identifying antipodal points on the boundary of a disk; its square boundary word is $aa$. Its cell structure has one vertex, one edge, and one face, so $\chi=1$. It is nonorientable and has one crosscap.}
 
 \section{同伦与 Euler 特征的证明思路 | Homotopy and Euler characteristic}
 \noindent 若 $X$ 变形收缩到 $A$，则包含映射 $i:A\hookrightarrow X$ 和收缩映射 $r:X\to A$ 满足 $r\circ i=\operatorname{id}_A$，且 $i\circ r\simeq\operatorname{id}_X$。因此 $X$ 与 $A$ 同伦等价。研究复杂空间时，可以先找一个更简单的变形收缩子空间。
@@ -206,10 +207,10 @@
 
 \EX{令 $q:[0,1]\to S^1$，$q(t)=e^{2\pi it}$。只有 $0$ 和 $1$ 被识别。若 $f:[0,1]\to Z$ 连续且 $f(0)=f(1)$，定义 $\bar f(q(t))=f(t)$。等价关系保证这个定义不依赖代表元；商拓扑的泛性质保证 $\bar f$ 连续。}{Let $q:[0,1]\to S^1$ be $q(t)=e^{2\pi it}$, identifying only zero and one. If $f:[0,1]\to Z$ is continuous and $f(0)=f(1)$, define $\bar f(q(t))=f(t)$. The endpoint condition makes this well-defined, and the quotient property makes the induced map continuous.}
 
-\noindent 对正方形还要记录边的方向。相对边按 $a,b,a^{-1},b^{-1}$ 粘合得到环面；若出现同一字母的边按相同方向粘合，通常会产生不可定向曲面。数顶点时不能只数原多边形的角，而要按照边的识别关系追踪它们在商空间中的等价类。
-\EN{For a square, record both labels and orientations. The word $aba^{-1}b^{-1}$ gives the torus. Same-direction identifications can produce nonorientable surfaces. When counting vertices, count equivalence classes after gluing, rather than the original corners.}
+\noindent 对正方形应记录边界词，而不是只说相对边的方向：沿边界读到 $a$ 表示顺着预先选定的箭头，读到 $a^{-1}$ 表示逆着箭头。因此 $aba^{-1}b^{-1}$ 表示环面，$aba^{-1}b$ 表示 Klein 瓶。顶点数应按识别关系确定等价类，不能直接数正方形的四个角。
+\EN{For a square, record the boundary word instead of saying only that opposite sides are glued “in the same” or “opposite” directions. Reading $a$ means following its chosen arrow, and reading $a^{-1}$ means going against it. Thus $aba^{-1}b^{-1}$ is the torus and $aba^{-1}b$ is the Klein bottle. Count vertices by their equivalence classes after gluing, not by the original corners.}
 
-\EX{Möbius 带可由矩形的一对相对边反向识别得到。它有一个边界分支，不能定向；它可以变形收缩到中心圆周，因此其 Euler 特征为 $0$。这与环面同样的 Euler 特征说明 Euler 特征不能单独判断可定向性。}{A Mobius band is obtained by reversing one pair of opposite sides of a rectangle. It has one boundary component and is nonorientable. It deformation retracts to its central circle, so its Euler characteristic is zero. The same characteristic as the torus shows that Euler characteristic alone does not determine orientability.}
+\EX{把矩形 $[0,1]\times[0,1]$ 的两条竖边按 $(0,y)\sim(1,1-y)$ 识别，得到 Möbius 带。它有一个边界分支且不可定向，并可变形收缩到中心圆周，所以 Euler 特征为 $0$。它与环面的 Euler 特征相同，说明 Euler 特征单独不能判断可定向性。}{Identifying the vertical sides of $[0,1]\times[0,1]$ by $(0,y)\sim(1,1-y)$ gives a Mobius band. It has one boundary component, is nonorientable, and deformation retracts to its central circle, so its Euler characteristic is zero. The same characteristic as the torus shows that Euler characteristic alone does not determine orientability.}
 
 \section{同伦计算：如何真正写出一个变形 | How to write a homotopy}
 \noindent 同伦 $H:X\times[0,1]\to Y$ 必须同时满足三件事：对每个 $t$ 是一个映射，对 $(x,t)$ 联合连续，并且 $H(x,0)=f(x)$、$H(x,1)=g(x)$。变形收缩还要求子空间 $A$ 中的点在整个过程中保持不动，即 $H(a,t)=a$。最后一条经常被遗漏。

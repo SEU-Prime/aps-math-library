@@ -39,9 +39,18 @@
 
 \EN{The exchange model represents each participant's holdings as state variables and uses utility or satisfaction functions to describe preferences. An indifference curve contains bundles with the same utility. At a differentiable interior Pareto-efficient exchange, the two participants' marginal rates of substitution are equal. Feasible exchanges must also respect the total resource constraints.}
 
-\noindent\textbf{抢渡长江模型。} 以位置 $r(t)=(x(t),y(t))$ 表示游泳者轨迹，将游泳速度和水流速度作向量合成：$\dot r=v_{\rm swim}(t)+v_{\rm current}(r,t)$。游泳者控制方向 $\theta(t)$，在给定起点、终点、游速及水流条件下，选择策略使渡河时间最短。若河宽为 $L$、游速大小 $u$、方向与垂直岸边方向夹角为 $\theta$，横向速度为 $u\cos\theta$，横渡时间满足 $T=L/(u\cos\theta)$（$\cos\theta>0$）；顺流位移还要计入水流速度。速度变化时应建立微分方程或变分优化模型。
-\READ{“The position derivative equals the swimming-velocity vector plus the current-velocity vector.” “The crossing time equals L divided by u cosine theta.”}
-\EN{For the Yangtze crossing problem, let $r(t)=(x(t),y(t))$ be the swimmer's position. The ground velocity is the vector sum of swimming velocity and current velocity. The swimmer chooses the heading $\theta(t)$ to minimize crossing time subject to the start point, destination, swimming speed, and current. With river width $L$, swimming speed $u$, and heading angle $\theta$ measured from the direction perpendicular to the bank, the cross-river speed is $u\cos\theta$ and the crossing time is $L/(u\cos\theta)$ when $\cos\theta>0$; downstream drift also includes the current. If velocities vary, formulate a differential-equation or variational optimization problem.}
+\noindent\textbf{抢渡长江模型。} 用位置 $r(t)=(x(t),y(t))$ 表示游泳者轨迹，规定沿岸下游为 $x$ 轴正方向、横河方向为 $y$ 轴正方向。地面速度等于游泳者相对水的速度与水流速度之和。设河宽 $L$ 不变、游速相对水为常数 $u$；航向角 $\theta$ 从垂直岸边的正方向起算，朝下游偏转为正。记水流的沿岸和横河分量为 $v_{\rm current,x}$、$v_{\rm current,y}$，则
+\[
+\dot x=u\sin\theta+v_{\rm current,x},\qquad
+\dot y=u\cos\theta+v_{\rm current,y}.
+\]
+若水流平行岸边，则 $v_{\rm current,y}=0$，横渡时间为
+\[
+T=\frac{L}{u\cos\theta},\qquad u\cos\theta>0.
+\]
+若水流有恒定横河分量，则分母改为 $u\cos\theta+v_{\rm current,y}$；若速度或航向随时间变化，应使用相应的微分方程。比如 $L=300$ 米、$u=1.5$ 米/秒、$\theta=30^\circ$ 且水流平行岸边时，横渡时间 $T=300/(1.5\cos30^\circ)\approx231$ 秒，即约 $3.85$ 分钟。此时若航向朝下游偏，游泳者沿岸分速度为 $u\sin30^\circ=0.75$ 米/秒；若水流沿岸速度为 $0.4$ 米/秒，总下游速度为 $1.15$ 米/秒，渡河期间总下游位移约为 $1.15\times231\approx266$ 米，其中约 $92$ 米来自水流。
+\READ{“Ground velocity equals swimming velocity relative to the water plus current velocity.” “Downstream speed is u sine theta plus the along-bank current.” “The crossing time equals river width divided by cross-river speed.”}
+\EN{Let $r(t)=(x(t),y(t))$ be the swimmer's position. Take downstream as the positive $x$ direction and across the river as the positive $y$ direction. Ground velocity is the sum of swimming velocity relative to the water and current velocity. Assume constant river width $L$, constant swimming speed $u$, and a fixed heading angle $\theta$ measured from the positive cross-river direction, with downstream deviation positive. If the current components are $v_{\rm current,x}$ and $v_{\rm current,y}$, then $\dot x=u\sin\theta+v_{\rm current,x}$ and $\dot y=u\cos\theta+v_{\rm current,y}$. For a current parallel to the bank, $v_{\rm current,y}=0$, so the crossing time is $T=L/(u\cos\theta)$ when $u\cos\theta>0$. A constant cross-river current changes the denominator to $u\cos\theta+v_{\rm current,y}$. If speed or heading varies, use the corresponding differential equations. For $L=300$ m, $u=1.5$ m/s, and $\theta=30^\circ$, crossing takes about $231$ s, or $3.85$ minutes. If the swimmer heads downstream, the swimmer's along-bank component is $u\sin30^\circ=0.75$ m/s. With a $0.4$ m/s downstream current, total downstream speed is $1.15$ m/s, giving about $266$ m of total drift; the current itself contributes about $92$ m.}
 
 \ASK{抢渡长江问题为什么要考虑水流？}{Why must the river-crossing model account for the current?}{游泳者相对水的速度不等于对岸观察到的实际速度。地面速度是游泳速度向量与水流速度向量之和，因此水流会改变轨迹和到达时间。}{The swimmer's velocity relative to the water differs from the ground velocity. The ground velocity is the vector sum of swimming velocity and current, so the current changes both the path and arrival time.}
 
