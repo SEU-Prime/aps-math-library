@@ -1,5 +1,7 @@
 # APS 数学课程资料库
 
+[在线阅读 APS 数学课程资料](https://seu-prime.github.io/aps-math-library/)
+
 一个无需构建步骤的静态课程目录，收录 14 门 APS 数学面试双语讲义。每门课程包含编译后的 PDF、对应的 LaTeX 源文件和用于目录预览的首页缩略图。
 
 ## 本地预览
@@ -14,7 +16,7 @@ powershell -ExecutionPolicy Bypass -File .\serve.ps1
 
 ## 发布到 GitHub Pages
 
-将本目录推送到 GitHub 的 `main` 分支后，`.github/workflows/pages.yml` 会自动构建并部署网站。首次部署完成后，可在仓库的 **Settings → Pages** 查看访问地址。
+将本目录推送到 GitHub 的 `main` 分支后，`.github/workflows/pages.yml` 会自动构建并部署网站。网站地址为 [https://seu-prime.github.io/aps-math-library/](https://seu-prime.github.io/aps-math-library/)。
 
 页面是纯静态文件，不依赖 Node.js 或第三方 CDN。公开仓库会让讲义 PDF 和 TeX 源文件对所有人可访问。
 
