@@ -1,0 +1,184 @@
+\documentclass[UTF8,11pt,a4paper]{ctexart}
+\usepackage{amsmath,amssymb,geometry,enumitem,hyperref}
+\geometry{margin=2cm}\setlist{itemsep=2pt,topsep=4pt}
+\hypersetup{colorlinks=true,linkcolor=blue}
+\newcommand{\BOTH}[2]{\par\noindent\textbf{中文。}\ #1\par\noindent\textbf{English.}\ #2\par}
+\newcommand{\EX}[2]{\par\noindent\textbf{例子。}\ #1\par\noindent\textbf{Example.}\ #2\par}
+\newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\ASK}[4]{\begin{samepage}\par\noindent\textbf{可能问题。}\ #1\par\noindent\textbf{Possible question.}\ #2\par\noindent\textbf{回答要点。}\ #3\par\noindent\textbf{Key answer.}\ #4\medskip\end{samepage}}
+\title{数学分析（二）APS 面试准备\\[4pt]\large 多变量微分、重积分、曲线曲面积分与场论}
+\author{Mathematical Analysis II: Bilingual Oral Review}
+\date{}
+\begin{document}\maketitle
+
+\section*{课程概述 | Course overview}
+\BOTH{我在第二学期把一元微积分推广到空间。多元微分用梯度和 Jacobian 描述函数对不同方向的变化；多重积分累加平面或空间区域内的密度；曲线积分和曲面积分则沿路径或曲面累积功、质量或通量。Green、Gauss 和 Stokes 公式把区域内部的导数与边界上的积分联系起来。一个可计算的例子是：速度场 $F=(-y,x)$ 沿单位圆的环流为 $2\pi$，Green 公式把线积分转成圆盘上旋度 $2$ 的面积积分。}{In my second semester, I extended single-variable calculus to space. Gradients and Jacobians describe directional change, multiple integrals accumulate density over regions, and line and surface integrals accumulate work, mass, or flux. Green's, Gauss's, and Stokes' theorems relate derivatives in a region to integrals on its boundary. For example, the circulation of $F=(-y,x)$ around the unit circle is $2\pi$; Green's theorem converts it into the area integral of the constant curl $2$ over the disk.}
+
+\BOTH{这些工具用于有明确几何和物理含义的问题：由密度 $\rho(x,y,z)$ 求物体质量，要算 $\iiint_\Omega\rho\,dV$；由速度场求穿过一张有向曲面的流量，要算 $\iint_S F\cdot n\,dS$。公式是否适用取决于区域、函数光滑性和边界取向，不能只凭形式套用。}{These tools answer concrete geometric and physical questions. The mass of a body with density $\rho$ is $\iiint_\Omega\rho\,dV$, while the flux of a vector field through an oriented surface is $\iint_S F\cdot n\,dS$. Applicability depends on the region, regularity, and orientation, so the formulas cannot be used by pattern alone.}
+
+\section{第十二章所列范围：多元微分 | Chapter 12: Multivariable differentiation}
+\subsection{偏导、方向导数与全微分}
+\BOTH{函数 $f(x_1,\ldots,x_n)$ 的偏导 $\partial f/\partial x_i$ 是只沿第 $i$ 个坐标方向变化时的变化率。对单位向量 $u$，方向导数为 $D_uf(a)=\lim_{t\to0}[f(a+tu)-f(a)]/t$。若 $f$ 在 $a$ 可微，则存在一个线性映射 $Df(a)$ 使 $f(a+h)=f(a)+Df(a)h+o(\|h\|)$；这比各偏导分别存在更强。}{For $f(x_1,\ldots,x_n)$, a partial derivative measures change along one coordinate direction. The directional derivative in a unit direction $u$ is the limit of the corresponding difference quotient. Differentiability means there is a linear map $Df(a)$ such that $f(a+h)=f(a)+Df(a)h+o(\|h\|)$. This is stronger than the existence of individual partial derivatives.}
+\EX{令 $f(x,y)=x^2+3xy+y^2$。梯度为 $\nabla f=(2x+3y,3x+2y)$，在 $(1,0)$ 沿单位方向 $u=(0,1)$ 的方向导数是 $\nabla f(1,0)\cdot u=3$。Hessian 矩阵为 $\begin{pmatrix}2&3\\3&2\end{pmatrix}$，记录二阶变化。}{For $f(x,y)=x^2+3xy+y^2$, the gradient is $(2x+3y,3x+2y)$. At $(1,0)$, the directional derivative in direction $(0,1)$ is $3$. The Hessian is the displayed matrix and records second-order change.}
+\BOTH{上例的 Hessian 特征值为 $5$ 与 $-1$，所以二次型既有正方向也有负方向，原点是鞍点而不是极值点。二阶判别的使用顺序是先确认驻点 $\nabla f=0$，再检查 Hessian 的正定、负定或不定；仅计算二阶导数而不看驻点条件是不够的。}{The Hessian in the example has eigenvalues five and negative one, so its quadratic form has both positive and negative directions. The origin is a saddle, not an extremum. For a second-derivative test, first identify a critical point and then determine whether the Hessian is positive definite, negative definite, or indefinite.}
+\BOTH{若偏导在邻域连续，则函数可微；但单有偏导存在不足以保证可微。例 $f(x,y)=xy/\sqrt{x^2+y^2}$（原点定义为 $0$）的两个偏导在原点都为零，但沿 $y=x$ 有 $f(x,x)=|x|/\sqrt2$，不满足 $f(x,y)=o(\sqrt{x^2+y^2})$，所以原点不可微。}{Continuous partial derivatives in a neighborhood imply differentiability, but the existence of partial derivatives at one point does not. For $f(x,y)=xy/\sqrt{x^2+y^2}$, defined as zero at the origin, both partial derivatives there are zero, yet along $y=x$ the function is $|x|/\sqrt2$. It is not a remainder of smaller order than the distance to the origin, so it is not differentiable there.}
+\BOTH{若 $f$ 可微，梯度给出最大增长方向，方向导数公式为 $D_uf=\nabla f\cdot u$。二阶偏导组成 Hessian 矩阵，用于描述曲率和局部二次近似。若混合二阶偏导在邻域连续，则 $f_{xy}=f_{yx}$。}{For a differentiable scalar function, the gradient points in the direction of greatest increase and $D_uf=\nabla f\cdot u$. Second partial derivatives form the Hessian and describe curvature in a quadratic approximation. If the mixed second partials are continuous nearby, then $f_{xy}=f_{yx}$.}
+\BOTH{对二元二次可微函数，二阶微分为 $d^2f=f_{xx}(dx)^2+2f_{xy}dxdy+f_{yy}(dy)^2$（使用 $f_{xy}=f_{yx}$）。它是 Hessian 对增量向量的二次型；正定表示各个非零小方向上的二阶变化为正，是局部极小判别的重要条件之一。}{For a twice continuously differentiable function of two variables, the second differential is the displayed quadratic form, using equality of mixed partials. It is the Hessian quadratic form evaluated on the increment and is positive in every nonzero direction when the Hessian is positive definite, an important condition for a local minimum.}
+\READ{“The directional derivative of f in direction u equals the gradient of f dotted with u.”}
+
+\subsection{向量值函数、链式法则与微分不变性}
+\BOTH{向量值函数 $F:\mathbb R^n\to\mathbb R^m$ 的导数是 $m\times n$ Jacobian 矩阵 $J_F$，第 $i,j$ 项为输出分量 $F_i$ 对输入 $x_j$ 的偏导。若 $G$ 和 $F$ 可微，则 $J_{F\circ G}(x)=J_F(G(x))J_G(x)$。这说明多步变量依赖通过矩阵乘法传递变化。}{For a map $F:\mathbb R^n\to\mathbb R^m$, the derivative is the $m\times n$ Jacobian matrix, whose $(i,j)$ entry is $\partial F_i/\partial x_j$. For differentiable maps, the chain rule is $J_{F\circ G}(x)=J_F(G(x))J_G(x)$. It propagates changes through a sequence of variable transformations.}
+\EX{设 $u=x^2+y$、$z=e^u$。链式法则给出 $z_x=e^{x^2+y}2x$、$z_y=e^{x^2+y}$。Jacobian 乘法就是把 $u$ 对 $(x,y)$ 的变化再传入 $e^u$。}{Let $u=x^2+y$ and $z=e^u$. The chain rule gives $z_x=2xe^{x^2+y}$ and $z_y=e^{x^2+y}$. The Jacobian product first measures the change of $u$ and then passes it through the exponential.}
+\EX{令 $F(x,y)=(x^2+y,xy)$，则 $J_F=\begin{pmatrix}2x&1\\y&x\end{pmatrix}$。在 $(1,2)$，Jacobian 为 $\begin{pmatrix}2&1\\2&1\end{pmatrix}$，秩为 $1$，表示该点附近一阶变化只覆盖一个独立输出方向。}{For $F(x,y)=(x^2+y,xy)$, the Jacobian is the displayed matrix. At $(1,2)$ its rank is one, so the first-order change spans only one independent output direction there.}
+\BOTH{全微分 $df=\sum_i f_{x_i}dx_i$ 表示一阶线性变化。若变量又由新参数光滑表示，把表达式代入后再微分与直接用链式法则一致，称一阶全微分形式不变。高阶导数需要继续对系数和变量求导，通常不具有同样简单的不变形式。}{The total differential $df=\sum_i f_{x_i}dx_i$ is the first-order linear change. Under a smooth change of variables, substituting first and then differentiating agrees with the chain rule; this is the invariance of the first differential. Higher differentials require additional terms and do not have the same simple invariance.}
+
+\section{第十三章：多变量积分 | Chapter 13: Multivariable integration}
+\subsection{重积分与 Fubini 定理}
+\BOTH{在平面区域 $D$ 上，把区域细分为小块 $D_i$，在每块取点 $p_i$，和式 $\sum f(p_i)\,\operatorname{area}(D_i)$ 的极限是二重积分 $\iint_D f\,dA$。对有界 Jordan 可求积区域上的连续函数，积分存在。$f\equiv1$ 时得到面积；$f$ 是面密度时积分得到总质量；除以面积则得到平均值。三重积分 $\iiint_\Omega f\,dV$ 同理累加体积中的密度。}{Partition a planar region $D$ into small pieces $D_i$ and choose a point $p_i$ in each. The limit of $\sum f(p_i)\operatorname{area}(D_i)$ is the double integral. A continuous function on a bounded Jordan-measurable region is integrable. Taking $f=1$ gives area; taking $f$ as a surface density gives mass; dividing by area gives the average value. A triple integral similarly accumulates a volume density.}
+\EX{三角形 $D=\{(x,y):0\le x\le1,0\le y\le x\}$ 的面积为 $\iint_D1\,dA=\int_0^1\int_0^x1\,dy\,dx=1/2$。积分上下限来自先固定 $x$、再让 $y$ 从 $0$ 到边界 $x$。}{The triangle $0\le y\le x\le1$ has area $\int_0^1\int_0^x1\,dy\,dx=1/2$. The bounds describe vertical slices: for each fixed $x$, $y$ runs from zero to $x$.}
+\EX{在单位立方体 $[0,1]^3$ 中，体密度 $\rho(x,y,z)=x+y+z$ 的总质量为 $\iiint\rho\,dV=1/2+1/2+1/2=3/2$。这说明三重积分是对空间中每个微小体积的密度求总和。}{In the unit cube, the density $\rho=x+y+z$ has total mass $\iiint\rho\,dV=1/2+1/2+1/2=3/2$. A triple integral sums density over infinitesimal volume elements.}
+\BOTH{Fubini 定理允许在可积条件下把重积分写成累次积分，并交换积分次序。矩形区域上先对一个变量积分，再对另一个变量积分；非矩形区域需正确描述为 $x$-型或 $y$-型区域。交换次序的价值是让内层积分变简单，不是改变被积区域。}{Under suitable integrability assumptions, Fubini's theorem expresses a multiple integral as iterated integrals and permits changing the order. On nonrectangular regions, bounds must describe the same region in vertical or horizontal slices. Changing order is useful when it simplifies the inner integral; the region itself must remain unchanged.}
+\EX{对 $D=\{0\le y\le x\le1\}$，$\iint_D(x+y)dA=\int_0^1\int_0^x(x+y)dy\,dx=\int_0^1(3x^2/2)dx=1/2$。改成先对 $x$ 积分时，区域是 $0\le y\le1, y\le x\le1$，也得到 $1/2$。}{For this triangle, integrating $(x+y)$ first in $y$ gives $1/2$. Reversing the order uses $0\le y\le1$ and $y\le x\le1$, and gives the same result.}
+\BOTH{在矩形 $[a,b]\times[c,d]$ 上，如果 $f$ 连续，Fubini 公式为 $\iint_Rf\,dA=\int_a^b(\int_c^df(x,y)dy)dx$，交换次序也成立。非矩形区域先画边界、确定切片上下限，再积分；最常见的错误是写出的上下限实际描述了另一个区域。}{On a rectangle, a continuous function satisfies the iterated-integral formula shown, and the order can be reversed. For a nonrectangular region, sketch the boundary and determine slice bounds first. A common error is to write limits that describe a different region.}
+
+\subsection{变量替换、反常重积分与 Beta 函数}
+\BOTH{若 $\Phi$ 是两个区域间的光滑一一坐标变换，Jacobian 行列式不为零，则小体积按 $|\det D\Phi(u)|$ 缩放：
+\[
+\int_D f(x)\,dx=\int_{\Phi^{-1}(D)}f(\Phi(u))\,|\det D\Phi(u)|\,du.
+\]
+行列式绝对值是面积或体积的局部缩放因子；若映射不是全局一一，应先拆成一一的区域处理。}{If $\Phi$ is a smooth one-to-one coordinate map between the regions with nonzero Jacobian, volume scales by $|\det D\Phi(u)|$, giving the displayed formula. The absolute determinant is the local area or volume scale factor. If the map is not globally one-to-one, split the domain into one-to-one pieces.}
+\EX{极坐标 $x=r\cos\theta,y=r\sin\theta$ 的 Jacobian 为 $r$。单位圆盘面积因此为 $\int_0^{2\pi}\int_0^1r\,dr\,d\theta=\pi$。若漏掉因子 $r$，就没有补偿圆环面积随半径增长这一几何事实。}{The polar-coordinate Jacobian is $r$. The unit disk therefore has area $\int_0^{2\pi}\int_0^1r\,dr\,d\theta=\pi$. Omitting $r$ would ignore that annular area grows with radius.}
+\EX{椭圆 $x^2/4+y^2\le1$ 用 $x=2u,y=v$ 变成单位圆盘。Jacobian 绝对值是 $2$，所以椭圆面积为 $2\iint_{u^2+v^2\le1}1\,dudv=2\pi$。椭圆长轴方向伸长两倍，面积也伸长两倍。}{The substitution $x=2u$, $y=v$ maps the ellipse $x^2/4+y^2\le1$ to the unit disk and has Jacobian magnitude two. Its area is therefore twice the disk's area, or $2\pi$.}
+\BOTH{无界区域上的积分由截断区域取极限；若函数在有限点无界，则排除奇点后取极限。若绝对值积分有限，Fubini 定理保证积分次序可交换；条件收敛时交换次序可能改变结果。二维径向幂函数在无穷远满足
+\[
+\iint_{r\ge1}r^{-p}\,dA=2\pi\int_1^\infty r^{1-p}\,dr,
+\]
+当且仅当 $p>2$ 收敛；在原点附近则当且仅当 $p<2$ 可积。}{An improper integral is defined by truncating an unbounded region or excluding a singularity and taking a limit. Absolute integrability permits changing integration order by Fubini; conditional convergence may not. The displayed radial power integral converges at infinity exactly when $p>2$, and near the origin exactly when $p<2$.}
+\BOTH{Beta 函数定义为 $B(p,q)=\int_0^1t^{p-1}(1-t)^{q-1}dt$，在 $p,q>0$ 时收敛。换元 $u=1-t$ 给出对称性 $B(p,q)=B(q,p)$。}{The beta function is defined by the displayed integral and converges for $p,q>0$. The substitution $u=1-t$ proves its symmetry $B(p,q)=B(q,p)$.}
+\EX{$B(1,2)=\int_0^1(1-t)dt=1/2$。靠近端点 $0$ 的行为由 $t^{p-1}$ 控制，靠近 $1$ 的行为由 $(1-t)^{q-1}$ 控制，因此需 $p,q>0$。}{We have $B(1,2)=\int_0^1(1-t)dt=1/2$. The factors near zero and one require $p>0$ and $q>0$, respectively.}
+\EX{$B(2,3)=\int_0^1t(1-t)^2dt=1/2-2/3+1/4=1/12$。这是一个端点都没有奇性的情形；一般参数 $p,q$ 时，端点幂次给出收敛条件。}{We have $B(2,3)=\int_0^1t(1-t)^2dt=1/2-2/3+1/4=1/12$. Here neither endpoint is singular; for general parameters, the endpoint powers determine convergence.}
+
+\subsection{曲线积分与曲面积分}
+\BOTH{第一型曲线积分 $\int_C f\,ds$ 按弧长累加标量密度，与方向无关。若 $r(t)$（$a\le t\le b$）参数化曲线，则
+\[
+\int_C f\,ds=\int_a^b f(r(t))\,\|r'(t)\|\,dt.
+\]
+第一型曲面积分 $\iint_S f\,dS$ 按面积累加温度或面密度；若曲面参数化为 $r(u,v)$，则
+\[
+\iint_S f\,dS=\iint_D f(r(u,v))\,\|r_u\times r_v\|\,du\,dv.
+\]
+}{A scalar line integral accumulates density with respect to arc length and does not depend on orientation. For a curve parametrized by $r(t)$, its formula is displayed above. A scalar surface integral accumulates temperature or surface density with respect to area; its parametrized formula is also displayed above.}
+\EX{半径 $R$、线密度恒为 $\lambda$ 的圆周质量是 $\int_C\lambda ds=\lambda(2\pi R)$。曲线怎么参数化不改变实际长度或质量。}{A circle of radius $R$ with constant linear density $\lambda$ has mass $\lambda(2\pi R)$. Its parametrization does not change the physical length or mass.}
+\EX{沿直线段 $r(t)=(t,t)$、$0\le t\le1$，计算标量线积分 $\int_C x\,ds$。因 $ds=\sqrt2dt$、$x=t$，结果是 $\int_0^1t\sqrt2dt=\sqrt2/2$。若改为 $\int_C x\,dx$，结果则为 $1/2$，两种积分累加的量不同。}{For the segment $r(t)=(t,t)$, $0\le t\le1$, we have $ds=\sqrt2dt$ and $x=t$, so $\int_Cx\,ds=\sqrt2/2$. By contrast, $\int_Cx\,dx=1/2$; the two integrals accumulate different quantities.}
+\BOTH{对于向量场 $F=(P,Q)$，第二型曲线积分 $\int_C P\,dx+Q\,dy$ 表示功或环流，依赖路径方向。若 $C$ 由 $r(t)=(x(t),y(t))$ 参数化，则
+\[
+\int_C P\,dx+Q\,dy=\int_a^b\bigl(P(r(t))x'(t)+Q(r(t))y'(t)\bigr)\,dt.
+\]
+第二型曲面积分 $\iint_S F\cdot n\,dS$ 是有向通量，依赖单位法向 $n$。反转曲线方向会改变线积分符号，反转曲面的法向会改变通量符号。}{For a vector field $F=(P,Q)$, the second-kind line integral is work or circulation and depends on the direction of the path. Its parametrized formula is displayed above. A second-kind surface integral is oriented flux through the unit normal $n$; reversing the path changes the line integral's sign, while reversing the surface normal changes the flux's sign.}
+\READ{“The line integral along C of P d x plus Q d y equals the integral from a to b of P of r of t times x prime of t plus Q of r of t times y prime of t, d t.”}
+\BOTH{若曲面以 $r(u,v)$ 参数化并选定方向，则
+\[
+\iint_S F\cdot n\,dS=\iint_D F(r(u,v))\cdot(r_u\times r_v)\,du\,dv.
+\]
+图像 $z=g(x,y)$ 的面积元是 $dS=\sqrt{1+g_x^2+g_y^2}\,dx\,dy$；这个根号补偿斜面相对于 $xy$ 平面的面积伸长。}{For an oriented parametrized surface, the flux formula is displayed above. The graph $z=g(x,y)$ has area element $\sqrt{1+g_x^2+g_y^2}\,dx\,dy$; this factor accounts for stretching relative to its projection onto the $xy$-plane.}
+\READ{“The flux of F through S equals the double integral over D of F of r of u comma v dotted with r sub u cross r sub v, d u d v.”}
+\EX{曲面 $z=x+y$ 在单位正方形 $0\le x,y\le1$ 上的面积为 $\iint\sqrt{1+1^2+1^2}\,dxdy=\sqrt3$。斜面面积大于其在 $xy$ 平面的投影面积 $1$，比例因子正是面积元中的平方根。}{The surface $z=x+y$ over the unit square has area $\iint\sqrt{1+1^2+1^2}\,dxdy=\sqrt3$. Its area exceeds the projected area one by the surface-element factor.}
+\EX{沿单位圆逆时针方向取 $F=(-y,x)$。参数 $r(t)=(\cos t,\sin t)$ 给出 $F\cdot r'(t)=1$，故环流为 $\int_0^{2\pi}1dt=2\pi$。顺时针则为 $-2\pi$。}{For the counterclockwise unit circle, use $r(t)=(\cos t,\sin t)$. Then $F\cdot r'(t)=1$, so the circulation is $2\pi$. Reversing orientation gives $-2\pi$.}
+\EX{常向量场 $F=(0,0,3)$ 穿过向上定向的单位圆盘的通量是 $\iint_D3\,dA=3\pi$。把法向反向，答案变为 $-3\pi$；通量记录的是有方向的穿越量。}{The upward flux of the constant field $F=(0,0,3)$ through the unit disk is $3\pi$. Reversing the normal gives $-3\pi$, because flux records oriented crossing.}
+
+\subsection{Green、Gauss、Stokes 与场论}
+\BOTH{Green 公式把平面正向简单闭曲线 $C=\partial D$ 上的环流转成区域内旋度：
+\[
+\oint_C P\,dx+Q\,dy=\iint_D(Q_x-P_y)\,dA.
+\]
+这里正向通常指沿边界行进时区域始终在左侧，即外边界逆时针。要求 $P,Q$ 在区域邻域有连续一阶偏导、边界分段光滑。它把边界总环流与内部局部旋转量联系起来。}{Green's theorem converts circulation around a positively oriented simple closed curve into the integral of planar curl. Positive orientation keeps the region on the left, so the outer boundary is counterclockwise. The field must have continuous first partial derivatives near the region, and the boundary must be piecewise smooth.}
+\READ{“The line integral of P d x plus Q d y around C equals the double integral over D of Q sub x minus P sub y.”}
+\EX{对 $F=(-y,x)$，有 $Q_x-P_y=1-(-1)=2$。单位圆盘面积为 $\pi$，故 Green 公式给出环流 $2\pi$，与参数计算一致。}{For $F=(-y,x)$, the planar curl is $2$. Multiplying by the unit disk's area gives $2\pi$, agreeing with the direct parametrization.}
+\EX{向量场 $F=(2x,2y)=\nabla(x^2+y^2)$ 的势函数是 $\phi=x^2+y^2$。从 $(0,0)$ 到 $(1,1)$ 的任意光滑路径，线积分都等于 $\phi(1,1)-\phi(0,0)=2$；这给出路径无关的直接计算。}{The field $F=(2x,2y)$ is the gradient of $\phi=x^2+y^2$. Its line integral along any smooth path from $(0,0)$ to $(1,1)$ equals $\phi(1,1)-\phi(0,0)=2$, illustrating path independence.}
+\BOTH{若平面向量场在单连通区域内连续可微且 $Q_x=P_y$，则线积分与路径无关并存在势函数 $\phi$ 使 $F=\nabla\phi$。若区域有洞，仅有旋度为零还不一定保证全局路径无关，例如原点去掉的平面上的绕圈场。}{If a continuously differentiable planar field on a simply connected region satisfies $Q_x=P_y$, its line integral is path-independent and it has a potential $\phi$ with $F=\nabla\phi$. On a region with a hole, zero curl alone may not imply global path independence, as illustrated by a field circulating around a removed origin.}
+\BOTH{Gauss 散度定理要求 $\Omega$ 是边界分片光滑的有界立体，向量场 $F$ 在其邻域有连续一阶偏导，并且 $S=\partial\Omega$ 取外法向：
+\[
+\iint_S F\cdot n\,dS=\iiint_\Omega\nabla\cdot F\,dV.
+\]
+它把闭曲面净流出量化为内部源汇强度总和。}{For a bounded solid with piecewise smooth boundary and a vector field with continuous first partial derivatives nearby, the divergence theorem with outward normal is displayed above. It converts net outward flux into the total source strength inside.}
+\READ{“The flux of F across the boundary of Omega equals the triple integral over Omega of the divergence of F.”}
+\EX{场 $F=(x,y,z)$ 穿过球面的通量既可直接算：球面上 $F\cdot n=R$，乘面积 $4\pi R^2$；也可由散度定理算：$\nabla\cdot F=3$，乘球体积 $4\pi R^3/3$。两者均为 $4\pi R^3$。}{For $F=(x,y,z)$ on a sphere of radius $R$, the normal component is $R$, so direct flux is $4\pi R^3$. The divergence is three, and the divergence theorem gives three times the ball's volume, also $4\pi R^3$.}
+\BOTH{若 $S$ 是定向分片光滑曲面，向量场在其邻域有连续一阶偏导，则 Stokes 公式为
+\[
+\oint_{\partial S}F\cdot dr=\iint_S(\nabla\times F)\cdot n\,dS.
+\]
+边界方向必须与法向满足右手定则。Green 公式是平面情形；Gauss 公式对应闭曲面的通量；Stokes 公式对应边界环流与曲面旋度。}{For an oriented piecewise smooth surface and a vector field with continuous first partial derivatives nearby, Stokes' theorem is displayed above. The boundary orientation must agree with the normal by the right-hand rule. Green's theorem is planar; Gauss concerns flux through a closed surface; Stokes relates boundary circulation to curl through a surface.}
+\READ{“The integral around the boundary of S of F dot d r equals the surface integral of curl F dotted with the unit normal.”}
+\EX{取 $F=(-y,x,0)$ 和 $xy$ 平面内的单位圆盘。旋度为 $(0,0,2)$，向上通量为 $2\pi$；Stokes 公式于是给出边界圆周的环流也是 $2\pi$。选曲面虽可改成同一边界的另一张曲面，但只要条件满足，结果相同。}{For $F=(-y,x,0)$ and the upward unit disk, the curl is $(0,0,2)$, whose flux is $2\pi$. Stokes' theorem gives the same circulation around the boundary circle. A different spanning surface gives the same result when the hypotheses hold.}
+\BOTH{标量场给空间每一点一个数，如温度 $T(x,y,z)$；向量场给每点一个向量，如速度 $F=(P,Q,R)$。梯度、散度和旋度分别描述标量场最陡上升方向、向量场的局部源汇强度、向量场的局部旋转：
+\[
+\nabla f=(f_x,f_y,f_z),\quad \nabla\cdot F=P_x+Q_y+R_z,
+\]
+\[
+\nabla\times F=(R_y-Q_z,\ P_z-R_x,\ Q_x-P_y).
+\]
+物理解释还需结合模型单位、边界和守恒假设。}{A scalar field assigns a number to each point, such as temperature; a vector field assigns a vector, such as velocity $F=(P,Q,R)$. The gradient, divergence, and curl have the coordinate formulas shown above and describe steepest increase, local source strength, and local rotation. Physical interpretation also requires units, boundary conditions, and conservation assumptions.}
+\BOTH{Hamilton 四元数用 $1,i,j,k$ 表示实四维代数，满足 $i^2=j^2=k^2=ijk=-1$；乘法不交换，例如 $ij=k$、$ji=-k$。Hamilton 微分算子 $\nabla_H=i\partial_x+j\partial_y+k\partial_z$ 把三个方向导数打包：作用于标量函数时得到梯度；按左乘约定作用于向量场 $F$ 时，结果的标量部分为 $-\nabla\cdot F$、向量部分为 $\nabla\times F$。因此它是把梯度、散度和旋度放在统一代数记号中的工具，使用时必须固定乘法顺序。}{Hamilton's quaternions form a four-dimensional real algebra with units $1,i,j,k$, where $i^2=j^2=k^2=ijk=-1$. Multiplication is noncommutative: $ij=k$ but $ji=-k$. The Hamilton differential operator packages three partial derivatives. Acting on a scalar gives its gradient; with left multiplication on a vector field, its scalar part is negative divergence and its vector part is curl. The multiplication convention must be fixed.}
+\EX{对向量场 $F=(x,y,z)$，有 $\nabla\cdot F=3$、$\nabla\times F=0$，所以 Hamilton 算子作用后的四元数可读作标量 $-3$ 加零向量。这个小节的重点是统一表示，不是额外引入一套新的积分定理。}{For $F=(x,y,z)$, the divergence is three and the curl is zero. The Hamilton operator therefore gives the quaternion with scalar part $-3$ and zero vector part. The point is unified notation, not a new integration theorem.}
+\EX{常向量场 $F=(0,0,1)$ 的散度为零，所以穿过任意封闭光滑曲面的净向外通量为零。若只取球面的上半部，通量则不为零，因为边界没有封闭；Gauss 定理只能用于闭曲面。}{The constant field $F=(0,0,1)$ has zero divergence, so its net outward flux through any closed smooth surface is zero. The flux through only the upper hemisphere is not zero because that surface is open; the divergence theorem applies to a closed boundary.}
+\section{多元分析的三个完整计算 | Three complete multivariable calculations}
+\noindent \textbf{偏导存在不保证连续或可微。} 定义
+\[
+f(x,y)=\begin{cases}\dfrac{x^2y}{x^4+y^2},&(x,y)\ne(0,0),\\0,&(x,y)=(0,0).\end{cases}
+\]
+沿坐标轴计算可得 $f_x(0,0)=f_y(0,0)=0$。但沿曲线 $y=x^2$，有 $f(x,x^2)=1/2$，所以 $f$ 在原点不连续，更不可能全微分。这个反例说明偏导数只是沿坐标方向的变化率；全微分还要求所有方向的增量由同一个线性映射统一近似。
+\BOTH{将上式在原点定义为零。原点处两个偏导数都为零，但沿 $y=x^2$ 有 $f(x,x^2)=1/2$，所以函数在原点不连续，也就不可能全微分。偏导数只测量坐标方向的变化；全微分要求同一个线性映射同时近似所有方向的增量。}{Define the function above to be zero at the origin. Both partial derivatives there are zero, but along $y=x^2$ the function equals one half. It is not continuous and therefore cannot be differentiable at the origin. Partial derivatives measure coordinate directions; total differentiability requires one linear map to approximate increments in every direction.}
+\EX{若 $f$ 在一点全微分，则必连续且所有方向导数由梯度给出。上述函数有两个偏导却不连续，所以不能仅凭“偏导都存在”就写 $df=f_xdx+f_ydy$。}{If a function is differentiable, it is continuous and its directional derivatives are determined by the gradient. The example has both partial derivatives but is discontinuous, so the formula $df=f_xdx+f_ydy$ cannot be justified merely from existence of partial derivatives.}
+
+\noindent \textbf{链式法则如何沿参数曲线求变化率。} 令 $z=f(x,y)=x^2+y^2$，并沿曲线 $x=t^2$、$y=2t$ 观察。多元链式法则给出
+\[
+\frac{dz}{dt}=f_x\frac{dx}{dt}+f_y\frac{dy}{dt}=2x(2t)+2y(2)=4t^3+8t.
+\]
+直接代入可得 $z(t)=t^4+4t^2$，求导也得到 $4t^3+8t$。在 $t=1$ 时变化率为 $12$。梯度 $(f_x,f_y)$ 给出空间中的局部变化方向，曲线速度 $(x',y')$ 把它转成沿实际运动轨迹的变化率。
+\BOTH{令 $z=x^2+y^2$，並沿 $x=t^2$、$y=2t$ 的曲線運動。多元鏈式法則得到上式；直接代入 $z(t)=t^4+4t^2$ 求導也得到同一結果，在 $t=1$ 時變化率為 $12$。梯度描述空間位置的局部變化，曲線速度則把它轉成沿實際軌跡的變化率。}{Let $z=x^2+y^2$ along the path $x=t^2$, $y=2t$. The multivariable chain rule gives the displayed derivative. Direct substitution gives $z(t)=t^4+4t^2$ and the same derivative; at $t=1$ the rate is twelve. The gradient describes local spatial change, while the path velocity converts it into change along a trajectory.}
+\READ{“D z over d t equals f sub x times d x over d t plus f sub y times d y over d t.”}
+
+\noindent \textbf{势函数如何计算曲线积分。} 取 $F=(P,Q)=(2xy+y^2,x^2+2xy)$。函数 $\phi(x,y)=x^2y+xy^2$ 满足 $\nabla\phi=F$，故对任意从 $A$ 到 $B$ 的分段光滑路径 $C$，微积分基本定理给出 $\int_C F\cdot dr=\phi(B)-\phi(A)$。从 $(0,0)$ 到 $(1,1)$ 的积分为 $2$，与路径形状无关。该结论需要向量场是某个势函数的梯度；在单连通区域，适当光滑且旋度为零可保证存在势函数，但有孔区域还要检查闭路积分。
+\BOTH{向量場 $F=(2xy+y^2,x^2+2xy)$ 是 $\phi(x,y)=x^2y+xy^2$ 的梯度。因此從 $A$ 到 $B$ 的任意分段光滑路徑，其線積分等於 $\phi(B)-\phi(A)$；從 $(0,0)$ 到 $(1,1)$ 的值為 $2$，與路徑無關。此結論依賴勢函數存在；在單連通區域，適當光滑且旋度為零可保證勢函數存在，而有孔區域還需檢查閉路積分。}{The vector field $F=(2xy+y^2,x^2+2xy)$ is the gradient of $\phi(x,y)=x^2y+xy^2$. Therefore its line integral along any piecewise smooth path from $A$ to $B$ equals $\phi(B)-\phi(A)$. From $(0,0)$ to $(1,1)$ the value is two, independent of the path. This conclusion follows from the existence of a potential; on a simply connected domain, suitable smoothness and zero curl guarantee one, while domains with holes require checking closed-loop integrals.}
+\EX{沿直线路径 $(x,y)=(t,t)$，$0\le t\le1$，场为 $F=(3t^2,3t^2)$，速度为 $(1,1)$，所以积分是 $\int_0^16t^2dt=2$，与势函数给出的端点差一致。}{Along the straight path $(x,y)=(t,t)$ for $0\le t\le1$, the field is $(3t^2,3t^2)$ and the velocity is $(1,1)$. The integral is $\int_0^16t^2dt=2$, agreeing with the potential difference.}
+
+\section{完整应用例题：密度、坐标变换与边界定理 | Integrated applications}
+\subsection{用极坐标计算圆盘的质量}
+\BOTH{设半径为 $2$ 的薄圆盘，其面密度为 $\rho(x,y)=x^2+y^2$。质量是把每个微小面积元的密度累加：$M=\iint_D\rho(x,y)\,dA$。区域 $D=\{(x,y):x^2+y^2\le4\}$ 是圆盘，故使用极坐标 $x=r\cos\theta$、$y=r\sin\theta$。}{Consider a thin disk of radius two with surface density $\rho(x,y)=x^2+y^2$. Its mass is the sum of density over area: $M=\iint_D\rho(x,y)\,dA$. Since $D=\{(x,y):x^2+y^2\le4\}$ is a disk, polar coordinates are natural.}
+\BOTH{在极坐标中 $x^2+y^2=r^2$，面积元必须乘 Jacobian $r$，即 $dA=r\,dr\,d\theta$。于是
+\[
+M=\int_0^{2\pi}\int_0^2 r^2\,r\,dr\,d\theta
+=2\pi\left[\frac{r^4}{4}\right]_0^2=8\pi.
+\]
+其中 $0\le r\le2$ 遍历圆盘半径，$0\le\theta\le2\pi$ 遍历一周。}{In polar coordinates, $x^2+y^2=r^2$, and the area element includes the Jacobian: $dA=r\,dr\,d\theta$. Thus the mass is the displayed integral, equal to $8\pi$. The radial variable runs from zero to two and the angle covers one full turn.}
+\READ{“The mass equals the double integral over the disk of rho d A. In polar coordinates, d A equals r d r d theta.”}
+\BOTH{若漏掉 Jacobian $r$，结果会变成 $4\pi$，没有正确计入外圈面积随半径增大的事实。完整解题顺序是：由几何描述积分区域，选择适合对称性的坐标，再同时变换被积函数和微元。}{Omitting the Jacobian would give $4\pi$, failing to account for the larger area of outer rings. The full method is to describe the region, choose coordinates suited to its symmetry, and transform both the integrand and the area element.}
+\ASK{为什么极坐标面积元带有 $r$？}{Why does the polar area element contain the factor $r$?}{小极坐标块的径向边长是 $dr$，弧向边长约为 $r\,d\theta$，所以面积约为 $r\,dr\,d\theta$。}{A small polar patch has radial side $dr$ and arc side approximately $r\,d\theta$, so its area is approximately $r\,dr\,d\theta$.}
+
+\subsection{高维空间中参数曲面的面积}
+\BOTH{在 $\mathbb R^n$ 中，一个 $k$ 维曲面可由参数映射 $r(u_1,\ldots,u_k)$ 描述。其切向量组成 Jacobian 矩阵 $J_r$；小参数块经过映射后，长度和角度会变化，因此 $k$ 维面积因子是 $\sqrt{\det(J_r^TJ_r)}$。面积公式为
+\[
+\operatorname{Area}(S)=\int_U\sqrt{\det(J_r(u)^TJ_r(u))}\,du_1\cdots du_k.
+\]
+矩阵 $J_r^TJ_r$ 是切向量的 Gram 矩阵，行列式测量由这些向量张成的平行多面体的平方体积。}{In $\mathbb R^n$, a $k$-dimensional surface can be described by a parametrization $r(u_1,\ldots,u_k)$. Its tangent vectors form the Jacobian matrix $J_r$. The local $k$-dimensional area factor is $\sqrt{\det(J_r^TJ_r)}$, where $J_r^TJ_r$ is the Gram matrix of the tangent vectors. Integrating this factor over the parameter domain gives the surface area.}
+\READ{“The area of S is the integral over U of the square root of the determinant of J r transpose J r.”}
+\EX{取 $r(u,v)=u(1,0,1)+v(0,1,1)$，其中 $0\le u,v\le1$。两切向量的 Gram 矩阵是 $\begin{pmatrix}2&1\\1&2\end{pmatrix}$，行列式为 $3$，故此平行四边形的面积为 $\int_0^1\int_0^1\sqrt3\,du\,dv=\sqrt3$。它比投影到 $xy$ 平面的单位正方形面积 $1$ 大，差别正由倾斜造成。}{For $r(u,v)=u(1,0,1)+v(0,1,1)$ on the unit square, the Gram matrix of the two tangent vectors is $\begin{pmatrix}2&1\\1&2\end{pmatrix}$ with determinant three. The parallelogram therefore has area $\sqrt3$, larger than its unit-square projection onto the $xy$-plane.}
+
+\subsection{Green、Gauss 与 Stokes 公式分别在算什么}
+\BOTH{平面向量场 $F=(P,Q)$ 沿逆时针闭曲线 $C=\partial D$ 的环流为 $\oint_C P\,dx+Q\,dy$。Green 公式把它转成区域内旋度的积分：$\iint_D(Q_x-P_y)\,dA$。取 $F=(-y,x)$、$D$ 为单位圆盘，则 $Q_x=1$、$P_y=-1$，故环流为 $\iint_D2\,dA=2\pi$。参数化 $x=\cos t,y=\sin t$ 也得到 $\int_0^{2\pi}1\,dt=2\pi$。}{For a planar field $F=(P,Q)$, circulation around a counterclockwise boundary is $\oint_C P\,dx+Q\,dy$. Green's theorem converts it to the integral of scalar curl $Q_x-P_y$ over the region. For $F=(-y,x)$ on the unit disk, the curl is two, so the circulation is $2\pi$. Direct parametrization gives the same result.}
+\READ{“The line integral of P d x plus Q d y around C equals the double integral of Q sub x minus P sub y over D.”}
+\BOTH{三维 Gauss 公式把闭曲面上的外向通量转成体内散度积分。取 $F=(x,y,z)$ 和半径 $R$ 的球体，散度为 $3$，因此
+\[
+\iint_{\partial\Omega}F\cdot n\,dS
+=\iiint_\Omega\nabla\cdot F\,dV
+=3\cdot\frac{4\pi R^3}{3}=4\pi R^3.
+\]
+左边是向量场穿出球面的总流量，法向量 $n$ 必须取外向。}{The three-dimensional divergence theorem converts outward flux through a closed surface into the integral of divergence over its volume. For $F=(x,y,z)$ on a ball of radius $R$, the divergence is three, so the outward flux is $4\pi R^3$. The normal must point outward.}
+\READ{“The flux across the boundary of Omega equals the triple integral over Omega of the divergence of F.”}
+\BOTH{Stokes 公式把曲面上的旋度通量转为边界环流：$\iint_S(\nabla\times F)\cdot n\,dS=\oint_{\partial S}F\cdot dr$。边界方向与曲面法向必须满足右手定则。Green 公式是平面情形的对应版本；Gauss 公式则联系闭曲面通量与体内散度。三者都把区域内部的导数总量与边界积分联系起来，但积分对象和几何维数不同。}{Stokes' theorem converts the flux of curl through a surface into circulation along its boundary. The boundary orientation must agree with the surface normal by the right-hand rule. Green's theorem is its planar counterpart, while Gauss's theorem relates flux through a closed surface to divergence in the volume. All connect derivatives inside a region to boundary integrals, but their geometric dimensions differ.}
+\ASK{使用 Green、Gauss 或 Stokes 前最容易漏掉什么？}{What is most often missed before applying Green's, Gauss's, or Stokes' theorem?}{核对光滑性、边界是否闭合、法向或边界方向是否一致；方向反了，积分会变号。还要确认所积的是面积、体积还是边界曲线。}{Check regularity, whether the boundary is closed, and whether the orientation is consistent. Reversing orientation changes the sign. Also check whether the theorem concerns area, volume, or a boundary curve.}
+
+\ASK{Green、Gauss 和 Stokes 公式的共同思想是什么？}{What is the common idea behind Green's, Gauss's, and Stokes' theorems?}{它们都把区域边界上的积分和区域内部的导数积分联系起来；选哪个公式取决于积分对象是环流还是通量、边界是曲线还是曲面。}{They relate an integral on a boundary to an integral of derivatives in the interior. The choice depends on whether the quantity is circulation or flux and whether the boundary is a curve or a surface.}
+
+{\footnotesize\noindent\textbf{范围与来源 / Source and scope.} 依据本文件夹的《数学分析讲义》和你提供的第二学期目录，覆盖第 12 章 12.1--12.2、第 13 章 13.1--13.4、13.6--13.10；所有带星号的内容均按未授课排除。 This review uses the local lecture notes and your second-semester outline. All starred topics are excluded as untaught; other unlisted chapters are outside the scope.\par}
+\end{document}

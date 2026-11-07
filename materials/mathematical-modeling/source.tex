@@ -173,6 +173,21 @@ x(t)=\frac{K}{1+(K/x_0-1)e^{-rt}}.
 
 \ASK{随机模型和确定性模型有什么区别？}{How does a stochastic model differ from a deterministic model?}{确定性模型在给定参数和初值后给出单一结果；随机模型显式描述不确定性，输出分布、概率或期望。}{A deterministic model gives one outcome for fixed parameters and initial conditions. A stochastic model explicitly represents uncertainty and produces distributions, probabilities, or expectations.}
 
+\section{SIR 阈值的数值读法与模型边界 | Reading an SIR threshold}
+\noindent 前文的归一化 SIR 模型给出 $i'=\beta si-\gamma i$，其中 $s=S/N$ 是易感比例。感染早期 $s(t)\approx s_0$，故
+\[
+I'\approx\left(\beta\frac{S_0}{N}-\gamma\right)I,
+\qquad
+\mathcal R_0=\frac{\beta}{\gamma},\quad
+\mathcal R_{\mathrm e}(0)=\mathcal R_0s_0=\frac{\beta S_0}{\gamma N}.
+\]
+若 $\mathcal R_{\mathrm e}(0)>1$，感染比例初期增长；若小于 $1$，则初期下降。这是局部于疫情早期的判断，不代表感染数一直指数变化，因为易感比例会继续下降。
+\EN{The initial growth condition is $\mathcal R_{\mathrm e}(0)=\mathcal R_0s_0>1$. This is an early-stage conclusion, not a claim that infections grow exponentially forever, since the susceptible fraction changes over time.}
+\EX{取初始易感比例 $s_0=0.99$、传播率 $\beta=0.3$ 每日、康复率 $\gamma=0.1$ 每日，则 $\mathcal R_0=\beta/\gamma=3$，有效阈值为 $\mathcal R_0s_0=2.97$，初始近似增长率为 $\beta s_0-\gamma=0.197$ 每日。若干预使参数 $\beta$ 降至 $0.08$ 每日，则新阈值为 $0.08\cdot0.99/0.1=0.792<1$，初期感染数转为下降。}{With susceptible fraction $s_0=0.99$, transmission rate $\beta=0.3$ per day, and recovery rate $\gamma=0.1$ per day, $\mathcal R_0=3$, the effective threshold is $2.97$, and the initial growth rate is $0.197$ per day. Reducing $\beta$ to $0.08$ per day gives threshold $0.792<1$, so infections initially decline.}
+\par\noindent\begin{minipage}{\linewidth}
+\ASK{模型算出的 $R_0$ 为什么不一定是可直接观测的常数？}{Why is the model's $R_0$ not necessarily a directly observed constant?}{它由模型假设和参数估计定义；接触行为、干预和易感比例变化都会改变实际增长率。SIR 的均匀混合假设不适合所有人群，估计结果必须连同数据来源和适用时段说明。}{It is defined through model assumptions and estimated parameters. Contact behavior, interventions, and changes in susceptibility affect the realized growth rate. The homogeneous-mixing assumption may not fit every population, so estimates should be stated with their data source and time period.}
+\end{minipage}
+
 \section*{口试表达 | Oral response structure}
 介绍任何一个模型时，可依次说明现实问题、关键假设、变量与参数、模型方程或优化目标、求解方法、主要结论和验证方式。解释预测结果时说明参数敏感性与模型局限，不把相关关系直接说成因果关系。
 

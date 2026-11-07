@@ -1,0 +1,193 @@
+\documentclass[UTF8,11pt,a4paper]{ctexart}
+\usepackage{amsmath,amssymb,geometry,enumitem,hyperref}
+\geometry{margin=2cm}\setlist{itemsep=2pt,topsep=3pt}
+\hypersetup{colorlinks=true,linkcolor=blue}
+\newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
+\newcommand{\BOTH}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par}
+\newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\EX}[2]{\par\noindent\textbf{例子 / Example.} #1\par\EN{#2}}
+\newcommand{\ASK}[4]{\par\noindent\textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent\textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
+\title{高等代数（二）APS 面试准备\\[4pt]\large 第 6--10 章：线性空间、变换、$\lambda$-矩阵、欧几里得空间与双线性函数}
+\author{Advanced Algebra II: Bilingual Oral Review}
+\date{}
+\begin{document}\maketitle
+
+\section*{课程概述 | Course overview}
+\noindent\textbf{中文口述稿。} 在高等代数后半部分，我把重点从“怎样解方程”转向“线性结构怎样表示和分类”。线性空间把向量的加法和数乘抽象出来，使坐标向量、多项式和函数可以用同一套语言讨论；线性变换则描述这些空间之间保持线性关系的映射。特征值说明某些方向在变换下只被拉伸，Jordan 形和 $\lambda$-矩阵继续回答：当矩阵不能对角化时，怎样用不变因子和块结构完整记录它。欧几里得空间加入长度与角度，导出正交投影和最小二乘。最后，双线性函数把两个向量配成一个数；非退化交错形式给出辛空间，可描述位置与动量组成的相空间结构。
+\EN{In the second half of my advanced algebra course, I shifted from solving equations to representing and classifying linear structure. A vector space abstracts addition and scalar multiplication, so coordinate vectors, polynomials, and functions can be treated in one framework. Linear maps preserve these operations. Eigenvalues identify directions that are only scaled, while Jordan form and polynomial matrices classify maps that cannot be diagonalized. Inner products add length and angle, leading to orthogonal projection and least squares. Finally, bilinear forms pair two vectors, and a nondegenerate alternating form defines a symplectic space used to describe phase space.}
+
+\noindent\textbf{可解释的应用。} 一个线性微分系统 $x'(t)=Ax(t)$ 的长期变化由 $A$ 的特征值决定；若能找到特征向量基，系统可拆成互不耦合的标量方程，否则 Jordan 块解释多项式因子乘在指数解前的来源。含噪声的测量通常超定，欧几里得投影给出最小二乘解。Hamilton 力学把位置 $q$ 和动量 $p$ 放在一起，标准辛形式记录它们的配对关系；这里保留线性代数层面的结构，不把它误说成完整的物理模型。
+\EN{For a linear differential system $x'=Ax$, eigenvalues describe long-term behavior. An eigenvector basis decouples the system into scalar equations; Jordan blocks explain polynomial factors that can accompany exponential solutions. Noisy measurements often produce an overdetermined system, for which orthogonal projection gives the least-squares solution. Hamiltonian mechanics pairs position and momentum through a symplectic form; this is the linear-algebraic structure, not a complete physical model.}
+
+\section{第 6 章：线性空间 | Vector spaces}
+\noindent\textbf{定义。} 域 $F$ 上的线性空间 $V$ 是带有向量加法和数乘的集合：向量对加法构成阿贝尔群，且数乘满足分配律、结合律和单位元条件 $1v=v$。$F$ 中的数称标量。实向量、复向量、多项式和函数都可以成为向量；关键在于它们的运算满足同一组公理。
+\EN{A vector space over a field $F$ has vector addition and scalar multiplication. Addition makes it an abelian group, and scalar multiplication satisfies distributive, associative, and identity laws. Elements of $F$ are scalars. Vectors, polynomials, and functions are examples when their operations satisfy these axioms.}
+\EX{$P_2=\{a+bx+cx^2:a,b,c\in\mathbb R\}$ 是实向量空间。多项式相加仍在 $P_2$，实数倍乘也仍在 $P_2$；一组基是 $1,x,x^2$，所以维数为 $3$。}{The polynomials of degree at most two form a real vector space. Addition and scalar multiplication stay in the set, and $1,x,x^2$ form a basis, so its dimension is three.}
+
+\noindent\textbf{子空间。} 非空子集 $U\subseteq V$ 是子空间，当且仅当对任意 $u,v\in U$ 和标量 $a,b\in F$，$au+bv\in U$。这一个封闭性判据同时保证零向量、加法和数乘都在 $U$ 内。
+\EN{A nonempty subset $U$ is a subspace if and only if it is closed under every linear combination $au+bv$. This single test ensures that zero, addition, and scalar multiplication remain in the subset.}
+\EX{$U=\{(x,y,z)\in\mathbb R^3:x+y+z=0\}$ 是子空间，因为满足条件的向量任意线性组合仍使坐标和为零。集合 $x+y+z=1$ 不是子空间，因为它不包含零向量。}{The plane $x+y+z=0$ is a subspace because linear combinations preserve the equation. The shifted plane $x+y+z=1$ is not a subspace because it does not contain the zero vector.}
+
+\noindent\textbf{张成、线性无关、基与维数。} 向量组的张成是所有线性组合组成的子空间。若 $c_1v_1+\cdots+c_kv_k=0$ 只能由全零系数得到，则该组线性无关。基是既张成 $V$ 又线性无关的向量组；有限维空间中，每个向量对一组基都有唯一坐标，基中向量数称维数。
+\EN{The span of vectors is the set of all their linear combinations. They are linearly independent if only the zero coefficients give the zero vector. A basis is both spanning and linearly independent. In a finite-dimensional space, coordinates relative to a basis are unique, and the number of basis vectors is the dimension.}
+\READ{“C one v one plus through c k v k equals zero only when every coefficient is zero.”}
+\EX{标准基 $e_1=(1,0),e_2=(0,1)$ 给出 $\mathbb R^2$ 中的坐标；向量 $(3,-2)$ 的坐标就是 $(3,-2)$。加入 $e_1+e_2=(1,1)$ 后向量组线性相关。}{The standard basis $e_1=(1,0),e_2=(0,1)$ gives coordinates in $\mathbb R^2$. The vector $(3,-2)$ has coordinates $(3,-2)$, and adding $e_1+e_2=(1,1)$ makes the list dependent.}
+\noindent\textbf{子空间和、交与直和。} $U+W=\{u+w:u\in U,w\in W\}$ 是包含二者的最小子空间，$U\cap W$ 是共同部分。有限维时
+\[
+\dim(U+W)=\dim U+\dim W-\dim(U\cap W).
+\]
+若 $U\cap W=\{0\}$，每个 $U+W$ 中的向量分解唯一，记作 $U\oplus W$。这对把复杂空间拆成互不重叠的组成部分很有用。
+\EN{The sum $U+W$ is the smallest subspace containing both, and the intersection is their common part. The dimension formula corrects for the overlap. If their intersection is only zero, every vector in the sum has a unique decomposition, called a direct sum.}
+\READ{“The dimension of U plus W equals the dimension of U plus the dimension of W minus the dimension of their intersection.”}
+\EX{在 $\mathbb R^3$ 中，$U=\operatorname{span}\{e_1,e_2\}$、$W=\operatorname{span}\{e_2,e_3\}$。交集是 $\operatorname{span}\{e_2\}$，所以 $\dim(U+W)=2+2-1=3$；二者不是直和，因为共享非零向量 $e_2$。}{The two coordinate planes share the line spanned by $e_2$. The dimension formula gives three for their sum, which is all of $\mathbb R^3$. They do not form a direct sum because their intersection is nonzero.}
+
+\section{第 7 章：线性变换、特征值与 Jordan 形 | Linear maps and canonical forms}
+\noindent\textbf{线性变换、核和值域。} 映射 $T:V\to W$ 线性，如果 $T(av+bw)=aT(v)+bT(w)$。核 $\ker T=\{v:T(v)=0\}$ 描述被压成零的方向；值域 $\operatorname{im}T=\{T(v):v\in V\}$ 描述所有可到达的输出。对有限维 $V$，
+\[
+\dim V=\dim\ker T+\dim\operatorname{im}T.
+\]
+这称秩—零度定理，说明输入方向要么被压掉，要么贡献给输出空间。
+\EN{A map is linear if it preserves linear combinations. Its kernel contains inputs sent to zero, and its image contains all reachable outputs. The rank-nullity theorem says the input dimension equals the dimension of the kernel plus the dimension of the image.}
+\READ{“The dimension of V equals the dimension of the kernel of T plus the dimension of the image of T.”}
+\EX{令 $T(x,y,z)=(x+y,0)$。核由 $x+y=0$ 且 $z$ 任意组成，维数为 $2$；值域是 $x$ 轴，维数为 $1$。因此 $3=2+1$。}{For this map, the kernel is the plane $x+y=0$ and has dimension two. The image is the $x$-axis and has dimension one, so rank-nullity gives $3=2+1$.}
+
+\noindent\textbf{矩阵表示和换基。} 选定定义域与值域的基后，$T$ 的矩阵第 $j$ 列是基向量 $v_j$ 的像 $T(v_j)$ 在值域基下的坐标。若 $T:V\to V$ 且换基矩阵为 $P$，新矩阵为 $P^{-1}AP$；它描述同一个变换在不同坐标中的表示。
+\EN{After choosing bases, the $j$th column of the matrix of $T$ is the coordinate vector of the image of the $j$th domain basis vector. For an operator on one space, a basis change gives $P^{-1}AP$, representing the same map in new coordinates.}
+\EX{$T(x,y)=(2x+y,3y)$ 在标准基下矩阵为 $A=\begin{pmatrix}2&1\\0&3\end{pmatrix}$，因为 $T(e_1)=(2,0)$ 是第一列，$T(e_2)=(1,3)$ 是第二列。}{The first column is $T(e_1)=(2,0)$ and the second is $T(e_2)=(1,3)$, giving the displayed matrix.}
+
+\noindent\textbf{特征值、特征向量和对角化。} 若非零向量 $v$ 满足 $Av=\lambda v$，则 $\lambda$ 是特征值，$v$ 是特征向量。特征值是 $\det(\lambda I-A)=0$ 的根。若有一组由 $n$ 个线性无关特征向量构成的基，则 $A=PDP^{-1}$，其中 $D$ 为对角矩阵；系统 $x'=Ax$ 在该坐标下分解为 $n$ 个独立的指数方程。
+\EN{A nonzero vector $v$ is an eigenvector with eigenvalue $\lambda$ if $Av=\lambda v$. Eigenvalues solve the characteristic equation. If there is a basis of eigenvectors, the matrix is diagonalizable; in those coordinates, a linear system splits into independent scalar exponential equations.}
+\READ{“A v equals lambda v; lambda is an eigenvalue and v is a nonzero eigenvector.”}
+\EX{$A=\begin{pmatrix}2&1\\0&3\end{pmatrix}$ 的特征值是 $2,3$。对应特征向量可取 $(1,0)$ 和 $(1,1)$，线性无关，因此 $P=\begin{pmatrix}1&1\\0&1\end{pmatrix}$、$D=\operatorname{diag}(2,3)$ 满足 $A=PDP^{-1}$。于是 $x'=Ax$ 在特征向量坐标中分别按 $e^{2t}$ 和 $e^{3t}$ 变化。}{The eigenvalues are two and three, with independent eigenvectors $(1,0)$ and $(1,1)$. They form the columns of $P$, giving the stated diagonalization. In eigenvector coordinates, the differential system evolves as $e^{2t}$ and $e^{3t}$.}
+
+\noindent\textbf{不变子空间、Jordan 链和最小多项式。} 子空间 $U$ 对 $T$ 不变，是指 $T(U)\subseteq U$。若矩阵缺少足够多的特征向量，Jordan 形把广义特征向量排成链：$(A-\lambda I)v_1=0$、$(A-\lambda I)v_2=v_1$。Jordan 块的对角线是 $\lambda$，上超对角线为 $1$。最小多项式是次数最低、首一且满足 $m_A(A)=0$ 的多项式；它整除特征多项式，并记录 Jordan 块的最大大小。
+\EN{A subspace is invariant if the transformation maps it into itself. When there are too few eigenvectors, generalized eigenvectors form Jordan chains. A Jordan block records the eigenvalue on its diagonal and the chain links above it. The minimal polynomial is the monic polynomial of least degree that annihilates the matrix; it divides the characteristic polynomial and records the largest Jordan block size for each eigenvalue.}
+\EX{$J=\begin{pmatrix}\lambda&1\\0&\lambda\end{pmatrix}$ 只有一个独立特征向量，因此不能对角化；但 $(J-\lambda I)^2=0$，最小多项式为 $(t-\lambda)^2$。系统的解会出现 $e^{\lambda t}$ 与 $t e^{\lambda t}$ 两类项。}{This Jordan block has only one independent eigenvector and is not diagonalizable. Its square after subtracting $\lambda I$ is zero, so the minimal polynomial is $(t-\lambda)^2$. Solutions can contain both $e^{\lambda t}$ and $t e^{\lambda t}$.}
+\READ{“The minimal polynomial of this Jordan block is t minus lambda squared.”}
+\ASK{为什么相同特征多项式的矩阵不一定相似？}{Why do equal characteristic polynomials not guarantee similar matrices?}{特征多项式只记录特征值及代数重数，不记录每个特征值对应多少独立特征向量或 Jordan 块大小。最小多项式、不变因子提供更细的结构信息。}{The characteristic polynomial records eigenvalues and algebraic multiplicities, but not eigenspace dimensions or Jordan block sizes. The minimal polynomial and invariant factors contain finer structural information.}
+
+\section{第 8 章：\texorpdfstring{$\lambda$}{lambda}-矩阵与不变因子 | Polynomial matrices}
+\noindent\textbf{$\lambda$-矩阵。} 令 $F[\lambda]$ 为以 $\lambda$ 为变量、系数在 $F$ 中的多项式环。矩阵元素若属于 $F[\lambda]$，称为 $\lambda$-矩阵。对它作可逆多项式行列变换，得到 Smith 标准形
+\[
+\operatorname{diag}(d_1,\ldots,d_r,0,\ldots,0),\qquad d_1\mid d_2\mid\cdots\mid d_r,
+\]
+其中 $d_i$ 可取首一多项式。这些 $d_i$ 称不变因子。对常矩阵 $A$，研究 $\lambda I-A$ 的不变因子，可把相似分类问题转化为多项式因子的分解。
+\EN{A polynomial matrix has entries in $F[\lambda]$. Invertible polynomial row and column operations reduce it to Smith normal form, whose nonzero diagonal entries form a divisibility chain. These monic entries are invariant factors. For a constant matrix $A$, the invariant factors of $\lambda I-A$ encode its similarity structure.}
+\READ{“D one divides d two, and so on through d r.”}
+\EX{$A=\operatorname{diag}(1,2)$ 时，$\lambda I-A=\operatorname{diag}(\lambda-1,\lambda-2)$。两个对角元互素，因为相差 $1$，故 Smith 形可写为 $\operatorname{diag}(1,(\lambda-1)(\lambda-2))$。若改为 $J=\begin{pmatrix}1&1\\0&1\end{pmatrix}$，Smith 形为 $\operatorname{diag}(1,(\lambda-1)^2)$；两者特征多项式都可从乘积读出，但不变因子不同，矩阵不相似。}{For a diagonal matrix with distinct eigenvalues, the invariant factors are one and the product of the two linear factors. For a size-two Jordan block, they are one and $(\lambda-1)^2$. Although characteristic polynomials are products of invariant factors, the invariant factors distinguish these similarity types.}
+
+\noindent\textbf{相似分类的含义。} 两个同阶方阵相似，表示它们只是同一线性变换在不同基下的矩阵。特征多项式相同是必要条件，但不充分；在教材所给的域和标准形条件下，完整的不变因子组相同才给出相似分类。若域不是代数闭域，特征多项式可能不能拆成线性因子，因而 $\lambda$-矩阵方法比只列特征值更稳妥。
+\EN{Similar matrices represent the same operator in different bases. Equal characteristic polynomials are necessary but not sufficient for similarity. Under the field assumptions of the canonical-form theorem, the full list of invariant factors gives the classification. Polynomial matrices remain useful when the field does not split the characteristic polynomial into linear factors.}
+\ASK{不变因子比特征多项式多告诉我们什么？}{What information do invariant factors add beyond the characteristic polynomial?}{特征多项式是各不变因子的乘积，只记录特征值总重数；不变因子还记录这些因子如何分组，从而确定最小多项式和 Jordan 块结构。}{The characteristic polynomial is the product of the invariant factors and records total multiplicities. Their grouping also determines the minimal polynomial and the Jordan block structure.}
+
+\section{第 9 章：欧几里得空间与最小二乘 | Euclidean spaces and least squares}
+\noindent\textbf{内积、长度和正交。} 实向量空间上的内积 $\langle u,v\rangle$ 对每个变量线性、满足对称性，并且 $\langle v,v\rangle>0$（当 $v\ne0$）。长度定义为 $\|v\|=\sqrt{\langle v,v\rangle}$；若 $\langle u,v\rangle=0$，则两向量正交。标准内积是坐标乘积求和。
+\EN{An inner product is linear in each variable, symmetric, and positive on every nonzero vector. It defines length by the square root of $\langle v,v\rangle$. Two vectors are orthogonal when their inner product is zero.}
+\READ{“The norm of v equals the square root of the inner product of v with v.”}
+\EX{在 $\mathbb R^2$ 标准内积下，$(1,2)$ 与 $(2,-1)$ 正交，因为 $1\cdot2+2\cdot(-1)=0$。前者长度为 $\sqrt5$。}{The vectors $(1,2)$ and $(2,-1)$ are orthogonal because their dot product is zero. The first has length $\sqrt5$.}
+
+\noindent\textbf{Gram--Schmidt 正交化。} 从线性无关向量组逐个减去已有正交方向上的投影，再归一化：
+\[
+u_k=v_k-\sum_{j<k}\frac{\langle v_k,u_j\rangle}{\langle u_j,u_j\rangle}u_j,\qquad e_k=\frac{u_k}{\|u_k\|}.
+\]
+$u_k$ 与前面所有 $u_j$ 正交；$e_k$ 还具有单位长度。算法不改变原向量组的张成空间。
+\EN{Gram--Schmidt subtracts projections onto previously constructed orthogonal directions, then normalizes. The new vector is orthogonal to all earlier ones, and the span remains unchanged.}
+\READ{“U k equals v k minus the sum of its projections onto the earlier u j.”}
+\EX{取 $v_1=(1,1,0)$、$v_2=(1,0,1)$。归一化第一个向量得 $e_1=(1,1,0)/\sqrt2$；从 $v_2$ 减去其在 $e_1$ 上的投影后得 $(1,-1,2)/2$，归一化为 $e_2=(1,-1,2)/\sqrt6$。两向量点积为零。}{Starting with the two vectors, normalize the first to obtain $e_1$. Subtracting the projection from the second gives a multiple of $(1,-1,2)$, which normalizes to $e_2$. Their dot product is zero.}
+
+\noindent\textbf{正交投影和最小二乘。} 若 $e_1,\ldots,e_k$ 是子空间 $U$ 的标准正交基，则
+\[
+\operatorname{proj}_U y=\sum_{j=1}^k\langle y,e_j\rangle e_j.
+\]
+它是 $U$ 中离 $y$ 最近的向量，误差 $y-\operatorname{proj}_Uy$ 与 $U$ 正交。对超定系统 $X\beta\approx y$，最小化残差平方 $\|X\beta-y\|^2$ 会导出正规方程 $X^TX\beta=X^Ty$。
+\EN{For an orthonormal basis of a subspace, the projection formula gives the closest vector in that subspace. The residual is orthogonal to the subspace. Minimizing the squared residual in an overdetermined system leads to the normal equations.}
+\READ{“The projection of y onto U is the sum of the inner products of y with e j, times e j.”}
+\EX{用直线 $y=a+bt$ 拟合数据 $(0,1),(1,2),(2,2)$。设计矩阵 $X=\begin{pmatrix}1&0\\1&1\\1&2\end{pmatrix}$，观测向量为 $(1,2,2)^T$。正规方程为 $\begin{pmatrix}3&3\\3&5\end{pmatrix}(a,b)^T=(5,6)^T$，解得 $a=7/6,b=1/2$。残差 $(-1/6,1/3,-1/6)$ 与常数列和时间列都正交，表示无法再沿这两个方向降低平方误差。}{The least-squares fit solves the displayed normal equations, giving intercept $7/6$ and slope $1/2$. The residual is orthogonal to both columns of the design matrix, so no adjustment within the model can further reduce the sum of squared errors.}
+
+\noindent\textbf{实对称矩阵的谱定理。} 若 $A=A^T$，存在正交矩阵 $Q$ 使 $Q^TAQ$ 为实对角矩阵。正交矩阵满足 $Q^TQ=I$，因此换基保长度和角度。对称矩阵的特征值为实数，且不同特征值的特征向量正交；这解释了为何二次型可沿互相垂直的主轴分解。
+\EN{The spectral theorem says that a real symmetric matrix is diagonalized by an orthogonal matrix. Orthogonal changes of coordinates preserve lengths and angles. Its eigenvalues are real, and eigenvectors for distinct eigenvalues are orthogonal, giving principal axes for a quadratic form.}
+\EX{若 $A=\begin{pmatrix}2&0\\0&5\end{pmatrix}$，坐标轴已经是正交特征方向。沿第一轴的二次能量系数为 $2$，沿第二轴为 $5$；任意方向的能量由这两个分量分别加权。}{For this diagonal symmetric matrix, the coordinate axes are orthogonal eigen-directions. The quadratic energy weights the first component by two and the second by five.}
+
+\section{第 10 章：线性函数、双线性函数与辛空间 | Bilinear forms and symplectic spaces}
+\noindent\textbf{线性函数与对偶空间。} 线性函数（线性泛函）是 $\ell:V\to F$ 的线性映射。所有线性泛函组成对偶空间 $V^*$。若 $e_1,\ldots,e_n$ 是 $V$ 的基，则对偶基 $e^1,\ldots,e^n$ 满足 $e^i(e_j)=\delta_{ij}$，其中 $\delta_{ij}$ 在 $i=j$ 时为 $1$，否则为 $0$。
+\EN{A linear functional is a linear map from a vector space to its scalar field. All such functionals form the dual space. The dual basis evaluates to one on its matching basis vector and zero on the others.}
+\EX{在 $\mathbb R^2$ 中，$\ell(x,y)=2x-y$ 是线性泛函。对标准基 $e_1=(1,0),e_2=(0,1)$，有 $\ell(e_1)=2,\ell(e_2)=-1$，所以 $\ell$ 完全由这两个基向量上的值决定。}{The map $\ell(x,y)=2x-y$ is a linear functional. Its values on the standard basis, two and negative one, determine it completely.}
+
+\noindent\textbf{双线性函数。} $B:V\times V\to F$ 若固定一个变量时对另一个变量线性，则称双线性。选定基后，存在矩阵 $M$ 使 $B(x,y)=x^TMy$。若 $B(x,y)=B(y,x)$，称对称；若 $B(x,x)=0$ 对所有 $x$ 成立，称交错。实数域上交错矩阵满足 $M^T=-M$。
+\EN{A bilinear form is linear in each argument when the other is fixed. In coordinates it has the form $x^TMy$. It is symmetric if swapping arguments changes nothing, and alternating if $B(x,x)=0$ for every vector. Over the real field, an alternating form has a skew-symmetric matrix.}
+\READ{“B of x and y equals x transpose M y.”}
+\EX{$B((x_1,x_2),(y_1,y_2))=x_1y_2-x_2y_1$ 的矩阵是 $J=\begin{pmatrix}0&1\\-1&0\end{pmatrix}$。它满足 $B(v,v)=0$，但 $B(e_1,e_2)=1$，所以交错不意味着所有配对都为零。}{The displayed form has matrix $J$. It vanishes when both inputs are the same, yet pairs the two coordinate basis vectors to one, so alternating does not mean identically zero.}
+
+\noindent\textbf{非退化和辛空间。} 双线性函数非退化，如果 $B(x,y)=0$ 对所有 $y$ 成立只能推出 $x=0$；在有限维坐标中等价于矩阵可逆。辛空间是偶数维空间配有非退化交错双线性函数。标准形式为
+\[
+J=\begin{pmatrix}0&I\\-I&0\end{pmatrix},\qquad
+B((q,p),(q',p'))=q^Tp'-p^Tq'.
+\]
+$q,p$ 分别是位置和动量坐标；非退化表示每个非零方向都能与某个方向配成非零值。实数域上奇数阶交错矩阵行列式必为零，所以非退化交错形式只能出现在偶数维。
+\EN{A bilinear form is nondegenerate if the only vector pairing to zero with every vector is zero; in finite dimensions this is equivalent to an invertible matrix. A symplectic space is an even-dimensional vector space with a nondegenerate alternating form. The standard form pairs position coordinates $q$ with momentum coordinates $p$.}
+\READ{“J is the block matrix with zero, identity, negative identity, and zero blocks.”}
+\EX{在二维平面上，$B((q,p),(q',p'))=qp'-pq'$。取 $(q,p)=(1,0)$、$(q',p')=(0,1)$，配对为 $1$；若两向量相同，配对为 $0$。这就是一对位置—动量坐标的最小线性模型。}{In the plane, the standard alternating form pairs $(1,0)$ with $(0,1)$ to give one, but pairs any vector with itself to give zero. This is the smallest linear model for a position-momentum pair.}
+\noindent 在 Hamilton 力学中，相空间由位置与动量构成，保持辛形式的变换保留这种配对结构。这个例子说明双线性形式不只是内积：内积测量长度与角度，交错形式则表达方向间的有向配对。
+\EN{In Hamiltonian mechanics, phase space combines positions and momenta, and transformations preserving the symplectic form preserve this pairing structure. A bilinear form need not be an inner product: an inner product measures length and angle, while an alternating form records an oriented pairing.}
+
+\section{基与坐标的完整计算 | A basis and coordinate calculation}
+\BOTH{在 $P_2$ 中取标准基 $E=(1,x,x^2)$，再取另一组向量 $B=(1+x,1-x,x^2)$。要判断 $B$ 是否为基，把它们按标准基写成列，得到坐标矩阵
+\[
+P=\begin{pmatrix}1&1&0\\1&-1&0\\0&0&1\end{pmatrix},\qquad \det P=-2\ne0.
+\]
+因此三向量线性无关，并张成三维空间 $P_2$，所以 $B$ 是一组基。}{In $P_2$, let $E=(1,x,x^2)$ be the standard basis and take $B=(1+x,1-x,x^2)$. Writing these vectors as columns in standard coordinates gives the displayed matrix $P$. Since its determinant is nonzero, the vectors are independent and span the three-dimensional space, so $B$ is a basis.}
+\BOTH{例如 $p(x)=2+3x+4x^2$ 在标准基下坐标为 $(2,3,4)^T$。若其 $B$ 坐标为 $(a,b,c)^T$，则 $P(a,b,c)^T=(2,3,4)^T$，即 $a+b=2$、$a-b=3$、$c=4$。解得 $a=5/2$、$b=-1/2$、$c=4$。这里坐标随基改变，但多项式 $p$ 本身没有改变。}{For $p(x)=2+3x+4x^2$, the standard coordinate vector is $(2,3,4)^T$. If its coordinates in $B$ are $(a,b,c)^T$, then $P(a,b,c)^T=(2,3,4)^T$, giving $a+b=2$, $a-b=3$, and $c=4$. Thus the $B$-coordinates are $(5/2,-1/2,4)$. The coordinates change with the basis, but the polynomial itself does not.}
+\READ{“The coordinate vector in basis E equals P times the coordinate vector in basis B.”}
+\ASK{基向量改变时，几何对象会改变吗？}{Does the geometric object change when we change the basis?}{不会。变化的是描述该向量的坐标。换基矩阵把新坐标转换成旧坐标；同一个线性变换因此有不同矩阵表示，但其作用本身不变。}{No. Only the coordinates used to describe the vector change. The change-of-basis matrix converts new coordinates to old ones. The same linear map may have different matrices, but the map itself is unchanged.}
+
+\section{Jordan 形与线性系统 | Jordan systems}
+\noindent\textbf{中文讲解。} 考虑 $A=\begin{pmatrix}\lambda&1\\0&\lambda\end{pmatrix}=\lambda I+N$，其中 $N=\begin{pmatrix}0&1\\0&0\end{pmatrix}$ 且 $N^2=0$。唯一特征值为 $\lambda$，但特征向量满足 $Nv=0$，只有一维空间，因此没有两个线性无关特征向量，矩阵不能对角化。取 $v_1=(1,0)^T$、$v_2=(0,1)^T$，则 $(A-\lambda I)v_1=0$、$(A-\lambda I)v_2=v_1$，这就是长度为二的 Jordan 链。
+\EN{Consider $A=\begin{pmatrix}\lambda&1\\0&\lambda\end{pmatrix}=\lambda I+N$, where $N^2=0$. The only eigenvalue is $\lambda$, but its eigenspace is one-dimensional, so there are not enough independent eigenvectors to diagonalize the matrix. The vectors $v_1=(1,0)^T$ and $v_2=(0,1)^T$ satisfy $(A-\lambda I)v_1=0$ and $(A-\lambda I)v_2=v_1$, forming a Jordan chain of length two.}
+\noindent\textbf{把它用于微分方程。} 解系统 $x'(t)=Ax(t)$ 时，矩阵指数为
+\[
+e^{At}=e^{\lambda t}e^{Nt}=e^{\lambda t}(I+tN)
+=e^{\lambda t}\begin{pmatrix}1&t\\0&1\end{pmatrix}.
+\]
+因此初值 $x(0)=(0,1)^T$ 给出 $x(t)=e^{\lambda t}(t,1)^T$。特征值解释指数因子 $e^{\lambda t}$，Jordan 链解释额外出现的因子 $t$。当 $\lambda<0$ 时，$t e^{\lambda t}\to0$，所以这个多项式因子不会阻止解衰减。
+\EN{For $x'(t)=Ax(t)$, the matrix exponential is $e^{At}=e^{\lambda t}e^{Nt}=e^{\lambda t}(I+tN)$. With initial condition $x(0)=(0,1)^T$, the solution is $x(t)=e^{\lambda t}(t,1)^T$. The eigenvalue explains the exponential factor; the Jordan chain explains the extra factor $t$. If $\lambda<0$, then $t e^{\lambda t}\to0$, so this polynomial factor does not prevent decay.}
+\READ{“The exponential of A t equals e to the lambda t times the matrix with entries one, t, zero, one.”}
+\noindent\textbf{最小多项式。} 对此矩阵，$(A-\lambda I)^2=0$，但 $A-\lambda I\ne0$，所以最小多项式是 $(t-\lambda)^2$。特征多项式同样是 $(t-\lambda)^2$，但含义不同：特征多项式给出代数重数，最小多项式的指数记录最大 Jordan 块大小。
+\EN{Here $(A-\lambda I)^2=0$ but $A-\lambda I\ne0$, so the minimal polynomial is $(t-\lambda)^2$. The characteristic polynomial is also $(t-\lambda)^2$, but the concepts differ: the characteristic polynomial gives algebraic multiplicity, while the exponent in the minimal polynomial records the largest Jordan block size.}
+\ASK{特征值相同为什么还需要 Jordan 形？}{Why do we need Jordan form when the eigenvalues are already known?}{特征值不能区分可对角化矩阵与缺少特征向量的矩阵。Jordan 块大小记录广义特征向量链，决定最小多项式，也决定矩阵指数中出现的多项式因子。}{Eigenvalues alone do not distinguish diagonalizable matrices from matrices with too few eigenvectors. Jordan block sizes record generalized eigenvector chains, determine the minimal polynomial, and explain polynomial factors in the matrix exponential.}
+
+\subsection{最小二乘方程从哪里来}
+\par\noindent\textbf{中文。} 设 $X\in\mathbb R^{m\times n}$，数据向量为 $y\in\mathbb R^m$。若 $X\beta=y$ 无精确解，就在 $X$ 的列空间中寻找离 $y$ 最近的向量 $X\beta$，即最小化 $\phi(\beta)=\|X\beta-y\|^2$。展开并对 $\beta$ 求梯度，得到 $\nabla\phi=2X^T(X\beta-y)$；令其为零便得到正规方程 $X^TX\beta=X^Ty$。几何上，这等价于残差 $y-X\beta$ 与每一列都正交。\par
+\EN{Let $X\in\mathbb R^{m\times n}$ and data vector $y\in\mathbb R^m$. If $X\beta=y$ has no exact solution, find the vector in the column space of $X$ closest to $y$ by minimizing $\phi(\beta)=\|X\beta-y\|^2$. Differentiating gives $\nabla\phi=2X^T(X\beta-y)$; setting it to zero yields the normal equations $X^TX\beta=X^Ty$. Geometrically, the residual is orthogonal to every column of $X$.}
+\READ{“X transpose X beta equals X transpose y; the residual is orthogonal to the column space of X.”}
+\par\noindent\textbf{中文。} 前文直线拟合例子的残差是 $(-1/6,1/3,-1/6)$，平方误差和为 $1/36+1/9+1/36=1/6$。若设计矩阵列满秩，则 $X^TX$ 正定，正规方程解唯一；若列不独立，最优拟合向量仍是唯一的正交投影，但参数 $\beta$ 可能不唯一。\par
+\EN{In the line-fitting example above, the residual is $(-1/6,1/3,-1/6)$ and the sum of squared errors is $1/6$. If the columns of $X$ are independent, then $X^TX$ is positive definite and the normal-equation solution is unique. If the columns are dependent, the fitted vector is still the unique orthogonal projection, but the parameter vector may not be unique.}
+
+\section{口试追问 | Oral follow-up questions}
+\ASK{线性空间和欧几里得空间有什么差别？}{How does a Euclidean space differ from a general vector space?}{线性空间只规定加法和数乘；欧几里得空间还配有正定内积，因此可以定义长度、角度、正交和距离。}{A vector space has addition and scalar multiplication. A Euclidean space also has a positive-definite inner product, which defines length, angle, orthogonality, and distance.}
+\ASK{特征向量在动力系统中有什么用？}{Why are eigenvectors useful in a dynamical system?}{沿特征向量方向，矩阵作用只乘一个特征值，微分系统可化为标量指数方程。若没有足够特征向量，Jordan 链补充缺少的方向，并产生 $t e^{\lambda t}$ 等项。}{Along an eigenvector, the matrix acts by scalar multiplication, so the differential system reduces to a scalar exponential equation. Jordan chains handle missing eigenvectors and produce terms such as $t e^{\lambda t}$.}
+\ASK{最小二乘解为什么是正交投影？}{Why is the least-squares solution an orthogonal projection?}{$X\beta$ 只能落在 $X$ 的列空间中。使 $\|y-X\beta\|$ 最小的点是列空间中离 $y$ 最近的点，所以残差与每个列方向正交，得到 $X^T(y-X\beta)=0$。}{The vector $X\beta$ lies in the column space of $X$. The closest point in that subspace has a residual orthogonal to every column, giving the normal equations.}
+\ASK{双线性形式与内积有何不同？}{How does a bilinear form differ from an inner product?}{内积还要求对称和正定，因此能定义长度；一般双线性形式不必正定。辛形式是非退化交错形式，同一向量与自身配对为零。}{An inner product is symmetric and positive definite, so it defines length. A general bilinear form need not be positive. A symplectic form is nondegenerate and alternating, so every vector pairs with itself to zero.}
+\section{Jordan 块的矩阵幂与线性递推 | Powers of a Jordan block}
+\noindent 前文用 Jordan 链解释了矩阵指数中的多项式因子；同一结构也控制离散递推。取 $A=\begin{pmatrix}2&1\\0&2\end{pmatrix}=2I+N$，其中 $N=\begin{pmatrix}0&1\\0&0\end{pmatrix}$ 且 $N^2=0$。二项式展开给出
+\[
+A^n=2^nI+n2^{n-1}N
+=\begin{pmatrix}2^n&n2^{n-1}\\0&2^n\end{pmatrix}.
+\]
+令 $x_{n+1}=Ax_n$，并取 $x_0=(0,1)^{\mathsf T}$。由于 $x_n=A^nx_0$，对 $n\ge1$ 有
+\[
+x_n=\begin{pmatrix}n2^{n-1}\\2^n\end{pmatrix}.
+\]
+第一分量满足 $u_{n+1}=2u_n+v_n$、第二分量满足 $v_{n+1}=2v_n$。第二分量按 $2^n$ 增长，第一分量还多出 $n$ 因子；这解释了为什么具有相同特征值的矩阵递推，增长率仍可能因 Jordan 块大小而不同。
+\EN{For the recurrence $x_{n+1}=Ax_n$ with $x_0=(0,1)^{\mathsf T}$, the formula for $A^n$ gives the displayed vector. The second component grows like $2^n$, while the first carries an additional factor $n$. Thus matrices with the same eigenvalue can have different growth patterns because of their Jordan block sizes.}
+\EX{取 $n=3$，$A^3x_0=(12,8)^{\mathsf T}$。直接递推也得到 $(0,1)\mapsto(1,2)\mapsto(4,4)\mapsto(12,8)$，可用来检查矩阵幂公式中的系数 $n2^{n-1}$。}{At $n=3$, the formula gives $A^3x_0=(12,8)^{\mathsf T}$. Direct iteration gives $(0,1)\mapsto(1,2)\mapsto(4,4)\mapsto(12,8)$, verifying the coefficient $n2^{n-1}$.}
+\READ{“A to the n equals two to the n times I plus n times two to the n minus one times N.”}
+
+\section{最小二乘如何由正交条件确定 | Least squares from orthogonality}
+\noindent 用直线 $y=a+bx$ 拟合数据 $(0,1),(1,2),(2,2)$。设计矩阵 $X$ 的每行是 $(1,x_i)$，数据向量为 $y$。最小化 $\|X\theta-y\|_2^2$（$\theta=(a,b)^{\mathsf T}$）得到正规方程 $X^{\mathsf T}X\theta=X^{\mathsf T}y$。几何上，残差 $r=y-X\theta$ 必须与 $X$ 的每一列正交。
+\EN{Fit a line $y=a+bx$ to the three data points by minimizing $\|X\theta-y\|_2^2$. Differentiating the squared error gives the normal equations $X^{\mathsf T}X\theta=X^{\mathsf T}y$. Geometrically, the residual must be orthogonal to each column of the design matrix.}
+\EX{本例中 $\bar x=1$、$\bar y=5/3$，斜率 $b=\sum(x_i-\bar x)(y_i-\bar y)/\sum(x_i-\bar x)^2=1/2$，截距 $a=\bar y-b\bar x=7/6$。拟合值为 $(7/6,5/3,13/6)$，残差为 $(-1/6,1/3,-1/6)$；其和为零，且与 $x$ 列的内积也为零，正好验证两个正规方程。}{Here $\bar x=1$ and $\bar y=5/3$, giving slope $1/2$ and intercept $7/6$. The fitted values are $(7/6,5/3,13/6)$ and the residual is $(-1/6,1/3,-1/6)$. Its entries sum to zero, and its inner product with the $x$ column is also zero, verifying both normal equations.}
+\ASK{正规方程何时有唯一解？}{When do the normal equations have a unique solution?}{当设计矩阵的列线性无关时，$X^{\mathsf T}X$ 正定且可逆，最小二乘解唯一；若列相关，最小值仍可达到，但参数向量未必唯一，拟合向量 $X\theta$ 仍是到列空间的唯一正交投影。}{If the columns of $X$ are linearly independent, then $X^{\mathsf T}X$ is positive definite and invertible, so the minimizer is unique. If the columns are dependent, a minimizer still exists but parameters may not be unique; the fitted vector remains the unique orthogonal projection onto the column space.}
+\section*{来源与范围 | Source and scope}
+本稿对应你指定的高等代数第二份 PDF：第 6--10 章，主要参考北京大学数学系前线代小组《高等代数》第五版，并以文件夹中的修订版作交叉核对。范围包括线性空间、线性变换与标准形、$\lambda$-矩阵、欧几里得空间和双线性函数；不同版次的定理编号可能不同。
+\EN{This is the second of the two requested Advanced Algebra reviews and covers Chapters 6--10. Its main source is the fifth edition of \emph{Advanced Algebra} by the Frontline Linear Algebra Group of Peking University's Department of Mathematics, cross-checked against the revised edition in the folder. The scope includes vector spaces, linear maps and canonical forms, polynomial matrices, Euclidean spaces, and bilinear forms; theorem numbering may differ by edition.}
+\end{document}

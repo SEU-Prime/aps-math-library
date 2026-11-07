@@ -202,6 +202,21 @@ A^{\mathsf T}P+PA=-Q.
 
 \ASK{怎样分析一个平衡点的局部稳定性？}{How do you analyze local stability of an equilibrium?}{先求平衡点，再求向量场的 Jacobian 并代入平衡点；若所有特征值实部为负，可推出局部渐近稳定。若有零实部特征值或向量场不光滑，则需额外分析。}{First solve for the equilibrium, then evaluate the Jacobian of the vector field there. If every eigenvalue has negative real part, the equilibrium is locally asymptotically stable. Zero-real-part eigenvalues or nonsmooth vector fields require further analysis.}
 
+\section{局部稳定、吸引域和指数收敛的手算例子 | A local stability estimate}
+\noindent 考虑标量系统 $\dot x=-x+x^2$。平衡点满足 $x(x-1)=0$，所以有 $x=0,1$。在原点取 $V(x)=x^2/2$，它正定，且
+\[
+\dot V=x\dot x=-x^2+x^3.
+\]
+当 $|x|\le1/2$ 时，$\dot V\le-\tfrac12x^2=-V$。若初值满足 $|x(0)|\le1/2$，在边界 $|x|=1/2$ 上向量场指向区间内部，所以区间正向不变；由微分不等式得到 $V(t)\le V(0)e^{-t}$，即 $|x(t)|\le|x(0)|e^{-t/2}$。这证明局部指数稳定，并给出一个明确的吸引域下界。
+\EN{For $\dot x=-x+x^2$, the equilibria are zero and one. With $V=x^2/2$, its derivative is $-x^2+x^3$, which is at most $-V$ when $|x|\le1/2$. The vector field points inward at the boundary, so this interval is positively invariant. The differential inequality gives $V(t)\le V(0)e^{-t}$ and $|x(t)|\le|x(0)|e^{-t/2}$. This proves local exponential stability and supplies an explicit inner estimate of the attraction region.}
+\READ{“The derivative of V is at most negative V, so V of t is at most V of zero times e to the negative t.”}
+\EX{线性化给出原点附近的趋势：$f'(0)=-1<0$。Lyapunov 计算进一步给出哪些初值可由同一个定量估计控制。平衡点 $x=1$ 的存在也提醒我们，不能把局部结论扩成全局结论。}{Linearization gives the local sign $f'(0)=-1$. The Lyapunov estimate additionally identifies initial values controlled by one quantitative bound. The other equilibrium at one is a reminder that the local conclusion cannot be promoted to a global one.}
+
+\section{零特征值时线性化为何可能失效 | A nonhyperbolic equilibrium}
+\noindent 比较系统 $\dot x=-x^3$ 与 $\dot x=x^3$。它们在原点的线性化矩阵都是 $[0]$，所以特征值判据无法区分。对第一个系统取 $V=x^2/2$，有 $\dot V=-x^4<0$（$x\ne0$），原点渐近稳定；解为 $x(t)=x_0/\sqrt{1+2x_0^2t}$，衰减是代数级而非指数级。对第二个系统，同一函数满足 $\dot V=x^4>0$，任意非零小初值都会离开原点，故原点不稳定。
+\EN{The systems $\dot x=-x^3$ and $\dot x=x^3$ both have zero linearization at the origin, so the eigenvalue test is inconclusive. For the first, $V=x^2/2$ has strictly negative derivative away from zero; its solution decays like $t^{-1/2}$, so stability is asymptotic but not exponential. For the second, the same function increases and every nonzero nearby solution moves away, so the origin is unstable.}
+\ASK{特征值实部为零时应该怎么做？}{What should you do when a linearized eigenvalue has zero real part?}{不能仅凭线性化作稳定或不稳定结论。应检查非线性高阶项、构造 Lyapunov 函数，或使用适用的其他方法；上面两个系统有相同线性化，却有相反的稳定性。}{The linearization alone gives no stability conclusion. Examine higher-order nonlinear terms, construct a Lyapunov function, or use another appropriate method. The two examples have identical linearizations but opposite stability behavior.}
+
 \section*{口试表达 | Oral response structure}
 讨论具体系统时，先说明平衡点与稳定性类型，再给出所选 Lyapunov 函数、正定性和 $\dot V$ 计算，最后说明结论是局部还是全局、稳定还是渐近稳定。若使用 LaSalle 原理，应明确 $\dot V=0$ 集合和其中的最大不变集。
 

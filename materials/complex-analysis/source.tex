@@ -120,4 +120,78 @@ f'(z_0)=\lim_{h\to0,\,h\in\mathbb C}\frac{f(z_0+h)-f(z_0)}{h}
 \EN{For $f(z)=1/[z(z-1)]$ on the counterclockwise circle $|z|=2$, both simple poles lie inside. Their residues are $-1$ and $1$, so the integral is zero. On $|z|=1/2$, only zero is enclosed and the integral is $-2\pi i$. No pole may lie on the contour; reversing orientation changes the sign.}
 \READ{``The contour integral equals two pi i times the sum of the residues inside the contour.''}
 \ASK{为什么两个极点都在里面时积分反而为零？}{Why is the integral zero when both poles are enclosed?}{积分取决于内部留数之和，而不是极点数量；这里两个留数相加抵消。}{It depends on the sum of the enclosed residues, not the number of poles. Here the two residues cancel.}
+
+\section{复指数、复对数与分支 | Exponential, logarithm, and branches}
+\noindent 复指数由幂级数定义，并满足 Euler 公式 $e^{x+iy}=e^x(\cos y+i\sin y)$。因此 $|e^z|=e^{\operatorname{Re}z}$，而虚部决定旋转角。复对数要解 $e^w=z$；若 $z=re^{i\theta}\ne0$，所有值为 $\log r+i(\theta+2k\pi)$，$k\in\mathbb Z$。所以复对数是多值函数。
+\EN{The complex exponential satisfies Euler's formula. Its modulus depends on the real part, while its argument depends on the imaginary part. For a nonzero complex number $z=re^{i\theta}$, all logarithms are $\log r+i(\theta+2k\pi)$, so the complex logarithm is multivalued.}
+\READ{“E to the x plus i y equals e to the x times cosine y plus i sine y.”}
+\EX{$-1=e^{i(\pi+2k\pi)}$，因此 $\log(-1)=i(\pi+2k\pi)$。选取 $-\pi<\arg z<\pi$ 后得到主值分支，通常写 $\operatorname{Log}z=\ln|z|+i\operatorname{Arg}z$；它在负实轴上有跳跃，故不能在绕原点一周的区域上连续选取单值辐角。}{Since $-1=e^{i(\pi+2k\pi)}$, its logarithms are $i(\pi+2k\pi)$. Choosing arguments between $-\pi$ and $\pi$ defines the principal branch, which jumps across the negative real axis.}
+\noindent 需要单值解析的对数时，先选不绕原点的区域，再指定连续的辐角分支；分支切线是人为删去的曲线，用来避免绕原点一周后辐角增加 $2\pi$ 的矛盾。复幂 $z^\alpha$ 也通过 $e^{\alpha\log z}$ 定义，因此同样依赖分支。
+\EN{To obtain a single-valued analytic logarithm, choose a domain that does not wind around the origin and fix a continuous argument there. A branch cut removes a curve to avoid the change of argument by $2\pi$ around the origin. Complex powers defined by $z^\alpha=e^{\alpha\log z}$ inherit the branch choice.}
+\ASK{为什么复对数不能在整个去心平面上连续单值？}{Why is there no continuous single-valued logarithm on the punctured plane?}{绕原点一周，$z$ 回到原值，但连续辐角增加 $2\pi$；若对数单值连续，这个变化就会造成矛盾。因此需要限制区域或引入分支切线。}{After one circuit around the origin, $z$ returns to its starting value while a continuous argument increases by $2\pi$. This contradicts a single-valued continuous logarithm, so the domain must be restricted or cut.}
+
+\section{Taylor 级数如何实际使用 | Using Taylor series}
+\noindent 若 $f$ 在 $z_0$ 的邻域解析，则
+\[
+f(z)=\sum_{n=0}^{\infty}\frac{f^{(n)}(z_0)}{n!}(z-z_0)^n.
+\]
+收敛半径由离展开中心最近的奇点决定。级数不仅近似函数，也能用来计算极限、求导、积分和识别奇点；在闭于收敛圆内的紧集上可逐项求导与积分。
+\EN{An analytic function has a Taylor expansion in a disk around $z_0$. Its radius is limited by the nearest singularity. The series can compute limits and derivatives and can be integrated or differentiated term by term on compact subsets strictly inside its disk of convergence.}
+\READ{“F of z equals the sum from n equals zero to infinity of the nth derivative at z zero over n factorial, times z minus z zero to the n.”}
+\EX{在 $z=0$ 展开 $1/(1-z)$，得到 $1+z+z^2+\cdots$，收敛条件为 $|z|<1$，因为最近的奇点 $z=1$ 距中心为 $1$。于是当 $|z|<1$ 时，$\int_0^z(1-w)^{-1}dw=-\log(1-z)=\sum_{n=1}^{\infty}z^n/n$，其中 $w$ 是积分变量，并选取在 $z=0$ 处取零的解析分支。}{Expanding $1/(1-z)$ at zero gives the geometric series with radius one, set by the singularity at $z=1$. Integrating term by term yields $-\log(1-z)=\sum_{n=1}^\infty z^n/n$ in the unit disk, using the branch that is zero at the origin.}
+\ASK{幂级数的收敛半径为什么受奇点限制？}{Why is the radius of convergence limited by singularities?}{幂级数在收敛圆内定义解析函数；若圆内存在原函数无法解析延拓穿过的奇点，级数就不能在整个圆内表示该函数。几何级数的最近奇点 $1$ 给出半径 $1$。}{A power series defines an analytic function inside its disk. A singularity that cannot be crossed by analytic continuation limits how large that disk can be. For the geometric series, the nearest singularity is at one, so the radius is one.}
+
+\section{Cauchy 估计、Liouville 定理与代数基本定理 | Cauchy's estimate and Liouville's theorem}
+\noindent 若 $f$ 在闭圆盘 $|z-a|\le R$ 上解析，且圆周上 $|f(z)|\le M$，Cauchy 积分公式推出
+\[
+|f^{(n)}(a)|\le\frac{n!M}{R^n}.
+\]
+其中 $a$ 是圆心，$R$ 是半径，$M$ 是边界模长上界。它说明边界控制会限制中心处所有阶导数。
+\EN{If $f$ is analytic on a neighborhood of the closed disk centered at $a$ with radius $R$, and its modulus on the circle is at most $M$, Cauchy's integral formula gives the displayed derivative estimate. Boundary bounds control every derivative at the center.}
+\READ{“The absolute value of the nth derivative at a is at most n factorial times M over R to the n.”}
+\noindent Liouville 定理是其重要推论：整个复平面上的有界解析函数必为常数。若 $f$ 有界，令 $R\to\infty$，一阶估计给 $|f'(a)|\le M/R\to0$，任意 $a$ 处导数为零，所以 $f$ 为常数。
+\EN{Liouville's theorem follows by letting $R$ tend to infinity in Cauchy's estimate: every derivative of a bounded entire function vanishes, so the function is constant.}
+\EX{代数基本定理说每个非常数复系数多项式至少有一个复根。若非常数多项式 $P$ 没有根，则 $1/P$ 是整个函数；当 $|z|\to\infty$ 时 $|P(z)|\to\infty$，所以 $1/P\to0$，而在有限区域上它连续有界。因此 $1/P$ 整个且有界，由 Liouville 定理为常数，导致 $P$ 为常数，矛盾。}{The fundamental theorem of algebra states that every nonconstant complex polynomial has a root. If $P$ had no root, then $1/P$ would be entire, bounded on compact sets, and tend to zero at infinity. Liouville's theorem would make $1/P$ constant, a contradiction.}
+\noindent 证明中“在有限区域上有界”来自连续函数在紧集上取得最大值；“无穷远处趋于零”来自多项式最高次项主导。这是复分析定理解释代数结论的典型例子。
+\EN{The reciprocal is bounded on compact sets because it is continuous there, and it tends to zero at infinity because the leading term of the polynomial dominates. This illustrates how complex analysis proves an algebraic result.}
+
+\section{Laurent 展开与留数的计算套路 | Laurent series and residue methods}
+\noindent 在环域而不是圆盘中，解析函数可以有负次幂项。不同环域可能对应不同 Laurent 展开，展开区域必须写清楚；留数就是 $(z-a)^{-1}$ 的系数，不需要把整个级数全部求出。
+\EN{In an annulus, an analytic function may have negative powers in its Laurent series. Different annuli can have different expansions, so the region of validity must be stated. The residue is only the coefficient of $(z-a)^{-1}$.}
+\EX{对 $1/[z(z-1)]$，当 $0<|z|<1$ 时，$1/[z(z-1)]=-z^{-1}(1-z)^{-1}=-\sum_{n=0}^{\infty}z^{n-1}$，因此 $z=0$ 的留数是 $-1$。当 $|z|>1$ 时，改写成 $z^{-2}(1-z^{-1})^{-1}=\sum_{n=0}^{\infty}z^{-n-2}$；该外环展开没有 $z^{-1}$ 项，与两个有限极点留数 $-1$、$1$ 之和为零相符。}{For $0<|z|<1$, expand $1/[z(z-1)]$ as $-\sum_{n=0}^\infty z^{n-1}$, so the residue at zero is minus one. For $|z|>1$, expand in powers of $1/z$; there is no $z^{-1}$ term, consistent with the sum of the two finite residues being zero.}
+\noindent 对 $m$ 阶极点 $a$，若 $f(z)=g(z)/(z-a)^m$ 且 $g$ 在 $a$ 解析，则
+\[
+\operatorname{Res}(f,a)=\frac{g^{(m-1)}(a)}{(m-1)!}.
+\]
+分子 $g$ 必须在 $a$ 解析；若极点不是单一分式形式，可先作 Laurent 展开或部分分式分解。
+\EN{For a pole of order $m$, if $f(z)=g(z)/(z-a)^m$ with $g$ analytic at $a$, the residue is the derivative shown above. The analyticity condition on $g$ matters; otherwise use a Laurent or partial-fraction expansion.}
+\READ{“The residue equals the m minus one derivative of g at a, divided by m minus one factorial.”}
+\EX{计算 $e^z/(z-1)^2$ 在 $z=1$ 的留数。这里 $m=2$、$g(z)=e^z$，所以留数为 $g'(1)=e$；任何逆时针包围 $1$ 且不经过奇点的简单闭曲线，其积分为 $2\pi i e$。}{For $e^z/(z-1)^2$, the pole has order two and $g(z)=e^z$. Its residue is $g'(1)=e$, so the integral around a positively oriented contour enclosing one is $2\pi i e$.}
+
+\section{复变公式的使用条件速查 | Conditions to check}
+\noindent 使用 Cauchy 积分公式时，检查函数在曲线及内部邻域解析、点 $a$ 在内部、曲线方向为正向；使用留数定理时，检查所有奇点均在曲线内部或外部且曲线上没有奇点；计算实积分时还要证明无穷远圆弧或绕开实极点的小弧贡献趋于零。条件检查是计算的一部分，不是形式要求。
+\EN{For Cauchy's formula, check analyticity near the contour and its interior, that the point lies inside, and positive orientation. For residues, locate every singularity and ensure none lies on the contour. For real improper integrals, prove that large arcs or small indentation arcs vanish. These checks are part of the argument.}
+\ASK{什么时候能用简单极点的极限公式？}{When can you use the limit formula for a residue?}{当 $a$ 是一阶极点时，$\operatorname{Res}(f,a)=\lim_{z\to a}(z-a)f(z)$。若极点阶数更高，该极限公式通常不适用，应使用高阶导数公式或 Laurent 展开。}{For a simple pole, the residue is the limit of $(z-a)f(z)$. At a higher-order pole, this formula generally does not apply; use the derivative formula or a Laurent expansion.}
+\section{完整留数积分：从选围道到检查弧项 | A complete residue integral}
+\noindent 计算
+\[
+I=\int_0^{\infty}\frac{x^2}{x^4+1}\,dx.
+\]
+被积函数为偶函数，所以先考虑实轴上的全积分，再取一半。令 $f(z)=z^2/(z^4+1)$，在上半平面取半径 $R>1$ 的半圆围道。围道内部的极点是 $a_1=e^{i\pi/4}$ 与 $a_2=e^{3i\pi/4}$；它们都是单极点，且
+\[
+\operatorname{Res}(f,a_j)=\frac{a_j^2}{4a_j^3}=\frac{1}{4a_j},\qquad
+\sum_{j=1}^2\operatorname{Res}(f,a_j)=-\frac{i\sqrt2}{4}.
+\]
+\EN{The integrand is even, so evaluate the integral over the whole real line and divide by two. On an upper semicircle, the enclosed poles are $e^{i\pi/4}$ and $e^{3i\pi/4}$. Since the derivative of $z^4+1$ is $4z^3$, the residue at either root $a$ is $1/(4a)$, and their sum is $-i\sqrt2/4$.}
+\READ{“The integral from zero to infinity of x squared over x to the fourth plus one is pi over two root two.”}
+\noindent 半圆弧上 $|z|=R$，故
+\[
+\left|\frac{z^2}{z^4+1}\right|\le\frac{R^2}{R^4-1},\qquad
+\left|\int_{\text{arc}}f(z)\,dz\right|\le\pi R\frac{R^2}{R^4-1}\longrightarrow0.
+\]
+留数定理给出实轴全积分为 $2\pi i(-i\sqrt2/4)=\pi/\sqrt2$，于是 $I=\pi/(2\sqrt2)$。检查弧项趋零是把闭合围道结果转成无穷区间实积分的必要一步。
+\EN{On the arc, the integrand is bounded by $R^2/(R^4-1)$ and the arc length is $\pi R$, so its contribution tends to zero. The residue theorem gives the whole real-line integral as $\pi/\sqrt2$. Evenness then gives $I=\pi/(2\sqrt2)$. Showing that the arc vanishes is essential when passing from a contour integral to an improper real integral.}
+\section*{来源与范围 | Source and scope}
+本稿依据“复变函数”文件夹中史济怀、刘太顺编写的《复变函数》第 1--7 章整理，按你给定的课程范围覆盖解析函数、复积分、级数、奇点与留数等主线。例子为口试理解而重排；具体定义和定理条件以正文陈述为准。
+\EN{This review is based on Chapters 1--7 of \emph{Complex Functions} by Shi Jihuai and Liu Taishun in the Complex Analysis folder. It follows the stated scope and organizes analytic functions, contour integration, series, singularities, and residues. Examples are arranged for oral explanation; the hypotheses stated in the review govern each result.}
 \end{document}

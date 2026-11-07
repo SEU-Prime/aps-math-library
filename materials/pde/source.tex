@@ -137,4 +137,102 @@ E(t)=\frac12\int_0^L\bigl(u_t^2+c^2u_x^2\bigr)\,dx
 由分部积分得到 $E'(t)=c^2[u_tu_x]_0^L=0$：固定端点使 $u_t=0$。因此零初值只能产生零解，也就说明同一初边值问题的经典解至多一个。
 \EN{For the wave equation on the whole line, $f$ and $g$ are the initial displacement and velocity, and $c$ is the wave speed. The displayed d'Alembert formula gives the solution. For $f(x)=\cos x$ and $g=0$, it becomes $\cos x\cos(ct)$, or two half-amplitude waves traveling in opposite directions. On a finite interval with fixed endpoints, integration by parts shows that the displayed energy is constant. Applied to the difference of two solutions, this proves uniqueness for sufficiently smooth solutions.}
 \ASK{为什么波动方程需要两个初始条件？}{Why does the wave equation need two initial conditions?}{因为方程对时间是二阶的，需要给初始位移和初始速度；而热方程对时间一阶，通常只需初始温度。}{It is second order in time, so we specify both the initial displacement and velocity. The heat equation is first order in time and usually needs only the initial temperature.}
+
+\section{特征线：把一阶偏微分方程化成常微分方程 | Characteristics}
+\noindent 对一阶方程 $a(x,t,u)u_x+b(x,t,u)u_t=c(x,t,u)$，沿曲线 $(x(s),t(s))$ 使用链式法则：
+\[
+\frac{dx}{ds}=a,\qquad \frac{dt}{ds}=b,\qquad \frac{du}{ds}=c.
+\]
+这里 $s$ 是沿曲线的参数；三条常微分方程给出特征曲线以及解沿曲线的变化。若右端 $c=0$，$u$ 沿特征线保持常数。
+\EN{For a first-order PDE, the chain rule reduces the equation to the characteristic ODEs shown above. The parameter $s$ traces a curve in space and time, and the final equation describes how the solution changes along that curve. If $c=0$, the solution is constant along each characteristic.}
+\READ{“D x by d s equals a, d t by d s equals b, and d u by d s equals c.”}
+\EX{考虑 $u_t+xu_x=0$，初值为 $u(x,0)=f(x)$。特征线满足 $dx/dt=x$，所以 $x(t)=x_0e^t$；同时 $du/dt=0$，故 $u$ 保持为 $f(x_0)$。由 $x_0=xe^{-t}$ 得 $u(x,t)=f(xe^{-t})$。初始位置 $x_0$ 随时间指数移动，解的数值沿每条特征线不变。}{For $u_t+xu_x=0$ with $u(x,0)=f(x)$, characteristics satisfy $dx/dt=x$, giving $x=x_0e^t$. Along them $du/dt=0$, so $u=f(x_0)=f(xe^{-t})$. The solution value is constant on each characteristic.}
+\ASK{特征线方法为什么适合一阶输运方程？}{Why are characteristics useful for first-order transport equations?}{方程描述解沿某个方向的变化。选取与系数相匹配的曲线后，空间和时间偏导合并成沿曲线的全导数，问题就变成常微分方程。}{A transport equation describes change along a direction. Choosing curves aligned with its coefficients combines the partial derivatives into a total derivative, reducing the problem to ordinary differential equations.}
+
+\section{Fourier 级数：由初始温度决定每个模态 | Fourier series}
+\noindent 区间 $0<x<L$ 上两端零温度的热方程，可将初始温度展开为正弦级数。正弦函数在端点为零，适合 Dirichlet 边界；每个频率 $n$ 随时间乘以 $e^{-\kappa(n\pi/L)^2t}$，所以高频模态衰减更快。
+\EN{For the heat equation on an interval with zero endpoint temperatures, expand the initial temperature in a sine series. Sines satisfy the boundary values. The $n$th frequency is multiplied by $e^{-\kappa(n\pi/L)^2t}$, so higher frequencies decay faster.}
+\[
+u(x,t)=\sum_{n=1}^{\infty}b_n e^{-\kappa(n\pi/L)^2t}\sin\frac{n\pi x}{L},\qquad
+b_n=\frac{2}{L}\int_0^L f(x)\sin\frac{n\pi x}{L}\,dx.
+\]
+其中 $f$ 是初始温度，$b_n$ 是它在第 $n$ 个正弦模态上的投影系数；$L$ 是杆长，$\kappa$ 是扩散率。
+\READ{“U equals the sum over n of b n times the exponential decay factor times sine of n pi x over L.”}
+\EX{取 $L=1$、$\kappa=1$、初始温度 $f(x)=x(1-x)$。积分得 $b_n=4(1-(-1)^n)/(n^3\pi^3)$，即奇数 $n$ 时 $8/(n^3\pi^3)$、偶数 $n$ 时为零。因此
+\[
+u(x,t)=\sum_{\substack{n\ge1\\n\text{ odd}}}\frac{8}{n^3\pi^3}e^{-n^2\pi^2t}\sin(n\pi x).
+\]
+第一项主导较长时间后的温度分布；$t=0$ 时该级数回到初始曲线，$t>0$ 时尖锐变化被逐渐平滑。}{For $L=1$, diffusivity one, and initial temperature $f(x)=x(1-x)$, the sine coefficients are $4(1-(-1)^n)/(n^3\pi^3)$. Only odd modes remain, giving the displayed series. The first mode dominates at later times, while the full series recovers the initial profile at time zero.}
+
+\section{Fourier 变换：从空间微分到频率乘法 | Fourier transform}
+\noindent 本讲义采用对称归一化：
+\[
+\widehat f(\xi)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}f(x)e^{-i\xi x}\,dx,\qquad
+f(x)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{\infty}\widehat f(\xi)e^{i\xi x}\,d\xi.
+\]
+$\xi$ 是空间频率，$i^2=-1$；帽号表示 Fourier 变换。对足够光滑且衰减的 $f$，分部积分给出 $\widehat{f'}=i\xi\widehat f$、$\widehat{f''}=-\xi^2\widehat f$。因此变换把 PDE 中的空间导数改成代数乘法。
+\EN{This review uses the symmetric Fourier transform convention shown above. Here $\xi$ is spatial frequency and $i^2=-1$. For sufficiently smooth decaying functions, integration by parts gives the derivative identities. Thus the transform replaces spatial derivatives by multiplication in frequency space.}
+\READ{“The Fourier transform of f double prime at xi equals minus xi squared times f hat of xi.”}
+\EX{计算 $f(x)=e^{-a|x|}$ 的 Fourier 变换，其中 $a>0$。在 $x=0$ 分成两段积分：
+\[
+\widehat f(\xi)=\frac{1}{\sqrt{2\pi}}\left(\frac{1}{a-i\xi}+\frac{1}{a+i\xi}\right)=\sqrt{\frac{2}{\pi}}\frac{a}{a^2+\xi^2}.
+\]
+正参数 $a$ 保证两段积分收敛；偶函数的变换是实偶函数。此例也说明空间中指数衰减对应频率空间中的有理函数尾部。}{Split the integral at zero. Since $a>0$, both pieces converge and yield the displayed transform. The original function is even, so its transform is real and even. Spatial exponential decay produces a rational frequency profile.}
+
+\section{Laplace 变换：把初值带入代数方程 | Laplace transform}
+\noindent 对 $t\ge0$ 定义 $Y(s)=\mathcal L[y](s)=\int_0^\infty e^{-st}y(t)\,dt$。在函数增长和 $s$ 的实部满足收敛条件时，分部积分得到
+\[
+\mathcal L[y'](s)=sY(s)-y(0).
+\]
+初始值 $y(0)$ 因此直接进入变换后的方程。$s$ 是变换变量，逆变换把 $Y$ 还原为时间响应 $y$。
+\EN{The Laplace transform is defined by the integral shown above for suitable functions and values of $s$. Integration by parts gives the derivative formula, so the initial value enters the transformed equation explicitly. Inverting the transform returns the time response.}
+\READ{“The Laplace transform of y prime is s Y of s minus y at zero.”}
+\EX{解 $y'+2y=1$、$y(0)=0$。变换后 $(sY-0)+2Y=1/s$，所以 $Y=1/[s(s+2)]$。部分分式分解得 $Y=\frac12(1/s-1/(s+2))$，逆变换为 $y(t)=\frac12(1-e^{-2t})$。它从零开始并逐渐趋近稳态值 $1/2$。}{Transforming $y'+2y=1$ with zero initial value gives $(s+2)Y=1/s$. Partial fractions and inversion give $y(t)=\frac12(1-e^{-2t})$, which starts at zero and approaches the steady value one half.}
+
+\section{Green 函数：由跳跃条件求核 | Green function from a jump condition}
+\noindent 对 $-u''=f$、$u(0)=u(1)=0$，先求点源响应 $-G_{xx}(x,\xi)=\delta(x-\xi)$。当 $x\ne\xi$ 时右端为零，所以 $G$ 关于 $x$ 分段线性；边界值为零，$G$ 在 $x=\xi$ 连续。对方程在 $\xi$ 附近积分，得导数跳跃条件 $G_x(\xi^+,\xi)-G_x(\xi^-,\xi)=-1$。由这三个条件可得
+\[
+G(x,\xi)=\begin{cases}x(1-\xi),&x\le\xi,\\\xi(1-x),&x\ge\xi.\end{cases}
+\]
+$\xi$ 是点源位置，$x$ 是观测位置。解由线性叠加给出 $u(x)=\int_0^1G(x,\xi)f(\xi)\,d\xi$。
+\EN{For the one-dimensional Poisson problem, the Green function is linear in $x$ on either side of the source point. It is continuous, vanishes at the endpoints, and its derivative has a jump of minus one, obtained by integrating the equation across the delta source. These conditions give the piecewise formula. The solution is the integral of the kernel against the forcing.}
+\READ{“The derivative of G on the right minus the derivative on the left at xi equals negative one.”}
+\EX{令 $f(x)=1$。直接积分 Green 核：
+\[
+u(x)=\int_0^x \xi(1-x)\,d\xi+\int_x^1x(1-\xi)\,d\xi=\frac{x(1-x)}2.
+\]
+验算 $-u''=1$ 且 $u(0)=u(1)=0$。这表示单位均匀源在两端固定的杆上形成的静态响应；核 $G$ 对称，体现线性算子的互易性。}{For a constant forcing, split the integral at $\xi=x$ and evaluate it to obtain $u=x(1-x)/2$. It satisfies $-u''=1$ and both endpoint conditions. The symmetric kernel expresses reciprocity of this boundary-value problem.}
+\ASK{Green 函数为什么能处理一般外力？}{Why can a Green function handle a general forcing term?}{线性算子的解满足叠加原理。把分布式外力看成许多位置上的点源，每个点源的响应由 $G(x,\xi)$ 给出，积分就是把所有响应相加。}{A linear operator obeys superposition. View a distributed force as a continuum of point sources; $G(x,\xi)$ gives each response, and integration adds them all.}
+\section{四个可手算的标准模型 | Four standard models worked from the data}
+\noindent \textbf{一阶输运方程。} 对 $u_t+c u_x=0$ 且初值 $u(x,0)=\phi(x)$，特征曲线满足 $dx/dt=c$，所以 $x-ct$ 沿曲线不变，$du/dt=u_t+cu_x=0$。因此 $u(x,t)=\phi(x-ct)$。这是波形以速度 $c$ 平移而不变形的理想模型；若边界或初值不光滑，解的经典可微性要另行检查。
+\EN{For $u_t+c u_x=0$ with initial data $u(x,0)=\phi(x)$, the characteristic curves satisfy $dx/dt=c$. Along each curve, $x-ct$ is constant and $du/dt=u_t+cu_x=0$, giving $u(x,t)=\phi(x-ct)$. The profile translates at speed $c$ without changing shape. Nonsmooth data may require a weak-solution interpretation.}
+\READ{“U of x and t equals phi of x minus c t.”}
+\EX{若初始温度或浓度分布为 $\phi(x)=e^{-x^2}$，且 $c=2$，则 $u(x,t)=e^{-(x-2t)^2}$；峰值位置从 $0$ 移到 $2t$，峰值大小仍为 $1$。}{For $\phi(x)=e^{-x^2}$ and speed $c=2$, the solution is $e^{-(x-2t)^2}$. Its peak moves from zero to $2t$ while retaining height one.}
+
+\noindent \textbf{弦的单一振型。} 对 $u_{tt}=c^2u_{xx}$、$0<x<L$，两端固定 $u(0,t)=u(L,t)=0$。若初位移 $u(x,0)=A\sin(\pi x/L)$、初速度 $u_t(x,0)=0$，分离变量给出
+\[
+u(x,t)=A\sin\!\left(\frac{\pi x}{L}\right)\cos\!\left(\frac{c\pi t}{L}\right).
+\]
+空间正弦满足端点条件，时间因子满足 $T''+(c\pi/L)^2T=0$；把 $t=0$ 代入可验初位移，而时间因子的导数在 $0$ 处为零，故初速度也正确。频率由波速和弦长决定。
+\EN{For a fixed string with zero endpoints, a single sine mode in the initial displacement evolves as the displayed product. The spatial factor satisfies the boundary conditions; the time factor solves the resulting oscillator equation. Substitution at time zero verifies both the initial displacement and zero initial velocity. The frequency depends on wave speed and string length.}
+\READ{“U equals A sine pi x over L, times cosine c pi t over L.”}
+
+\noindent \textbf{有限杆上的热扩散。} 对 $u_t=\kappa u_{xx}$、$0<x<L$，两端保持零温度，初温若恰为 $u(x,0)=A\sin(\pi x/L)$，则
+\[
+u(x,t)=A\sin\!\left(\frac{\pi x}{L}\right)e^{-\kappa(\pi/L)^2t}.
+\]
+代入方程可见 $u_t=-\kappa(\pi/L)^2u$，而 $u_{xx}=-(\pi/L)^2u$，两边相等；端点与初值也逐项满足。指数因子说明温度振型随时间衰减，时间常数为 $L^2/(\kappa\pi^2)$。一般初温需展开为 Fourier 正弦级数，各模态分别乘上相应指数衰减因子。
+\EN{For a rod satisfying the heat equation with zero endpoint temperatures and a single sine-shaped initial profile, the solution is the same spatial mode multiplied by an exponential decay. Differentiating verifies the equation, and the boundary and initial data are satisfied. The decay time is $L^2/(\kappa\pi^2)$. A general initial profile is expanded in a Fourier sine series, with each mode decaying at its own rate.}
+\EX{若 $L=1$、$\kappa=1$、$A=10$，则中点温度 $u(1/2,t)=10e^{-\pi^2t}$。经过 $t=1/\pi^2$ 后，它降为 $10/e$；这不是整个温度场都变成常数，而是单一振型的振幅按指数衰减。}{For $L=1$, $\kappa=1$, and $A=10$, the midpoint temperature is $10e^{-\pi^2t}$. At $t=1/\pi^2$ it is $10/e$. The temperature field does not become spatially constant in this example; the amplitude of one mode decays exponentially.}
+
+\noindent \textbf{矩形区域的 Laplace 方程。} 在 $0<x<L$、$0<y<H$ 上令 $\Delta u=0$，底边、左右边取零，顶边取 $u(x,H)=\sin(\pi x/L)$。分离变量 $u=X(x)Y(y)$ 后，端点条件给出 $X=\sin(\pi x/L)$，而 $Y''-(\pi/L)^2Y=0$。因此
+\[
+u(x,y)=\sin\!\left(\frac{\pi x}{L}\right)\frac{\sinh(\pi y/L)}{\sinh(\pi H/L)}.
+\]
+代入四条边可逐一检查边界值。它描述矩形薄板在给定边缘温度下的稳态温度；若顶边数据是一般函数，需要作正弦 Fourier 展开并叠加各模态。
+\EN{On a rectangle, impose zero data on the bottom and vertical sides and sine data on the top. Separation of variables leads to a sine factor in $x$ and a hyperbolic-sine factor in $y$, giving the displayed harmonic function. Checking each side verifies the boundary data. It models steady temperature in a thin plate; general top data require a Fourier sine expansion.}
+\ASK{分离变量法为什么会出现正弦和指数？}{Why do sine and exponential factors appear in separation of variables?}{空间边界条件把空间常微分方程的允许特征函数选成正弦模态；时间方程再由热方程得到指数衰减、由波动方程得到正弦余弦振荡。边界条件决定空间谱，方程类型决定时间演化。}{Spatial boundary conditions select sine eigenfunctions. The heat equation gives exponential decay in time, while the wave equation gives oscillation. The boundary conditions determine spatial modes, and the PDE type determines their time evolution.}
+\section*{来源与范围 | Source and scope}
+主线参考《数学物理方程讲义》第 3 版第 1--4 章；分离变量、积分变换和 Green 函数部分同时参考“数学物理方程”文件夹中的《分离变量法》《积分变换方法》《格林函数与格林函数法》。本稿重述常见模型和解法，遇到不同教材的符号约定时以本稿定义为准。
+\EN{The main source is Chapters 1--4 of the third edition of the Mathematical Physics Equations lecture notes. The sections on separation of variables, integral transforms, and Green functions also use the corresponding handouts in the Mathematical Physics Equations folder. This review restates common models and methods; when notation differs across sources, the definitions in this review apply.}
 \end{document}

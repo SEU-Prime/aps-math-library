@@ -1,0 +1,194 @@
+\documentclass[UTF8,11pt,a4paper]{ctexart}
+\usepackage{amsmath,amssymb,geometry,enumitem,hyperref}
+\geometry{margin=2cm}\setlist{itemsep=2pt,topsep=3pt}
+\hypersetup{colorlinks=true,linkcolor=blue}
+\newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
+\newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\EX}[2]{\par\noindent\textbf{例子 / Example.} #1\par\EN{#2}}
+\newcommand{\ASK}[4]{\par\noindent\textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent\textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
+\title{高等代数（一）APS 面试准备\\[4pt]\large 第 1--5 章：多项式、行列式、线性方程组、矩阵与二次型}
+\author{Advanced Algebra I: Bilingual Oral Review}
+\date{}
+\begin{document}\maketitle
+
+{\footnotesize\noindent\textbf{来源与范围 / Source and scope.} 主要参考北京大学数学系前线代小组《高等代数》第五版，并与文件夹中的修订版核对；覆盖第 1--5 章：多项式、行列式、线性方程组、矩阵与二次型。 Based on the fifth edition of \emph{Advanced Algebra} by Peking University's Frontline Linear Algebra Group, cross-checked against the revised edition; covers Chapters 1--5.\par}
+
+\section*{课程概述 | Course overview}
+\noindent\textbf{中文口述稿。} 高等代数前半部分把中学里熟悉的多项式和方程推广成更系统的对象。我先学习多项式的整除、最大公因式和因式分解，理解“有根”如何转化成一个线性因子；随后学习行列式，用它判断方阵是否可逆，以及一个线性变换是否会压扁空间。在线性方程组中，矩阵的秩告诉我方程是否相容、解有几个自由参数。最后，二次型把多个变量的平方项和交叉项放进一个对称矩阵，通过换坐标化成平方和，例如把 $x^2+4xy+5y^2$ 写成 $(x+2y)^2+y^2$。这门课的主线是用代数结构把计算、解的存在性和几何意义连起来。
+\EN{The first half of advanced algebra systematizes polynomials, determinants, matrices, and equations. I began with divisibility and factorization of polynomials, where a root corresponds to a linear factor. Determinants then tell us whether a square matrix is invertible. In a linear system, rank determines consistency and the number of free parameters. Finally, a quadratic form packages square and cross terms into a symmetric matrix; a change of coordinates can turn it into a sum of squares. The course connects algebraic structure with computation, existence of solutions, and geometric meaning.}
+
+\noindent\textbf{具体应用。} 电路中的节点电流守恒、化学反应的物料平衡和小型网络的流量平衡，都能写成 $Ax=b$。消元法求解；秩比较判断方程是否矛盾；若有唯一解，$A^{-1}$ 或 Cramer 法则提供理论表达。二次型可表示弹簧系统或优化问题附近的能量：正定表示除平衡点外能量为正，因此是稳定性和局部最小值判断的重要工具。这里的模型假设关系是线性的，若元件或约束是非线性的，就需要线性化或其他方法。
+\EN{Circuit laws, material balances in chemical reactions, and flow balances in small networks can be written as $Ax=b$. Gaussian elimination solves the system, while rank detects inconsistency. A quadratic form can represent energy in a coupled spring system or a local optimization model. Positive definiteness means the energy is positive away from equilibrium and is useful for stability or local-minimum tests. These models assume linear relationships; nonlinear systems require additional methods or linearization.}
+
+\section{第 1 章：多项式与整除 | Polynomials and divisibility}
+\noindent\textbf{数域和多项式。} 数域 $F$ 是可进行加、减、乘、除（除数非零）的数集，常见例子是 $\mathbb Q,\mathbb R,\mathbb C$。$F[x]$ 中的多项式是形式和 $f(x)=a_nx^n+\cdots+a_0$，系数 $a_i\in F$；最高非零项的指数是次数 $\deg f$。零多项式的次数通常不定义。多项式是形式对象，不能只看它在某个数上的取值：非零多项式可能在一些点取零。
+\EN{A field is a number system in which addition, subtraction, multiplication, and division by nonzero elements are possible. A polynomial in $F[x]$ is a formal expression with coefficients in $F$. Its degree is the largest exponent with a nonzero coefficient; the zero polynomial is treated separately. A polynomial is not merely its value at one point.}
+\EX{$f(x)=x^2+1$ 是 $\mathbb R[x]$ 中的非零二次多项式，但它没有实根；在 $\mathbb C$ 中则分解为 $(x-i)(x+i)$。因此“零多项式”和“在某点取零的多项式”是不同概念。}{The polynomial $x^2+1$ is nonzero and has degree two, but it has no real root. Over the complex numbers it factors as $(x-i)(x+i)$. A nonzero polynomial is different from a polynomial that vanishes at a particular point.}
+
+\noindent\textbf{带余除法。} 对 $f,g\in F[x]$ 且 $g\ne0$，存在唯一的商 $q$ 和余式 $r$，使
+\[
+f=qg+r,\qquad r=0\ \text{or}\ \deg r<\deg g.
+\]
+次数下降保证算法有限终止；“唯一”说明商和余式不依赖计算路径。用重复除法可求最大公因式，再从余式逐步回代得到 Bézout 等式。
+\EN{For polynomials $f,g$ over a field with $g\ne0$, the division algorithm gives unique quotient $q$ and remainder $r$, with the remainder either zero or of smaller degree than $g$. Repeated division computes a greatest common divisor, and back-substitution gives a polynomial Bezout identity.}
+\READ{“F equals q times g plus r, where r is zero or has degree less than the degree of g.”}
+\EX{在 $\mathbb R[x]$ 中除 $x^3-1$ 以 $x-1$：
+\[
+x^3-1=(x-1)(x^2+x+1)+0.
+\]
+因此 $x-1$ 整除 $x^3-1$，而商是 $x^2+x+1$。这也可由 $1^3-1=0$ 预见，但带余除法给出完整的代数关系。}{Dividing $x^3-1$ by $x-1$ gives quotient $x^2+x+1$ and remainder zero. Thus $x-1$ is a factor. Evaluating at one predicts divisibility, while the division identity gives the full algebraic relation.}
+
+\noindent\textbf{最大公因式与 Bézout 定理。} 多项式 $d$ 是 $f,g$ 的最大公因式，如果它整除二者，且任何公因式都整除 $d$。最大公因式只差一个非零常数倍；常取首一形式使它唯一。存在 $u,v\in F[x]$ 使
+\[
+d=uf+vg.
+\]
+这条等式说明最大公因式不是只靠“共同因子”定义的，它还能由原多项式的线性组合构造出来。
+\EN{A greatest common divisor divides both polynomials and is divisible by every common divisor, up to multiplication by a nonzero constant. It can be normalized to be monic. The polynomial Bezout theorem expresses it as $uf+vg$ for some polynomials $u,v$.}
+\READ{“D equals u times f plus v times g, for polynomials u and v.”}
+\EX{对 $f=x^2-1=(x-1)(x+1)$、$g=x-1$，最大公因式为 $d=x-1$，且 $d=0\cdot f+1\cdot g$。若两多项式没有非恒定公因式，最大公因式取 $1$，称二者互素。}{For $f=x^2-1$ and $g=x-1$, the monic gcd is $x-1$, which is already the second polynomial. If the monic gcd is one, the two polynomials are coprime.}
+
+\noindent\textbf{因式定理和根的重数。} 对 $a\in F$，$f(a)=0$ 当且仅当 $x-a$ 整除 $f(x)$。这是把求根转成因式分解的桥梁。若 $(x-a)^m$ 整除 $f$ 而 $(x-a)^{m+1}$ 不整除，则 $a$ 是 $m$ 重根。域的不同会改变分解：复系数多项式可完全分解为一次因式；实系数多项式可分解为一次因式和不可约二次因式。
+\EN{The factor theorem says that $f(a)=0$ exactly when $x-a$ divides $f(x)$. It converts a root into a linear factor. If $(x-a)^m$ divides $f$ but $(x-a)^{m+1}$ does not, then $a$ is a root of multiplicity $m$. Factorization depends on the field: complex polynomials split into linear factors, while real polynomials factor into linear and irreducible quadratic factors.}
+\READ{“F of a equals zero if and only if x minus a divides f of x.”}
+\EX{$f(x)=x^3-3x+2=(x-1)^2(x+2)$，所以 $1$ 是二重根、$-2$ 是单根。代入检验 $f(1)=0$，再除以 $x-1$ 两次，可确认重数恰为二。}{The factorization shows that one is a double root and negative two is a simple root. Evaluating at one verifies it is a root, and dividing twice by $x-1$ confirms its multiplicity is exactly two.}
+
+\noindent\textbf{多元和对称多项式。} 多元多项式允许多个变量，如 $p(x,y)=x^2+xy+y^2$。若交换变量不改变多项式，例如 $x+y$ 和 $xy$，称其对称。两个变量的对称多项式可由基本对称式 $x+y,xy$ 表示。这使关于若干根的表达可以转写成多项式系数，连接方程根与系数。
+\EN{A multivariable polynomial may involve several variables. A symmetric polynomial is unchanged when its variables are permuted. In two variables, symmetric polynomials can be expressed using the elementary symmetric polynomials $x+y$ and $xy$, linking expressions in roots to polynomial coefficients.}
+\EX{若 $r,s$ 是 $t^2-5t+6=0$ 的两根，则 $r+s=5,rs=6$；所以 $r^2+s^2=(r+s)^2-2rs=25-12=13$，无需分别求根。}{If $r,s$ are the roots of $t^2-5t+6=0$, then their sum is five and product is six. Therefore $r^2+s^2=(r+s)^2-2rs=13$, without solving for the roots individually.}
+
+\section{第 2 章：行列式 | Determinants}
+\noindent\textbf{定义和几何意义。} $n\times n$ 方阵 $A$ 的行列式 $\det A$ 是由矩阵元素按带符号排列求和得到的标量。二阶时
+\[
+\det\begin{pmatrix}a&b\\c&d\end{pmatrix}=ad-bc.
+\]
+在实二维中，$|\det A|$ 表示线性映射对面积的缩放倍数；行列式为零意味着列向量线性相关，映射把平面压到更低维。
+\EN{The determinant of a square matrix is a signed sum over permutations. In two dimensions it is $ad-bc$. For a real linear map, the absolute determinant is the area-scaling factor. A zero determinant means the columns are dependent and the map collapses dimension.}
+\READ{“The determinant of the two by two matrix is a d minus b c.”}
+\EX{$A=\begin{pmatrix}2&0\\0&3\end{pmatrix}$ 把矩形宽放大两倍、高放大三倍，面积放大六倍；$\det A=6$。若两列相同，行列式为零，平行四边形面积也为零。}{The diagonal matrix doubles one coordinate and triples the other, so it multiplies area by six; its determinant is six. If the columns are equal, the parallelogram has zero area and the determinant is zero.}
+
+\noindent\textbf{计算性质。} 交换两行会改变行列式符号；一行乘 $c$ 会使行列式乘 $c$；一行加上另一行的倍数不改变行列式。由这些性质可用高斯消元计算。另有
+\[
+\det(A^T)=\det A,\qquad \det(AB)=\det A\det B.
+\]
+其中 $A^T$ 是转置，$AB$ 是矩阵乘积。乘积公式表示连续两个线性变换的体积缩放因子相乘。
+\EN{Swapping two rows changes the sign; scaling a row scales the determinant; adding a multiple of one row to another leaves it unchanged. These rules support Gaussian-elimination computation. The determinant is unchanged by transpose and is multiplicative under matrix products.}
+\READ{“The determinant of A transpose equals the determinant of A; the determinant of A B equals the determinant of A times the determinant of B.”}
+\EX{计算 $A=\begin{pmatrix}1&2&0\\0&3&1\\2&1&1\end{pmatrix}$：按第一行展开，$\det A=(3-1)-2(0-2)=6$。因为行列式非零，$A$ 可逆，且相应线性系统对任意右端都有唯一解。}{Expanding along the first row gives $(3-1)-2(0-2)=6$. Since the determinant is nonzero, the matrix is invertible and every system with this coefficient matrix has a unique solution.}
+
+\noindent\textbf{余子式、伴随矩阵和 Cramer 法则。} 删除第 $i$ 行第 $j$ 列后得到的子矩阵行列式称余子式 $M_{ij}$，代数余子式为 $C_{ij}=(-1)^{i+j}M_{ij}$。沿一行或一列展开可计算行列式。若 $\det A\ne0$，则 $A^{-1}=\operatorname{adj}(A)/\det A$；对 $Ax=b$，Cramer 法则用替换一列后的行列式给出 $x_i=\det A_i/\det A$。它主要用于理论和小矩阵，实际大系统通常用消元。
+\EN{A minor is the determinant after deleting one row and one column; its signed version is a cofactor. Cofactor expansion computes determinants. If $A$ is invertible, the adjugate formula gives its inverse. Cramer's rule expresses each coordinate of the solution using a determinant, but Gaussian elimination is usually more efficient for large systems.}
+\READ{“X i equals the determinant of A i divided by the determinant of A.”}
+\EX{方程 $2x+y=5,\ x-y=1$ 的系数行列式是 $-3\ne0$，所以唯一解存在。替换第一列求得 $x=2$，替换第二列求得 $y=1$；代回两式均成立。}{The coefficient determinant is nonzero, so the system has a unique solution. Cramer's rule gives $x=2$ and $y=1$, which satisfy both equations.}
+
+\section{第 3 章：线性方程组与秩 | Linear systems and rank}
+\noindent\textbf{系数矩阵和增广矩阵。} $m$ 个线性方程、$n$ 个未知量写为 $Ax=b$。$A$ 是 $m\times n$ 系数矩阵，$x$ 是未知列向量，$b$ 是常数列。增广矩阵 $[A\mid b]$ 把常数列并到系数矩阵右边；对方程作合法消元等价于对增广矩阵作初等行变换。
+\EN{A system of $m$ linear equations in $n$ unknowns is written as $Ax=b$. The coefficient matrix $A$ contains the coefficients, $x$ is the unknown vector, and $b$ is the right-hand side. The augmented matrix appends $b$ to $A$, and elementary row operations preserve the solution set.}
+\READ{“A x equals b, where A is the coefficient matrix and b is the right-hand-side vector.”}
+\EX{系统 $x+y=3,\ 2x+2y=6$ 的第二行是第一行的两倍，增广矩阵消元后出现一条零行，表示一个方程冗余，而不是矛盾。若第二个方程右边改为 $7$，则得到 $0=1$，系统无解。}{In the first system, the second equation is twice the first, so elimination produces a zero row and infinitely many solutions. If the right-hand side is changed to seven, elimination gives a contradiction and no solution.}
+
+\noindent\textbf{秩判别定理。} 矩阵的秩是其列空间或行空间的维数，也等于消元后主元的个数。线性方程组有解当且仅当
+\[
+\operatorname{rank}(A)=\operatorname{rank}([A\mid b]).
+\]
+若共同秩为 $r$，解集维数为 $n-r$：当 $r=n$ 时唯一解；当 $r<n$ 且有解时有自由变量。这里讨论实数或复数域，非唯一时解有无穷多个。
+\EN{The rank is the dimension of the row or column space and equals the number of pivots after elimination. A system is consistent exactly when the coefficient and augmented matrices have the same rank. If the common rank is $r$, the solution set has dimension $n-r$: full column rank gives a unique solution, while a smaller rank gives free variables when the system is consistent.}
+\READ{“The rank of A equals the rank of the augmented matrix A bar b if and only if the system is consistent.”}
+\EX{解 $x+y=3,\ x-y=1$。相加得 $2x=4$，所以 $x=2,y=1$，两列主元使秩为 $2=n$。把第二式改为 $x+y=4$ 则两行系数相同而常数不同，秩判别不等，故无解。}{Adding the equations gives $2x=4$, hence $(x,y)=(2,1)$; there are two pivots for two unknowns. If the second equation is changed to $x+y=4$, the coefficient rows agree while the constants differ, so the ranks are unequal and the system is inconsistent.}
+
+\noindent\textbf{解集的结构。} 若 $x_0$ 是一个特解，则所有解为 $x=x_0+z$，其中 $z\in\ker A$ 满足 $Az=0$。因此非齐次解集是齐次解空间平移得到的仿射空间；齐次方程 $Ax=0$ 一定有零解。
+\EN{If $x_0$ is one particular solution, every solution has the form $x=x_0+z$, where $z$ lies in the null space of $A$. Thus the solution set is a translate of the homogeneous solution space. The homogeneous system always has the zero solution.}
+\READ{“X equals x zero plus z, where z belongs to the kernel of A.”}
+\ASK{行列式和秩分别回答什么问题？}{What questions do determinant and rank answer?}{行列式只对方阵定义，行列式非零等价于满秩和可逆；秩适用于任意矩阵，表示独立行或列的数目，也用于判断方程组相容与自由变量个数。}{The determinant is defined only for square matrices; a nonzero determinant is equivalent to full rank and invertibility. Rank applies to rectangular matrices and counts independent rows or columns, determining consistency and the number of free variables.}
+
+\section{第 4 章：矩阵、逆矩阵与秩 | Matrices, inverses, and rank}
+\noindent\textbf{矩阵乘法。} 若 $A$ 是 $m\times n$、$B$ 是 $n\times p$，则 $AB$ 是 $m\times p$，其第 $(i,j)$ 项是 $A$ 第 $i$ 行与 $B$ 第 $j$ 列的内积。矩阵乘法表示线性变换复合，一般不交换，即 $AB\ne BA$。
+\EN{If $A$ is $m$ by $n$ and $B$ is $n$ by $p$, then $AB$ is $m$ by $p$. Its entry in row $i$, column $j$ is the dot product of row $i$ of $A$ and column $j$ of $B$. Multiplication represents composition of linear maps and is generally not commutative.}
+\EX{$A=\begin{pmatrix}1&1\\0&1\end{pmatrix}$、$B=\begin{pmatrix}1&0\\1&1\end{pmatrix}$ 时，$AB=\begin{pmatrix}2&1\\1&1\end{pmatrix}$，而 $BA=\begin{pmatrix}1&1\\1&2\end{pmatrix}$。两个变换先后顺序不同，结果不同。}{For the displayed matrices, $AB$ and $BA$ are different. Applying two linear transformations in different orders can produce different results.}
+
+\noindent\textbf{可逆矩阵和初等变换。} 方阵 $A$ 可逆表示存在 $A^{-1}$ 使 $AA^{-1}=A^{-1}A=I$。以下命题等价：$A$ 可逆、$\det A\ne0$、$\operatorname{rank}A=n$、$Ax=0$ 只有零解、$Ax=b$ 对每个 $b$ 都有唯一解。交换行、非零倍乘一行、给一行加另一行倍数对应可逆的初等矩阵；消元本质上是在左乘这些矩阵。
+\EN{A square matrix is invertible if it has a two-sided inverse. Invertibility is equivalent to a nonzero determinant, full rank, a trivial null space, and a unique solution for every right-hand side. Elementary row operations correspond to multiplication by invertible elementary matrices.}
+\EX{旋转矩阵 $R=\begin{pmatrix}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{pmatrix}$ 满足 $R^TR=I$，故 $R^{-1}=R^T$。它保持长度和角度，是正交变换。}{The rotation matrix satisfies $R^TR=I$, so its inverse is its transpose. It preserves lengths and angles.}
+
+\noindent\textbf{矩阵的秩与实际压缩。} $A$ 的秩等于它能独立输出的方向数。若一个 $3\times4$ 矩阵秩为 $2$，它把四维输入的变化压到二维像空间；齐次方程的核维数为 $4-2=2$。一般地，
+\[
+\dim\ker A+\operatorname{rank}A=n.
+\]
+这里 $n$ 是输入空间维数，$\ker A$ 是被映到零向量的输入集合。
+\EN{The rank of a matrix is the number of independent output directions. For a matrix with four input coordinates and rank two, the null space has dimension two. In general, nullity plus rank equals the dimension of the input space.}
+\READ{“The dimension of the kernel of A plus the rank of A equals n.”}
+\EX{映射 $A(x,y,z)=(x+y,2x+2y)$ 的矩阵秩为 $1$，因为第二行是第一行的两倍。像空间是一条直线；核由 $x+y=0$ 且 $z$ 任意组成，是二维平面。}{The two output coordinates are dependent, so the matrix has rank one. Its image is a line, while its kernel is the plane $x+y=0$ with arbitrary $z$.}
+
+\section{第 5 章：二次型 | Quadratic forms}
+\noindent\textbf{定义与对称矩阵。} 实二次型是形如 $Q(x)=\sum_{i,j}a_{ij}x_ix_j$ 的齐次二次多项式，可写成
+\[
+Q(x)=x^TAx,
+\]
+其中 $x$ 是列向量，$A$ 可取对称矩阵。若原矩阵不对称，反对称部分对 $x^TAx$ 没有贡献，所以可用 $(A+A^T)/2$ 替代。
+\EN{A real quadratic form is a homogeneous polynomial of degree two. It can be written as $Q(x)=x^TAx$ with a symmetric matrix $A$. Any skew-symmetric part contributes zero to this expression, so the matrix may always be symmetrized.}
+\READ{“Q of x equals x transpose A x.”}
+\EX{$Q(x,y)=x^2+4xy+5y^2$ 对应 $A=\begin{pmatrix}1&2\\2&5\end{pmatrix}$，因为交叉项是 $2a_{12}xy=4xy$。把 $4$ 直接放在矩阵两个非对角位置会把交叉项误算成 $8xy$。}{The cross-term coefficient is twice the off-diagonal matrix entry, so the associated symmetric matrix has entries two, not four, in its off-diagonal positions.}
+
+\noindent\textbf{合同变换和标准形。} 作可逆坐标替换 $x=Cy$ 后，
+\[
+Q(x)=y^T(C^TAC)y.
+\]
+矩阵变为 $C^TAC$，这称合同变换。二次型的化简是换变量，不是相似变换 $C^{-1}AC$；二者解决的问题不同。实对称矩阵可正交对角化，因而也可用正交坐标把二次型化为平方项之和。
+\EN{Under an invertible change of variables $x=Cy$, the matrix becomes $C^TAC$; this is a congruence transformation. Reducing a quadratic form is a change of variables, not the similarity transformation $C^{-1}AC$. A real symmetric matrix can also be diagonalized by an orthogonal change of coordinates.}
+\READ{“A changes to C transpose A C under the substitution x equals C y.”}
+\EX{$x^2+4xy+5y^2=(x+2y)^2+y^2$。令 $u=x+2y,v=y$，是可逆替換，故標準形為 $u^2+v^2$。矩阵的主子式为 $1$ 和 $1$，也都为正。}{Completing the square gives $(x+2y)^2+y^2$. The invertible substitution $u=x+2y$, $v=y$ reduces the form to $u^2+v^2$. Its leading principal minors are both positive.}
+
+\noindent\textbf{正定、负定与惯性。} 若 $Q(x)>0$ 对所有 $x\ne0$，称正定；若恒小于零称负定；若可正可负称不定。Sylvester 判据：实对称矩阵正定当且仅当所有顺序主子式都为正。经可逆合同变换后，正平方项数、负平方项数和零项数不变，称惯性指数。
+\EN{A quadratic form is positive definite if it is positive for every nonzero vector, negative definite if always negative, and indefinite if it takes both signs. Sylvester's criterion says a real symmetric matrix is positive definite exactly when all leading principal minors are positive. The numbers of positive, negative, and zero squares are invariant under invertible congruence.}
+\READ{“A real symmetric matrix is positive definite if and only if all its leading principal minors are positive.”}
+\EX{$Q(x,y)=x^2-y^2$ 取 $(1,0)$ 时为 $1$，取 $(0,1)$ 时为 $-1$，所以不定。$x^2+4xy+5y^2=(x+2y)^2+y^2$ 对非零向量恒正，所以正定。}{The form $x^2-y^2$ takes both positive and negative values, so it is indefinite. The completed-square form is positive for every nonzero vector and is positive definite.}
+
+\noindent\textbf{实际问题：能量和局部极小值。} 若系统能量写成 $E(x)=x^TAx$ 且 $A$ 正定，那么任意非零偏离都会增加能量；在优化中，目标函数在驻点附近的 Hessian 正定是严格局部极小的充分条件。矩阵的特征方向给出耦合变量的主轴，特征值大小表示各方向上的曲率或刚度。
+\EN{If the energy is $E(x)=x^TAx$ with positive-definite $A$, every nonzero displacement raises the energy. In optimization, a positive-definite Hessian at a stationary point is sufficient for a strict local minimum. Eigenvectors give principal directions, and eigenvalues measure curvature or stiffness in those directions.}
+\ASK{为什么交叉项在对称矩阵里要分成两半？}{Why is a cross-term split between two symmetric matrix entries?}{展开 $x^TAx$ 时，$a_{12}x_1x_2$ 和 $a_{21}x_2x_1$ 相加。取对称矩阵后两项相等，所以交叉项系数是 $2a_{12}$。}{When expanding $x^TAx$, the two off-diagonal terms add. For a symmetric matrix they are equal, so the cross-term coefficient is twice the off-diagonal entry.}
+\ASK{Cramer 法则和消元法分别适合什么场合？}{When is Cramer's rule useful, and when is elimination preferable?}{Cramer 法则要求方阵系数矩阵可逆，表达式简洁，适合理论说明和小例子；消元法适用于一般线性系统，计算效率更高，也能直接显示秩和自由变量。}{Cramer's rule requires an invertible square coefficient matrix and is concise for theory or small examples. Elimination handles general systems more efficiently and reveals rank and free variables.}
+\ASK{二次型化标准形时，为什么用合同变换而非相似变换？}{Why do we use congruence rather than similarity to reduce a quadratic form?}{二次型在换坐标 $x=Cy$ 后成为 $y^T(C^TAC)y$，因此变换律是 $C^TAC$。相似变换描述线性算子在换基下的矩阵，变换律不同。}{A change of variables in a quadratic form gives $C^TAC$. Similarity describes the matrix of a linear operator under a basis change and follows a different transformation rule.}
+\section{综合例题：多项式整除、秩与解集 | Worked examples}
+\subsection{欧几里得算法如何给出最大公因式}
+\noindent\textbf{中文讲解。} 取 $f(x)=x^3-1$ 和 $g(x)=x^2-1$。多项式除法给出
+\[
+f=xg+(x-1),\qquad g=(x+1)(x-1).
+\]
+所以任何同时整除 $f,g$ 的多项式也整除余数 $x-1$；而 $x-1$ 又整除两者，故首一最大公因式为 $x-1$。第一式还直接给出 Bezout 表示 $x-1=f-xg$。这说明欧几里得算法不仅找到最大公因式，还构造出它作为原多项式线性组合的表达。
+\EN{Take $f(x)=x^3-1$ and $g(x)=x^2-1$. Polynomial division gives $f=xg+(x-1)$, and $g=(x+1)(x-1)$. Every common divisor must divide the remainder $x-1$, which itself divides both polynomials. Thus the monic gcd is $x-1$. The division identity also gives the Bezout representation $x-1=f-xg$.}
+\READ{“F equals x times g plus x minus one; therefore the greatest common divisor is x minus one.”}
+\noindent\textbf{条件解释。} 这里使用一元多项式环 $F[x]$，其中系数来自域 $F$。除法算法保证每一步的非零余数次数严格下降，因此有限步后终止；不能把这个论证不加检查地推广到任意多元多项式环。
+\EN{This argument uses the one-variable polynomial ring $F[x]$ over a field. The division algorithm strictly lowers the degree of each nonzero remainder, so the process terminates. The same reasoning does not automatically extend to arbitrary multivariable polynomial rings.}
+
+\subsection{秩定理如何描述全部解}
+\noindent\textbf{题目。} 解方程组
+\[
+x+y+z=2,\qquad 2x+2y+2z=4,\qquad x-y+z=0.
+\]
+第二个方程是第一个的两倍。第一式减第三式得 $2y=2$，所以 $y=1$，并有 $x+z=1$。令自由变量 $z=t$，全部解为
+\[
+(x,y,z)=(1-t,1,t),\qquad t\in\mathbb R.
+\]
+系数矩阵有两个主元，故秩为 $2$；未知量有 $3$ 个，解集维数为 $3-2=1$。
+\EN{The second equation is twice the first. Subtracting the third equation from the first gives $2y=2$, hence $y=1$, and then $x+z=1$. Let the free variable be $z=t$; all solutions are $(1-t,1,t)$. There are two pivots, so the rank is two and the solution set has dimension $3-2=1$.}
+\noindent\textbf{齐次解空间的解释。} 一个特解是 $x_0=(1,1,0)$；对应齐次系统的解为 $t(-1,0,1)$。因此非齐次解集是 $x_0+t(-1,0,1)$，即“一个特解加上核中的任意向量”。若把第二式右端改为 $5$，消元会得到 $0=1$，此时 $\operatorname{rank}(A)<\operatorname{rank}([A\mid b])$，系统无解。
+\EN{One particular solution is $(1,1,0)$, and the homogeneous solutions are $t(-1,0,1)$. Thus the full solution set is one particular solution plus an arbitrary vector in the kernel. If the right-hand side of the second equation were changed to five, elimination would produce $0=1$ and the augmented matrix would have larger rank, so the system would be inconsistent.}
+\READ{“The solution set is x zero plus the kernel of A; its dimension is the number of variables minus the rank.”}
+\ASK{为什么秩告诉我们自由变量的个数？}{Why does rank determine the number of free variables?}{消元后每个主元对应一个受方程约束的变量，其余变量可自由选取。主元数是秩，未知量总数减主元数就是零空间维数。}{Each pivot corresponds to a constrained variable, while non-pivot variables are free. The number of pivots is the rank, so nullity equals the number of unknowns minus rank.}
+
+\clearpage
+\subsection{二次型的符号、几何与应用}
+\noindent\textbf{中文讲解。} 对称矩阵 $A=\begin{pmatrix}2&1\\1&2\end{pmatrix}$ 对应二次型 $Q(x,y)=2x^2+2xy+2y^2$。顺序主子式为 $2$ 和 $\det A=3$，都为正；Sylvester 判据说明 $Q$ 正定。矩阵特征值为 $3$ 和 $1$，因此沿两个互相垂直的主轴，二次型分别按系数 $3$、$1$ 增长；等值线 $Q(x,y)=c$（$c>0$）是椭圆。
+\EN{The symmetric matrix $A=\begin{pmatrix}2&1\\1&2\end{pmatrix}$ gives $Q(x,y)=2x^2+2xy+2y^2$. Its leading principal minors are two and three, both positive, so Sylvester's criterion proves positive definiteness. The eigenvalues are three and one, so the form grows with these weights along two perpendicular principal axes. Its positive level sets are ellipses.}
+\noindent\textbf{实际解释。} 若 $Q$ 表示小位移对应的势能增量，正定表示任何非零小位移都会增加能量，平衡位置是严格局部能量最低点；若矩阵有正、负特征值，二次型沿不同方向一增一减，驻点呈鞍形。优化问题中，这正是用 Hessian 判断驻点局部性质的线性代数基础。
+\EN{If $Q$ represents the change in potential energy under a small displacement, positive definiteness means every nonzero displacement raises the energy, so the equilibrium is a strict local energy minimum. If the matrix has both positive and negative eigenvalues, the form rises in some directions and falls in others, producing a saddle. This is the linear-algebraic basis of Hessian tests in optimization.}
+\ASK{若二次型矩阵的特征值一正一负，图形和驻点有什么特征？}{What do mixed-sign eigenvalues imply for a quadratic form and its critical point?}{二次型沿一个特征方向取正、沿另一个方向取负，因此等值面呈鞍形；若它是函数在驻点处的 Hessian 二次项，该驻点为鞍点而非局部极小或极大。}{The form is positive along one eigenvector and negative along another, so its level geometry is saddle-shaped. If it is the Hessian quadratic term at a critical point, that point is a saddle rather than a local minimum or maximum.}
+
+\section{二次型的正负性与坐标变换 | A quadratic form and its geometry}
+\noindent 二次型 $Q(x,y)=x^2+4xy+y^2$ 的对称矩阵为 $A=\begin{pmatrix}1&2\\2&1\end{pmatrix}$，因为交叉项系数来自两个对称非对角元。特征向量可取 $(1,1)$ 与 $(1,-1)$，对应特征值 $3$ 与 $-1$。在正交坐标 $u=(x+y)/\sqrt2$、$v=(x-y)/\sqrt2$ 下，
+\[
+Q=3u^2-v^2.
+\]
+故该二次型不定：沿 $v=0$ 取正值，沿 $u=0$ 取负值。正交变换保留长度和角度，只改变坐标表达。
+\EN{The symmetric matrix of $Q=x^2+4xy+y^2$ is $\begin{pmatrix}1&2\\2&1\end{pmatrix}$. Its eigenvectors $(1,1)$ and $(1,-1)$ have eigenvalues three and minus one. In the corresponding orthonormal coordinates, $Q=3u^2-v^2$, so the form is indefinite. An orthogonal change of coordinates preserves lengths and angles and changes only the coordinate expression.}
+\EX{判断 $Q=0$ 的等值线时，化为 $3u^2-v^2=0$ 得两条直线 $v=\pm\sqrt3u$；判断正定性时，负特征值 $-1$ 已足以否定正定。}{For the level set $Q=0$, the diagonal form gives two lines $v=\pm\sqrt3u$. To test positive definiteness, the negative eigenvalue alone shows that the form is not positive definite.}
+\end{document}

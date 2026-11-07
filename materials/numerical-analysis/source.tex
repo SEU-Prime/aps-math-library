@@ -245,6 +245,17 @@ y_{n+1}^{\mathrm{AM2}}=y_n+\frac h{12}(5f_{n+1}+8f_n-f_{n-1}),
 
 \ASK{Runge--Kutta 法和多步法有什么区别？}{How do Runge--Kutta and multistep methods differ?}{Runge--Kutta 法每一步用当前点多次计算斜率，通常不需要历史解；多步法在新步计算中使用多个已算出的历史点，可能更省函数评估但需要启动值并分析零稳定性。}{Runge--Kutta methods evaluate several slopes within each step and usually do not need past solution values. Multistep methods use several previous points, which can reduce function evaluations but require starting values and a zero-stability analysis.}
 
+\section[条件数与稳定性 | Conditioning and stability]{同一问题的病态性与算法不稳定 | Problem conditioning versus algorithm stability}
+\noindent 计算 $\sqrt{1+x}-1$ 在很小正 $x$ 时，直接相减会把两个接近 $1$ 的浮点数相减，造成有效数字丢失。代数有理化给出等价形式
+\[
+\sqrt{1+x}-1=\frac{x}{\sqrt{1+x}+1}.
+\]
+右边不发生两个近似相等大数相减，通常数值更稳定。例如若机器舍入使 $1+x$ 直接变成 $1$，原式可能计算为 $0$；有理化形式仍可保留约 $x/2$ 的量级。同一个数学问题可以有数值性质不同的算法。
+\EN{For small positive $x$, directly computing $\sqrt{1+x}-1$ subtracts nearly equal floating-point numbers and can lose significant digits. Rationalization gives the equivalent quotient, which avoids that cancellation. If rounding turns $1+x$ into one, the direct formula may return zero, while the rationalized expression retains the scale $x/2$. Equivalent formulas can lead to algorithms with different numerical behavior.}
+\noindent \textbf{条件数与稳定性是两件事。} 条件数描述输入小扰动对精确解的敏感程度；算法稳定性描述计算过程是否额外放大舍入误差。即使问题本身条件良好，不稳定算法仍可能给出差结果；反过来，稳定算法也无法消除病态问题对输入误差的固有放大。
+\EN{Conditioning measures how sensitive the exact solution is to perturbations in the input. Algorithmic stability measures whether the computational procedure adds further amplification of rounding errors. A well-conditioned problem can still be computed poorly by an unstable algorithm, and a stable algorithm cannot remove sensitivity inherent in an ill-conditioned problem.}
+\EX{矩阵方程 $Ax=b$ 中，若 $A$ 的条件数很大，输入 $b$ 的相对扰动可能造成解 $x$ 的大相对变化；使用带主元的 Gaussian 消去可以改善算法稳定性，但不能改变 $A$ 本身的条件数。口试时应分别说明“问题是否敏感”和“算法是否稳定”。}{For $Ax=b$, a large condition number of $A$ means a small relative perturbation in $b$ may cause a large relative change in $x$. Pivoted Gaussian elimination improves algorithmic stability but does not change the condition number of $A$. State separately whether the problem is sensitive and whether the algorithm is stable.}
+\ASK{为什么公式代数等价，计算结果却可能差很多？}{Why can algebraically equivalent formulas behave differently numerically?}{浮点运算有舍入误差，减去接近的数会产生消去误差，运算顺序也会改变误差传播。应选择稳定的等价表达式，并结合问题条件数判断可达到的精度。}{Floating-point operations round, subtraction of nearby numbers causes cancellation, and operation order changes error propagation. Choose a stable equivalent formula and use the condition number to judge achievable accuracy.}
 \section*{口试表达 | Oral response structure}
 介绍数值算法时，说明输入条件、迭代或求积公式、误差阶、收敛条件和适用场景。若比较算法，应同时比较稳定性、精度、计算量和存储需求；给出数值结果时说明停止准则与误差控制。
 

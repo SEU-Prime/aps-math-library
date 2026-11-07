@@ -172,4 +172,25 @@ c\|x\|_a\le \|x\|_b\le C\|x\|_a\qquad(\text{for all }x),
 \ASK{为什么导数算子可能无界？}{Why can the differentiation operator be unbounded?}{取 $D:C^1[0,1]\to C[0,1]$，$Df=f'$，并在定义域使用上确界范数。令 $f_n(x)=\sin(nx)/n$，则 $\|f_n\|_\infty\le1/n$，但 $\|Df_n\|_\infty=1$。如果存在统一常数 $C$，就会有 $1\le C/n$，矛盾。}{Let $D:C^1[0,1]\to C[0,1]$ be differentiation with the supremum norm on the domain. For $f_n(x)=\sin(nx)/n$, the input norm is at most $1/n$ but the derivative norm is one. A uniform bound would give $1\le C/n$, which is impossible.}
 \ASK{Banach 不动点定理和 Schauder 不动点定理有什么区别？}{What is the difference between Banach and Schauder fixed-point theorems?}{Banach 要求压缩映射，给出唯一不动点及迭代收敛；Schauder 在非空闭有界凸集上要求连续映射的像相对紧，主要给出存在性，通常不保证唯一性和迭代收敛。}{Banach requires a contraction and gives a unique fixed point with iterative convergence. Schauder assumes a continuous map on a nonempty closed bounded convex set whose image is relatively compact; it mainly gives existence and usually gives neither uniqueness nor convergence of simple iteration.}
 \ASK{弱收敛为什么在偏微分方程中有用？}{Why is weak convergence useful in PDEs?}{近似解的范数可能有统一界，却不一定有强收敛子列；弱收敛允许先对所有连续泛函取极限，再通过弱形式传递方程。它把有界性转化为提取极限的工具。}{Approximate solutions may be uniformly bounded without having a strongly convergent subsequence. Weak convergence allows one to pass to limits after testing with continuous functionals and is natural for weak formulations of PDEs.}
+\section[收敛类型 | Convergence modes]{函数列的点态、强与弱收敛：一个对照例子 | Pointwise, norm, and weak convergence}
+\noindent 前文已经用 $f_n(x)=x^n$ 说明点态收敛不一定一致收敛。把同一列放入 $L^2[0,1]$，则
+\noindent
+\[
+\|f_n\|_2^2=\int_0^1x^{2n}\,dx=\frac1{2n+1}\longrightarrow0.
+\]
+因此它在 $L^2$ 范数下强收敛到零，尽管在 $x=1$ 的函数值始终为 $1$。$L^2$ 函数按几乎处处相等视为同一元素，单点差异不影响范数。这说明“强收敛”依赖所选空间和范数，不能只凭单点值判断。
+\EN{In $L^2[0,1]$, however, the squared norm is $1/(2n+1)$, so $f_n$ converges strongly to zero. The value at the single point one does not affect the integral norm; $L^2$ identifies functions that agree almost everywhere. Strong convergence therefore depends on the chosen space and norm.}
+\READ{“The L two norm squared of f sub n equals one over two n plus one, which tends to zero.”}
+\noindent 再看 Hilbert 空间 $\ell^2$ 中的标准基 $e_n=(0,\ldots,0,1,0,\ldots)$。它满足 $\|e_n\|_2=1$，所以不强收敛到零；但对任意 $y=(y_k)\in\ell^2$，内积 $\langle e_n,y\rangle=y_n\to0$，故 $e_n$ 弱收敛到零。平方可和序列的坐标必趋于零。弱收敛控制每个连续线性泛函的取值，不要求向量范数差趋于零。
+\EN{In $\ell^2$, the standard basis vectors have norm one and therefore do not converge strongly to zero. Yet for every $y\in\ell^2$, $\langle e_n,y\rangle=y_n\to0$, so they converge weakly to zero. Coordinates of a square-summable sequence must tend to zero. Weak convergence tests continuous linear functionals; it does not require the norm difference to vanish.}
+\ASK{为什么弱收敛通常比强收敛弱？}{Why is weak convergence weaker than norm convergence?}{若 $x_n\to x$ 按范数收敛，则对任意连续线性泛函 $\ell$，有 $|\ell(x_n-x)|\le\|\ell\|\|x_n-x\|\to0$，所以弱收敛。反向不成立，$\ell^2$ 的标准基就是反例。}{Norm convergence implies weak convergence because $|\ell(x_n-x)|\le\|\ell\|\|x_n-x\|$. The converse fails; the standard basis in $\ell^2$ is a counterexample.}
+
+\section{緊積分算子：從等度連續到緊性 | A compact integral operator}
+\noindent 在 $C[0,1]$ 上定义 $(Tf)(x)=\int_0^x f(t)\,dt$。若 $\|f\|_\infty\le1$，则 $|Tf(x)|\le1$，且对任意 $x,y$ 有 $|Tf(x)-Tf(y)|\le|x-y|$。因此单位球经 $T$ 映成一致有界、等度连续的函数族。由 Arzel\`a--Ascoli 定理，其闭包在上确界范数下紧，故 $T$ 是紧算子。
+\EN{Define $Tf(x)=\int_0^x f(t)\,dt$ on $C[0,1]$. For inputs in the unit ball, the outputs are uniformly bounded by one and satisfy $|Tf(x)-Tf(y)|\le|x-y|$. They are equicontinuous, so Arzela--Ascoli makes their closure compact in the supremum norm. Hence $T$ is compact.}
+\EX{若 $f_n(t)=t^n$，则 $Tf_n(x)=x^{n+1}/(n+1)$，并且 $\|Tf_n\|_\infty=1/(n+1)\to0$。一般单位球中的输入可以快速振荡，但积分会平均掉局部变化；上面的等度连续估计给出这种平滑效应的统一证明。该算子还满足 $(Tf)'=f$，所以它也是积分与微分方程之间的简单联系。}{For $f_n(t)=t^n$, we have $Tf_n(x)=x^{n+1}/(n+1)$, whose supremum norm tends to zero. Integration averages local variation; the equicontinuity estimate proves this smoothing effect uniformly over the unit ball. Since $(Tf)'=f$, this operator also links integral and differential equations.}
+\ASK{为什么有界算子不一定紧？}{Why is a bounded operator not necessarily compact?}{有界只保证单位球的像仍有界，紧性还要求像的闭包紧，也就是每个序列都有收敛子列。无限维 Hilbert 空间上的恒等算子有界，但单位向量列 $e_n$ 没有范数收敛子列，因此不紧。}{Boundedness only keeps the image of the unit ball bounded. Compactness requires its closure to be compact, so every sequence has a convergent subsequence. The identity on an infinite-dimensional Hilbert space is bounded but not compact because its orthonormal sequence has no norm-convergent subsequence.}
+\section*{来源与范围 | Source and scope}
+本稿以张恭庆、林源渠《泛函分析讲义（第二版，上册）》第 1--2 章为主，按你给定的范围整理度量空间、赋范与 Banach 空间、Hilbert 空间、线性算子和线性泛函等内容。稿中应用例子用于解释定理的作用，不代表纳入后续章节的全部理论。
+\EN{This review is based primarily on Chapters 1--2 of Zhang Gongqing and Lin Yuanqu's \emph{Lectures on Functional Analysis}, second edition, volume I. It follows the stated scope on metric, normed, Banach, and Hilbert spaces, linear operators, and linear functionals. Applications clarify the role of the results and do not claim to cover all later theory.}
 \end{document}
