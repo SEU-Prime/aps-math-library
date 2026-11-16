@@ -15,7 +15,8 @@
 \maketitle
 
 \section*{课程概述 | Course overview}
-\noindent\textbf{课程主线 / Course roadmap.} 我以教材第 4--5 章的参数估计和假设检验为主线：先建立 Bernoulli/二项、Poisson 和正态模型，再学习矩估计、极大似然、充分性、无偏性、有效性、置信区间及 Bayes 方法，最后讨论显著性水平、两类错误、$p$ 值、均值/方差/比例检验和拟合优度。正态总体的三大抽样分布是连接模型与推断的核心：$(n-1)S^2/\sigma^2$ 服从卡方分布，$\bar X$ 标准化后在未知方差时服从 $t$ 分布，两个独立样本方差之比服从 $F$ 分布；每个结论都依赖正态性、独立性和自由度条件。
+\noindent\textbf{课程主线 / Course roadmap.}\par
+\noindent 我以教材第 4--5 章的参数估计和假设检验为主线：先建立 Bernoulli/二项、Poisson 和正态模型，再学习矩估计、极大似然、充分性、无偏性、有效性、置信区间及 Bayes 方法，最后讨论显著性水平、两类错误、$p$ 值、均值/方差/比例检验和拟合优度。正态总体的三大抽样分布是连接模型与推断的核心：$(n-1)S^2/\sigma^2$ 服从卡方分布，$\bar X$ 标准化后在未知方差时服从 $t$ 分布，两个独立样本方差之比服从 $F$ 分布；每个结论都依赖正态性、独立性和自由度条件。
 \EN{I organize the review around parameter estimation and hypothesis testing in Chapters 4 and 5, with the statistical models and sampling distributions they require. The models include Bernoulli/binomial, Poisson, and normal distributions; the chi-square, $t$, and $F$ distributions connect normal-sample statistics to population parameters. Estimation covers moments, maximum likelihood, sufficiency, unbiasedness, efficiency, confidence intervals, and Bayesian methods. Testing covers significance levels, the two types of error, $p$-values, tests for means, variances, and proportions, and goodness of fit. In an application, I first check the observational unit, independence, and distributional assumptions before computing an estimate or test.}
 \noindent\textbf{中文口述稿。} 我学习用样本推断未知总体，而不是只描述已看到的数据。例如想了解生产线的不合格率 $p$，假设随机抽取的 $n$ 件产品独立、每件不合格概率相同。若其中 $X$ 件不合格，就可以用 $\hat p=X/n$ 估计 $p$；抽查 $100$ 件发现 $10$ 件不合格时，估计值是 $0.1$。换一批样本会得到不同结果，所以还要用置信区间表达不确定性。若要判断是否超过某个标准，我会先写出原假设和备择假设，再选择合适的检验方法。概率论提供抽样分布，数理统计则利用数据反推参数。
 
