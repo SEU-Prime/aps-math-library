@@ -4,6 +4,7 @@
 \hypersetup{colorlinks=true,linkcolor=blue}
 \newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
 \newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\FORMULA}[2]{\par\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
 \newcommand{\EX}[2]{\par\noindent\textbf{例子 / Example.} #1\par\EN{#2}}
 \newcommand{\ASK}[4]{\par\noindent\textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent\textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
 \title{数学建模与数学实验 APS 面试准备\\[4pt]\large 双语课程概述、模型知识点与口试题}
@@ -11,6 +12,8 @@
 \date{}
 \begin{document}\maketitle
 \section*{课程概述 | Course overview}
+\noindent\textbf{课程主线 / Course roadmap.} 我按“提出问题—定义变量与单位—说明假设—建立方程或约束—选择解析/数值方法—用数据验证—分析敏感性和局限”的顺序复习。课件中的知识点包括量纲分析、层次分析法、拟合与插值、求根、常微分和差分方程、优化与图网络、随机模型、更新更换策略及 SIR 模型。比如药物清除用 $C'=-kC$，传染病用 $S,I,R$ 三类人群方程，二者都必须解释参数含义并检查模型假设。
+\EN{I organize the course as a sequence: formulate a question, choose variables and assumptions, build equations, compute, compare with data, and state limitations. The notes cover elementary models and dimensional analysis, the analytic hierarchy process, fitting, interpolation and root finding, differential and difference equations, optimization and graph networks, stochastic models, renewal and replacement policies, and the SIR epidemic model. Different questions require different mathematics; modeling is not formula matching but explaining how variables, parameters, and assumptions represent the real problem.}
 \noindent\textbf{中文口述稿。} 在数学建模课上，我学习把现实问题转化为可计算的模型。例如描述药物浓度时，先假设药物在体内充分混合，且单位时间清除量与当前浓度成正比。若 $C(t)$ 是浓度、$k>0$ 是清除速率，我可以写出 $C'(t)=-kC(t)$，由初始浓度 $C(0)=C_0$ 得到 $C(t)=C_0e^{-kt}$。这说明浓度随时间衰减，半衰期为 $\ln2/k$。再用观测数据估计 $k$，并比较预测与实际浓度；如果清除速率并不恒定，就需要修改模型。这个例子把微分方程、数据拟合和模型检验联系起来。
 
 \EN{In mathematical modeling, I learned to turn a practical question into a model that can be computed and checked. For drug concentration, suppose the drug is well mixed and the elimination rate is proportional to the current concentration. If $C(t)$ is concentration and $k>0$ is the elimination rate, then $C'(t)=-kC(t)$. Starting from $C(0)=C_0$, the solution is $C(t)=C_0e^{-kt}$, with half-life $\ln2/k$. I can estimate $k$ from observations and compare predictions with measured concentrations. If the elimination rate is not constant, the model needs to change. This example connects differential equations, data fitting, and model validation.}
@@ -32,6 +35,7 @@
 
 \subsection{实物交换与抢渡长江 | Exchange and river-crossing models}
 实物交换模型把不同参与者拥有的物品数量记为状态变量，以效用或满意度函数表示偏好。无差别曲线是效用相同的组合；在可微的内部帕累托有效交换点，两方的边际替代率相等：
+\FORMULA{帕累托有效交换的边际替代率条件}{marginal-rate-of-substitution condition for Pareto efficiency}
 \[
 \frac{MU_{Ax}}{MU_{Ay}}=\frac{MU_{Bx}}{MU_{By}}.
 \]
@@ -40,11 +44,13 @@
 \EN{The exchange model represents each participant's holdings as state variables and uses utility or satisfaction functions to describe preferences. An indifference curve contains bundles with the same utility. At a differentiable interior Pareto-efficient exchange, the two participants' marginal rates of substitution are equal. Feasible exchanges must also respect the total resource constraints.}
 
 \noindent\textbf{抢渡长江模型。} 用位置 $r(t)=(x(t),y(t))$ 表示游泳者轨迹，规定沿岸下游为 $x$ 轴正方向、横河方向为 $y$ 轴正方向。地面速度等于游泳者相对水的速度与水流速度之和。设河宽 $L$ 不变、游速相对水为常数 $u$；航向角 $\theta$ 从垂直岸边的正方向起算，朝下游偏转为正。记水流的沿岸和横河分量为 $v_{\rm current,x}$、$v_{\rm current,y}$，则
+\FORMULA{游泳者的地面速度分解}{ground-velocity components in the river-crossing model}
 \[
 \dot x=u\sin\theta+v_{\rm current,x},\qquad
 \dot y=u\cos\theta+v_{\rm current,y}.
 \]
 若水流平行岸边，则 $v_{\rm current,y}=0$，横渡时间为
+\FORMULA{横渡时间公式}{river-crossing time formula}
 \[
 T=\frac{L}{u\cos\theta},\qquad u\cos\theta>0.
 \]
@@ -60,6 +66,7 @@ T=\frac{L}{u\cos\theta},\qquad u\cos\theta>0.
 \EN{Dimensional homogeneity requires both sides of a physical equation to have the same dimensions. Buckingham's Pi theorem says that a relation involving $n$ dimensional variables and $k$ independent base dimensions can be rewritten using $n-k$ dimensionless groups. This reduces the number of variables and reveals similarity, but it does not determine every model constant or functional form.}
 
 \noindent\textbf{AHP 步骤与公式。} 建立目标层、准则层和方案层；用两两比较构造判断矩阵 $A=(a_{ij})$，其中 $a_{ii}=1$、$a_{ij}>0$ 且 $a_{ji}=1/a_{ij}$；求最大特征值对应的正特征向量并归一化为权重 $w$；逐层合成排序；最后进行一致性检验：
+\FORMULA{AHP 判断矩阵的一致性指标与一致性比率}{AHP consistency index and consistency ratio}
 \[
 CI=\frac{\lambda_{\max}-n}{n-1},\qquad CR=\frac{CI}{RI}.
 \]
@@ -73,6 +80,7 @@ CI=\frac{\lambda_{\max}-n}{n-1},\qquad CR=\frac{CI}{RI}.
 
 \section{拟合、插值与数值求根 | Fitting, interpolation and root finding}
 \noindent\textbf{最小二乘拟合。} 给定数据 $(x_i,y_i)$ 和模型 $y\approx\sum_{j=1}^p\beta_j\phi_j(x)$，最小二乘法选择参数使残差平方和最小。矩阵形式为
+\FORMULA{线性最小二乘目标与正规方程}{linear least-squares objective and normal equations}
 \[
 \hat\beta=\arg\min_\beta\|X\beta-y\|_2^2,\qquad X^{\mathsf T}X\hat\beta=X^{\mathsf T}y.
 \]
@@ -81,6 +89,7 @@ CI=\frac{\lambda_{\max}-n}{n-1},\qquad CR=\frac{CI}{RI}.
 \EN{Given data $(x_i,y_i)$ and a model $y\approx\sum_j\beta_j\phi_j(x)$, least squares chooses coefficients minimizing the sum of squared residuals. In matrix form it gives the normal equations above; a unique solution requires full column rank. Fitting summarizes noisy observations, while interpolation passes through the given data nodes.}
 
 \noindent\textbf{插值公式。} 对互异节点 $x_0,\ldots,x_n$，Lagrange 插值多项式为
+\FORMULA{Lagrange 插值公式与余项}{Lagrange interpolation formula and remainder}
 \[
 P_n(x)=\sum_{i=0}^{n}y_i\prod_{j\ne i}\frac{x-x_j}{x_i-x_j},\qquad
 f(x)-P_n(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}\prod_{i=0}^{n}(x-x_i).
@@ -90,6 +99,7 @@ Newton 差商形式便于增加节点；高次等距节点插值可能出现 Run
 \EN{For distinct nodes, the Lagrange polynomial and its remainder are given above. Newton divided differences make it easy to add nodes. High-degree interpolation on equally spaced nodes may exhibit Runge's phenomenon, so the course also covers piecewise interpolation and cubic splines. Increasing degree does not guarantee increasing accuracy.}
 
 \noindent\textbf{求根方法。} 二分法要求连续函数在区间端点异号，迭代保持根被夹在区间内；区间长度每步减半。固定点迭代 $x_{k+1}=g(x_k)$ 在邻域内若 $|g'(x)|\le q<1$，可收敛。Newton 法为
+\FORMULA{Newton 求根迭代公式}{Newton iteration for root finding}
 \[
 x_{k+1}=x_k-\frac{f(x_k)}{f'(x_k)}.
 \]
@@ -103,15 +113,17 @@ x_{k+1}=x_k-\frac{f(x_k)}{f'(x_k)}.
 
 \section{常微分与差分模型 | Dynamic models}
 \noindent\textbf{人口模型。} Malthus 指数增长模型 $\dot x=rx$，解为 $x(t)=x_0e^{rt}$。Logistic 阻滞增长模型为
+\FORMULA{Logistic 人口增长方程及其解}{Logistic population equation and its solution}
 \[
 \dot x=rx\left(1-\frac{x}{K}\right),\qquad
 x(t)=\frac{K}{1+(K/x_0-1)e^{-rt}}.
 \]
 其中 $K$ 为环境容纳量；增长率在 $x=K/2$ 达到最大，拐点代表增长速度由增转减。
-\READ{“X dot equals r x times one minus x over K.” “X of t equals K divided by one plus K over x zero minus one, times e to the negative r t.”}
+\READ{“X dot equals r x times one minus x over K.” “X of t equals K divided by a denominator of one plus the quantity K over x zero minus one, multiplied by e to the negative r t.”}
 \EN{The Malthus model has exponential growth. The Logistic model includes a carrying capacity $K$; its growth rate is maximal at $x=K/2$, the inflection point where growth changes from accelerating to decelerating.}
 
 \noindent\textbf{传染病模型。} 归一化人群中 SIR 模型为
+\FORMULA{SIR 易感--感染--康复模型}{susceptible-infectious-recovered model}
 \[
 \dot s=-\beta si,\qquad \dot i=\beta si-\gamma i,\qquad \dot r=\gamma i,
 \quad s+i+r=1.
@@ -121,6 +133,7 @@ x(t)=\frac{K}{1+(K/x_0-1)e^{-rt}}.
 \EN{The normalized SIR model is given above. Its basic reproduction number is $R_0=\beta/\gamma$. At the beginning, infections grow if $\beta s_0-\gamma>0$, equivalently $R_0s_0>1$. SIS allows recovered people to become susceptible again; SIR assumes permanent immunity; SIRS includes waning immunity.}
 
 \noindent\textbf{捕食者--被捕食者模型。} 课件复习提纲中的 Volterra 模型可写为
+\FORMULA{Lotka--Volterra 捕食者--被捕食者方程}{Lotka--Volterra predator--prey equations}
 \[
 \dot x=ax-bxy,\qquad \dot y=-cy+dxy,
 \]
@@ -152,6 +165,7 @@ x(t)=\frac{K}{1+(K/x_0-1)e^{-rt}}.
 
 \section{优化、变分与图论网络 | Optimization, variational methods and networks}
 \noindent\textbf{函数优化模型。} 标准约束优化形式为
+\FORMULA{一般非线性约束优化模型}{general nonlinear constrained optimization problem}
 \[
 \min_{x\in\mathbb R^n} f(x)\quad\text{subject to }g_i(x)\le0,\ h_j(x)=0.
 \]
@@ -160,6 +174,7 @@ x(t)=\frac{K}{1+(K/x_0-1)e^{-rt}}.
 \EN{A standard constrained optimization model minimizes an objective subject to inequality and equality constraints. Depending on the objective and constraints, it may be a linear, quadratic, nonlinear, integer, multiobjective, or minimax problem. Specify decision variables, objective, feasible set, and units, then consider existence and solver assumptions.}
 
 \noindent\textbf{变分问题。} 若目标是选取函数 $y(t)$ 以极小化泛函 $J[y]=\int_a^b L(t,y,y')\,dt$，固定端点下极值函数满足 Euler--Lagrange 方程
+\FORMULA{Euler--Lagrange 方程}{Euler--Lagrange equation}
 \[
 \frac{d}{dt}\frac{\partial L}{\partial y'}-\frac{\partial L}{\partial y}=0.
 \]
@@ -184,6 +199,7 @@ x(t)=\frac{K}{1+(K/x_0-1)e^{-rt}}.
 
 \section{SIR 阈值的数值读法与模型边界 | Reading an SIR threshold}
 \noindent 前文的归一化 SIR 模型给出 $i'=\beta si-\gamma i$，其中 $s=S/N$ 是易感比例。感染早期 $s(t)\approx s_0$，故
+\FORMULA{SIR 模型的初期增长率与有效再生数}{initial growth rate and effective reproduction number in the SIR model}
 \[
 I'\approx\left(\beta\frac{S_0}{N}-\gamma\right)I,
 \qquad

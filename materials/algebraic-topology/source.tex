@@ -15,13 +15,12 @@
 \maketitle
 
 \section*{课程概述 | Course overview}
-\noindent\textbf{中文口述稿。} 我按教材顺序学习了几何复形、单纯同调、单纯逼近、基本群和覆盖空间。主线是先把空间剖分成顶点、边、三角形等简单部分，再用边界算子判断闭合链能否被高一维的面填充；随后研究连续映射怎样由有限的单纯映射近似；最后用闭路的拼接定义基本群，并借助覆盖空间把闭路的同伦类转化为提升路径的终点信息。例如，未填充的三角形边框有一个独立的一维洞，故 $H_1\cong\mathbb Z$；填入三角面后该圈成为边界，$H_1=0$。这说明同调是可计算的代数不变量，而基本群保留更精细的闭路拼接信息。
-\EN{Following the textbook, I studied geometric complexes, simplicial homology, simplicial approximation, the fundamental group, and covering spaces. The main idea is to decompose a space into vertices, edges, triangles, and higher-dimensional pieces, then use boundary maps to decide which cycles can be filled by higher-dimensional faces. Simplicial approximation turns continuous maps into finite combinatorial maps. The fundamental group records loops and their concatenation, while covering spaces encode loop classes through the endpoints of lifted paths. For example, an unfilled triangular frame has one independent one-dimensional hole, so $H_1\cong\mathbb Z$. Filling its triangular face makes that loop a boundary and gives $H_1=0$. Homology is a computable algebraic invariant, while the fundamental group retains finer information about loop concatenation.}
+\BOTH{我按课程顺序学习几何复形与三角剖分、链复形和单纯同调、单纯逼近、基本群与 van Kampen 定理，最后是覆盖空间。三角剖分把空间拆成顶点、边和三角形；边界算子满足 $\partial_{k-1}\partial_k=0$，所以每个面边界都是闭链，同调群再把“闭链中不能由更高维面填掉的部分”记录下来。最简单的例子是三角形边框：不填入内部三角形时，边界圈给出一个生成元，$H_1\cong\mathbb Z$；填入三角形后该圈成为边界，$H_1=0$。基本群 $\pi_1(X,x_0)$ 则记录以基点为端点的闭路及其拼接；圆周的基本群是 $\mathbb Z$，覆盖映射 $z\mapsto z^n$ 会把绕行次数与提升路径的终点联系起来。van Kampen 定理用开集分解把复杂空间的基本群化为生成元和关系。这样，同调便于计算洞，基本群保留更细的闭路拼接信息。}{I studied the course in this order: geometric complexes and triangulations, chain complexes and simplicial homology, simplicial approximation, the fundamental group and van Kampen's theorem, and covering spaces. A triangulation breaks a space into vertices, edges, and triangles. Since the boundary operator satisfies $\partial_{k-1}\partial_k=0$, every face boundary is a cycle; homology records cycles that are not boundaries of higher-dimensional faces. For a simple example, the unfilled triangular frame has one generator and $H_1\cong\mathbb Z$. Once the triangle is filled, that loop becomes a boundary and $H_1=0$. The fundamental group $\pi_1(X,x_0)$ records loops based at $x_0$ and their concatenation. The circle has fundamental group $\mathbb Z$, and the covering map $z\mapsto z^n$ relates winding number to the endpoint of a lifted path. Van Kampen's theorem computes fundamental groups by decomposing a space into open sets and combining generators and relations. Homology is convenient for counting holes, while the fundamental group preserves finer loop information.}
 
 \noindent\textbf{具体应用联系。} 在拓扑数据分析中，可以把传感器或三维扫描得到的点云按距离阈值连接成边，并在三点两两相连时加入三角形，得到随尺度变化的单纯复形。计算 $H_0$ 可观察数据簇何时合并，计算 $H_1$ 可观察环形空隙何时出现或被填掉。若一个洞只在极窄的尺度范围存在，它可能来自测量噪声；持续跨越多个尺度的特征通常更值得进一步检查。这个过程分析的是有限点云构成的模型，结论仍要结合采样密度和噪声判断。
 \EN{In topological data analysis, a point cloud from sensors or a 3D scan can be turned into a simplicial complex at each distance scale: connect nearby points by edges and add a triangle when all three edges are present. The group $H_0$ tracks when data clusters merge, and $H_1$ tracks when loop-shaped gaps appear or are filled. A feature that exists only over a very narrow range of scales may be caused by measurement noise, while a feature persisting across scales deserves closer attention. The calculation concerns a finite model of the point cloud, so conclusions still depend on sampling density and noise.}
 
-\section{第 1 章：几何复形与多面体 | Chapter 1: Geometric complexes and polyhedra}
+\section{几何复形与多面体 | Geometric complexes and polyhedra}
 \subsection{单形、面与仿射独立 | Simplices, faces, and affine independence}
 \noindent 在欧氏空间中，$k$-单形是 $k+1$ 个仿射独立顶点的凸包。仿射独立表示顶点不落在一个维数更低的仿射子空间内。于是 $0$-单形是点，$1$-单形是闭线段，$2$-单形是实心三角形，$3$-单形是实心四面体。单形的面由它的任意一组顶点的凸包给出，空面通常也作为面处理。
 \EN{A geometric $k$-simplex is the convex hull of $k+1$ affinely independent vertices. Affine independence means that the vertices do not lie in a lower-dimensional affine subspace. Thus a zero-simplex is a point, a one-simplex is a closed line segment, a two-simplex is a filled triangle, and a three-simplex is a solid tetrahedron. A face is the convex hull of any subset of the vertices; the empty face is usually included by convention.}
@@ -38,7 +37,7 @@
 \EX{将三角形边界定向为 $v_0\to v_1\to v_2\to v_0$。若把最后一条边写成 $[v_0,v_2]$，它的方向与沿边界行走的 $[v_2,v_0]$ 相反，所以应使用 $-[v_0,v_2]$。}{Orient the triangle boundary as $v_0\to v_1\to v_2\to v_0$. If the last edge is written as $[v_0,v_2]$, its direction is opposite to the boundary direction $[v_2,v_0]$, so it must appear as $-[v_0,v_2]$.}
 \ASK{为什么单纯复形必须包含每个单形的所有面？}{Why must a simplicial complex contain every face of each simplex?}{边界算子要把一个单形送到它的面组成的链中。若这些面不在复形里，边界就不属于该复形的链群，后续的链复形和同调也无法定义。}{The boundary map sends a simplex to a chain made of its faces. If those faces were absent, the boundary would not belong to the chain group of the complex, so the chain complex and its homology could not be defined.}
 
-\section{第 2 章：单纯同调群 | Chapter 2: Simplicial homology groups}
+\section{单纯同调群 | Simplicial homology groups}
 \subsection{链群与边界算子 | Chain groups and boundary maps}
 \noindent 选定系数 $\mathbb Z$ 后，$C_k(K;\mathbb Z)$ 是由 $K$ 的定向 $k$-单形生成的自由阿贝尔群；一个 $k$-链是有限个 $k$-单形的整数线性组合。反转单形方向等同于将相应生成元乘以 $-1$。边界算子 $\partial_k:C_k\to C_{k-1}$ 对一个有序单形定义如下，并按线性性扩张到所有链：
 \FORMULA{单纯边界公式（交替删点公式）}{the simplicial boundary formula, or the alternating face formula}
@@ -71,7 +70,6 @@ H_k(K;\mathbb Z)=Z_k/B_k=\ker\partial_k/\operatorname{im}\partial_{k+1}.
 \noindent 为什么要取这个商？圈是闭合的候选“洞边界”，但若它恰好是某个面或高维链的边界，就能在空间内部填掉，不应算作非平凡洞。同调类 $[z]$ 把相差一个边界的圈视为等价；$[z]=0$ 当且仅当 $z$ 本身是边界。$H_0$ 记录连通分支，$H_1$ 记录不能由二维面填掉的一维圈，$H_2$ 则记录不能由三维链填掉的二维闭合表面。
 \EN{Why take this quotient? A cycle is a candidate boundary of a hole, but if it is itself the boundary of a face or a higher-dimensional chain, it can be filled inside the space and should not count as a nontrivial hole. Homology identifies cycles that differ by a boundary. A class $[z]$ is zero exactly when $z$ is a boundary. The group $H_0$ records connected components, $H_1$ records loops not filled by two-dimensional faces, and $H_2$ records closed surfaces not filled by three-dimensional chains.}
 
-\subsection{完整计算：三角形边框与填充三角形 | Worked computation: a triangular frame and a filled triangle}
 \noindent 先看未填充的三角形边框。令顶点为 $v_0,v_1,v_2$，边按环向定向为 $e_{01},e_{12},e_{20}$。链群为 $C_1\cong\mathbb Z^3$、$C_0\cong\mathbb Z^3$，而 $C_2=0$。按上述基底，边界矩阵为
 \FORMULA{三角形边框的一维边界矩阵}{the boundary matrix of the triangular frame}
 \[
@@ -108,9 +106,18 @@ H_k(K;\mathbb Z)=Z_k/B_k=\ker\partial_k/\operatorname{im}\partial_{k+1}.
 \noindent 使用整数系数时，同调群可能还含有有限阶元素（挠元）；Betti 数只记录自由部分的秩。要报告完整的整数同调，必须说明挠部分，而不只是列出 Betti 数。
 \EN{With integer coefficients, homology groups may also contain finite-order elements called torsion. Betti numbers record only the rank of the free part. To state the full integer homology, one must include any torsion, not just the Betti numbers.}
 
-\section{第 3 章：单纯逼近 | Chapter 3: Simplicial approximation}
+\section{单纯逼近 | Simplicial approximation}
 \subsection{单纯映射与诱导同调映射 | Simplicial maps and induced maps on homology}
-\noindent 单纯映射 $\phi:K\to L$ 首先把顶点映到顶点，并要求每个单形的所有顶点像共同落在 $L$ 的某个单形中。不同顶点可以映到同一顶点，故单形维数可能下降。它在线性单形上延拓为几何实现之间的连续映射，并诱导链映射 $\phi_\#:C_k(K)\to C_k(L)$。边界与映射相容，即 $\partial\phi_\#=\phi_\#\partial$，因此圈映到圈、边界映到边界，进而得到同调同态 $\phi_*:H_k(K)\to H_k(L)$。
+\noindent 单纯映射 $\phi:K\to L$ 首先把顶点映到顶点，并要求每个单形的所有顶点像共同落在 $L$ 的某个单形中。不同顶点可以映到同一顶点，故单形维数可能下降。它在线性单形上延拓为几何实现之间的连续映射，并按下面的规则诱导链映射：若顶点像互异，就把顶点逐个映过去；若有重复像，该维链取零。边界与映射相容，即 $\partial\phi_\#=\phi_\#\partial$，因此圈映到圈、边界映到边界，进而得到同调同态 $\phi_*:H_k(K)\to H_k(L)$。
+\FORMULA{单纯映射诱导的链映射}{the chain map induced by a simplicial map}
+\[
+\phi_\#[v_0,\ldots,v_k]=
+\begin{cases}
+[\phi(v_0),\ldots,\phi(v_k)],&\text{if the images are distinct},\\
+0,&\text{if two or more images coincide}.
+\end{cases}
+\]
+\READ{“Map each vertex of the simplex; if the image vertices are distinct, take the resulting simplex, and otherwise take zero.”}
 \EN{A simplicial map $\phi:K\to L$ maps vertices to vertices and sends the vertices of each simplex into the vertices of a simplex of $L$. Distinct vertices may have the same image, so dimension can drop. Linear extension gives a continuous map between geometric realizations and a chain map $\phi_\#:C_k(K)\to C_k(L)$. It commutes with the boundary map, so it sends cycles to cycles and boundaries to boundaries and induces a homomorphism $\phi_*:H_k(K)\to H_k(L)$.}
 \EX{把三角形边框的三个顶点都映到单点复形的唯一顶点，是一个单纯映射。边框的生成圈被映成零链，因而诱导映射把 $H_1\cong\mathbb Z$ 的生成元送到零。这个例子说明连续映射可以消去洞；同调群在映射下并非总保持不变，而是由映射诱导一个同态。}{Map all three vertices of a triangular frame to the only vertex of a one-point complex. This is a simplicial map. The generating loop is mapped to the zero chain, so the induced map sends the generator of $H_1\cong\mathbb Z$ to zero. A continuous map can destroy a hole: homology is not necessarily unchanged, but the map induces a homomorphism between homology groups.}
 
@@ -124,7 +131,7 @@ H_k(K;\mathbb Z)=Z_k/B_k=\ker\partial_k/\operatorname{im}\partial_{k+1}.
 \EX{若 $f$ 是圆周三角剖分上的恒等映射，顶点可映回自身，单纯逼近就是原映射。对更一般的连续映射，先细分圆周，再按开星条件选目标顶点；得到的顶点映射可写成有限矩阵，并计算它对 $H_1$ 的作用。}{For the identity map on a triangulated circle, each vertex can be sent to itself, and the simplicial approximation is the original map. For a general continuous map, first subdivide the circle and then choose target vertices using the open-star condition. The resulting vertex map is finite and can be used to compute the induced map on $H_1$.}
 \ASK{单纯逼近为什么要先细分？}{Why may subdivision be needed before simplicial approximation?}{原来的单形可能太大，其像会跨过目标中的多个单形，无法由顶点像定义一个单纯映射。细分使顶点开星变小，连续性保证每个小开星的像可落进目标某个顶点的开星。}{An original simplex may be too large: its image can cross several target simplices, so its vertex images may not define a simplicial map. Subdivision makes the vertex stars smaller, and continuity ensures that each small star can map into an open star of a target vertex.}
 
-\section{第 4 章：基本群 | Chapter 4: The fundamental group}
+\section{基本群 | The fundamental group}
 \subsection{路径、闭路同伦与群运算 | Paths, loop homotopy, and the group operation}
 \noindent 路径是连续映射 $\alpha:[0,1]\to X$。若 $\alpha(0)=\alpha(1)=x_0$，称它为基于 $x_0$ 的闭路。若两条端点相同的路径可以在始终固定端点的连续变形中互相变到，称它们端点固定同伦。基本群 $\pi_1(X,x_0)$ 是基于 $x_0$ 的闭路按端点固定同伦取等价类后得到的集合，运算是路径拼接。
 \EN{A path is a continuous map $\alpha:[0,1]\to X$. It is a loop based at $x_0$ if $\alpha(0)=\alpha(1)=x_0$. Two paths with the same endpoints are endpoint-fixed homotopic if one can be continuously deformed into the other while keeping both endpoints fixed. The fundamental group $\pi_1(X,x_0)$ consists of based loops modulo endpoint-fixed homotopy, with path concatenation as its operation.}
@@ -156,8 +163,8 @@ H_k(K;\mathbb Z)=Z_k/B_k=\ker\partial_k/\operatorname{im}\partial_{k+1}.
 \ASK{为什么基本群可以证明圆周与圆盘不同胚？}{How can the fundamental group show that the circle and disk are not homeomorphic?}{圆周的基本群是 $\mathbb Z$，圆盘可缩所以基本群平凡。同胚会诱导基本群同构，而这两个群不同构，因此圆周与圆盘不同胚。}{The circle has fundamental group $\mathbb Z$, while the disk is contractible and has trivial fundamental group. A homeomorphism induces an isomorphism of fundamental groups, and these groups are not isomorphic. Hence the circle and disk are not homeomorphic.}
 
 \subsection{Seifert--van Kampen 定理与生成元、关系 | The Seifert--van Kampen theorem and presentations}
-\noindent 基本群的直接闭路计算有时很困难。\textbf{Seifert--van Kampen 定理}的作用是把空间拆成较简单的重叠部分再计算。若 $X=U\cup V$，$U,V,U\cap V$ 路径连通，且基点 $x_0\in U\cap V$，则 $\pi_1(X,x_0)$ 由 $\pi_1(U,x_0)$ 与 $\pi_1(V,x_0)$ 的自由积生成，并把交集中的同一闭路在两边的像识别起来。换言之，若 $i_U,i_V$ 是包含映射，需商去由 $i_{U*}(g)i_{V*}(g)^{-1}$ 生成的正规子群，其中 $g\in\pi_1(U\cap V,x_0)$。
-\EN{The Seifert--van Kampen theorem computes a fundamental group by decomposing a space into simpler overlapping pieces. If $X=U\cup V$, the sets $U,V,U\cap V$ are path-connected, and the basepoint lies in the intersection, then $\pi_1(X,x_0)$ is generated by the free product of $\pi_1(U,x_0)$ and $\pi_1(V,x_0)$, with loops from the intersection identified through the two inclusion maps. Equivalently, one quotients by the normal subgroup generated by $i_{U*}(g)i_{V*}(g)^{-1}$ for loops $g$ in the intersection.}
+\noindent 基本群的直接闭路计算有时很困难。\textbf{Seifert--van Kampen 定理}的作用是把空间拆成较简单的重叠部分再计算。若 $U,V$ 是 $X$ 的开子集，$X=U\cup V$，$U,V,U\cap V$ 路径连通，且基点 $x_0\in U\cap V$，则 $\pi_1(X,x_0)$ 是 $\pi_1(U,x_0)*\pi_1(V,x_0)$ 对交集中的闭路在两边的像作识别后所得的群。换言之，若 $i_U,i_V$ 是包含映射，需商去由 $i_{U*}(g)i_{V*}(g)^{-1}$ 生成的正规子群，其中 $g\in\pi_1(U\cap V,x_0)$。
+\EN{The Seifert--van Kampen theorem computes a fundamental group by decomposing a space into simpler overlapping pieces. If $U,V$ are open, $X=U\cup V$, the sets $U,V,U\cap V$ are path-connected, and the basepoint lies in the intersection, then $\pi_1(X,x_0)$ is the free product $\pi_1(U,x_0)*\pi_1(V,x_0)$ with loops from the intersection identified through the two inclusion maps. Equivalently, one quotients by the normal subgroup generated by $i_{U*}(g)i_{V*}(g)^{-1}$ for loops $g$ in the intersection.}
 \noindent 这一定理常把基本群写成\textbf{生成元与关系}。例如，环面可表示为一个顶点、两条边 $a,b$ 和一个二维面；一维骨架是两个圆周一点粘合，基本群为自由群 $F(a,b)$。二维面的边界按粘合顺序是 $aba^{-1}b^{-1}$，加入该面相当于令这个边界词为单位元。因此
 \FORMULA{环面基本群的表示}{the presentation of the fundamental group of the torus}
 \[
@@ -181,7 +188,7 @@ H_1(X;\mathbb Z)\cong\pi_1(X,x_0)^{\mathrm{ab}}
 \EN{The fundamental group retains the order of loop concatenation and may be noncommutative. Homology turns loops into chains that can be added, so it abelianizes the group and loses some information. The wedge of two circles has $\pi_1=F(a,b)$, where $ab$ and $ba$ differ, but $H_1\cong\mathbb Z^2$. The torus also has $H_1(T^2;\mathbb Z)\cong\mathbb Z^2$, so equal first homology does not imply equal fundamental groups.}
 \ASK{基本群与第一同调的主要区别是什么？}{What is the main difference between the fundamental group and first homology?}{基本群记录基点闭路的同伦类及其拼接，可能非交换；第一同调是基本群的交换化，只保留可交换的环信息。因而 $H_1$ 通常较容易计算，但信息比 $\pi_1$ 少。}{The fundamental group records based-loop homotopy classes and their concatenation, which may be noncommutative. First homology is its abelianization and retains only the commutative loop information. Thus $H_1$ is often easier to compute but contains less information than $\pi_1$.}
 
-\section{第 5 章：覆盖空间 | Chapter 5: Covering spaces}
+\section{覆盖空间 | Covering spaces}
 \subsection{覆盖映射与均匀覆盖邻域 | Covering maps and evenly covered neighborhoods}
 \noindent 连续满射 $p:\widetilde X\to X$ 称为覆盖映射，如果每个 $x\in X$ 都有开邻域 $U$，使得原像 $p^{-1}(U)$ 是互不相交开集 $V_\alpha$ 的并，且每个限制 $p|_{V_\alpha}:V_\alpha\to U$ 都是同胚。$U$ 称为均匀覆盖邻域；$p^{-1}(x)$ 称为 $x$ 上方的纤维。覆盖空间在每个足够小的邻域上看起来像若干份底空间，但全局的粘合方式可以不同。
 \EN{A continuous surjection $p:\widetilde X\to X$ is a covering map if every $x\in X$ has an open neighborhood $U$ such that $p^{-1}(U)$ is a disjoint union of open sets $V_\alpha$, each mapped homeomorphically onto $U$ by the restriction of $p$. Such a set $U$ is evenly covered, and $p^{-1}(x)$ is the fiber over $x$. Locally a covering looks like several copies of the base, although the global arrangement can differ.}
@@ -207,8 +214,7 @@ H=p_*\bigl(\pi_1(\widetilde X,\widetilde x_0)\bigr)\le\pi_1(X,x_0).
 \noindent 覆盖的片数等于子群指数 $[\pi_1(X,x_0):H]$。$H=\{1\}$ 对应的连通覆盖是普遍覆盖：它本身单连通。这个对应把“底空间中哪些闭路提升后闭合”转成基本群中的子群问题。
 \EN{The number of sheets of the cover equals the subgroup index $[\pi_1(X,x_0):H]$. The connected cover corresponding to the trivial subgroup is the universal cover, which is simply connected. This correspondence turns the question of which loops lift to closed loops into a subgroup problem in the fundamental group.}
 
-\subsection{圆周覆盖的完整例子 | A complete example: coverings of the circle}
-\noindent 圆周的基本群是 $\mathbb Z$，其子群只有 $n\mathbb Z$（$n\ge1$）和 $\{0\}$。对 $n\ge1$，映射 $p_n:S^1\to S^1$ 定义如下：
+\noindent\textbf{圆周覆盖的计算。} 圆周的基本群是 $\mathbb Z$，其子群只有 $n\mathbb Z$（$n\ge1$）和 $\{0\}$。对 $n\ge1$，映射 $p_n:S^1\to S^1$ 定义如下：
 \FORMULA{圆周的 $n$ 层覆盖}{the n-sheeted covering map of the circle}
 \[
 p_n(z)=z^n.

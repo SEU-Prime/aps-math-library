@@ -5,6 +5,7 @@
 \hypersetup{colorlinks=true,linkcolor=blue}
 \newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
 \newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\FORMULA}[2]{\par\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
 \newcommand{\EX}[2]{\par\noindent\textbf{例子 / Example.} #1\par\EN{#2}}
 \newcommand{\ASK}[4]{\par\noindent\textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent\textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
 \title{数理统计 APS 面试准备\\[4pt]\large 陈希孺第 4--5 章与课程讲义 | Bilingual Review}
@@ -14,6 +15,8 @@
 \maketitle
 
 \section*{课程概述 | Course overview}
+\noindent\textbf{课程主线 / Course roadmap.} 我以教材第 4--5 章的参数估计和假设检验为主线：先建立 Bernoulli/二项、Poisson 和正态模型，再学习矩估计、极大似然、充分性、无偏性、有效性、置信区间及 Bayes 方法，最后讨论显著性水平、两类错误、$p$ 值、均值/方差/比例检验和拟合优度。正态总体的三大抽样分布是连接模型与推断的核心：$(n-1)S^2/\sigma^2$ 服从卡方分布，$\bar X$ 标准化后在未知方差时服从 $t$ 分布，两个独立样本方差之比服从 $F$ 分布；每个结论都依赖正态性、独立性和自由度条件。
+\EN{I organize the review around parameter estimation and hypothesis testing in Chapters 4 and 5, with the statistical models and sampling distributions they require. The models include Bernoulli/binomial, Poisson, and normal distributions; the chi-square, $t$, and $F$ distributions connect normal-sample statistics to population parameters. Estimation covers moments, maximum likelihood, sufficiency, unbiasedness, efficiency, confidence intervals, and Bayesian methods. Testing covers significance levels, the two types of error, $p$-values, tests for means, variances, and proportions, and goodness of fit. In an application, I first check the observational unit, independence, and distributional assumptions before computing an estimate or test.}
 \noindent\textbf{中文口述稿。} 我学习用样本推断未知总体，而不是只描述已看到的数据。例如想了解生产线的不合格率 $p$，假设随机抽取的 $n$ 件产品独立、每件不合格概率相同。若其中 $X$ 件不合格，就可以用 $\hat p=X/n$ 估计 $p$；抽查 $100$ 件发现 $10$ 件不合格时，估计值是 $0.1$。换一批样本会得到不同结果，所以还要用置信区间表达不确定性。若要判断是否超过某个标准，我会先写出原假设和备择假设，再选择合适的检验方法。概率论提供抽样分布，数理统计则利用数据反推参数。
 
 \EN{In mathematical statistics, I learned to infer properties of a population from a sample. Suppose I want to estimate a production defect probability $p$. If $n$ sampled items are independent and have the same defect probability, I can use $\hat p=X/n$, where $X$ is the number of defects. Ten defects among one hundred items give an estimate of $0.1$. A different sample would give a different result, so I also use a confidence interval to express uncertainty. To assess a production standard, I first state a null and an alternative hypothesis, then select a suitable test. Probability gives the sampling distribution; statistics uses observed data to infer the parameter.}
@@ -54,6 +57,7 @@
 \EN{A statistic $T=T(X_1,\ldots,X_n)$ is a function of the sample and cannot involve an unknown parameter. When used to estimate $\theta$, it is called an estimator $\hat\theta$. Its value after substituting observed data is an estimate. The probability distribution of a statistic is its sampling distribution.}
 
 \noindent\textbf{样本均值、方差与经验分布。}
+\FORMULA{样本均值、无偏样本方差与经验分布函数}{sample mean, unbiased sample variance, and empirical distribution function}
 \[
 \bar X=\frac1n\sum_{i=1}^nX_i,\qquad
 S^2=\frac1{n-1}\sum_{i=1}^n(X_i-\bar X)^2,\qquad
@@ -69,6 +73,7 @@ $S^2$ 的分母是 $n-1$，因此在 iid 且总体方差有限时 $E(S^2)=\sigma
 
 \subsection{正态总体的三大抽样分布 | The three classical normal-sample distributions}
 \noindent 设 $X_1,\ldots,X_n\overset{\mathrm{iid}}{\sim}N(\mu,\sigma^2)$，且 $n\ge2$。定义
+\FORMULA{正态样本的标准化变量、样本均值与样本方差}{standardized observations, sample mean, and sample variance for a normal sample}
 \[
 Z_i=\frac{X_i-\mu}{\sigma},\qquad
 \bar X=\frac1n\sum_iX_i,\qquad
@@ -78,6 +83,7 @@ S^2=\frac1{n-1}\sum_i(X_i-\bar X)^2.
 \EN{Let $X_1,\ldots,X_n$ be iid $N(\mu,\sigma^2)$ with $n\ge2$. The sample mean and sample variance are independent, and $\bar X\sim N(\mu,\sigma^2/n)$. These facts are central to the chi-square and $t$ distributions below.}
 
 \noindent\textbf{1. 卡方分布：样本方差的枢轴量。} 若 $Z_1,\ldots,Z_\nu$ 独立且服从 $N(0,1)$，则 $\sum_{i=1}^{\nu}Z_i^2\sim\chi^2_\nu$，称自由度为 $\nu$ 的卡方分布。对正态随机样本，
+\FORMULA{正态样本方差的卡方枢轴量}{chi-square pivot for the variance of a normal sample}
 \[
 \frac{(n-1)S^2}{\sigma^2}
 =\frac{\sum_{i=1}^n(X_i-\bar X)^2}{\sigma^2}
@@ -88,10 +94,12 @@ S^2=\frac1{n-1}\sum_i(X_i-\bar X)^2.
 \EN{The sum of squares of $\nu$ independent standard normal variables has a chi-square distribution with $\nu$ degrees of freedom. For a normal sample, $(n-1)S^2/\sigma^2$ has $n-1$ degrees of freedom. One degree is lost because the deviations from the sample mean sum to zero. This pivot is used for exact inference on the variance; normality is essential for the exact result.}
 
 \noindent\textbf{2. $t$ 分布：总体方差未知时的均值推断。} 若 $Z\sim N(0,1)$、$U\sim\chi^2_\nu$ 且相互独立，则
+\FORMULA{Student $t$ 分布的定义}{definition of Student's $t$ distribution}
 \[
 T=\frac{Z}{\sqrt{U/\nu}}\sim t_\nu.
 \]
 正态样本中，$\sqrt n(\bar X-\mu)/\sigma\sim N(0,1)$，且 $(n-1)S^2/\sigma^2\sim\chi^2_{n-1}$，两者独立。因此
+\FORMULA{未知方差下样本均值的 $t$ 枢轴量}{Student's $t$ pivot for a mean with unknown variance}
 \[
 \frac{\bar X-\mu}{S/\sqrt n}\sim t_{n-1}.
 \]
@@ -100,10 +108,12 @@ T=\frac{Z}{\sqrt{U/\nu}}\sim t_\nu.
 \EN{A Student's $t$ variable is a standard normal variable divided by the square root of an independent chi-square variable per degree of freedom. Standardizing $\bar X$ and replacing the unknown $\sigma$ with $S$ gives a $t$ statistic with $n-1$ degrees of freedom. The random denominator adds uncertainty, so the $t$ distribution has heavier tails than the standard normal; it approaches the normal distribution as the degrees of freedom increase.}
 
 \noindent\textbf{3. $F$ 分布：两个方差的标准化比。} 若 $U_1\sim\chi^2_{\nu_1}$、$U_2\sim\chi^2_{\nu_2}$ 相互独立，则
+\FORMULA{F 分布的定义}{definition of the $F$ distribution}
 \[
 F=\frac{U_1/\nu_1}{U_2/\nu_2}\sim F_{\nu_1,\nu_2}.
 \]
 对两个相互独立的正态样本，若来自共同方差 $\sigma^2$ 的总体，则
+\FORMULA{共同方差下两个样本方差比的 $F$ 分布}{$F$ distribution of the ratio of two sample variances}
 \[
 \frac{S_1^2}{S_2^2}\sim F_{n_1-1,n_2-1}.
 \]
@@ -115,10 +125,12 @@ F=\frac{U_1/\nu_1}{U_2/\nu_2}\sim F_{\nu_1,\nu_2}.
 
 \subsection{三个抽样分布怎样用于实际推断 | Using the three sampling distributions}
 \noindent\textbf{卡方：估计单个总体方差。} 例：从正态机器加工过程独立抽取 $n=10$ 件，样本方差为 $s^2=4$ 平方毫米。未知参数是过程方差 $\sigma^2$；标准差是 $\sigma=\sqrt{\sigma^2}$。由于
+\FORMULA{方差估计中的卡方枢轴量}{chi-square pivot for variance estimation}
 \[
 \frac{(n-1)S^2}{\sigma^2}\sim\chi^2_9,
 \]
 把 $\chi^2$ 分位数反解得到 95\% 方差区间
+\FORMULA{正态总体方差的卡方置信区间}{chi-square confidence interval for a normal-population variance}
 \[
 \left(\frac{9s^2}{\chi^2_{0.975,9}},\frac{9s^2}{\chi^2_{0.025,9}}\right)
 \approx\left(\frac{36}{19.023},\frac{36}{2.700}\right)
@@ -168,6 +180,7 @@ F=\frac{U_1/\nu_1}{U_2/\nu_2}\sim F_{\nu_1,\nu_2}.
 \EN{Parameter estimation uses observed data to estimate an unknown parameter $\theta$ in a population model. A point estimate gives one value $\hat\theta$; an interval estimate gives a range expressing uncertainty. The model and sampling assumptions should be established before assessing an estimator.}
 
 \noindent\textbf{充分统计量。} 统计量 $T(X)$ 对 $\theta$ 充分，直观上表示给定 $T$ 后，原样本不再提供关于 $\theta$ 的额外信息。因子分解定理：若联合密度或概率质量函数可写成
+\FORMULA{Neyman--Fisher 因子分解定理}{Neyman--Fisher factorization theorem}
 \[
 f_\theta(x_1,\ldots,x_n)=g_\theta(T(x_1,\ldots,x_n))h(x_1,\ldots,x_n),
 \]
@@ -179,6 +192,7 @@ f_\theta(x_1,\ldots,x_n)=g_\theta(T(x_1,\ldots,x_n))h(x_1,\ldots,x_n),
 
 \subsection{4.2 矩估计、极大似然估计与贝叶斯估计 | Moments, maximum likelihood, and Bayesian estimation}
 \noindent\textbf{矩估计。} 对含 $k$ 个未知参数的模型，选取 $k$ 个总体矩条件 $E_\theta(X^j)$，将总体原点矩替换为样本原点矩并解方程：
+\FORMULA{矩估计方程}{method-of-moments equations}
 \[
 \frac1n\sum_{i=1}^nX_i^j=E_\theta(X^j),\qquad j=1,\ldots,k.
 \]
@@ -189,6 +203,7 @@ f_\theta(x_1,\ldots,x_n)=g_\theta(T(x_1,\ldots,x_n))h(x_1,\ldots,x_n),
 \EX{若 $X_i\sim\mathrm{Poisson}(\lambda)$，因 $E(X)=\lambda$，令 $\bar X=\lambda$ 得 $\hat\lambda_{\mathrm{MOM}}=\bar X$。}{If $X_i\sim\mathrm{Poisson}(\lambda)$, then $E(X)=\lambda$. Equating $\bar X$ to this moment gives $\hat\lambda_{\mathrm{MOM}}=\bar X$.}
 
 \noindent\textbf{极大似然估计。} 对离散样本 $L(\theta;x)=\prod_i p_\theta(x_i)$；对连续样本 $L(\theta;x)=\prod_i f_\theta(x_i)$。似然是把已观察数据固定后看作参数的函数，不是参数本身的概率。定义
+\FORMULA{极大似然估计量}{maximum-likelihood estimator}
 \[
 \hat\theta_{\mathrm{MLE}}=\arg\max_{\theta\in\Theta}L(\theta;x)
 =\arg\max_{\theta\in\Theta}\ell(\theta;x),\qquad \ell=\log L.
@@ -202,6 +217,7 @@ f_\theta(x_1,\ldots,x_n)=g_\theta(T(x_1,\ldots,x_n))h(x_1,\ldots,x_n),
 \EX{若 $X_i\overset{\mathrm{iid}}\sim U(0,\theta)$，$\theta>0$，则矩估计为 $2\bar X$；似然在 $\theta\ge X_{(n)}$ 时与 $\theta^{-n}$ 成正比，因此 MLE 为 $X_{(n)}=\max_iX_i$。对 $0\le x\le\theta$，由独立性得 $P(X_{(n)}\le x)=(x/\theta)^n$，进而 $E[X_{(n)}]=n\theta/(n+1)$。所以最大值相合但向下有偏；乘以 $(n+1)/n$ 得到无偏估计量 $(n+1)X_{(n)}/n$。}{For iid $X_i\sim U(0,\theta)$, the method-of-moments estimate is $2\bar X$ and the MLE is $X_{(n)}=\max_iX_i$. Independence gives $P(X_{(n)}\le x)=(x/\theta)^n$ for $0\le x\le\theta$, so $E[X_{(n)}]=n\theta/(n+1)$. The maximum is consistent but downward biased; multiplying it by $(n+1)/n$ gives an unbiased estimator.}
 
 \noindent\textbf{贝叶斯估计。} 贝叶斯方法给参数先验分布 $\pi(\theta)$，观察样本后用 Bayes 公式更新为
+\FORMULA{Bayes 后验分布公式}{Bayes formula for the posterior distribution}
 \[
 \pi(\theta\mid x)=\frac{L(\theta;x)\pi(\theta)}
 {\int_\Theta L(u;x)\pi(u)\,du}.
@@ -218,6 +234,7 @@ f_\theta(x_1,\ldots,x_n)=g_\theta(T(x_1,\ldots,x_n))h(x_1,\ldots,x_n),
 
 \subsection{4.3 点估计的优良性准则 | Criteria for point estimators}
 \noindent\textbf{偏差、无偏性和均方误差。}
+\FORMULA{估计量的偏差与均方误差分解}{bias and mean-squared-error decomposition}
 \[
 \operatorname{Bias}_\theta(\hat\theta)=E_\theta(\hat\theta)-\theta,\qquad
 \operatorname{MSE}_\theta(\hat\theta)=E_\theta[(\hat\theta-\theta)^2]
@@ -231,10 +248,12 @@ f_\theta(x_1,\ldots,x_n)=g_\theta(T(x_1,\ldots,x_n))h(x_1,\ldots,x_n),
 \EN{An estimator is consistent if, for every $\varepsilon>0$, the probability that it differs from $\theta$ by more than $\varepsilon$ tends to zero as $n\to\infty$. Consistency is a large-sample property and differs from finite-sample unbiasedness. Asymptotic normality provides large-sample standard errors and approximate intervals, whose accuracy may be limited at small sample sizes.}
 
 \noindent\textbf{有效性、Fisher 信息与 Cramér--Rao 下界。} 对同一参数、同一模型中的无偏估计量，方差较小者通常称更有效。若模型满足可微性、支持集不依赖参数等正则条件，单个观测的 Fisher 信息为
+\FORMULA{单个观测的 Fisher 信息}{Fisher information in one observation}
 \[
 I_1(\theta)=E_\theta\left[\left(\frac{\partial}{\partial\theta}\log f_\theta(X)\right)^2\right],
 \]
 则无偏估计 $T$ 的方差满足
+\FORMULA{Cramér--Rao 方差下界}{Cramér--Rao variance lower bound}
 \[
 \operatorname{Var}_\theta(T)\ge\frac{[g'(\theta)]^2}{nI_1(\theta)}
 \quad\text{若 }E_\theta(T)=g(\theta).
@@ -254,6 +273,7 @@ I_1(\theta)=E_\theta\left[\left(\frac{\partial}{\partial\theta}\log f_\theta(X)\
 
 \subsection{4.4 区间估计 | Interval estimation}
 \noindent\textbf{定义与枢轴量法。} $1-\alpha$ 置信区间 $[L(X),U(X)]$ 满足对固定真参数 $\theta$，
+\FORMULA{置信区间的覆盖概率定义}{coverage-probability definition of a confidence interval}
 \[
 P_\theta\{L(X)\le\theta\le U(X)\}=1-\alpha
 \]
@@ -261,10 +281,12 @@ P_\theta\{L(X)\le\theta\le U(X)\}=1-\alpha
 \EN{A $1-\alpha$ confidence interval has repeated-sampling coverage probability $1-\alpha$ for the fixed true parameter. The parameter is fixed, while the interval endpoints are random before sampling. The pivot method finds a statistic involving the parameter with a known distribution, sets probability bounds, and solves the inequalities for the parameter.}
 
 \noindent\textbf{正态总体均值区间。} 对正态总体，若 $\sigma$ 已知，
+\FORMULA{已知总体方差时正态均值的置信区间}{normal confidence interval for a mean with known variance}
 \[
 \bar X\pm z_{1-\alpha/2}\frac{\sigma}{\sqrt n}.
 \]
 若 $\sigma$ 未知，用 $S$ 并取自由度 $n-1$ 的 $t$ 分位数：
+\FORMULA{未知总体方差时正态均值的 $t$ 置信区间}{Student $t$ confidence interval for a mean with unknown variance}
 \[
 \bar X\pm t_{1-\alpha/2,n-1}\frac{S}{\sqrt n}.
 \]
@@ -273,6 +295,7 @@ P_\theta\{L(X)\le\theta\le U(X)\}=1-\alpha
 \EN{For a normal population mean, use a normal quantile when $\sigma$ is known. When it is unknown, use the sample standard deviation and a $t$ quantile with $n-1$ degrees of freedom. The latter is exact under normality. A central-limit approximation may be used for some large nonnormal samples, but skewness, outliers, and sample size affect its accuracy.}
 
 \noindent\textbf{正态总体方差区间。} 记 $\chi^2_{q,\nu}$ 为自由度 $\nu$ 卡方分布的下侧 $q$ 分位数，则
+\FORMULA{正态总体方差的双侧卡方置信区间}{two-sided chi-square confidence interval for a normal variance}
 \[
 \left[
 \frac{(n-1)S^2}{\chi^2_{1-\alpha/2,n-1}},
@@ -283,6 +306,7 @@ P_\theta\{L(X)\le\theta\le U(X)\}=1-\alpha
 \EN{The chi-square pivot gives the exact variance interval shown above for a normal population. Here $\chi^2_{q,\nu}$ is the lower-tail $q$ quantile. Since the chi-square distribution is asymmetric, the interval is generally not centered at $S^2$.}
 
 \noindent\textbf{两个正态总体均值差与方差比。} 对独立样本、共同方差假设，令
+\FORMULA{合并方差及两独立均值差的 $t$ 枢轴量}{pooled variance and $t$ pivot for two independent means}
 \[
 S_p^2=\frac{(n_1-1)S_1^2+(n_2-1)S_2^2}{n_1+n_2-2},
 \quad
@@ -290,6 +314,7 @@ T=\frac{(\bar X-\bar Y)-(\mu_1-\mu_2)}
 {S_p\sqrt{1/n_1+1/n_2}}\sim t_{n_1+n_2-2}.
 \]
 因此均值差区间为 $(\bar X-\bar Y)\pm t_{1-\alpha/2,n_1+n_2-2}S_p\sqrt{1/n_1+1/n_2}$。使用前需有独立正态样本和方差相等假设。配对设计应先构造差值 $D_i=X_i-Y_i$，再做单样本推断。对于方差比，
+\FORMULA{两个正态总体方差比的 $F$ 置信区间}{$F$ confidence interval for a ratio of two normal variances}
 \[
 \frac{\sigma_1^2}{\sigma_2^2}\text{ 的区间}=
 \left[\frac{S_1^2/S_2^2}{F_{1-\alpha/2,\nu_1,\nu_2}},
@@ -311,6 +336,7 @@ T=\frac{(\bar X-\bar Y)-(\mu_1-\mu_2)}
 \EN{A statistical hypothesis is a claim about a population distribution or parameter. The null $H_0$ and alternative $H_1$ divide the parameter space; the alternative may be left-sided, right-sided, or two-sided. Choose the direction from the scientific question before examining the data. A test statistic is evaluated under $H_0$ to assess how compatible the observation is with the null.}
 
 \noindent\textbf{拒绝域、显著性水平与两类错误。} 拒绝域 $W$ 是导致拒绝 $H_0$ 的样本结果集合。第一类错误是在 $H_0$ 为真时拒绝它，概率为 $\alpha$ 或不超过预设显著性水平；第二类错误是在 $H_1$ 为真时未拒绝 $H_0$，概率记为 $\beta(\theta)$。功效函数为
+\FORMULA{检验的功效函数}{power function of a statistical test}
 \[
 \pi(\theta)=P_\theta\{X\in W\}=1-\beta(\theta),\qquad \theta\in\Theta_1.
 \]
@@ -340,6 +366,7 @@ T=\frac{(\bar X-\bar Y)-(\mu_1-\mu_2)}
 \EX{某批枪弹储存前平均初速度为 $950$ m/s，已知标准差 $\sigma=100$ m/s。储存后随机测 $n=8$ 发，$\bar x=930$。检验是否降低：$H_0:\mu=950$ 对 $H_1:\mu<950$，$Z=(930-950)/(100/\sqrt8)\approx-0.566$。在 $\alpha=0.05$ 左尾临界值 $-1.645$，故未拒绝 $H_0$；样本不足以证明平均初速度显著降低。}{Before storage, the mean muzzle velocity is $950$ m/s with known standard deviation $100$ m/s. After storage, a sample of $8$ has mean $930$. For $H_0:\mu=950$ versus $H_1:\mu<950$, $Z=(930-950)/(100/\sqrt8)\approx-0.566$. The 5\% left-tail critical value is $-1.645$, so we fail to reject $H_0$; this sample does not establish a significant decrease.}
 
 \noindent\textbf{两个独立正态总体均值。} 先确认样本独立，之后根据方差条件选统计量。共同未知方差时使用合并方差 $S_p^2$ 和自由度 $n_1+n_2-2$ 的 $t$ 检验。若方差不假定相等，常用 Welch 统计量
+\FORMULA{Welch 两样本均值差统计量}{Welch statistic for a difference of two means}
 \[
 T_W=\frac{\bar X-\bar Y-(\mu_1-\mu_2)_0}
 {\sqrt{S_1^2/n_1+S_2^2/n_2}},
@@ -348,10 +375,12 @@ T_W=\frac{\bar X-\bar Y-(\mu_1-\mu_2)_0}
 \EN{For two independent normal populations, first verify independence and choose the statistic according to the variance assumption. A common unknown variance leads to a pooled $t$ test with $n_1+n_2-2$ degrees of freedom. Without equal variances, Welch's statistic uses the standard error shown above and approximate Welch--Satterthwaite degrees of freedom. For paired data, form $D_i=X_i-Y_i$ and use a one-sample $t$ test on $\mu_D$.}
 
 \noindent\textbf{单个正态总体方差与两个方差比。} 检验 $H_0:\sigma^2=\sigma_0^2$ 时，
+\FORMULA{单个正态总体方差的卡方检验统计量}{chi-square statistic for one normal-population variance}
 \[
 \chi^2=\frac{(n-1)S^2}{\sigma_0^2}\sim\chi^2_{n-1}.
 \]
 检验两个独立正态总体方差相等时，在 $H_0:\sigma_1^2=\sigma_2^2$ 下，
+\FORMULA{两个正态总体方差相等的 $F$ 检验统计量}{$F$ statistic for equality of two normal-population variances}
 \[
 F=\frac{S_1^2}{S_2^2}\sim F_{n_1-1,n_2-1}.
 \]
@@ -360,6 +389,7 @@ F=\frac{S_1^2}{S_2^2}\sim F_{n_1-1,n_2-1}.
 \EN{A single normal-population variance test uses the chi-square statistic above. Under equal variances, the ratio of sample variances from two independent normal samples follows an $F$ distribution. Choose the tail or tails from the alternative; two-sided $F$ tests must account for the asymmetry of the distribution. Both procedures are sensitive to departures from normality.}
 
 \noindent\textbf{总体比例的大样本检验。} 对二项样本 $X\sim\mathrm{Binomial}(n,p)$，$\hat p=X/n$。检验 $H_0:p=p_0$ 时，若正态近似条件满足，
+\FORMULA{单个总体比例的正态近似检验统计量}{normal-approximation statistic for one population proportion}
 \[
 Z=\frac{\hat p-p_0}{\sqrt{p_0(1-p_0)/n}}\approx N(0,1).
 \]
@@ -372,6 +402,7 @@ Z=\frac{\hat p-p_0}{\sqrt{p_0(1-p_0)/n}}\approx N(0,1).
 
 \subsection{5.3 拟合优度检验 | Goodness-of-fit tests}
 \noindent\textbf{Pearson 拟合优度检验。} 将观测分入 $k$ 个互斥类别，记观测频数为 $O_i$，原假设给出的概率为 $p_i(\theta)$，期望频数 $E_i=np_i(\theta)$。统计量为
+\FORMULA{Pearson 卡方拟合优度统计量}{Pearson chi-square goodness-of-fit statistic}
 \[
 X^2=\sum_{i=1}^k\frac{(O_i-E_i)^2}{E_i}.
 \]
@@ -382,6 +413,7 @@ X^2=\sum_{i=1}^k\frac{(O_i-E_i)^2}{E_i}.
 \EX{遗传理论预测四类比例相同，观测数为 $40,22,18,20$，总数 $100$，故每类期望数为 $25$。$X^2=(15^2+(-3)^2+(-7)^2+(-5)^2)/25=12.32$，自由度 $3$。因 $12.32>\chi^2_{0.95,3}\approx7.815$，在 5\% 水平拒绝“四类等比例”的原假设。}{A genetic model predicts four equally likely categories. The observed counts are $40,22,18,20$ out of $100$, so each expected count is $25$. The statistic is $12.32$ with $3$ degrees of freedom. Since $12.32>\chi^2_{0.95,3}\approx7.815$, reject equal proportions at the 5\% level.}
 
 \noindent\textbf{列联表独立性检验。} 对 $r\times c$ 列联表，在行变量与列变量独立的原假设下，
+\FORMULA{列联表独立性检验的期望频数与 Pearson 统计量}{expected counts and Pearson statistic for a contingency-table independence test}
 \[
 E_{ij}=\frac{O_{i+}O_{+j}}{n},\qquad
 X^2=\sum_{i=1}^r\sum_{j=1}^c\frac{(O_{ij}-E_{ij})^2}{E_{ij}},

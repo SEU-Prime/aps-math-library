@@ -5,6 +5,7 @@
 \hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
 \newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
 \newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\FORMULA}[2]{\par\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
 \newcommand{\EX}[2]{\par\noindent\textbf{例子 / Example.} #1\par\EN{#2}}
 \newcommand{\ASK}[4]{\par\noindent\textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent\textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
 \title{抽象代数 APS 面试准备\\[4pt]\large 群、环与模 | Groups, Rings and Modules}
@@ -13,9 +14,7 @@
 \begin{document}
 \maketitle
 \section*{课程概述 | Course overview}
-\noindent\textbf{中文口述稿。} 在抽象代数课上，我学习用运算的共同规则研究不同对象。例如整数加法构成群，而偶数 $2\mathbb Z$ 构成它的子群；把相差偶数的整数看作同一类，就得到商群 $\mathbb Z/2\mathbb Z$，其中只有偶数类和奇数类。这个例子也能说明同态：取余映射 $\phi(n)=n\bmod2$ 的核恰好是偶数。对于环，我用整数说明加法和乘法如何一起工作；模则类似向量空间，但标量可以取自环，例如任意阿贝尔群都可以看作 $\mathbb Z$-模。这里 $3m$ 表示把 $m$ 加三次。
-
-\EN{In abstract algebra, I studied common rules behind different operations. The integers under addition form a group, and the even integers form a subgroup. If I identify integers whose difference is even, I obtain the quotient group $\mathbb Z/2\mathbb Z$, with an even class and an odd class. The parity map $\phi(n)=n\bmod2$ has the even integers as its kernel. A ring has compatible addition and multiplication, as the integers do. A module resembles a vector space, but its scalars can come from a ring. For example, any abelian group is a $\mathbb Z$-module: $3m$ means adding $m$ three times.}
+\BOTH{我按群、环、模的顺序学习抽象代数：群从子群、陪集讲到正规子群、商群和同态；环讨论单位、零因子、理想与商环；模把向量空间的标量作用推广到一般环。群的例子是整数加法群及其子群 $2\mathbb Z$：取余映射 $\phi(n)=n\bmod 2$ 的核是偶数，商群 $\mathbb Z/2\mathbb Z$ 因而只有偶数类和奇数类。环中，$\mathbb Z/6\mathbb Z$ 的 $2$ 和 $3$ 是零因子，因为 $2\cdot3=0$，而 $5$ 是单位，因为 $5^2=1$。模的例子是任意阿贝尔群作为 $\mathbb Z$-模，其中 $3m$ 表示把 $m$ 相加三次；这说明模类似向量空间，但系数可以来自环。贯穿课程的问题是如何用同态比较结构、用商对象表达等价类，以及这些对象何时有基或自由生成元。}{I studied abstract algebra in the order of groups, rings, and modules. Groups lead from subgroups and cosets to normal subgroups, quotient groups, and homomorphisms. Rings introduce units, zero divisors, ideals, and quotient rings. Modules generalize scalar multiplication from vector spaces to scalars in a ring. For a group example, the even integers form the subgroup $2\mathbb Z$ of the integers under addition. The parity map $\phi(n)=n\bmod 2$ has kernel $2\mathbb Z$, so the quotient group $\mathbb Z/2\mathbb Z$ has an even and an odd class. In $\mathbb Z/6\mathbb Z$, $2$ and $3$ are zero divisors because their product is zero, while $5$ is a unit because $5^2=1$. Any abelian group is a $\mathbb Z$-module, where $3m$ means adding $m$ three times. These examples illustrate how homomorphisms compare structures, quotient objects encode equivalence classes, and modules extend linear algebra.}
 
 \noindent\textbf{学科联系与现实应用（拓展口述）。} 群论把几何变换、分子构型或晶体中的对称操作组织成代数对象；例如正方形的旋转和反射构成二面体群 $D_4$。环中的模运算是数论算法和公钥密码学的重要基础，例如 RSA 使用模 $n$ 的乘法与幂运算；面试时应说明这是环与数论的应用，不是本课程已经推导过 RSA 安全性的意思。有限域上的线性码是 $\mathbb F_q^n$ 的子空间，因此连接了模、线性代数、组合设计与通信中的纠错。一个可以贯穿群、环、模的回答是：它们分别提供对称、算术运算和线性组合的语言，再通过同态研究这些结构如何作用于几何对象、编码或计算。
 \EN{\textbf{Connections and applications (extension for an interview).} Group theory organizes geometric transformations and symmetry operations of molecules or crystals; for example, the rotations and reflections of a square form the dihedral group $D_4$. Modular arithmetic in rings is important in number-theoretic algorithms and public-key cryptography; RSA, for instance, uses multiplication and exponentiation modulo $n$. This is an application of rings and number theory, not a claim that the course proved RSA's security. A linear code over a finite field is a subspace of $\mathbb F_q^n$, connecting modules and linear algebra to combinatorial design and error correction in communications. A concise connection across groups, rings, and modules is that they provide languages for symmetry, arithmetic, and linear combinations, while homomorphisms describe how these structures act on geometric objects, codes, and computations.}
@@ -53,6 +52,7 @@
 \EX{在加法群 $\mathbb Z_{12}$ 中，$\langle\bar 4\rangle=\{\bar0,\bar4,\bar8\}$，所以 $\bar4$ 的阶为 $3$。}{In the additive group $\mathbb Z_{12}$, $\langle\bar4\rangle=\{\bar0,\bar4,\bar8\}$, so $\bar4$ has order $3$.}
 
 \noindent\textbf{循环群的子群。} 循环群的每个子群仍是循环群。对 $\mathbb Z_n$，每个正因子 $d\mid n$ 对应唯一一个阶为 $d$ 的子群
+\FORMULA{$\mathbb Z_n$ 中子群的生成元刻画}{generator description of subgroups of $\mathbb Z_n$}
 \[
 \left\langle\overline{n/d}\right\rangle=\{\overline{k n/d}:k\in\mathbb Z\}.
 \]
@@ -71,6 +71,7 @@
 \EN{If $H\le G$ and $g\in G$, the left coset is $gH=\{gh:h\in H\}$ and the right coset is $Hg=\{hg:h\in H\}$. Left cosets partition $G$ into disjoint subsets of equal size. The index $[G:H]$ is the number of left cosets.}
 
 \noindent\textbf{定理。} 若 $G$ 是有限群且 $H\le G$，则
+\FORMULA{拉格朗日定理的阶公式}{order formula in Lagrange's theorem}
 \[
 |G|=[G:H]\,|H|,\qquad |H|\mid |G|.
 \]
@@ -95,6 +96,7 @@
 \EX{在 $S_3$ 中，$H=\langle(12)\rangle=\{e,(12)\}$ 不是正规子群，因为 $(123)(12)(123)^{-1}=(23)\notin H$。相反，$A_3=\{e,(123),(132)\}$ 是正规子群。}{In $S_3$, $H=\langle(12)\rangle=\{e,(12)\}$ is not normal because $(123)(12)(123)^{-1}=(23)\notin H$. In contrast, $A_3=\{e,(123),(132)\}$ is normal.}
 
 \noindent\textbf{定义。} 群同态 $\varphi:G\to H$ 满足 $\varphi(ab)=\varphi(a)\varphi(b)$。其核为 $\ker\varphi=\{g\in G:\varphi(g)=e_H\}$，像为 $\operatorname{im}\varphi=\varphi(G)$。核是正规子群；$\varphi$ 单射当且仅当 $\ker\varphi=\{e_G\}$。第一同构定理为
+\FORMULA{群第一同构定理}{the first isomorphism theorem for groups}
 \[
 G/\ker\varphi\cong\operatorname{im}\varphi.
 \]
@@ -133,6 +135,7 @@ G/\ker\varphi\cong\operatorname{im}\varphi.
 
 \subsection{理想与商环 | Ideals and quotient rings}
 \noindent\textbf{定义。} 交换环 $R$ 的理想 $I\subseteq R$ 是加法子群，并且对所有 $r\in R,a\in I$ 都有 $ra\in I$。由 $a_1,\ldots,a_n$ 生成的理想为
+\FORMULA{有限生成理想的表示}{description of a finitely generated ideal}
 \[
 (a_1,\ldots,a_n)=\left\{\sum_{i=1}^n r_i a_i:r_i\in R\right\}.
 \]
@@ -145,10 +148,12 @@ G/\ker\varphi\cong\operatorname{im}\varphi.
 \EX{在 $\mathbb Z$ 中，$(4,6)=\{4x+6y:x,y\in\mathbb Z\}=2\mathbb Z=(2)$。}{In $\mathbb Z$, $(4,6)=\{4x+6y:x,y\in\mathbb Z\}=2\mathbb Z=(2)$.}
 
 \noindent\textbf{定义与公式。} 若 $I$ 是环 $R$ 的理想，商环 $R/I$ 由陪集 $a+I$ 构成，运算为
+\FORMULA{商环的加法与乘法}{addition and multiplication in a quotient ring}
 \[
 (a+I)+(b+I)=(a+b)+I,\qquad (a+I)(b+I)=ab+I.
 \]
 自然投影 $\pi:R\to R/I$，$a\mapsto a+I$ 是满同态且 $\ker\pi=I$。若 $\varphi:R\to S$ 是保单位环同态，则 $\ker\varphi$ 是理想，并有第一同构定理
+\FORMULA{环第一同构定理}{the first isomorphism theorem for rings}
 \[
 R/\ker\varphi\cong\operatorname{im}\varphi.
 \]
@@ -176,6 +181,7 @@ $ab-a'b'=a(b-b')+(a-a')b'\in I$。因此 $ab+I=a'b'+I$，乘法不依赖代表�
 \section{模 | Modules}
 \subsection{模的定义与例子 | Definition and examples}
 \noindent\textbf{定义。} 设 $R$ 为含单位元的环。左 $R$-模 $M$ 是一个阿贝尔群（加法记作 $+$），配有标量作用 $R\times M\to M$，满足对任意 $r,s\in R$ 及 $m,n\in M$：
+\FORMULA{左模的标量作用公理}{axioms for a left-module scalar action}
 \[
 1m=m,\quad (r+s)m=rm+sm,\quad r(m+n)=rm+rn,\quad r(sm)=(rs)m.
 \]
@@ -194,6 +200,7 @@ $ab-a'b'=a(b-b')+(a-a')b'\in I$。因此 $ab+I=a'b'+I$，乘法不依赖代表�
 
 \subsection{子模、模同态与商模 | Submodules, homomorphisms and quotients}
 \noindent\textbf{定义。} $R$-模 $M$ 的子集 $N$ 是子模，若它是加法子群且对所有 $r\in R,n\in N$ 都有 $rn\in N$。模同态 $\varphi:M\to N$ 满足
+\FORMULA{模同态保持加法与标量作用}{linearity conditions for a module homomorphism}
 \[
 \varphi(x+y)=\varphi(x)+\varphi(y),\qquad \varphi(rx)=r\varphi(x).
 \]

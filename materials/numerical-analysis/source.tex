@@ -4,6 +4,7 @@
 \hypersetup{colorlinks=true,linkcolor=blue}
 \newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
 \newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\FORMULA}[2]{\par\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
 \newcommand{\EX}[2]{\par\noindent\textbf{例子 / Example.} #1\par\EN{#2}}
 \newcommand{\ASK}[4]{\par\noindent\textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent\textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
 \title{数值分析 APS 面试准备\\[4pt]\large 双语课程概述、知识点与口试题}
@@ -11,6 +12,8 @@
 \date{}
 \begin{document}\maketitle
 \section*{课程概述 | Course overview}
+\noindent\textbf{课程主线 / Course roadmap.} 我按误差与收敛、非线性方程求根、线性方程组、插值与最佳逼近、数值积分/微分、常微分方程数值解的顺序复习，并区分问题条件数、算法稳定性、截断误差和舍入误差。每种方法都要写出离散公式、误差阶和适用条件。比如 Newton 法解 $x^2-2=0$ 时 $x_{k+1}=(x_k+2/x_k)/2$，从 $x_0=1$ 得到 $1.5,1.4167,\ldots$；它在简单根附近二次收敛，但初值不当或导数接近零时可能失败。
+\EN{I review the main numerical-analysis problems: error and convergence, nonlinear root finding, linear systems, interpolation and best approximation, numerical integration and differentiation, numerical ODEs, and the distinction between conditioning, stability, and algorithmic error. Each method should be described by its discrete formula, sources of error, and assumptions. Newton's method is a concrete example: to solve $f(x)=x^2-2=0$, iterate $x_{k+1}=(x_k+2/x_k)/2$. Starting at $x_0=1$ gives $1.5,1.4167,\ldots$, but rapid convergence depends on a suitable initial value near the root, and the method cannot be applied directly where the derivative is zero.}
 \noindent\textbf{中文口述稿。} 我在这门课学习怎样用计算机求近似解，并判断结果是否可靠。例如求 $\sqrt2$ 可以转化为 $f(x)=x^2-2=0$，Newton 迭代为 $x_{k+1}=x_k-f(x_k)/f'(x_k)=(x_k+2/x_k)/2$。从 $x_0=1$ 出发，得到 $x_1=1.5$、$x_2\approx1.4167$，逐步接近 $1.4142$。这个方法在根附近且初值合适时收敛很快，但导数为零或初值不合适时可能失败。我还学习用插值从离散数据构造近似函数，用数值积分估算面积；关键是同时检查误差和算法的收敛条件。
 
 \EN{In numerical analysis, I learned to compute approximate answers and assess their reliability. To find $\sqrt2$, I can solve $f(x)=x^2-2=0$ with Newton's iteration, $x_{k+1}=(x_k+2/x_k)/2$. Starting at one gives $1.5$ and then approximately $1.4167$, approaching $1.4142$. The method converges rapidly near a simple root with a suitable starting value, but it can fail when the derivative is zero or the initial guess is unsuitable. I also studied interpolation for constructing a function from data and numerical integration for estimating areas. In each case, I check the error and the conditions for the method.}
@@ -29,6 +32,7 @@
 \EN{The absolute error between the exact value $x$ and approximation $\tilde x$ is $|x-\tilde x|$. When $x\ne0$, the relative error is $|x-\tilde x|/|x|$. Sources include model, observation, truncation, and rounding errors. Convergence asks whether the approximation approaches the target as the step size decreases or iteration count increases. Stability asks whether input and intermediate errors are excessively amplified.}
 
 \noindent\textbf{条件数与收敛阶。} 条件数衡量问题本身对输入扰动的敏感度；算法稳定性衡量所选算法如何传播扰动。对非奇异矩阵 $A$，相对于选定矩阵范数的条件数为
+\FORMULA{矩阵条件数}{matrix condition number}
 \[
 \kappa(A)=\|A\|\,\|A^{-1}\|.
 \]
@@ -46,11 +50,12 @@ $\kappa(A)$ 大表示输入数据的小相对误差可能造成解的较大相�
 
 \section{非线性方程求根 | Nonlinear equations}
 \noindent\textbf{二分法。} 若 $f$ 在 $[a,b]$ 连续且 $f(a)f(b)<0$，则至少存在一个根。每次取中点 $m=(a+b)/2$，保留仍满足端点异号的一半区间。$n$ 步后区间长度为 $(b-a)/2^n$，因此误差上界随步数几何下降；方法稳健但通常线性收敛。
+\FORMULA{二分法的中点与区间误差界}{midpoint and interval-error bound for bisection}
 \[
 m=\frac{a+b}{2},\qquad \text{interval length after }n\text{ steps}=\frac{b-a}{2^n}.
 \]
 若要求最终区间长度不超过 $\varepsilon$，取 $n\ge\left\lceil\log_2((b-a)/\varepsilon)\right\rceil$；若要求中点根误差不超过 $\varepsilon$，可用更强的界 $n\ge\left\lceil\log_2((b-a)/(2\varepsilon))\right\rceil$。
-\READ{“The midpoint is a plus b over two. After n steps, the interval length is b minus a over two to the n.”}
+\READ{“The midpoint is the sum of a and b, all divided by two. After n steps, the interval length is the quantity b minus a, all divided by two to the n-th power.”}
 \EN{If $f$ is continuous on $[a,b]$ and $f(a)f(b)<0$, at least one root lies inside. Bisection repeatedly takes the midpoint and keeps the half-interval whose endpoints have opposite signs. The interval length halves at every step, giving robust but usually linear convergence.}
 
 \noindent\textbf{不动点迭代。} 将 $f(x)=0$ 等价改写为 $x=g(x)$，迭代 $x_{k+1}=g(x_k)$。若 $g$ 将闭区间映入自身，且 $|g'(x)|\le q<1$，Banach 压缩原理保证唯一不动点和收敛。不同等价改写的收敛性可能完全不同。
@@ -58,6 +63,7 @@ m=\frac{a+b}{2},\qquad \text{interval length after }n\text{ steps}=\frac{b-a}{2^
 \EN{Rewrite $f(x)=0$ as $x=g(x)$ and iterate. If $g$ maps a closed interval into itself and $|g'(x)|\le q<1$, the contraction theorem gives a unique fixed point and convergence. Different rearrangements of the same equation may have very different convergence behavior.}
 
 \noindent\textbf{Newton 法。} 对单根 $\alpha$，在适当光滑性和初值接近条件下，
+\FORMULA{Newton 求根迭代公式}{Newton iteration for root finding}
 \[
 x_{k+1}=x_k-\frac{f(x_k)}{f'(x_k)}
 \]
@@ -81,6 +87,7 @@ x_{k+1}=x_k-\frac{f(x_k)}{f'(x_k)}
 \EN{A linear system is written $Ax=b$. Gaussian elimination applies elementary row operations to obtain an upper-triangular system, followed by back substitution. Partial pivoting selects a large-magnitude pivot in the current column to reduce numerical risk. LU factorization writes $A=LU$, or $PA=LU$ with pivoting, and is reusable for multiple right-hand sides.}
 
 \noindent\textbf{迭代法。} 采用 $A=D-L-U$ 的符号约定，其中 $D$ 为对角部分，$L$、$U$ 分别为严格下、上三角部分的\emph{负值}。于是
+\FORMULA{Jacobi、Gauss--Seidel 与 SOR 迭代格式}{Jacobi, Gauss--Seidel, and SOR iteration schemes}
 \[
 \begin{aligned}
 \text{Jacobi:}\quad &x^{(k+1)}=D^{-1}\big[(L+U)x^{(k)}+b\big],\\
@@ -106,6 +113,7 @@ Jacobi 的整步都使用旧向量；Gauss--Seidel 一旦算出新分量就立�
 
 \section{插值与最佳逼近 | Interpolation and best approximation}
 互异节点 $(x_i,y_i)$ 唯一确定次数不超过 $n$ 的插值多项式。Lagrange 公式为
+\FORMULA{Lagrange 插值公式与余项}{Lagrange interpolation formula and remainder}
 \[
 P_n(x)=\sum_{i=0}^{n}y_i\prod_{j\ne i}\frac{x-x_j}{x_i-x_j},\qquad
 f(x)-P_n(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}\prod_{i=0}^{n}(x-x_i).
@@ -115,6 +123,7 @@ f(x)-P_n(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}\prod_{i=0}^{n}(x-x_i).
 \EN{Distinct interpolation nodes determine a unique polynomial of degree at most $n$. The Lagrange formula and its remainder are shown above. Newton's divided-difference form is convenient when adding data points. Hermite interpolation also matches derivative values. Piecewise interpolation and cubic splines reduce high-degree oscillation; natural cubic splines use zero second derivatives at the endpoints.}
 
 \noindent\textbf{其他插值与逼近。} Newton 差商形式适合增添节点；Hermite 插值同时匹配函数值及导数；分段 Lagrange 和三次样条避免对整个区间使用单个高次多项式。函数最佳一致逼近最小化最大绝对误差。对离散数据及基函数展开，最小二乘系数解
+\FORMULA{线性最小二乘目标与正规方程}{linear least-squares objective and normal equations}
 \[
 \min_c\|Ac-b\|_2^2,\qquad A^{\mathsf T}Ac=A^{\mathsf T}b.
 \]
@@ -136,9 +145,11 @@ f(x)-P_n(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}\prod_{i=0}^{n}(x-x_i).
 
 \section{数值积分与数值微分 | Numerical integration and differentiation}
 \noindent\textbf{插值型求积。} 求积公式用加权函数值近似积分：$\int_a^bf(x)dx\approx\sum_{i=0}^nw_if(x_i)$。复化梯形公式和复化 Simpson 公式分别为
+\FORMULA{复化梯形求积公式}{composite trapezoidal quadrature rule}
 \[
 T_n=h\left[\frac{f(a)+f(b)}2+\sum_{i=1}^{n-1}f(a+ih)\right],
 \]
+\FORMULA{复化 Simpson 求积公式}{composite Simpson quadrature rule}
 \[
 S_n=\frac h3\left[f(x_0)+f(x_n)+4\sum_{i\,\mathrm{odd}}f(x_i)+2\sum_{\substack{i\,\mathrm{even}\\0<i<n}}f(x_i)\right],\quad h=\frac{b-a}{n},\ n\text{ 偶}.
 \]
@@ -151,6 +162,7 @@ S_n=\frac h3\left[f(x_0)+f(x_n)+4\sum_{i\,\mathrm{odd}}f(x_i)+2\sum_{\substack{i
 \EN{Romberg integration applies Richardson extrapolation to composite trapezoidal approximations at different step sizes, successively canceling lower-order error terms. An $n$-point Gaussian quadrature chooses nodes and weights to integrate polynomials through degree $2n-1$ exactly, often achieving high accuracy with relatively few nodes.}
 
 \EX{标准区间上的两点 Gauss--Legendre 公式为
+\FORMULA{两点 Gauss--Legendre 求积公式}{two-point Gauss--Legendre quadrature rule}
 \[
 \int_{-1}^{1}f(x)\,dx\approx f\left(-\frac1{\sqrt3}\right)+f\left(\frac1{\sqrt3}\right).
 \]
@@ -159,6 +171,7 @@ S_n=\frac h3\left[f(x_0)+f(x_n)+4\sum_{i\,\mathrm{odd}}f(x_i)+2\sum_{\substack{i
 \ASK{为什么 Gauss 求积能用较少节点达到较高精度？}{Why can Gaussian quadrature achieve high accuracy with relatively few nodes?}{节点和权重不是预先固定为等距，而是专门选择使公式对尽可能高次数的多项式精确。$n$ 点 Gauss--Legendre 公式可精确积分至 $2n-1$ 次多项式。}{Its nodes and weights are chosen rather than fixed at equally spaced points, making the rule exact for polynomials of the highest possible degree. An $n$-point Gauss--Legendre rule is exact through degree $2n-1$.}
 
 \noindent\textbf{数值微分。} Taylor 展开给出常用差分公式：
+\FORMULA{向前、向后与中心差分公式}{forward, backward, and centered finite-difference formulas}
 \[
 \begin{aligned}
 f'(x)&\approx\frac{f(x+h)-f(x)}h &&(O(h)),\\
@@ -180,6 +193,7 @@ f'(x)&\approx\frac{f(x+h)-f(x-h)}{2h} &&(O(h^2)).
 
 \section{常微分方程数值解 | Numerical ODE methods}
 考虑初值问题 $y'=f(t,y)$，$y(t_0)=y_0$，步长为 $h$，$t_{n+1}=t_n+h$。Euler 显式法、后退 Euler 法和梯形法分别为
+\FORMULA{Euler 显式法、后退法与梯形法}{explicit Euler, backward Euler, and trapezoidal methods}
 \[
 y_{n+1}=y_n+hf(t_n,y_n),\quad
 y_{n+1}=y_n+hf(t_{n+1},y_{n+1}),\quad
@@ -190,6 +204,7 @@ y_{n+1}=y_n+\frac h2\big[f(t_n,y_n)+f(t_{n+1},y_{n+1})\big].
 \EN{For the initial-value problem, explicit Euler, backward Euler, and trapezoidal methods are shown above. The latter two are implicit and generally require solving an equation at every step. The trapezoidal method is second order; improved Euler can also be constructed as an explicit second-order method.}
 
 \noindent\textbf{显式、隐式与改进 Euler。} 显式格式的 $y_{n+1}$ 可直接由已知量计算；隐式格式在右侧含 $y_{n+1}$，每步通常还要解方程。Heun 型改进 Euler 先预测再校正：
+\FORMULA{Heun 预测--校正法}{Heun predictor-corrector method}
 \[
 k_1=f(t_n,y_n),\quad k_2=f(t_n+h,y_n+hk_1),\qquad
 y_{n+1}=y_n+\frac h2(k_1+k_2).
@@ -198,11 +213,13 @@ y_{n+1}=y_n+\frac h2(k_1+k_2).
 \EN{An explicit method computes $y_{n+1}$ directly from known values. An implicit method contains $y_{n+1}$ on the right and usually requires solving an equation at each step. The Heun version of improved Euler uses a predictor and a corrected average slope as shown above. It is explicit and second order; some textbooks use the same name for the midpoint method, so state which version you mean.}
 
 \noindent\textbf{四阶 Runge--Kutta。} 令
+\FORMULA{经典四阶 Runge--Kutta 的阶段斜率}{stage slopes in the classical fourth-order Runge--Kutta method}
 \[
 k_1=f(t_n,y_n),\quad k_2=f(t_n+h/2,y_n+hk_1/2),\quad
 k_3=f(t_n+h/2,y_n+hk_2/2),\quad k_4=f(t_n+h,y_n+hk_3),
 \]
 则
+\FORMULA{经典四阶 Runge--Kutta 更新公式}{update formula for classical fourth-order Runge--Kutta}
 \[
 y_{n+1}=y_n+\frac h6(k_1+2k_2+2k_3+k_4).
 \]
@@ -216,6 +233,7 @@ y_{n+1}=y_n+\frac h6(k_1+2k_2+2k_3+k_4).
 \noindent 对测试方程 $y'=\lambda y$，数值方法产生放大因子 $R(z)$，$z=h\lambda$；绝对稳定要求 $|R(z)|\le1$。显式 Euler 有 $R(z)=1+z$，故其稳定区域是复平面上的圆盘 $|1+z|\le1$。对于负实数 $\lambda$，条件为 $0\le h|\lambda|\le2$。一阶 Euler、二阶改进 Euler/梯形和四阶 RK 的全局误差阶分别为 $O(h)$、$O(h^2)$ 和 $O(h^4)$。
 
 \noindent\textbf{Adams 多步法。} 代表性的二步 Adams--Bashforth 显式格式和 Adams--Moulton 隐式格式为
+\FORMULA{二步 Adams--Bashforth 与 Adams--Moulton 公式}{two-step Adams--Bashforth and Adams--Moulton formulas}
 \[
 y_{n+1}^{\mathrm{AB2}}=y_n+\frac h2(3f_n-f_{n-1}),\qquad
 y_{n+1}^{\mathrm{AM2}}=y_n+\frac h{12}(5f_{n+1}+8f_n-f_{n-1}),
@@ -247,6 +265,7 @@ y_{n+1}^{\mathrm{AM2}}=y_n+\frac h{12}(5f_{n+1}+8f_n-f_{n-1}),
 
 \section[条件数与稳定性 | Conditioning and stability]{同一问题的病态性与算法不稳定 | Problem conditioning versus algorithm stability}
 \noindent 计算 $\sqrt{1+x}-1$ 在很小正 $x$ 时，直接相减会把两个接近 $1$ 的浮点数相减，造成有效数字丢失。代数有理化给出等价形式
+\FORMULA{平方根差式的有理化恒等式}{rationalization identity for a square-root difference}
 \[
 \sqrt{1+x}-1=\frac{x}{\sqrt{1+x}+1}.
 \]

@@ -5,6 +5,7 @@
 \newcommand{\BOTH}[2]{\par\noindent\textbf{中文。}\ #1\par\noindent\textbf{English.}\ #2\par}
 \newcommand{\EX}[2]{\par\noindent\textbf{例子。}\ #1\par\noindent\textbf{Example.}\ #2\par}
 \newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\FORMULA}[2]{\par\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
 \newcommand{\ASK}[4]{\begin{samepage}\par\noindent\textbf{可能问题。}\ #1\par\noindent\textbf{Possible question.}\ #2\par\noindent\textbf{回答要点。}\ #3\par\noindent\textbf{Key answer.}\ #4\medskip\end{samepage}}
 \title{数学分析（一）APS 面试准备\\[4pt]\large 单变量极限、微分、积分与 Fourier 级数}
 \author{Mathematical Analysis I: Bilingual Oral Review}
@@ -12,17 +13,19 @@
 \begin{document}\maketitle
 
 \section*{课程概述 | Course overview}
-\BOTH{我在第一学期从数列和函数的极限开始，逐步建立连续、导数和积分的精确定义。导数把局部变化率变成线性近似，积分把许多小量累加起来；微积分基本定理说明二者互为联系。比如测量一辆车的位置随时间变化，导数给出瞬时速度；已知速度曲线后积分则给出行驶距离。课程后半用 Taylor 公式控制近似误差，用定积分计算面积、体积和质量，并用 Fourier 级数把周期信号分解为不同频率的正弦波。}{In the first semester, I started with limits of sequences and functions and used them to define continuity, derivatives, and integrals precisely. A derivative gives a local linear approximation, while an integral accumulates small quantities; the fundamental theorem of calculus connects the two. For example, differentiating a car's position gives its instantaneous velocity, and integrating velocity gives its displacement. Taylor's theorem controls approximation error, definite integrals compute quantities such as area and mass, and Fourier series decompose periodic signals into sinusoidal frequencies.}
+\BOTH{第一学期我按“极限—连续—微分—积分”的顺序学习单变量分析：从数列和函数极限建立连续性，再学习导数、微分、中值定理、L'Hospital 法则和 Taylor 公式；积分部分包括不定积分、Riemann 定积分、反常积分、几何应用和数值积分，最后接触 Fourier 级数。导数给出局部变化率，例如位置 $s(t)$ 的导数是速度；积分累计变化，例如 $\int_0^T v(t)\,dt$ 是位移。微积分基本定理把两者连起来。Taylor 公式用于近似并控制误差：在 $x=0.1$ 处，$e^x$ 的二次 Taylor 多项式给出 $1.105$，Lagrange 余项不超过 $e^{0.1}(0.1)^3/6$。定积分还可由密度 $\rho(x)$ 计算细杆质量 $\int_a^b\rho(x)\,dx$，而 Fourier 级数把周期信号拆成不同频率的正弦和余弦项。}{In the first semester, I followed the sequence limits, continuity, differentiation, and integration in single-variable analysis. I began with sequence and function limits, then studied continuity, derivatives, differentials, mean-value theorems, L'Hospital's rule, and Taylor's theorem. The integration topics included antiderivatives, the Riemann integral, improper integrals, geometric applications, and numerical quadrature, followed by Fourier series. A derivative gives a local rate of change: the derivative of position $s(t)$ is velocity. An integral accumulates change: $\int_0^T v(t)\,dt$ is displacement. The fundamental theorem of calculus connects them. Taylor's theorem approximates and bounds error: at $x=0.1$, the quadratic Taylor polynomial for $e^x$ is $1.105$, with Lagrange remainder at most $e^{0.1}(0.1)^3/6$. A definite integral can compute the mass $\int_a^b\rho(x)\,dx$ of a rod with density $\rho$, while a Fourier series decomposes a periodic signal into sinusoidal frequencies.}
 
 \BOTH{一个具体应用是用 Taylor 多项式近似 $e^x$。在 $x=0.1$ 时，$1+x+x^2/2=1.105$；Lagrange 余项说明误差不超过 $e^{0.1}(0.1)^3/6$，约为 $0.000185$。这说明公式不仅给近似值，也给出可信的误差界。}{A concrete application is approximating $e^x$ by a Taylor polynomial. At $x=0.1$, $1+x+x^2/2=1.105$. The Lagrange remainder bounds the error by $e^{0.1}(0.1)^3/6$, about $0.000185$. The formula therefore gives both an approximation and a justified error bound.}
 
-\section{开始前需要的记号 | Basic notation}
+\section*{开始前需要的记号 | Basic notation}
 \BOTH{数列 $(a_n)$ 是按正整数编号的一串实数；函数 $f:A\to\mathbb R$ 把定义域 $A$ 中每个输入指定到一个实数。$|x|$ 是 $x$ 到 $0$ 的距离。区间 $(a,b)$ 不含端点，$[a,b]$ 包含端点。极限中的 $n\to\infty$ 表示指标不断增大，$x\to a$ 表示 $x$ 在定义域内趋近 $a$，不要求取到 $a$。}{A sequence $(a_n)$ is an ordered list of real numbers indexed by positive integers. A function $f:A\to\mathbb R$ assigns a real output to each input in its domain. The absolute value $|x|$ is the distance from $x$ to zero. Parentheses exclude interval endpoints and brackets include them. In a limit, $n\to\infty$ means the index grows without bound; $x\to a$ means domain points approach $a$, without requiring $x=a$.}
 
-\section{第二章：数列极限 | Chapter 2: Limits of sequences}
+\setcounter{section}{1}
+\section{数列极限 | Limits of sequences}
 \subsection{定义、基本性质与计算}
+\FORMULA{数列收敛的 $\varepsilon$--$N$ 定义}{the epsilon-N definition of sequence convergence}
 \BOTH{数列 $a_n$ 收敛到 $L$，记作 $a_n\to L$，若对每个 $\varepsilon>0$，存在整数 $N$，使 $n\ge N$ 时 $|a_n-L|<\varepsilon$。先给定误差要求 $\varepsilon$，再找到从哪一项起全部满足要求；$N$ 可以依赖 $\varepsilon$。极限若存在则唯一，且收敛数列有界。}{A sequence $a_n$ converges to $L$, written $a_n\to L$, if for every $\varepsilon>0$ there is an integer $N$ such that $|a_n-L|<\varepsilon$ whenever $n\ge N$. We first choose the allowed error and then find an index after which every term meets it. The index may depend on $\varepsilon$. A limit is unique, and every convergent sequence is bounded.}
-\EX{证明 $1/n\to0$：给定 $\varepsilon>0$，取 $N>1/\varepsilon$。当 $n\ge N$ 时，$|1/n|\le1/N<\varepsilon$。这个例子展示了如何把定义转成明确的 $N(\varepsilon)$。}{To prove $1/n\to0$, choose an integer $N>1/\varepsilon$. Then $n\ge N$ implies $|1/n|\le1/N<\varepsilon$. This gives an explicit choice of $N$ from the definition.}
+\EX{证明 $1/n\to0$：给定 $\varepsilon>0$，取整数 $N>1/\varepsilon$，则 $n\ge N$ 时 $|1/n|\le1/N<\varepsilon$。同样，证明 $a_n=n/(n+1)\to1$ 时，$|a_n-1|=1/(n+1)$；取 $N>1/\varepsilon$ 即可。两例都先把误差写成 $n$ 的显式函数，再反解出充分大的 $N$，不要求最小的 $N$。}{To prove $1/n\to0$, choose an integer $N>1/\varepsilon$; then $n\ge N$ gives $|1/n|\le1/N<\varepsilon$. Similarly, $|n/(n+1)-1|=1/(n+1)$, so the same choice proves $n/(n+1)\to1$. In both examples, express the error as a function of $n$ and solve for a sufficient index; the least possible $N$ is unnecessary.}
 \BOTH{若 $a_n\to a$、$b_n\to b$，则 $a_n\pm b_n\to a\pm b$、$a_nb_n\to ab$；若 $b\ne0$，则 $a_n/b_n\to a/b$。夹逼定理说，若最终有 $a_n\le b_n\le c_n$ 且两侧都趋于 $L$，中间数列也趋于 $L$。商法则中的 $b\ne0$ 不可省略。}{If $a_n\to a$ and $b_n\to b$, then sums, differences, and products converge to the corresponding operations on the limits. Quotients converge when the limiting denominator is nonzero. The squeeze theorem says that if $a_n\le b_n\le c_n$ eventually and both outer sequences tend to $L$, then $b_n\to L$. The nonzero-denominator condition is essential.}
 \EX{$(2n+1)/(n+3)=(2+1/n)/(1+3/n)\to2$。又因 $|\sin n|\le1$，有 $|\sin n|/n\le1/n\to0$，故 $\sin n/n\to0$。}{We have $(2n+1)/(n+3)=(2+1/n)/(1+3/n)\to2$. Also $|\sin n|/n\le1/n\to0$, so the squeeze theorem gives $\sin n/n\to0$.}
 
@@ -39,8 +42,9 @@
 \EX{交错数列 $(-1)^n$ 的偶数项恒为 $1$，奇数项恒为 $-1$，两子列极限不同，所以原数列不收敛。}{The even terms of $(-1)^n$ equal $1$ and the odd terms equal $-1$. Since these subsequences have different limits, the original sequence diverges.}
 \BOTH{三个常见常数可由极限刻画：$\pi$ 是圆周长与直径之比；$e=\lim_{n\to\infty}(1+1/n)^n$；Euler--Mascheroni 常数 $\gamma=\lim_{n\to\infty}(H_n-\log n)$，其中 $H_n=1+1/2+\cdots+1/n$。数列 $H_n-\log n$ 递减且大于 $0$，由单调有界定理可知其极限存在；$e$ 的极限也可用单调有界性证明。$e$ 是自然对数与指数函数的底数。}{The constant $\pi$ is the ratio of a circle's circumference to its diameter. The number $e$ is $\lim(1+1/n)^n$. The Euler--Mascheroni constant is $\gamma=\lim(H_n-\log n)$, where $H_n$ is the $n$th harmonic number. The sequence $H_n-\log n$ decreases and remains positive, so it has a limit by monotone convergence. The limit defining $e$ can also be established by monotone boundedness. The number $e$ is the base of the natural logarithm and exponential function.}
 
-\section{第三章：函数极限与连续 | Chapter 3: Function limits and continuity}
+\section{函数极限与连续 | Function limits and continuity}
 \subsection{函数极限、重要极限与阶}
+\FORMULA{函数极限的 $\varepsilon$--$\delta$ 定义}{the epsilon-delta definition of a function limit}
 \BOTH{设 $a$ 是定义域的聚点。$\lim_{x\to a}f(x)=L$ 表示对每个 $\varepsilon>0$，存在 $\delta>0$，使 $0<|x-a|<\delta$ 且 $x$ 在定义域内时 $|f(x)-L|<\varepsilon$。这里 $x\ne a$，所以函数在 $a$ 处可以未定义。无穷远处的极限把邻域条件换成 $|x|>R$。}{Let $a$ be an accumulation point of the domain. The statement $\lim_{x\to a}f(x)=L$ means that for every $\varepsilon>0$ there is $\delta>0$ such that domain points satisfying $0<|x-a|<\delta$ also satisfy $|f(x)-L|<\varepsilon$. The point $a$ itself need not belong to the domain. Limits at infinity use a condition $|x|>R$.}
 \EX{因 $|x^2-4|=|x-2||x+2|$，当 $|x-2|<1$ 时 $|x+2|<5$。给定 $\varepsilon$，取 $\delta=\min(1,\varepsilon/5)$，即可证明 $\lim_{x\to2}x^2=4$。}{Since $|x^2-4|=|x-2||x+2|$ and $|x-2|<1$ implies $|x+2|<5$, choosing $\delta=\min(1,\varepsilon/5)$ proves that $x^2\to4$ as $x\to2$.}
 \BOTH{Heine 定理把函数极限与数列极限联系起来：$f(x)\to L$ 当且仅当对每个定义域内满足 $x_n\to a$ 且 $x_n\ne a$ 的数列，都有 $f(x_n)\to L$。它既能用来证明极限，也能用反例数列证明极限不存在。两个基本极限是 $\sin x/x\to1$（$x\to0$）和 $(1+x)^{1/x}\to e$（$x\to0$ 且 $x>-1$）。}{Heine's theorem characterizes a function limit by sequences: $f(x)\to L$ if and only if every domain sequence $x_n\to a$, with $x_n\ne a$, satisfies $f(x_n)\to L$. It can prove a limit or disprove one by a counterexample sequence. Two fundamental limits are $\sin x/x\to1$ as $x\to0$ and $(1+x)^{1/x}\to e$ as $x\to0$ with $x>-1$.}
@@ -49,14 +53,17 @@
 \EX{当 $x\to0$，$\sin x\sim x$，所以 $\sin x/x\to1$。但 $1-\cos x$ 不能用 $1-1=0$ 代替；应先改写成 $2\sin^2(x/2)$，才能保留二阶主项。}{As $x\to0$, $\sin x\sim x$, so $\sin x/x\to1$. Replacing $1-\cos x$ by $1-1$ would lose the leading term; rewriting it as $2\sin^2(x/2)$ preserves the second-order behavior.}
 
 \subsection{连续、一致连续与紧区间定理}
+\FORMULA{连续性的 $\varepsilon$--$\delta$ 判据}{the epsilon-delta criterion for continuity}
 \BOTH{函数在 $a$ 连续，若 $f(a)$ 有定义且 $\lim_{x\to a}f(x)=f(a)$。间断点可按单侧极限分类：左右极限都存在但不等是跳跃间断；极限存在但不等于函数值是可去间断；至少一侧无有限极限时是无穷或振荡间断。}{A function is continuous at $a$ if $f(a)$ is defined and its limit there equals $f(a)$. Discontinuities can be classified by one-sided limits: unequal finite one-sided limits give a jump; an existing limit different from the function value gives a removable discontinuity; failure of a finite one-sided limit gives an infinite or oscillatory discontinuity.}
 \EX{令 $f(x)=\sin x/x$（$x\ne0$），并定义 $f(0)=1$，则 $f$ 在 $0$ 连续。函数 $1/x$ 在 $0$ 无定义且无有限极限，是无穷间断；$\sin(1/x)$ 在 $0$ 附近振荡而无极限。}{Define $f(x)=\sin x/x$ for $x\ne0$ and $f(0)=1$. The resulting function is continuous at zero. The function $1/x$ has an infinite discontinuity there, while $\sin(1/x)$ oscillates and has no limit.}
 \BOTH{连续函数在闭有界区间 $[a,b]$ 上有界并能取到最大、最小值；若 $f(a)f(b)<0$，则介值定理保证中间有零点。闭区间上的连续函数还一致连续：给定 $\varepsilon$，同一个 $\delta$ 可用于所有点。一般连续不代表一致连续，例如 $f(x)=x^2$ 在 $\mathbb R$ 连续但不一致连续。}{A continuous function on a closed bounded interval is bounded and attains its maximum and minimum. If $f(a)f(b)<0$, the intermediate value theorem guarantees a zero between them. Such a function is also uniformly continuous: one $\delta$ works for every point. Continuity alone does not imply uniform continuity; $x^2$ is continuous but not uniformly continuous on all of $\mathbb R$.}
 \EX{若连续函数 $f$ 满足 $f(1)=-2$、$f(3)=5$，介值定理给出某个 $c\in(1,3)$ 使 $f(c)=0$。它证明零点存在，不直接给出零点数目或精确位置。}{If $f$ is continuous, $f(1)=-2$, and $f(3)=5$, the intermediate value theorem gives some $c\in(1,3)$ with $f(c)=0$. It proves existence, not the number or exact location of zeros.}
+\EX{验证 $f(x)=x^2$ 在 $x=1$ 连续：给定 $\varepsilon>0$，取 $\delta=\min(1,\varepsilon/3)$。若 $|x-1|<\delta$，则 $|x+1|<3$，故 $|x^2-1|=|x-1||x+1|<3\delta\le\varepsilon$。限制 $\delta\le1$ 是为了统一控制因子 $|x+1|$；量词顺序是先给定函数值误差，再选输入距离。}{To verify continuity of $x^2$ at one, let $\varepsilon>0$ and choose $\delta=\min(1,\varepsilon/3)$. If $|x-1|<\delta$, then $|x+1|<3$, so $|x^2-1|=|x-1||x+1|<3\delta\le\varepsilon$. The bound $\delta\le1$ controls the factor $|x+1|$ uniformly. Choose the input tolerance after the output tolerance.}
 \ASK{Heine 定理为什么有用？}{Why is Heine's theorem useful?}{它把函数极限化成对所有趋近数列的判断；若能找到两条趋近同一点却函数值趋向不同结果的数列，极限便不存在。}{It converts a function limit into a statement about every approaching sequence. Two sequences with different image limits disprove the existence of the function limit.}
 
-\section{第四章：导数与微分 | Chapter 4: Derivatives and differentials}
+\section{导数与微分 | Derivatives and differentials}
 \subsection{导数、微分与求导规则}
+\FORMULA{导数的差商定义与一阶线性近似}{the difference-quotient definition and first-order linearization}
 \BOTH{导数定义为 $f'(a)=\lim_{h\to0}[f(a+h)-f(a)]/h$，若极限存在。它是切线斜率，也是局部线性近似的系数：$f(a+h)=f(a)+f'(a)h+o(h)$。微分 $df=f'(a)h$ 是主线性部分；小 $h$ 时它近似函数增量，但一般不等于真实增量。}{The derivative is $f'(a)=\lim_{h\to0}[f(a+h)-f(a)]/h$, when the limit exists. It is the tangent slope and coefficient of the local linear approximation $f(a+h)=f(a)+f'(a)h+o(h)$. The differential $df=f'(a)h$ is the linear part; it approximates but is not generally equal to the actual increment.}
 \EX{对 $f(x)=x^2$，$f'(a)=2a$，所以 $f(a+h)-f(a)=2ah+h^2$，微分近似为 $2ah$，误差恰为 $h^2$。在 $a=3,h=0.01$ 时，近似增量 $0.06$，真实增量 $0.0601$。}{For $f(x)=x^2$, the derivative is $2a$ and the increment is $2ah+h^2$. The differential keeps the linear term $2ah$ and has error $h^2$. At $a=3$ and $h=0.01$, the approximate increment is $0.06$ and the exact increment is $0.0601$.}
 \BOTH{单侧导数只从左侧或右侧取差商极限。若两侧导数都存在且相等，普通导数存在；若不等，则不可导。端点处常用单侧导数，因为函数未必在端点另一侧定义。}{A one-sided derivative takes the difference-quotient limit from only the left or right. The ordinary derivative exists when both one-sided derivatives exist and agree. At a domain endpoint, only the inward one-sided derivative may be available.}
@@ -72,6 +79,7 @@
 \EX{令 $f(x)=x^2$ 于 $[1,3]$。中值定理保证 $c\in(1,3)$ 使 $9-1=2c(3-1)$，解得 $c=2$。几何上某处切线斜率等于端点连线斜率。}{For $f(x)=x^2$ on $[1,3]$, the theorem gives $8=2c\cdot2$, so $c=2$. Geometrically, some tangent has the same slope as the secant through the endpoints.}
 \BOTH{L'Hospital 法则用于 $0/0$ 或 $\infty/\infty$ 型极限：在删去点附近 $f,g$ 可导、$g'\ne0$，且导数比极限存在时，原函数比的极限等于导数比的极限。要先确认不定式型和假设；它不能直接用于任意商，也不能把 $0/0$ 当作答案。其他不定式常先取对数、通分或改写成商。}{L'Hospital's rule applies to $0/0$ or $\infty/\infty$ forms. Near the limiting point, the functions must be differentiable, $g'$ must be nonzero, and the derivative ratio must have a limit. Check the form and hypotheses first; $0/0$ is not itself an answer. Other indeterminate forms can often be rewritten as quotients or handled with logarithms.}
 \EX{$\lim_{x\to0}(e^x-1)/x$ 是 $0/0$ 型。求导后得到 $e^x/1$，极限为 $1$。}{The quotient $(e^x-1)/x$ is of type $0/0$. Differentiating numerator and denominator gives $e^x$, whose limit is $1$.}
+\FORMULA{Taylor 公式及 Lagrange 余项}{Taylor's theorem with the Lagrange remainder}
 \BOTH{若 $f$ 在 $a$ 附近有 $n+1$ 阶连续导数，Taylor 公式为
 \[
 f(a+h)=\sum_{k=0}^n\frac{f^{(k)}(a)}{k!}h^k+R_n,
@@ -80,13 +88,21 @@ f(a+h)=\sum_{k=0}^n\frac{f^{(k)}(a)}{k!}h^k+R_n,
 其中 $\xi$ 位于 $a$ 与 $a+h$ 之间。Peano 形式在 $n$ 阶可微且 $n$ 阶导数在 $a$ 连续时写成 $R_n=o(h^n)$；Lagrange 余项给出显式误差界，Cauchy 形式是另一种余项表达。Taylor 级数只有在余项趋于零时才等于原函数。}{If $f$ has $n+1$ continuous derivatives near $a$, Taylor's theorem has the displayed polynomial and Lagrange remainder, with $\xi$ between $a$ and $a+h$. If $f$ is $n$ times differentiable and its $n$th derivative is continuous at $a$, the Peano form states $R_n=o(h^n)$. The Lagrange form gives an explicit error bound; the Cauchy form is another remainder expression. A Taylor series represents the function only when its remainder tends to zero.}
 \READ{“The remainder equals the n plus first derivative at xi, times h to the n plus one, divided by n plus one factorial.”}
 \READ{“f of a plus h equals the sum from k equals zero to n of the k-th derivative at a times h to the k over k factorial, plus the remainder.”}
-\EX{对 $e^x$ 在 $0$ 展开到二次：$e^x=1+x+x^2/2+R_2$。若 $0\le x\le0.1$，则 $|R_2|\le e^{0.1}x^3/6$。余项上界来自三阶导数 $e^\xi$ 在 $[0,0.1]$ 不超过 $e^{0.1}$。}{For $e^x$ expanded to degree two at zero, $e^x=1+x+x^2/2+R_2$. If $0\le x\le0.1$, then $|R_2|\le e^{0.1}x^3/6$, because the third derivative is at most $e^{0.1}$ on that interval.}
+\EX{对 $e^x$ 在 $0$ 展开到二次：$e^x=1+x+x^2/2+R_2$。若 $0\le x\le0.1$，则 $|R_2|\le e^{0.1}x^3/6$。代入 $x=0.1$ 得 $|R_2|<0.000185$，所以近似值 $1.105$ 的误差小于这个上界。}{For $e^x$ expanded to degree two at zero, $e^x=1+x+x^2/2+R_2$. If $0\le x\le0.1$, then $|R_2|\le e^{0.1}x^3/6$. At $x=0.1$, this is below $0.000185$, so the approximation $1.105$ has error below that bound.}
 
-\subsection{导数的应用与 Newton 迭代}
+\subsection{导数的应用、数值求根与 Newton 迭代}
 \BOTH{若 $f'>0$ 则函数递增，若 $f''\ge0$ 则函数凸。极值可用一阶导数变号判断，二阶导数测试需要 $f'(c)=0$ 且 $f''(c)>0$（局部最小）或 $f''(c)<0$（局部最大）。渐近线描述远处行为。Newton 迭代 $x_{n+1}=x_n-f(x_n)/f'(x_n)$ 来自切线与 $x$ 轴交点；若初值足够靠近单根且导数不为零等条件满足，通常局部快速收敛，但不保证任意初值都成功。}{If $f'>0$, the function is increasing; if $f''\ge0$, it is convex. A sign change of the first derivative can identify extrema. The second-derivative test requires $f'(c)=0$ and a nonzero second derivative. Asymptotes describe behavior far away. Newton's iteration comes from intersecting the tangent with the $x$-axis. Under suitable local assumptions near a simple root it often converges rapidly, but arbitrary initial values are not guaranteed to work.}
 \EX{求 $x^2-2=0$ 的正根，Newton 公式为 $x_{n+1}=(x_n+2/x_n)/2$。从 $x_0=1.5$ 得 $x_1=1.4167$，再迭代逼近 $\sqrt2$。每一步是切线近似，不是自动保证收敛的黑箱。}{To solve $x^2-2=0$ for the positive root, Newton's formula is $x_{n+1}=(x_n+2/x_n)/2$. Starting at $1.5$ gives about $1.4167$ and subsequent iterates approach $\sqrt2$. Each step is a tangent approximation, not a black box with guaranteed convergence.}
+\FORMULA{Newton 迭代与平方根误差递推}{Newton's iteration and the error recurrence for the square root}
+\[
+x_{n+1}=\frac12\left(x_n+\frac2{x_n}\right),\qquad
+x_{n+1}-\sqrt2=\frac{(x_n-\sqrt2)^2}{2x_n}.
+\]
+\READ{“X n plus one equals one half times the sum of x n and the fraction two over x n. The next error equals the current error squared, divided by two times x n.”}
+\BOTH{取 $x_0=1$，则 $x_1=3/2$。对每个 $x_n>\sqrt2$，算术—几何平均不等式给出 $x_{n+1}\ge\sqrt2$，而 $2/x_n<x_n$ 给出 $x_{n+1}<x_n$。所以从 $n=1$ 起数列递减且以下界 $\sqrt2$ 控制，必有极限 $L$。因 $L\ge\sqrt2>0$，可在递推式中取极限，得到 $L=(L+2/L)/2$，故 $L=\sqrt2$。误差公式说明迭代接近根时误差近似按平方缩小；这证明的是该方程和该初值，不代表任意 Newton 迭代都收敛。}{Starting with $x_0=1$ gives $x_1=3/2$. Whenever $x_n>\sqrt2$, the arithmetic-geometric mean inequality gives $x_{n+1}\ge\sqrt2$, and $2/x_n<x_n$ gives $x_{n+1}<x_n$. Thus the sequence from $n=1$ decreases and is bounded below by $\sqrt2$, so it has a limit $L$. Since $L\ge\sqrt2>0$, taking limits in the recurrence gives $L=(L+2/L)/2$, hence $L=\sqrt2$. The error identity shows quadratic error reduction near the root. This proves convergence for this equation and initial value, not for every Newton iteration.}
+\EX{若 $f$ 在 $[1,2]$ 连续且 $f(1)<0<f(2)$，介值定理保证存在根。二分法每次保留端点异号的半区间；迭代 $n$ 次后区间长度为 $2^{-n}$，中点误差不超过 $2^{-(n+1)}$。因此 $n=19$ 时误差小于 $10^{-6}$。例如 $f(x)=x^2-2$，前两个中点为 $1.5$ 和 $1.25$，第二步后保留 $[1.25,1.5]$。此法不需要导数，也不要求根唯一。}{If $f$ is continuous on $[1,2]$ with opposite signs at the endpoints, the intermediate value theorem guarantees a root. Bisection keeps the half interval whose endpoints have opposite signs. After $n$ steps, its length is $2^{-n}$ and the midpoint error is at most $2^{-(n+1)}$, so 19 steps give error below $10^{-6}$. For $f(x)=x^2-2$, the first two midpoints are $1.5$ and $1.25$, leaving $[1.25,1.5]$. Bisection needs no derivative and does not require a unique root.}
 
-\section{第五章：积分 | Chapter 5: Integration}
+\section{积分 | Integration}
 \subsection{原函数与基本积分技巧}
 \BOTH{若 $F'=f$，则 $F$ 是 $f$ 的原函数；不定积分 $\int f(x)\,dx=F(x)+C$ 表示全部原函数，常数 $C$ 不能省略。换元法是链式法则的逆用，分部积分来自乘积求导：$\int u\,dv=uv-\int v\,du$。有理函数通常先因式分解分母并作部分分式分解。}{If $F'=f$, then $F$ is an antiderivative of $f$. The indefinite integral denotes all antiderivatives and includes an arbitrary constant. Substitution reverses the chain rule, while integration by parts follows from the product rule. Rational functions are usually handled by factoring the denominator and using partial fractions.}
 \EX{$\int 2x\cos(x^2)\,dx$ 令 $u=x^2$，$du=2x\,dx$，得 $\sin(x^2)+C$。另 $\int xe^x dx=xe^x-e^x+C$，由分部积分得到。}{For $\int 2x\cos(x^2)\,dx$, set $u=x^2$ to obtain $\sin(x^2)+C$. Integration by parts gives $\int xe^x dx=xe^x-e^x+C$.}
@@ -99,45 +115,54 @@ f(a+h)=\sum_{k=0}^n\frac{f^{(k)}(a)}{k!}h^k+R_n,
 \subsection{Riemann 定积分与微积分基本定理}
 \BOTH{Riemann 积分通常从有界函数 $f:[a,b]\to\mathbb R$ 开始。把区间分割为小段，在每段取一点 $\xi_i$，Riemann 和为 $\sum f(\xi_i)\Delta x_i$。也可定义上和 $U(f,P)=\sum M_i\Delta x_i$、下和 $L(f,P)=\sum m_i\Delta x_i$，其中 $M_i,m_i$ 是该段上的上、下确界；可积当且仅当任意精细分割能使上和与下和之差任意小。当分割网格趋零时所有 Riemann 和趋向同一数，该数记为 $\int_a^b f(x)\,dx$。连续函数和闭区间上的单调函数都可积。}{Riemann integration usually starts with a bounded function $f:[a,b]\to\mathbb R$. A tagged sum is $\sum f(\xi_i)\Delta x_i$. Equivalently, upper and lower sums use the supremum $M_i$ and infimum $m_i$ on each subinterval. Integrability means that sufficiently fine partitions make the difference between upper and lower sums arbitrarily small. The common limit of tagged sums is the definite integral. Continuous and monotone functions on a closed interval are integrable.}
 \EX{$\int_0^1x^2dx=1/3$。用等距分割和右端点，Riemann 和为 $\frac1n\sum_{k=1}^n(k/n)^2=\frac{(n+1)(2n+1)}{6n^2}\to1/3$，直接展示了“分割求和再取极限”的定义。}{For $x^2$ on $[0,1]$, the right-endpoint Riemann sum is $\frac1n\sum_{k=1}^n(k/n)^2=\frac{(n+1)(2n+1)}{6n^2}\to1/3$. This directly illustrates the definition.}
+\FORMULA{微积分基本定理与 Newton--Leibniz 公式}{the fundamental theorem of calculus and the Newton--Leibniz formula}
 \BOTH{微积分基本定理第一部分说，若 $f$ 连续，$F(x)=\int_a^x f(t)dt$ 可导且 $F'(x)=f(x)$。第二部分说，若 $F'=f$ 且 $f$ 可积，则 $\int_a^b f=F(b)-F(a)$。前者从积分构造原函数，后者用原函数计算定积分。}{The first part of the fundamental theorem says that if $f$ is continuous, then $F(x)=\int_a^x f(t)dt$ is differentiable and $F'(x)=f(x)$. The second part evaluates an integral using any antiderivative: $\int_a^b f=F(b)-F(a)$. The first constructs an antiderivative from an integral; the second computes a definite integral.}
 \READ{“The integral from a to b of f of x d x equals F of b minus F of a, where F prime equals f.”}
 \EX{若 $F(x)=x^3/3$ 是 $x^2$ 的原函数，则 $\int_1^2x^2dx=F(2)-F(1)=7/3$。}{Since $F(x)=x^3/3$ is an antiderivative of $x^2$, the integral from one to two equals $F(2)-F(1)=7/3$.}
+\FORMULA{定积分换元公式}{the change-of-variables formula for definite integrals}
 \BOTH{定积分换元必须同步变换微分和积分上下限。若 $u=g(x)$ 在区间上光滑且严格单调，则
 \[
 \int_a^b f(g(x))g'(x)\,dx=\int_{g(a)}^{g(b)}f(u)\,du.
 \]
 定积分分部积分为 $\int_a^b u v'\,dx=[uv]_a^b-\int_a^b u'v\,dx$。}{For definite substitution, transform both the differential and the endpoints. If $u=g(x)$ is smooth and strictly monotone, the change-of-variables formula is displayed above. Definite integration by parts includes the endpoint term $[uv]_a^b$.}
 \EX{计算 $\int_0^1 2x e^{x^2}dx$，令 $u=x^2$，上下限从 $0,1$ 变成 $0,1$，得到 $\int_0^1e^u du=e-1$。若忘记改上下限，就必须先把原变量换回去。}{For $\int_0^1 2xe^{x^2}dx$, set $u=x^2$. The endpoints remain zero and one, giving $\int_0^1e^u du=e-1$. If the bounds are not changed, one must convert back to the original variable.}
-\BOTH{一个有理函数例子是 $1/(x^2-1)=\frac12(1/(x-1)-1/(x+1))$，因此在不跨越奇点的区间上其原函数为 $\frac12\log|x-1|-\frac12\log|x+1|+C$。部分分式前先因式分解；若积分区间跨过极点，必须分别讨论定义域和反常积分。}{For example, $1/(x^2-1)=\frac12(1/(x-1)-1/(x+1))$, so an antiderivative on an interval not crossing a pole is $\frac12\log|x-1|-\frac12\log|x+1|+C$. Factor first, and treat intervals crossing a pole as improper integrals.}
+\EX{用 Newton--Leibniz 公式计算 $\int_0^2 2x\,dx$。原函数为 $F(x)=x^2$，所以积分等于 $F(2)-F(0)=4$。这说明定积分既可由 Riemann 和定义，也可在满足微积分基本定理条件时通过原函数计算。}{The Newton--Leibniz formula gives $\int_0^2 2x\,dx=F(2)-F(0)=4$ for the antiderivative $F(x)=x^2$. A definite integral is defined through Riemann sums, but under the fundamental theorem it can be evaluated using an antiderivative.}
 
 \subsection{反常积分与判别}
 \BOTH{无界区间或被积函数无界时，用截断极限定义反常积分。例如 $\int_1^\infty f=\lim_{R\to\infty}\int_1^R f$，要求该极限有限；有限区间内部有奇点时要分别取左右极限。绝对收敛 $\int|f|<\infty$ 蕴含收敛；比较判别把非负函数与已知积分比较。}{An improper integral has an unbounded interval or an unbounded integrand and is defined by a truncation limit. For example, $\int_1^\infty f=\lim_{R\to\infty}\int_1^R f$, which must be finite. A singularity inside a finite interval requires separate one-sided limits. Absolute convergence implies convergence; comparison tests use a known nonnegative integrable function.}
 \BOTH{$\int_1^\infty x^{-p}dx$ 当且仅当 $p>1$ 收敛；$\int_0^1x^{-p}dx$ 当且仅当 $p<1$ 收敛。临界指数不同，取决于奇点在无穷远还是有限端点。Cauchy 主值以对称方式截断奇点，不等同于反常积分通常意义的收敛。}{The integral $\int_1^\infty x^{-p}dx$ converges exactly when $p>1$, while $\int_0^1x^{-p}dx$ converges exactly when $p<1$. The threshold differs because one concerns infinity and the other a finite-endpoint singularity. A Cauchy principal value uses symmetric truncation and is not the same as ordinary improper convergence.}
 \EX{$\int_{-1}^1 dx/x$ 按通常反常积分发散，因为左右两侧分别发散；它的对称主值为 $0$。因此主值有限不能替代原积分收敛。}{The improper integral of $1/x$ over $[-1,1]$ diverges because both one-sided integrals diverge, although its symmetric principal value is zero. A finite principal value does not imply ordinary convergence.}
 
-\subsection{几何应用、数值积分与 Fourier 级数}
+\subsection{几何应用与数值积分}
 \BOTH{积分可累加几何量：两条曲线之间面积为 $\int_a^b|f-g|dx$；绕 $x$ 轴旋转所得体积为 $\pi\int_a^b f(x)^2dx$（$f\ge0$）；曲线弧长为 $\int_a^b\sqrt{1+(f')^2}dx$；图像曲率为 $|f''|/(1+(f')^2)^{3/2}$。将 $y=f(x)\ge0$ 绕 $x$ 轴旋转的曲面面积为 $2\pi\int_a^bf(x)\sqrt{1+(f')^2}dx$。这些公式来自把图形切成细条、线段或圆盘再取极限。}{Integration accumulates geometric quantities. The area between two graphs is $\int_a^b|f-g|dx$; rotation about the $x$-axis gives volume $\pi\int f^2$ for nonnegative $f$; arc length is $\int\sqrt{1+(f')^2}$; and graph curvature is $|f''|/(1+(f')^2)^{3/2}$. Rotating $y=f(x)\ge0$ about the axis gives surface area $2\pi\int f\sqrt{1+(f')^2}dx$. These formulas arise from sums of thin strips, segments, and disks.}
 \EX{半径 $r$ 的圆盘可写作 $y=\sqrt{r^2-x^2}$，绕 $x$ 轴旋转的体积为 $\pi\int_{-r}^r(r^2-x^2)dx=4\pi r^3/3$，与球体积公式一致。}{Writing a disk as $y=\sqrt{r^2-x^2}$ and rotating it about the $x$-axis gives $\pi\int_{-r}^r(r^2-x^2)dx=4\pi r^3/3$, the volume of a sphere.}
 \EX{在 $[0,1]$ 上，曲线 $y=x$ 与 $y=x^2$ 之间的面积是 $\int_0^1(x-x^2)dx=1/6$。若上下关系会变，就必须先找交点并按区间拆分，或直接使用绝对值公式。}{The area between $y=x$ and $y=x^2$ on $[0,1]$ is $\int_0^1(x-x^2)dx=1/6$. If the upper and lower curves switch, find their intersections and split the interval, or use the absolute-value formula.}
 \BOTH{矩形法、梯形法和 Simpson 法用有限次函数值近似积分。步长减半通常能提高精度，但 Simpson 的标准误差阶要求四阶导数连续；若函数有尖点或奇异性，不能直接套用该误差界。数值结果应结合误差估计或步长比较解释。}{Rectangle, trapezoidal, and Simpson rules approximate an integral using finitely many function values. Reducing the step often improves accuracy, but the standard Simpson error bound requires a continuous fourth derivative. It cannot be applied blindly at cusps or singularities. Numerical results should be accompanied by an error estimate or step-size comparison.}
+\FORMULA{复合梯形公式与 Simpson 误差界}{the composite trapezoidal rule and Simpson error bound}
 \BOTH{矩形法可取每个小区间的左端、右端或中点函数值；取中点通常能降低误差。对等距网格 $x_i=a+ih$，复合梯形公式为
 \[
 T_n=h\left[\frac12f(x_0)+\sum_{i=1}^{n-1}f(x_i)+\frac12f(x_n)\right].
 \]
 若 $f\in C^2[a,b]$，复合梯形公式满足 $|E_T|\le (b-a)h^2\max_{[a,b]}|f''|/12$。复合 Simpson 公式要求子区间数 $n$ 为偶数，权重依次为 $1,4,2,4,\ldots,2,4,1$；若 $f\in C^4[a,b]$，则 $|E_S|\le (b-a)h^4\max_{[a,b]}|f^{(4)}|/180$。}{For an equally spaced grid, the composite trapezoidal rule uses half-weights at the endpoints and full weights inside. If $f\in C^2[a,b]$, its error is bounded by $(b-a)h^2\max|f''|/12$. Composite Simpson's rule requires an even number of subintervals and uses weights $1,4,2,4,\ldots,2,4,1$. If $f\in C^4[a,b]$, its error is bounded by $(b-a)h^4\max|f^{(4)}|/180$.}
 \EX{用一个 Simpson 面板近似 $\int_0^2x^2dx$：步长 $h=1$，结果为 $\frac13[f(0)+4f(1)+f(2)]=\frac13(0+4+4)=8/3$，本例对二次多项式恰好精确；这不代表它对任意函数都精确。}{One Simpson panel for $\int_0^2x^2dx$ gives $\frac13[f(0)+4f(1)+f(2)]=8/3$. It is exact here because the integrand is quadratic, not because Simpson's rule is exact for every function.}
+\setcounter{section}{15}
+\section{Fourier 级数 | Fourier series}
+\subsection{正交系与 Fourier 系数}
 \BOTH{在 $[-\pi,\pi]$ 上使用内积 $\langle f,g\rangle=\int_{-\pi}^{\pi}f(x)g(x)\,dx$。不同频率的正弦彼此正交，不同频率的余弦彼此正交，正弦与余弦也正交；对 $n\ge1$，$\int_{-\pi}^{\pi}\sin^2(nx)dx=\int_{-\pi}^{\pi}\cos^2(nx)dx=\pi$，而常数函数的平方范数是 $2\pi$。平方可积指 $\int_{-\pi}^{\pi}|f(x)|^2dx<\infty$；这类函数的 Fourier 系数是正交投影系数，部分和在均方意义下逼近原函数。}{On $[-\pi,\pi]$, use the inner product $\langle f,g\rangle=\int_{-\pi}^{\pi}f(x)g(x)\,dx$. Distinct sines are orthogonal, as are distinct cosines, and sines are orthogonal to cosines. For $n\ge1$, each sine and cosine has squared norm $\pi$, while the constant function has squared norm $2\pi$. A function is square-integrable if $\int_{-\pi}^{\pi}|f(x)|^2dx<\infty$. Its Fourier coefficients are orthogonal projection coefficients, and the partial sums approximate the function in mean square.}
+\FORMULA{$2\pi$ 周期 Fourier 系数与级数}{Fourier coefficients and series for a $2\pi$-periodic function}
 \BOTH{对 $2\pi$ 周期函数，Fourier 系数和级数为
 \[
 a_0=\frac1\pi\int_{-\pi}^{\pi}f(x)\,dx,\quad
 a_n=\frac1\pi\int_{-\pi}^{\pi}f(x)\cos(nx)\,dx,\quad
 b_n=\frac1\pi\int_{-\pi}^{\pi}f(x)\sin(nx)\,dx,
 \]
+\FORMULA{Fourier 级数对函数的展开表示}{Fourier-series representation of a function}
 \[
 f(x)\sim\frac{a_0}{2}+\sum_{n=1}^{\infty}\bigl(a_n\cos(nx)+b_n\sin(nx)\bigr).
 \]
 若周期延拓分段光滑，级数在连续点收敛到 $f(x)$，在跳跃点收敛到左右极限的平均值。周期为 $2L$ 时，频率改为 $n\pi/L$，积分区间改为 $[-L,L]$，系数前因子改为 $1/L$。}{For a $2\pi$-periodic function, the Fourier coefficients and series are displayed above. If the periodic extension is piecewise smooth, the series converges to its value at continuity points and to the average of its one-sided limits at jumps. For period $2L$, use frequency $n\pi/L$, integrate over $[-L,L]$, and replace $1/\pi$ by $1/L$.}
 \READ{“A n equals one over pi times the integral from minus pi to pi of f of x cosine n x d x.”}
+\FORMULA{半区间正弦与余弦级数系数}{Fourier sine and cosine coefficients on a half interval}
 \BOTH{若函数只在 $[0,L]$ 上给定，可作偶延拓得到余弦级数，或作奇延拓得到正弦级数：
 \[
 a_n=\frac2L\int_0^L f(x)\cos\frac{n\pi x}{L}\,dx,\qquad
@@ -145,47 +170,12 @@ b_n=\frac2L\int_0^L f(x)\sin\frac{n\pi x}{L}\,dx\quad(n\ge1),
 \]
 两种展开的常数项均为 $a_0/2$，其中 $a_0=\frac2L\int_0^L f(x)dx$。正弦级数来自奇延拓，余弦级数来自偶延拓；选择哪一种取决于对称性和边界条件。}{For a function given only on $[0,L]$, an even extension gives a cosine series and an odd extension gives a sine series. The coefficients are displayed above, with constant term $a_0/2$. The choice depends on symmetry and boundary conditions.}
 \EX{在 $[0,\pi]$ 上取 $f(x)=x$。奇延拓给出
+\FORMULA{$f(x)=x$ 的奇延拓 Fourier 正弦级数}{Fourier sine series for the odd extension of $f(x)=x$}
 \[
 x=2\sum_{n=1}^{\infty}(-1)^{n+1}\frac{\sin(nx)}n,\qquad 0<x<\pi;
 \]
 偶延拓则给出 $x=\frac\pi2-\frac4\pi\sum_{k=0}^{\infty}\frac{\cos((2k+1)x)}{(2k+1)^2}$。两者因周期延拓的对称性不同而不同；在延拓跳跃点，Fourier 级数收敛到左右极限平均值。}{For $f(x)=x$ on $[0,\pi]$, the odd extension gives the sine series shown above, while the even extension gives a cosine series with only odd frequencies. They differ because the periodic extensions have different symmetries. At a jump, the series converges to the average of the one-sided limits.}
 \ASK{Taylor 近似和 Fourier 近似有什么不同？}{How do Taylor and Fourier approximations differ?}{Taylor 近似用某一点的导数描述局部行为；Fourier 近似用整个周期区间上的正交积分系数描述周期结构。前者局部，后者全局。}{Taylor approximation uses derivatives at one point to describe local behavior. Fourier approximation uses orthogonal integral coefficients over a full period to describe global periodic structure.}
-
-\section{迭代与误差控制 | Iteration and error bounds}
-\BOTH{实际计算中，得到一串近似数还不够；还要说明它是否收敛、极限是什么，以及误差有多大。以下用 Newton 迭代求 $\sqrt2$，把单调有界定理、极限运算和误差公式连起来。}{A numerical sequence alone is not enough: we need to justify convergence, identify the limit, and estimate the error. Newton's method for $\sqrt2$ connects monotone convergence, limit operations, and an explicit error formula.}
-\BOTH{从方程 $g(x)=x^2-2=0$ 出发，Newton 公式是 $x_{n+1}=x_n-g(x_n)/g'(x_n)=\frac12(x_n+2/x_n)$。取 $x_0=1$，得到 $x_1=3/2$、$x_2=17/12\approx1.41667$。因为 $x_1>\sqrt2$，且对 $x_n>\sqrt2$，算术—几何平均不等式给出 $x_{n+1}\ge\sqrt2$；同时 $x_{n+1}<x_n$。因此从 $n=1$ 起数列递减且以下界 $\sqrt2$ 控制，必有极限 $L$。}{Starting from $g(x)=x^2-2=0$, Newton's formula is $x_{n+1}=x_n-g(x_n)/g'(x_n)=\frac12(x_n+2/x_n)$. With $x_0=1$, we get $x_1=3/2$ and $x_2=17/12\approx1.41667$. Since $x_1>\sqrt2$, the arithmetic-geometric mean inequality gives $x_{n+1}\ge\sqrt2$ whenever $x_n>\sqrt2$, while the recurrence also gives $x_{n+1}<x_n$. The sequence from $n=1$ is decreasing and bounded below, so it has a limit $L$.}
-\BOTH{把递推式取极限，因 $L\ge\sqrt2>0$ 可合法取倒数，得到 $L=\frac12(L+2/L)$，所以 $L^2=2$ 且 $L=\sqrt2$。误差还能精确改写为 $x_{n+1}-\sqrt2=\frac{(x_n-\sqrt2)^2}{2x_n}$。这表明误差大致按平方缩小：当 $x_n$ 已接近根时，每一步会迅速增加正确数字。}{Taking limits in the recurrence is valid because $L\ge\sqrt2>0$. It gives $L=\frac12(L+2/L)$, hence $L^2=2$ and $L=\sqrt2$. The error has the exact form $x_{n+1}-\sqrt2=\frac{(x_n-\sqrt2)^2}{2x_n}$. Thus the error is approximately squared at each step: once close to the root, the number of correct digits grows rapidly.}
-\READ{“X n plus one equals one half times x n plus two over x n. The next error equals the square of the current error divided by two x n.”}
-\BOTH{这里的误差公式解释了 Newton 法为何快，但它本身不自动证明任意初值都收敛。证明时需要检查迭代保持在哪个区间、分母是否为零、误差是否下降。若实际应用只报告计算器输出而不说明这些条件，仍缺少收敛论证。}{The error identity explains why Newton's method is fast, but it does not prove convergence from every initial value. A proof must check that the iteration stays in a suitable interval, denominators do not vanish, and the error decreases. Calculator output alone does not provide this justification.}
-\ASK{为什么这里能把 $L$ 代入递推式？}{Why may we pass to the limit in the recurrence?}{数列已证明收敛到 $L$，且 $L\ge\sqrt2>0$，所以函数 $x\mapsto (x+2/x)/2$ 在 $L$ 连续，可以对等式两边取极限。}{The sequence has been shown to converge, and $L\ge\sqrt2>0$. The map $x\mapsto (x+2/x)/2$ is continuous at $L$, so we may take limits on both sides.}
-
-\subsection{Taylor 余项怎样变成可用的精度保证}
-\BOTH{对 $f(x)=e^x$ 在 $0$ 点作二阶 Taylor 展开，$e^x=1+x+x^2/2+R_2(x)$。若 $0\le x\le0.1$，Lagrange 余项为 $R_2(x)=e^\xi x^3/6$，其中 $0<\xi<x$，因此 $|R_2(x)|\le e^{0.1}(0.1)^3/6<0.000185$。代入 $x=0.1$，近似值 $1.105$ 与真值的差小于这个上界。}{The second-order Taylor expansion of $e^x$ at zero is $e^x=1+x+x^2/2+R_2(x)$. For $0\le x\le0.1$, the Lagrange remainder is $R_2(x)=e^\xi x^3/6$ for some $0<\xi<x$, so $|R_2(x)|\le e^{0.1}(0.1)^3/6<0.000185$. At $x=0.1$, the approximation $1.105$ is therefore within this error bound.}
-\BOTH{实际使用 Taylor 公式时，先选展开点和阶数，再求导数并写余项，最后在题目给定区间上控制余项中的导数上界。若只写多项式而不说明余项，得到的是候选近似，不是精度保证。}{To use Taylor's theorem, choose the center and order, compute derivatives, write the remainder, and bound the derivative in that remainder on the required interval. A polynomial without a remainder estimate is only a candidate approximation, not a certified accuracy statement.}
-\READ{“E to the x equals one plus x plus x squared over two, plus a remainder bounded by e to the point one times point one cubed over six.”}
-
-\section[计算例题 | Worked examples]{补充计算：从定义到误差界 | Worked calculations from definitions to error bounds}
-\noindent \textbf{用 $\varepsilon$--$N$ 定义证明数列极限。} 证明 $a_n=n/(n+1)\to1$。给定任意 $\varepsilon>0$，有
-\[
-|a_n-1|=\frac1{n+1}<\varepsilon
-\quad\text{whenever}\quad n+1>\frac1\varepsilon.
-\]
-因此取整数 $N>1/\varepsilon$，则 $n\ge N$ 时误差小于 $\varepsilon$。关键是先把误差写成 $n$ 的显式函数，再反解出充分大的 $N$；这里没有要求找到最小的 $N$。
-\BOTH{给定 $\varepsilon>0$，由 $|n/(n+1)-1|=1/(n+1)$，取整数 $N>1/\varepsilon$，则每个 $n\ge N$ 都有误差小于 $\varepsilon$。方法是先把误差写成 $n$ 的显式函数，再反解出充分大的指标；不必寻找最小的 $N$。}{To prove $n/(n+1)\to1$, let $\varepsilon>0$. Since $|n/(n+1)-1|=1/(n+1)$, choose an integer $N>1/\varepsilon$. Then every $n\ge N$ has error below $\varepsilon$. The method is to express the error explicitly and solve for a sufficient index; the least possible index is unnecessary.}
-\READ{“For every epsilon greater than zero, choose an integer N greater than one over epsilon.”}
-
-\noindent \textbf{用 $\varepsilon$--$\delta$ 定义验证函数连续。} 证明 $f(x)=x^2$ 在 $x=1$ 连续。给定 $\varepsilon>0$，令 $\delta=\min(1,\varepsilon/3)$。若 $|x-1|<\delta$，则 $|x+1|\le |x-1|+2<3$，从而
-\[
-|f(x)-f(1)|=|x^2-1|=|x-1||x+1|<3\delta\le\varepsilon.
-\]
-这正是连续定义的量词顺序：先给定函数值误差 $\varepsilon$，再选输入距离 $\delta$。因子估计依赖限制 $\delta\le1$；这一步确保 $|x+1|$ 有统一上界。
-\BOTH{给定 $\varepsilon>0$，取 $\delta=\min(1,\varepsilon/3)$。若 $|x-1|<\delta$，则 $|x+1|<3$，所以 $|x^2-1|=|x-1||x+1|<3\delta\le\varepsilon$。量词顺序是先给函数值误差 $\varepsilon$，再选输入距离 $\delta$。限制 $\delta\le1$ 是为了统一控制第二个因子。}{To prove $f(x)=x^2$ is continuous at one, let $\varepsilon>0$ and choose $\delta=\min(1,\varepsilon/3)$. If $|x-1|<\delta$, then $|x+1|<3$, so $|x^2-1|=|x-1||x+1|<3\delta\le\varepsilon$. The order of quantifiers is essential: choose an input tolerance after the desired output tolerance. The restriction $\delta\le1$ supplies a uniform bound for the second factor.}
-\READ{“Given epsilon, choose delta to be the minimum of one and epsilon over three.”}
-
-\noindent \textbf{介值定理与二分法的误差保证。} 假设 $f$ 在 $[1,2]$ 连续，且 $f(1)<0<f(2)$。介值定理保证区间内存在根 $r$。每次计算中点并保留端点异号的半区间；做 $n$ 次后，区间长度为 $2^{-n}$，其中点 $m_n$ 的根误差至多 $2^{-(n+1)}$。因此取 $n=19$ 即有误差小于 $10^{-6}$。该法只需连续性和端点异号，不要求导数或根唯一；若有多个根，它找到保留区间中的一个。
-\BOTH{假设 $f$ 在 $[1,2]$ 连续，且 $f(1)<0<f(2)$。介值定理保证存在根 $r$。每次计算中点并保留端点异号的半区间；做 $n$ 次后，区间长度为 $2^{-n}$，中点误差至多 $2^{-(n+1)}$，所以 $19$ 次后误差小于 $10^{-6}$。此法只需连续性和端点异号，不需要导数，也不要求根唯一。}{If $f$ is continuous on $[1,2]$ and has opposite signs at the endpoints, the intermediate value theorem guarantees a root. At each step, keep the half interval whose endpoints have opposite signs. After $n$ steps, its length is $2^{-n}$ and the midpoint error is at most $2^{-(n+1)}$, so 19 steps give error below $10^{-6}$. The method requires no derivative and no unique root.}
-\READ{“The error after n bisections is at most two to the negative n minus one.”}
-\EX{取 $f(x)=x^2-2$，$f(1)=-1$、$f(2)=2$，所以 $[1,2]$ 中含有 $\sqrt2$。前两次中点是 $1.5$ 和 $1.25$；第二步检查符号后保留 $[1.25,1.5]$。}{For $f(x)=x^2-2$, the endpoint values have opposite signs, so the interval contains $\sqrt2$. The first two midpoints are $1.5$ and $1.25$; after checking the second midpoint's sign, the interval $[1.25,1.5]$ remains.}
 
 \section*{范围与复习说明 | Scope note}
 \BOTH{本稿依据“数学分析”文件夹中的《数学分析讲义（东南大学理班讲义）》及你提供的第一学期目录整理，覆盖数列极限、函数极限与连续、单变量微分和积分、定积分数值方法及 Fourier 级数入门。教材目录中所有带星号的内容均视为未讲授并排除；未列出的章节不作扩展。}{This review uses the lecture notes in the Mathematical Analysis folder together with the first-semester outline you supplied. It covers sequence and function limits, continuity, one-variable differentiation and integration, numerical quadrature, and an introduction to Fourier series. Every starred topic is treated as not taught and excluded; unlisted chapters are not added.}

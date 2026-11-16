@@ -4,6 +4,7 @@
 \hypersetup{colorlinks=true,linkcolor=blue}
 \newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
 \newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\FORMULA}[2]{\par\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
 \newcommand{\EX}[2]{\par\noindent\textbf{例子 / Example.} #1\par\EN{#2}}
 \newcommand{\ASK}[4]{\par\noindent\textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent\textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
 \title{概率论 APS 面试准备\\[4pt]\large 双语课程概述、知识点与口试题}
@@ -11,6 +12,8 @@
 \date{}
 \begin{document}\maketitle
 \section*{课程概述 | Course overview}
+\noindent\textbf{课程主线 / Course roadmap.} 我按“概率空间与测度—随机变量与分布—条件概率和独立性—期望与方差—条件期望—极限定理”的顺序复习，并把常见模型放回具体问题：Bernoulli/二项分布计数有限次成功，Poisson 分布计数固定时间内事件，几何和指数分布描述等待，正态分布描述许多小扰动的总和。抽查 $10$ 件不合格率为 $0.1$ 的独立产品时，至少一件不合格的概率是 $1-0.9^{10}$；若等待时间为率 $\lambda$ 的指数分布，则 $P(T>t)=e^{-\lambda t}$，这个恒定危险率假设不描述老化。
+\EN{I begin with a probability space $(\Omega,\mathcal F,\mathbb P)$ and events, then study random variables and distribution functions, discrete and continuous distributions, conditional probability and independence, expectation and variance, covariance and conditional expectation, and finally the law of large numbers and the central limit theorem. Common models include Bernoulli/binomial, geometric, Poisson, uniform, exponential, and normal distributions. For ten independent items with defect probability $0.1$, the chance of at least one defect is $1-0.9^{10}$. If a failure time has an exponential distribution with rate $\lambda$, then $P(T>t)=e^{-\lambda t}$; its constant-hazard assumption does not describe aging.}
 \noindent\textbf{中文口述稿。} 在概率论中，我学习用概率模型描述不确定事件。例如某零件独立地以 $p=0.1$ 的概率不合格，检查 $n=10$ 件时，不合格数 $X$ 服从二项分布。我可以写出 $P(X=0)=(1-p)^{10}=0.9^{10}$，所以至少有一件不合格的概率是 $1-0.9^{10}\approx0.651$。这里关键假设是各件结果独立且不合格率相同。测度论帮助我理解概率要定义在可讨论的事件集合上，而数理统计进一步用实际样本估计未知的 $p$。
 
 \EN{In probability, I learned to describe uncertainty with mathematical models. Suppose each of ten parts is independently defective with probability $p=0.1$. The number $X$ of defective parts is binomial. The probability of none is $P(X=0)=0.9^{10}$, so the chance of at least one is $1-0.9^{10}\approx0.651$. The key assumptions are independence and the same defect probability for each part. Measure theory explains why probability is defined on a suitable collection of events. Mathematical statistics then uses observations to estimate an unknown probability $p$.}
@@ -35,6 +38,7 @@
 \EN{In $\mathbb R^d$, the volume of a rectangle $B=I_1\times\cdots\times I_d$ is the product of its side lengths. A finite union of rectangles is an elementary set, measured by a disjoint rectangular decomposition. Jordan inner measure approximates a set from inside by elementary sets; Jordan outer measure covers it from outside. When they agree, the boundary contributes no positive volume error, and the set is Jordan measurable. This handles many bounded sets with regular boundaries, but Jordan measurable sets need not be closed under countable unions. Lebesgue's construction uses countable covers to support the countable operations and limit events used in probability.}
 
 \noindent\textbf{Lebesgue 外测度。} 对任意集合 $E$，用有限个或可数个矩形覆盖它；每个覆盖的总代价是矩形体积之和。取所有覆盖总代价的下确界，得到
+\FORMULA{Lebesgue 外测度的覆盖定义}{covering definition of Lebesgue outer measure}
 \[
 m^*(E)=\inf\left\{\sum_{i=1}^{\infty}|B_i|:
 E\subseteq\bigcup_{i=1}^{\infty}B_i\right\}.
@@ -43,6 +47,7 @@ E\subseteq\bigcup_{i=1}^{\infty}B_i\right\}.
 \EN{The infimum means the smallest total covering volume that can be approached by a sequence of covers. Covers may overlap, which can overcount, so taking the infimum removes as much excess as possible. An unbounded set may have outer measure $+\infty$. To see why $m^*(\mathbb Q\cap[0,1])=0$, enumerate the rationals and cover the $k$th one by an interval of length less than $\varepsilon/2^k$. The total length is less than $\varepsilon$, for every $\varepsilon>0$. Outer measure is not yet the final measure: it is defined for every subset but in general is only countably subadditive. We must select measurable sets to obtain countable additivity.}
 
 \noindent Lebesgue 可测性用 Carath\'eodory 条件刻画：对任意集合 $S$，
+\FORMULA{Carathéodory 可测性判据}{Carathéodory criterion for measurability}
 \[
 m^*(S)=m^*(S\cap E)+m^*(S\setminus E).
 \]
@@ -51,6 +56,7 @@ m^*(S)=m^*(S\cap E)+m^*(S\setminus E).
 
 \subsection{\texorpdfstring{$\sigma$}{sigma}-代数与可测空间 | Sigma-algebras and measurable spaces}
 \noindent\textbf{直观理解：} $\Omega$ 是所有可能结果，$\mathcal F$ 是我们允许讨论并赋予概率的事件清单。$\mathcal F$ 是“集合的集合”，其中每个元素本身都是 $\Omega$ 的一个子集。设 $\Omega$ 为全集，$\mathcal F\subseteq2^\Omega$。若
+\FORMULA{$\sigma$-代数的封闭公理}{closure axioms for a sigma-algebra}
 \[
 \Omega\in\mathcal F,\qquad
 A\in\mathcal F\Rightarrow A^c\in\mathcal F,\qquad
@@ -64,6 +70,7 @@ A_1,A_2,\ldots\in\mathcal F\Rightarrow\bigcup_{i=1}^{\infty}A_i\in\mathcal F,
 \EN{The sigma-algebra answers, “Which sets can be measured?” The measure answers, “How large are those sets?” We first have a measurable space $(\Omega,\mathcal F)$, then define $\mu:\mathcal F\to[0,\infty]$. In the Caratheodory construction, the measurable sets form a sigma-algebra. In probability, we likewise choose an event sigma-algebra before defining a probability measure. Countable unions and intersections occur in limit events; closure only under finite operations could leave a limit event outside the domain, where its probability would not be defined.}
 
 \noindent 两个极端例子是平凡 $\sigma$-代数 $\{\varnothing,\Omega\}$ 和幂集 $2^\Omega$：前者只区分“必然发生”与“不可能发生”，后者允许讨论每一个子集。若 $\Omega=\{HH,HT,TH,TT\}$ 表示抛两次硬币的完整结果，但只观察第一次，则事件族可取
+\FORMULA{只观察第一次抛掷时的事件族}{event sigma-algebra when only the first toss is observed}
 \[
 \mathcal F=\{\varnothing,\{HH,HT\},\{TH,TT\},\Omega\}.
 \]
@@ -76,6 +83,7 @@ A_1,A_2,\ldots\in\mathcal F\Rightarrow\bigcup_{i=1}^{\infty}A_i\in\mathcal F,
 
 \subsection{测度及其基本性质 | Measures and basic properties}
 \noindent 在可测空间 $(\Omega,\mathcal F)$ 上，测度是集合函数 $\mu:\mathcal F\to[0,\infty]$，满足
+\FORMULA{测度的可列可加性公理}{countable-additivity axiom for a measure}
 \[
 \mu(\varnothing)=0,\qquad
 \mu\left(\bigcup_{i=1}^{\infty}A_i\right)=\sum_{i=1}^{\infty}\mu(A_i)
@@ -89,10 +97,12 @@ A_1,A_2,\ldots\in\mathcal F\Rightarrow\bigcup_{i=1}^{\infty}A_i\in\mathcal F,
 
 \subsection{Lebesgue 积分的基本思想 | Basic idea of the Lebesgue integral}
 \noindent 黎曼积分主要按定义域分割，再累加小区间上的函数值；Lebesgue 积分按函数值分层，测量每一层对应的集合有多大。若非负简单函数
+\FORMULA{非负简单函数的表示}{representation of a nonnegative simple function}
 \[
 f=\sum_{i=1}^{n}a_i\mathbf1_{A_i},\qquad A_i\text{ 两两不交},
 \]
 则定义
+\FORMULA{简单函数的 Lebesgue 积分}{Lebesgue integral of a simple function}
 \[
 \int_\Omega f\,d\mu=\sum_{i=1}^{n}a_i\mu(A_i).
 \]
@@ -104,10 +114,12 @@ f=\sum_{i=1}^{n}a_i\mathbf1_{A_i},\qquad A_i\text{ 两两不交},
 
 \section{概率空间与事件 | Probability spaces and events}
 \noindent\textbf{定义。} 概率空间是三元组 $(\Omega,\mathcal F,P)$：$\Omega$ 是样本空间，$\mathcal F$ 是事件构成的 $\sigma$-代数，$(\Omega,\mathcal F)$ 是可测空间；$P$ 是其上的概率测度，即
+\FORMULA{概率测度的非负性、空集与归一化公理}{nonnegativity, empty-set, and normalization axioms for probability}
 \[
 P(\varnothing)=0,\qquad P(A)\ge0,\qquad P(\Omega)=1,
 \]
 并且对两两互不相交的 $A_i\in\mathcal F$，
+\FORMULA{概率的可列可加性}{countable additivity of probability}
 \[
 P\left(\bigcup_{i=1}^{\infty}A_i\right)=\sum_{i=1}^{\infty}P(A_i).
 \]
@@ -116,6 +128,7 @@ P\left(\bigcup_{i=1}^{\infty}A_i\right)=\sum_{i=1}^{\infty}P(A_i).
 \EN{A probability space $(\Omega,\mathcal F,P)$ consists of a sample space $\Omega$, an event sigma-algebra $\mathcal F$, and a probability measure $P$ on the measurable space $(\Omega,\mathcal F)$. The probability measure is nonnegative, assigns zero to the empty set, assigns one to $\Omega$, and is countably additive over disjoint events. Thus probability is a measure with total mass one.}
 
 \noindent\textbf{常用公式。} 对事件 $A,B$：
+\FORMULA{补事件与两事件并集的概率公式}{complement and two-event union formulas}
 \[
 P(A^c)=1-P(A),\quad P(A\cup B)=P(A)+P(B)-P(A\cap B).
 \]
@@ -131,10 +144,12 @@ P(A^c)=1-P(A),\quad P(A\cup B)=P(A)+P(B)-P(A\cap B).
 
 \section{条件概率、全概率与独立性 | Conditioning and independence}
 \noindent\textbf{定义与公式。} 当 $P(B)>0$ 时，
+\FORMULA{条件概率定义}{definition of conditional probability}
 \[
 P(A\mid B)=\frac{P(A\cap B)}{P(B)}.
 \]
-若 $A_1,\ldots,A_n$ 构成样本空间的划分且 $P(A_i)>0$，则
+若 $A_1,\ldots,A_n$ 构成样本空间的划分且 $P(A_i)>0$，并且 $P(B)>0$，则
+\FORMULA{全概率公式与 Bayes 公式}{law of total probability and Bayes' formula}
 \[
 P(B)=\sum_{i=1}^nP(B\mid A_i)P(A_i),\qquad
 P(A_j\mid B)=\frac{P(B\mid A_j)P(A_j)}{\sum_iP(B\mid A_i)P(A_i)}.
@@ -166,6 +181,7 @@ P(A_j\mid B)=\frac{P(B\mid A_j)P(A_j)}{\sum_iP(B\mid A_i)P(A_i)}.
 \EN{A Bernoulli variable represents one trial with two outcomes. Set $X=1$ for success and $X=0$ for failure, with success probability $p$. Then $X$ has mean $p$ and variance $p(1-p)$. The variance is largest at $p=1/2$. Examples include whether one item passes inspection or whether one user clicks, after defining exactly what counts as success.}
 
 若做 $n$ 次相互独立、成功概率相同为 $p$ 的伯努利试验，并令 $X=\sum_{i=1}^nX_i$ 记录总成功数，则 $X\sim\operatorname{Bin}(n,p)$。出现 $k$ 次成功的概率为
+\FORMULA{二项分布的概率质量函数}{probability mass function of the binomial distribution}
 \[
 P(X=k)=\binom nkp^k(1-p)^{n-k},\qquad k=0,1,\ldots,n.
 \]
@@ -176,6 +192,7 @@ P(X=k)=\binom nkp^k(1-p)^{n-k},\qquad k=0,1,\ldots,n.
 
 \subsection{几何与负二项分布：等到成功需要多久 | Geometric and negative-binomial waiting counts}
 若每次独立试验成功率为 $p$，令 $T$ 为“第一次成功发生在第几次试验”，则几何分布采用从 $1$ 开始计数：
+\FORMULA{几何分布的概率质量函数与期望}{geometric probability mass function and mean}
 \[
 P(T=k)=(1-p)^{k-1}p,\quad k=1,2,\ldots,\qquad E(T)=\frac1p.
 \]
@@ -183,6 +200,7 @@ P(T=k)=(1-p)^{k-1}p,\quad k=1,2,\ldots,\qquad E(T)=\frac1p.
 \EN{Let $T$ be the trial number on which the first success occurs in independent trials with success probability $p$. Under the convention used here, $T$ starts at $1$. The first $k-1$ trials fail and trial $k$ succeeds, giving the mass function above and mean $1/p$. The geometric distribution is memoryless. Some books instead count the number of failures before the first success, starting at zero, so state the convention.}
 
 若要等到第 $r$ 次成功，令 $Y$ 记录此前失败次数，则
+\FORMULA{负二项分布的概率质量函数}{probability mass function of the negative-binomial distribution}
 \[
 P(Y=k)=\binom{k+r-1}{r-1}p^r(1-p)^k,\quad k=0,1,\ldots,
 \]
@@ -193,6 +211,7 @@ P(Y=k)=\binom{k+r-1}{r-1}p^r(1-p)^k,\quad k=0,1,\ldots,
 
 \subsection{超几何与多项分布：抽样数类别计数 | Hypergeometric and multinomial counts}
 一批共有 $N$ 件，其中 $K$ 件具有某特征；不放回随机抽取 $n$ 件，令 $X$ 为抽到的特征件数，则
+\FORMULA{超几何分布的概率质量函数}{probability mass function of the hypergeometric distribution}
 \[
 P(X=k)=\frac{\binom Kk\binom{N-K}{n-k}}{\binom Nn},
 \quad \max(0,n-N+K)\le k\le\min(n,K).
@@ -203,6 +222,7 @@ P(X=k)=\frac{\binom Kk\binom{N-K}{n-k}}{\binom Nn},
 \EX{一盒 $20$ 个零件中有 $4$ 个不合格，不放回抽 $5$ 个。至少抽到一个不合格的概率为 $1-\binom{16}{5}/\binom{20}{5}\approx0.7183$。若误当作独立抽样，则会算成 $1-(16/20)^5\approx0.6723$；总体不大时这种差别不可忽略。}{A box has $20$ parts, including $4$ defective ones. We draw $5$ without replacement. The chance of at least one defective part is $1-\binom{16}{5}/\binom{20}{5}\approx0.7183$. Treating draws as independent would give $1-(16/20)^5\approx0.6723$, a noticeable difference for this small batch.}
 
 若每次独立试验有 $m$ 类结果，类别概率为 $p_1,\ldots,p_m$（总和为 $1$），固定做 $n$ 次并记录各类次数 $X_1,\ldots,X_m$，则向量服从多项分布：
+\FORMULA{多项分布的联合概率质量函数}{joint probability mass function of the multinomial distribution}
 \[
 P(X_1=x_1,\ldots,X_m=x_m)=\frac{n!}{x_1!\cdots x_m!}\prod_{j=1}^mp_j^{x_j},\quad \sum_jx_j=n.
 \]
@@ -211,6 +231,7 @@ P(X_1=x_1,\ldots,X_m=x_m)=\frac{n!}{x_1!\cdots x_m!}\prod_{j=1}^mp_j^{x_j},\quad
 
 \subsection{泊松分布：单位时间或区域中的事件数 | Poisson counts}
 若随机变量 $N$ 记录固定时间、面积或体积内发生的事件数，常用 $N\sim\operatorname{Poisson}(\lambda)$：
+\FORMULA{Poisson 分布的概率质量函数、均值与方差}{Poisson probability mass function, mean, and variance}
 \[
 P(N=k)=e^{-\lambda}\frac{\lambda^k}{k!},\quad k=0,1,\ldots,\qquad E(N)=\operatorname{Var}(N)=\lambda.
 \]
@@ -227,6 +248,7 @@ $\lambda$ 是该观察区间中的平均事件数，不是每次试验的成功�
 
 \subsection{指数与伽马分布：等待事件 | Exponential and gamma waiting times}
 在恒定率 $\lambda$ 的 Poisson 过程中，两次相邻事件之间的等待时间 $T$ 服从指数分布：
+\FORMULA{指数分布的密度与生存函数}{exponential density and survival function}
 \[
 f_T(t)=\lambda e^{-\lambda t}\ (t\ge0),\qquad P(T>t)=e^{-\lambda t},
 \qquad E(T)=1/\lambda,\quad \operatorname{Var}(T)=1/\lambda^2.
@@ -235,6 +257,7 @@ $\lambda$ 的单位是“事件数/时间”，所以均值 $1/\lambda$ 的单�
 \EN{In a constant-rate Poisson process, the waiting time $T$ between events is exponential. The rate $\lambda$ is measured in events per unit time, so the mean waiting time $1/\lambda$ has units of time. The memoryless property says that having already waited $s$ units does not change the chance of waiting at least another $t$ units. This property belongs to the constant-rate model and does not describe every lifetime.}
 
 等待第 $r$ 个 Poisson 事件的时间是 $r$ 个独立指数等待时间之和，服从伽马分布。采用“形状 $\alpha$、率 $\beta$”参数化时，密度为
+\FORMULA{Gamma 分布的密度与矩（率参数化）}{Gamma density and moments under the rate parameterization}
 \[
 f(t)=\frac{\beta^\alpha}{\Gamma(\alpha)}t^{\alpha-1}e^{-\beta t},\quad t>0,
 \qquad E(T)=\frac{\alpha}{\beta},\quad \operatorname{Var}(T)=\frac{\alpha}{\beta^2}.
@@ -246,6 +269,7 @@ f(t)=\frac{\beta^\alpha}{\Gamma(\alpha)}t^{\alpha-1}e^{-\beta t},\quad t>0,
 
 \subsection{正态分布：许多小误差的合成 | Normal distribution}
 若连续变量围绕中心值 $\mu$ 对称、偏差由许多近似独立的小因素相加，可考虑正态模型 $X\sim N(\mu,\sigma^2)$，其密度为
+\FORMULA{正态分布的概率密度函数}{probability density function of the normal distribution}
 \[
 f_X(x)=\frac{1}{\sqrt{2\pi}\sigma}\exp\!\left[-\frac{(x-\mu)^2}{2\sigma^2}\right],\qquad -\infty<x<\infty.
 \]
@@ -314,6 +338,7 @@ $\mu$ 是均值和对称中心，$\sigma>0$ 是标准差，$\sigma^2$ 是方差�
 
 \section{期望、方差与相关性 | Expectation, variance and dependence}
 \noindent\textbf{定义与公式。} 离散变量 $E(X)=\sum_xxp_X(x)$；连续变量 $E(X)=\int_{-\infty}^{\infty}xf_X(x)\,dx$，前提是相应期望存在。更一般地，$E[g(X)]=\sum_xg(x)p_X(x)$ 或 $\int g(x)f_X(x)\,dx$。方差、协方差和相关系数为
+\FORMULA{方差、协方差与相关系数}{variance, covariance, and correlation}
 \[
 \begin{aligned}
 \operatorname{Var}(X)&=E[(X-EX)^2]=E(X^2)-(EX)^2,\\
@@ -348,10 +373,12 @@ $\mu$ 是均值和对称中心，$\sigma>0$ 是标准差，$\sigma^2$ 是方差�
 \EN{Convergence in probability means $P(|X_n-X|>\varepsilon)\to0$ for every $\varepsilon>0$. Almost-sure convergence means $P(X_n\to X)=1$. Convergence in $L^r$ means $E|X_n-X|^r\to0$. Convergence in distribution is convergence of distribution functions at continuity points of the limit distribution. Almost-sure and $L^r$ convergence each imply convergence in probability under the usual conditions; the converses generally fail.}
 
 \noindent\textbf{大数定律。} 若 $X_i$ 独立同分布且 $E|X_1|<\infty$，强大数定律给出
+\FORMULA{强大数定律的样本均值结论}{sample-mean conclusion of the strong law of large numbers}
 \[
 \frac{1}{n}\sum_{i=1}^nX_i\xrightarrow{a.s.}E(X_1).
 \]
 它解释了样本平均值趋近总体均值。\textbf{中心极限定理。} 若 $X_i$ 独立同分布，均值 $\mu$、方差 $0<\sigma^2<\infty$，则
+\FORMULA{独立同分布情形的中心极限定理}{central limit theorem for iid random variables}
 \[
 \frac{\sum_{i=1}^nX_i-n\mu}{\sigma\sqrt n}\xrightarrow{d}N(0,1).
 \]
@@ -366,7 +393,4 @@ $\mu$ 是均值和对称中心，$\sigma>0$ 是标准差，$\sigma^2$ 是方差�
 
 \ASK{几种随机变量收敛方式的区别是什么？}{How do common modes of convergence differ?}{依分布只比较分布函数；依概率控制偏差超过任意阈值的概率；几乎必然要求样本路径最终收敛；$L^r$ 控制偏差的 $r$ 阶矩。}{Convergence in distribution compares distribution functions. Convergence in probability controls the chance of an error exceeding any threshold. Almost-sure convergence concerns sample paths, while $L^r$ convergence controls the $r$th moment of the error.}
 
-\section*{来源与范围 | Source and scope}
-本讲义依据“概率论”文件夹中的 2024 年课程讲义 PDF（共 23 讲）整理，覆盖事件、古典与几何概型、概率公理、条件概率、独立性、随机变量分布、期望与变换函数、收敛及极限定理。测度扩张等理论细节按课程课件作为理解背景，面试回答可优先突出基础定义与计算。
-\EN{This handout follows the 2024 probability lecture file in the Probability Theory folder, which contains 23 lectures. It covers events, classical and geometric models, probability axioms, conditioning, independence, distributions, expectation and transformations, convergence, and limit theorems. Measure-extension details are included as course context; interview answers can prioritize core definitions and calculations.}
 \end{document}

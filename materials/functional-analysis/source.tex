@@ -4,6 +4,7 @@
 \hypersetup{colorlinks=true,linkcolor=blue}
 \newcommand{\EN}[1]{\par\noindent \textbf{English.} #1\par}
 \newcommand{\READ}[1]{\par\noindent \textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\FORMULA}[2]{\par\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
 \newcommand{\EX}[2]{\par\noindent \textbf{例子 / Example.} #1\par\EN{#2}}
 \newcommand{\ASK}[4]{\par\noindent \textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent \textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
 \title{泛函分析 APS 面试准备\\[4pt]\large 第 1--2 章范围：度量空间、线性算子与线性泛函}
@@ -11,8 +12,7 @@
 \date{}
 \begin{document}\maketitle
 \section*{课程概述 | Course overview}
-\noindent \textbf{中文口述稿。} 泛函分析中，我把函数当作空间里的点，研究函数之间的距离以及运算是否稳定。例如在 $C[0,1]$ 中，用 $\|f-g\|_\infty=\max_{0\le x\le1}|f(x)-g(x)|$ 衡量两条曲线的最大差距。若测量误差不超过 $\varepsilon$，则它们的平均值之差也不超过 $\varepsilon$：$|\int_0^1(f-g)\,dx|\le\|f-g\|_\infty$。这说明积分在这个范数下连续。课程还研究完备性：近似解组成的 Cauchy 列是否在空间内有极限；这个问题与微分方程解的存在性相连。
-\EN{In functional analysis, I treat functions as points in a space and study distances and stability of operations. In $C[0,1]$, the supremum norm $\|f-g\|_\infty$ is the largest difference between two curves. If this difference is at most $\varepsilon$, their averages differ by at most $\varepsilon$ as well, because $|\int_0^1(f-g)dx|\le\|f-g\|_\infty$. Thus integration is continuous in this norm. I also studied completeness: whether a Cauchy sequence of approximate solutions has a limit in the same space, which connects to existence of solutions of differential equations.}
+\BOTH{我从度量空间的收敛和完备性开始，学习赋范空间、Banach 空间与 Hilbert 空间，再研究有界线性算子、连续线性泛函、对偶空间和 Riesz 表示定理；主要定理还包括 Hahn--Banach、开映射、闭图像和一致有界原理，之后讨论正交投影、谱与紧算子。收敛有三种常用强度：强（范数）收敛要求 $\|x_n-x\|\to0$；弱收敛要求每个连续线性泛函 $\ell$ 都满足 $\ell(x_n)\to\ell(x)$；弱-* 收敛则对对偶空间中的泛函逐点检验其在原空间上的取值。例子是 $\ell^2$ 的标准基 $e_n$：对任意 $y\in\ell^2$，$\langle e_n,y\rangle=y_n\to0$，所以 $e_n$ 弱收敛到 $0$，但 $\|e_n\|=1$，不强收敛。在 $C[0,1]$ 中，积分泛函也连续，因为 $|\int_0^1 f(x)\,dx|\le\|f\|_\infty$。这些内容共同研究极限、线性运算及其对误差的控制。}{I begin with convergence and completeness in metric spaces, then study normed, Banach, and Hilbert spaces, bounded linear operators, continuous linear functionals, dual spaces, and the Riesz representation theorem. The main theorems include Hahn--Banach, the open mapping theorem, the closed graph theorem, and uniform boundedness; later topics include orthogonal projection, spectra, and compact operators. There are three common notions of convergence. Strong, or norm, convergence means $\|x_n-x\|\to0$. Weak convergence means $\ell(x_n)\to\ell(x)$ for every continuous linear functional $\ell$. Weak-star convergence tests dual-space functionals pointwise on the original space. In $\ell^2$, the standard unit vectors $e_n$ converge weakly to zero because $\langle e_n,y\rangle=y_n\to0$ for every $y\in\ell^2$, but they do not converge strongly because $\|e_n\|=1$. In $C[0,1]$, integration is also a continuous functional since $|\int_0^1 f(x)\,dx|\le\|f\|_\infty$. These topics study limits, linear operations, and control of errors.}
 
 \noindent \textbf{课程联系与具体应用。} 数值计算中常把微分方程离散成线性方程 $Ax=b$；泛函分析提供连续问题的无限维版本。若解算子 $A^{-1}$ 连续，则数据误差 $\|\Delta b\|$ 会受到控制：$\|\Delta x\|\le \|A^{-1}\|\,\|\Delta b\|$。反问题中若逆算子不连续，测量中的微小噪声可能造成很大的解误差，这解释了病态问题为何需要正则化。积分方程、边值问题和 Fourier 展开也常用函数空间与有界算子来表述。
 \EN{A numerical method often discretizes a differential equation into a linear system $Ax=b$. Functional analysis gives an infinite-dimensional framework for the original problem. If the solution operator $A^{-1}$ is continuous, data error is controlled by $\|\Delta x\|\le \|A^{-1}\|\,\|\Delta b\|$. In an inverse problem, a discontinuous inverse can amplify small measurement noise, which explains why regularization is needed. Integral equations, boundary-value problems, and Fourier expansions are also naturally expressed using function spaces and bounded operators.}
@@ -51,6 +51,7 @@
 
 \section{线性算子与线性泛函 | Operators and functionals}
 \noindent 线性算子 $T:X\to Y$ 满足 $T(\alpha x+\beta y)=\alpha T(x)+\beta T(y)$。若存在常数 $C$ 使 $\|Tx\|_Y\le C\|x\|_X$ 对所有 $x$ 成立，则 $T$ 有界；在线性算子之间，有界等价于连续。算子范数是
+\FORMULA{有界线性算子的算子范数}{operator norm of a bounded linear operator}
 \[
 \|T\|=\sup_{\|x\|_X\le1}\|Tx\|_Y,
 \qquad \|Tx\|_Y\le\|T\|\,\|x\|_X.
@@ -72,15 +73,32 @@
 
 \EX{在 $L^2[0,1]$ 中，测量 $\ell(f)=\int_0^1 f(t)t\,dt$ 可写成 $\langle f,g\rangle$，其中 $g(t)=t$。所以 $\|\ell\|=\|g\|_2=(\int_0^1t^2dt)^{1/2}=1/\sqrt3$；Cauchy--Schwarz 给出 $|\ell(f)|\le\|f\|_2/\sqrt3$。}{In $L^2[0,1]$, the measurement $\ell(f)=\int_0^1 f(t)t\,dt$ is the inner product with $g(t)=t$. Thus $\|\ell\|=\|g\|_2=1/\sqrt3$, and Cauchy--Schwarz gives $|\ell(f)|\le\|f\|_2/\sqrt3$.}
 
-\noindent\textbf{弱收敛。} 赋范空间中，$x_n\rightharpoonup x$ 表示对每个连续线性泛函 $\ell\in X^*$，都有 $\ell(x_n)\to\ell(x)$；强收敛则要求 $\|x_n-x\|\to0$。强收敛蕴含弱收敛，反之一般不成立。弱收敛适合在范数无法直接控制到零时研究解列的极限，但必须说明检验的是全部连续线性泛函。
-\EN{Weak convergence $x_n\rightharpoonup x$ means that $\ell(x_n)\to\ell(x)$ for every continuous linear functional $\ell$. Strong convergence requires $\|x_n-x\|\to0$. Strong convergence implies weak convergence, but not conversely. Weak convergence is useful for limiting sequences of approximate solutions even when their norms do not converge strongly.}
+\subsection{范数（强）、弱与弱-* 收敛}
+\noindent\textbf{三种定义。} 设 $X$ 是赋范空间，$X^*$ 表示所有连续线性泛函组成的对偶空间。\emph{范数收敛}（也称\emph{强收敛}）是 $\|x_n-x\|_X\to0$；它直接要求向量距离变小。\emph{弱收敛}写作 $x_n\rightharpoonup x$，意思是对每个 $\ell\in X^*$ 都有 $\ell(x_n)\to\ell(x)$；它要求所有连续线性测量都无法区分极限。\emph{弱-* 收敛}只用于对偶空间中的泛函列：$\ell_n\stackrel{*}{\rightharpoonup}\ell$ 当且仅当对每个 $x\in X$，$\ell_n(x)\to\ell(x)$。弱-* 只检查由 $X$ 中向量产生的取值；在 $X^*$ 的弱收敛则要对 $X^{**}$ 中的所有连续线性泛函检查。
+\EN{Let $X^*$ be the dual space of continuous linear functionals on a normed space $X$. \emph{Norm convergence}, also called \emph{strong convergence}, means $\|x_n-x\|_X\to0$. \emph{Weak convergence}, written $x_n\rightharpoonup x$, means that $\ell(x_n)\to\ell(x)$ for every $\ell\in X^*$. \emph{Weak-* convergence} is defined for functionals in $X^*$: $\ell_n\stackrel{*}{\rightharpoonup}\ell$ if $\ell_n(x)\to\ell(x)$ for every $x\in X$. Weak-* convergence tests evaluations at vectors in $X$, whereas weak convergence in $X^*$ tests every functional in the larger dual space $X^{**}$.}
 
-\EX{在 $\ell^2$ 中，第 $n$ 个标准基向量 $e_n$ 的第 $n$ 项为 $1$，其余为 $0$。对任意 $y=(y_k)\in\ell^2$，$\langle e_n,y\rangle$ 的绝对值为 $|y_n|\to0$，所以 $e_n$ 弱收敛到零；但 $\|e_n\|_2=1$，故不强收敛到零。}{In $\ell^2$, the $n$th unit vector $e_n$ has a one in position $n$ and zeros elsewhere. For every $y\in\ell^2$, $|\langle e_n,y\rangle|=|y_n|\to0$, so $e_n$ converges weakly to zero. Yet $\|e_n\|_2=1$, so the convergence is not strong.}
+\noindent\textbf{蕴含关系与用途。} 范数收敛蕴含弱收敛，因为
+\FORMULA{连续线性泛函的范数估计}{norm bound for a continuous linear functional}
+\[
+|\ell(x_n-x)|\le \|\ell\|\,\|x_n-x\|_X.
+\]
+在对偶空间 $X^*$ 中，弱收敛蕴含弱-* 收敛：$X$ 的每个向量 $x$ 都可通过评价泛函 $Jx(\ell)=\ell(x)$ 作为 $X^{**}$ 中的检验对象。反向蕴含一般不成立。弱收敛常用于 PDE 的逼近解：能量估计先给出范数有界，再借助弱收敛提取极限并在弱形式中传递方程；弱-* 收敛常用于研究对偶空间中的有界泛函列。
+\EN{Norm convergence implies weak convergence by the displayed inequality. In $X^*$, weak convergence implies weak-* convergence because each $x\in X$ defines an evaluation functional in $X^{**}$. The converse generally fails. Weak convergence is useful for bounded approximate solutions of PDEs: energy estimates give boundedness, and weak limits can then be passed through the weak formulation. Weak-* convergence is useful for bounded sequences of functionals.}
+
+\EX{在 Hilbert 空间 $\ell^2$ 中，标准基 $e_n=(0,\ldots,0,1,0,\ldots)$ 满足 $\|e_n\|_2=1$。对任意 $y=(y_k)\in\ell^2$，Riesz 表示定理把连续线性泛函写成与某个 $y$ 的内积，而 $|\langle e_n,y\rangle|=|y_n|\to0$；因此 $e_n$ 弱收敛到 $0$，但不强收敛到 $0$。再令 $X=c_0$（趋于零的数列空间），其对偶为 $X^*=\ell^1$。把 $e_n$ 看作 $\ell^1$ 中的泛函，对每个 $x=(x_k)\in c_0$ 有 $e_n(x)=x_n\to0$，故 $e_n\stackrel{*}{\rightharpoonup}0$。它不在 $\ell^1$ 中弱收敛到零，因为连续泛函 $L(a)=\sum_{k=1}^\infty a_k$ 满足 $L(e_n)=1$；同时 $\|e_n\|_1=1$，所以也不范数收敛。}{In the Hilbert space $\ell^2$, the unit vectors have norm one. By the Riesz representation theorem, every continuous linear functional is an inner product with some $y\in\ell^2$, and $|\langle e_n,y\rangle|=|y_n|\to0$. Thus $e_n$ converges weakly, but not strongly, to zero. Now let $X=c_0$, whose dual is $X^*=\ell^1$. Viewed as functionals on $c_0$, the unit vectors satisfy $e_n(x)=x_n\to0$ for every $x\in c_0$, so they converge weak-* to zero. They do not converge weakly to zero in $\ell^1$, since the continuous functional $L(a)=\sum_{k=1}^\infty a_k$ gives $L(e_n)=1$. Their $\ell^1$ norms also remain one.}
+
+\noindent\textbf{与函数列收敛的区别。} 点态收敛逐点检查 $f_n(t)$；一致收敛要求同一个指标 $N$ 同时控制所有 $t$。例如 $f_n(t)=t^n$ 在 $[0,1]$ 上点态趋于 $f(t)=0$（$t=1$ 除外），但不一致收敛；然而把它们看成 $L^2[0,1]$ 中的元素，
+\FORMULA{$t^n$ 在 $L^2[0,1]$ 中的范数}{the $L^2[0,1]$ norm of $t^n$}
+\[
+\|f_n\|_2^2=\int_0^1t^{2n}\,dt=\frac{1}{2n+1}\longrightarrow0,
+\]
+所以它们在 $L^2$ 中强收敛到零。这里的单点差异不影响 $L^2$ 范数，因为 $L^2$ 函数按几乎处处相等视为同一元素。
+\EN{Pointwise convergence checks $f_n(t)$ separately at each point, while uniform convergence uses one index to control every point at once. On $[0,1]$, $t^n$ converges pointwise to zero except at $t=1$, but not uniformly. As elements of $L^2[0,1]$, however, their squared norms equal $1/(2n+1)$, so they converge strongly to zero. A difference at one point does not affect the $L^2$ norm, since functions equal almost everywhere represent the same element.}
 
 \noindent\textbf{谱。} 对复 Banach 空间上的有界线性算子 $T$，若 $T-\lambda I$ 存在有界逆，$\lambda$ 属于预解集；不满足这一条件的 $\lambda$ 构成谱 $\sigma(T)$。特征值只要求存在非零 $x$ 使 $Tx=\lambda x$，因此属于谱，但无限维谱可能还含没有特征向量的点。谱描述 $T-\lambda I$ 何时不能稳定地解出输入。
 \EN{For a bounded operator $T$ on a complex Banach space, the resolvent set consists of scalars $\lambda$ for which $T-\lambda I$ has a bounded inverse. The spectrum is its complement. Every eigenvalue belongs to the spectrum, but in infinite dimensions the spectrum can contain points that are not eigenvalues.}
 
-\ASK{弱收敛与强收敛的主要差别是什么？}{What is the difference between weak and strong convergence?}{强收敛要求向量范数距离趋于零；弱收敛只要求所有连续线性泛函给出的数值收敛。$\ell^2$ 的标准基序列弱收敛为零，但范数始终为一，所以不强收敛。}{Strong convergence requires the norm distance to tend to zero. Weak convergence requires convergence after applying every continuous linear functional. The unit vectors in $\ell^2$ converge weakly to zero, but their norms remain one.}
+\ASK{泛函分析中范数（强）、弱与弱-* 收敛有什么区别？}{How do norm (strong), weak, and weak-* convergence differ?}{强收敛要求 $\|x_n-x\|\to0$，因此蕴含弱收敛；弱收敛要求所有 $X^*$ 中的泛函取值收敛。弱-* 收敛用于 $X^*$ 中的泛函列，只检查每个 $x\in X$ 上的取值。$\ell^2$ 的标准基弱收敛但不强收敛；把 $c_0$ 的对偶识别为 $\ell^1$ 后，标准基弱-* 收敛但不弱收敛。}{Norm (strong) convergence requires $\|x_n-x\|\to0$ and therefore implies weak convergence, which tests every functional in $X^*$. Weak-* convergence applies to functionals in $X^*$ and tests their values at each $x\in X$. The unit vectors in $\ell^2$ converge weakly but not strongly; in $X^*=\ell^1=(c_0)^*$, they converge weak-* but not weakly.}
 
 \section{四个基本定理 | Four fundamental theorems}
 \noindent \textbf{Hahn--Banach 定理。} 在实或复线性空间上，满足一定支配条件的子空间线性泛函可以延拓到整个空间，并保持相同的范数。它保证可以用连续线性泛函“检测”向量和闭凸集，也支撑对偶空间理论。\EN{The Hahn--Banach theorem extends a suitably bounded linear functional from a subspace to the whole space without increasing its norm.}
@@ -105,6 +123,7 @@
 
 \section{压缩映射的证明思路与初值问题 | Fixed points and initial-value problems}
 \noindent 设 $F$ 的压缩常数为 $q<1$。由迭代式 $x_{n+1}=F(x_n)$ 得 $d(x_{n+1},x_n)\le q^n d(x_1,x_0)$；对 $m>n$，三角不等式与等比级数给出
+\FORMULA{压缩迭代的 Cauchy 误差估计}{Cauchy error bound for contraction iterations}
 \[d(x_m,x_n)\le \frac{q^n}{1-q}\,d(x_1,x_0).\]
 右侧趋零，所以 $x_n$ 是 Cauchy 列。完备性提供极限 $x^*$；$F$ 连续，故 $F(x^*)=x^*$。若 $x^*,y^*$ 都是不动点，$d(x^*,y^*)\le qd(x^*,y^*)$ 迫使二者相等。这是存在、算法和唯一性的完整证明框架。
 \EN{For a contraction with constant $q<1$, the distance between successive iterates is at most $q^n d(x_1,x_0)$. The geometric-series bound above makes the iterates Cauchy. Completeness supplies a limit, continuity shows that the limit is a fixed point, and the contraction inequality shows that two fixed points must coincide.}
@@ -112,6 +131,7 @@
 
 \section{正交投影与最小二乘的计算 | Projection and least squares}
 \noindent \textbf{从几何到方程。} 在实 Hilbert 空间中，用 $m=\sum_{j=1}^na_j\phi_j$ 逼近 $x$，令误差平方 $J(a)=\|x-m\|^2$ 最小。若最优解存在，残差 $x-m$ 与每个方向 $\phi_i$ 正交，因而满足正规方程
+\FORMULA{Hilbert 空间投影的 Gram 正规方程}{Gram normal equations for Hilbert-space projection}
 \[\sum_{j=1}^n\langle\phi_j,\phi_i\rangle a_j=\langle x,\phi_i\rangle,\qquad i=1,\ldots,n.\]
 系数矩阵称 Gram 矩阵。基向量线性无关时，它正定且解唯一；如果它们线性相关，系数可能不唯一，即使最佳逼近向量本身仍唯一。
 \EN{In a real Hilbert space, approximate $x$ by $m=\sum_j a_j\phi_j$ and minimize $\|x-m\|^2$. The residual must be orthogonal to every trial direction, giving the normal equations above. Their coefficient matrix is the Gram matrix. Independent trial vectors give a positive-definite Gram matrix and unique coefficients; dependent vectors can produce nonunique coefficients even when the best approximating vector is unique.}
@@ -124,6 +144,7 @@
 \ASK{为什么无限维空间中谱不一定都是特征值？}{Why need not every spectral value be an eigenvalue in infinite dimensions?}{特征值只检查齐次方程 $(T-\lambda I)x=0$ 是否有非零解；谱还检查算子是否满射以及逆是否有界，因此即使核为零，仍可能属于谱。}{An eigenvalue checks whether the homogeneous equation has a nonzero solution. The spectrum also checks surjectivity and boundedness of the inverse, so a value may be spectral even when the kernel is zero.}
 \section{范数等价与函数空间的比较 | Equivalent norms and function spaces}
 \noindent 在同一个向量空间上可以有不同范数。若存在常数 $c,C>0$ 使
+\FORMULA{范数等价的双边界}{two-sided bounds defining equivalent norms}
 \[
 c\|x\|_a\le \|x\|_b\le C\|x\|_a\qquad(\text{for all }x),
 \]
@@ -131,6 +152,7 @@ c\|x\|_a\le \|x\|_b\le C\|x\|_a\qquad(\text{for all }x),
 \EN{Different norms may be defined on the same vector space. They are equivalent when they bound each other by two positive constants. Equivalent norms give the same convergent sequences and topology, although numerical error constants may differ. All norms on a finite-dimensional space are equivalent, but this is generally false in infinite dimensions.}
 
 \EX{在 $\mathbb R^2$ 中，$\|x\|_1=|x_1|+|x_2|$、$\|x\|_2=(x_1^2+x_2^2)^{1/2}$、$\|x\|_\infty=\max(|x_1|,|x_2|)$ 满足
+\FORMULA{$\mathbb R^2$ 三种常用范数的比较}{comparison of three standard norms on $\mathbb R^2$}
 \[
 \|x\|_\infty\le\|x\|_2\le\|x\|_1\le2\|x\|_\infty.
 \]
@@ -152,6 +174,7 @@ c\|x\|_a\le \|x\|_b\le C\|x\|_a\qquad(\text{for all }x),
 
 \section{正交系与 Fourier 系数 | Orthonormal systems}
 \noindent Hilbert 空间中的向量系 $\{e_k\}$ 若满足 $\langle e_j,e_k\rangle=0$（$j\ne k$）且 $\|e_k\|=1$，称为标准正交系。给定 $x$，沿 $e_k$ 的 Fourier 系数为 $c_k=\langle x,e_k\rangle$。Bessel 不等式为
+\FORMULA{Bessel 不等式}{Bessel's inequality}
 \[
 \sum_{k=1}^{\infty}|\langle x,e_k\rangle|^2\le\|x\|^2.
 \]
@@ -172,20 +195,7 @@ c\|x\|_a\le \|x\|_b\le C\|x\|_a\qquad(\text{for all }x),
 \ASK{为什么导数算子可能无界？}{Why can the differentiation operator be unbounded?}{取 $D:C^1[0,1]\to C[0,1]$，$Df=f'$，并在定义域使用上确界范数。令 $f_n(x)=\sin(nx)/n$，则 $\|f_n\|_\infty\le1/n$，但 $\|Df_n\|_\infty=1$。如果存在统一常数 $C$，就会有 $1\le C/n$，矛盾。}{Let $D:C^1[0,1]\to C[0,1]$ be differentiation with the supremum norm on the domain. For $f_n(x)=\sin(nx)/n$, the input norm is at most $1/n$ but the derivative norm is one. A uniform bound would give $1\le C/n$, which is impossible.}
 \ASK{Banach 不动点定理和 Schauder 不动点定理有什么区别？}{What is the difference between Banach and Schauder fixed-point theorems?}{Banach 要求压缩映射，给出唯一不动点及迭代收敛；Schauder 在非空闭有界凸集上要求连续映射的像相对紧，主要给出存在性，通常不保证唯一性和迭代收敛。}{Banach requires a contraction and gives a unique fixed point with iterative convergence. Schauder assumes a continuous map on a nonempty closed bounded convex set whose image is relatively compact; it mainly gives existence and usually gives neither uniqueness nor convergence of simple iteration.}
 \ASK{弱收敛为什么在偏微分方程中有用？}{Why is weak convergence useful in PDEs?}{近似解的范数可能有统一界，却不一定有强收敛子列；弱收敛允许先对所有连续泛函取极限，再通过弱形式传递方程。它把有界性转化为提取极限的工具。}{Approximate solutions may be uniformly bounded without having a strongly convergent subsequence. Weak convergence allows one to pass to limits after testing with continuous functionals and is natural for weak formulations of PDEs.}
-\section[收敛类型 | Convergence modes]{函数列的点态、强与弱收敛：一个对照例子 | Pointwise, norm, and weak convergence}
-\noindent 前文已经用 $f_n(x)=x^n$ 说明点态收敛不一定一致收敛。把同一列放入 $L^2[0,1]$，则
-\noindent
-\[
-\|f_n\|_2^2=\int_0^1x^{2n}\,dx=\frac1{2n+1}\longrightarrow0.
-\]
-因此它在 $L^2$ 范数下强收敛到零，尽管在 $x=1$ 的函数值始终为 $1$。$L^2$ 函数按几乎处处相等视为同一元素，单点差异不影响范数。这说明“强收敛”依赖所选空间和范数，不能只凭单点值判断。
-\EN{In $L^2[0,1]$, however, the squared norm is $1/(2n+1)$, so $f_n$ converges strongly to zero. The value at the single point one does not affect the integral norm; $L^2$ identifies functions that agree almost everywhere. Strong convergence therefore depends on the chosen space and norm.}
-\READ{“The L two norm squared of f sub n equals one over two n plus one, which tends to zero.”}
-\noindent 再看 Hilbert 空间 $\ell^2$ 中的标准基 $e_n=(0,\ldots,0,1,0,\ldots)$。它满足 $\|e_n\|_2=1$，所以不强收敛到零；但对任意 $y=(y_k)\in\ell^2$，内积 $\langle e_n,y\rangle=y_n\to0$，故 $e_n$ 弱收敛到零。平方可和序列的坐标必趋于零。弱收敛控制每个连续线性泛函的取值，不要求向量范数差趋于零。
-\EN{In $\ell^2$, the standard basis vectors have norm one and therefore do not converge strongly to zero. Yet for every $y\in\ell^2$, $\langle e_n,y\rangle=y_n\to0$, so they converge weakly to zero. Coordinates of a square-summable sequence must tend to zero. Weak convergence tests continuous linear functionals; it does not require the norm difference to vanish.}
-\ASK{为什么弱收敛通常比强收敛弱？}{Why is weak convergence weaker than norm convergence?}{若 $x_n\to x$ 按范数收敛，则对任意连续线性泛函 $\ell$，有 $|\ell(x_n-x)|\le\|\ell\|\|x_n-x\|\to0$，所以弱收敛。反向不成立，$\ell^2$ 的标准基就是反例。}{Norm convergence implies weak convergence because $|\ell(x_n-x)|\le\|\ell\|\|x_n-x\|$. The converse fails; the standard basis in $\ell^2$ is a counterexample.}
-
-\section{緊積分算子：從等度連續到緊性 | A compact integral operator}
+\section{紧积分算子：从等度连续到紧性 | A compact integral operator}
 \noindent 在 $C[0,1]$ 上定义 $(Tf)(x)=\int_0^x f(t)\,dt$。若 $\|f\|_\infty\le1$，则 $|Tf(x)|\le1$，且对任意 $x,y$ 有 $|Tf(x)-Tf(y)|\le|x-y|$。因此单位球经 $T$ 映成一致有界、等度连续的函数族。由 Arzel\`a--Ascoli 定理，其闭包在上确界范数下紧，故 $T$ 是紧算子。
 \EN{Define $Tf(x)=\int_0^x f(t)\,dt$ on $C[0,1]$. For inputs in the unit ball, the outputs are uniformly bounded by one and satisfy $|Tf(x)-Tf(y)|\le|x-y|$. They are equicontinuous, so Arzela--Ascoli makes their closure compact in the supremum norm. Hence $T$ is compact.}
 \EX{若 $f_n(t)=t^n$，则 $Tf_n(x)=x^{n+1}/(n+1)$，并且 $\|Tf_n\|_\infty=1/(n+1)\to0$。一般单位球中的输入可以快速振荡，但积分会平均掉局部变化；上面的等度连续估计给出这种平滑效应的统一证明。该算子还满足 $(Tf)'=f$，所以它也是积分与微分方程之间的简单联系。}{For $f_n(t)=t^n$, we have $Tf_n(x)=x^{n+1}/(n+1)$, whose supremum norm tends to zero. Integration averages local variation; the equicontinuity estimate proves this smoothing effect uniformly over the unit ball. Since $(Tf)'=f$, this operator also links integral and differential equations.}

@@ -3,6 +3,8 @@
 \geometry{margin=2.1cm}\setlist{itemsep=2pt,topsep=3pt}
 \hypersetup{colorlinks=true,linkcolor=blue}
 \newcommand{\EN}[1]{\par\noindent \textbf{English.} #1\par}
+\newcommand{\BOTH}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par}
+\newcommand{\FORMULA}[2]{\par\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
 \newcommand{\READ}[1]{\par\noindent \textbf{公式英文读法 / How to read it.} #1\par}
 \newcommand{\EX}[2]{\par\noindent \textbf{例子 / Example.} #1\par\EN{#2}}
 \newcommand{\ASK}[4]{\par\noindent \textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent \textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
@@ -11,6 +13,8 @@
 \date{}
 \begin{document}\maketitle
 \section*{课程概述 | Course overview}
+\noindent\textbf{课程主线 / Course roadmap.} 我按整除与最大公因数、Euclid 算法、同余与线性同余方程、中国剩余定理、Fermat 小定理与 Euler 定理、平方剩余/阶/原根，最后到整数方程和 Pell 方程的顺序复习。先判断 $ax\equiv b\pmod n$ 是否有解：充要条件是 $\gcd(a,n)\mid b$；若互素，Bézout 等式构造逆元；若模数互素，中国剩余定理把局部同余合成一个解。比如 $3x\equiv1\pmod7$ 的解为 $x\equiv5$，RSA 只作为快速模幂的应用说明。
+\EN{Within the stated scope, I review divisibility, greatest common divisors and the Euclidean algorithm, congruences and linear congruences, the Chinese remainder theorem, Fermat's little theorem and Euler's theorem, quadratic residues, orders, primitive roots and indices, and finally Diophantine and Pell equations. A central calculation is to determine whether an inverse exists: $ax\equiv b\pmod n$ is solvable exactly when $\gcd(a,n)$ divides $b$. When the relevant numbers are coprime, the Euclidean algorithm constructs an inverse, and the Chinese remainder theorem combines congruences with coprime moduli. RSA illustrates fast modular exponentiation, although small examples explain only the principle and are not secure.}
 \noindent \textbf{中文口述稿。} 我在数论课研究整数的整除与余数。比如要解 $3x\equiv1\pmod7$，我寻找一个与 $3$ 相乘余 $1$ 的整数；因为 $3\cdot5=15\equiv1\pmod7$，所以 $x\equiv5\pmod7$。这里 $5$ 是 $3$ 模 $7$ 的乘法逆元。更一般地，我可以用 Euclid 算法检查最大公因数并构造逆元，再用中国剩余定理合并不同模数下的条件。这些方法也出现在密码学的模运算中。
 \EN{In number theory, I studied divisibility and remainders of integers. To solve $3x\equiv1\pmod7$, I look for a number whose product with three leaves remainder one. Since $3\cdot5=15\equiv1\pmod7$, the solution is $x\equiv5\pmod7$; five is the inverse of three modulo seven. More generally, I can use the Euclidean algorithm to find a greatest common divisor and construct an inverse, then use the Chinese remainder theorem to combine congruences. These modular calculations also appear in cryptography.}
 
@@ -19,6 +23,7 @@
 
 \section{整除、最大公因数与 Euclid 算法 | Divisibility and gcd}
 \noindent 对整数 $a,b$，若存在整数 $k$ 使 $b=ak$，记 $a\mid b$。最大公因数 $\gcd(a,b)$ 是同时整除 $a,b$ 的最大正整数。带余除法写作 $a=bq+r$，其中 $0\le r<|b|$；反复应用它得到 Euclid 算法。回代可得 Bézout 等式
+\FORMULA{Bézout 等式}{Bézout's identity}
 \[
 \gcd(a,b)=sa+tb\qquad(s,t\in\mathbb Z).
 \]
@@ -32,43 +37,77 @@
 \EX{求 $\gcd(252,105)$：$252=2\cdot105+42$，$105=2\cdot42+21$，$42=2\cdot21$，故最大公因数为 $21$。回代得 $21=105-2(252-2\cdot105)=5\cdot105-2\cdot252$。这既给出 gcd，也构造出 Bézout 系数。}{The Euclidean algorithm gives $252=2\cdot105+42$, $105=2\cdot42+21$, and $42=2\cdot21$, so the gcd is $21$. Back-substitution gives $21=5\cdot105-2\cdot252$, producing the Bezout coefficients.}
 
 \noindent\textbf{用 Bézout 求逆元。} 若 $\gcd(a,n)=1$，从 $sa+tn=1$ 得 $sa\equiv1\pmod n$，所以 $s$ 是 $a$ 的模 $n$ 乘法逆元。逆元唯一到模 $n$ 同余类；若 gcd 大于 $1$，逆元不存在。
-\EX{上面的回代式给 $-2\cdot252+5\cdot105=21$，因此 $\gcd(17,43)=1$ 可用同样过程求逆。$43=2\cdot17+9$、$17=9+8$、$9=8+1$，回代得 $1=2\cdot43-5\cdot17$，所以 $17^{-1}\equiv-5\equiv38\pmod{43}$。}{If $sa+tn=1$, then $sa\equiv1\pmod n$, so $s$ is the multiplicative inverse of $a$ modulo $n$. For example, the Euclidean algorithm gives $1=2\cdot43-5\cdot17$, hence $17^{-1}\equiv38\pmod{43}$.}
+\EX{例如，$43=2\cdot17+9$、$17=9+8$、$9=8+1$。回代得 $1=2\cdot43-5\cdot17$，故 $17^{-1}\equiv-5\equiv38\pmod{43}$。逆元例子展示了 Euclid 算法如何从 gcd 计算继续得到实际可用的系数。}{For example, $43=2\cdot17+9$, $17=9+8$, and $9=8+1$. Back-substitution gives $1=2\cdot43-5\cdot17$, so $17^{-1}\equiv-5\equiv38\pmod{43}$. The example shows how the Euclidean algorithm produces an actual inverse after finding the gcd.}
 
 \section{同余与线性同余方程 | Congruences}
 \noindent 模 $n$ 同余 $a\equiv b\pmod n$ 的定义是 $n\mid(a-b)$，也就是 $a,b$ 除以 $n$ 有相同余数。同余与加法、乘法相容，所以可在余数类中计算；但约去因子必须小心。方程
+\FORMULA{线性同余方程的解存在条件与通解}{solvability condition and solutions of a linear congruence}
 \[
 ax\equiv b\pmod n
 \]
+\FORMULA{线性同余方程的可解判据}{solvability criterion for a linear congruence}
 有解当且仅当 $d=\gcd(a,n)$ 整除 $b$；若有解，模 $n$ 恰有 $d$ 个不同解。若 $d=1$，Bézout 等式给出 $a$ 在模 $n$ 下的乘法逆元。
 \EN{The congruence $a\equiv b\pmod n$ means that $a-b$ is divisible by $n$, so the two integers have the same remainder. Addition and multiplication preserve congruence. The linear congruence $ax\equiv b\pmod n$ is solvable exactly when $\gcd(a,n)$ divides $b$; if solvable, it has that many solutions modulo $n$.}
 \READ{“A x is congruent to b modulo n has a solution if and only if the greatest common divisor of a and n divides b.”}
 
 \EX{解 $6x\equiv8\pmod{14}$。因为 $\gcd(6,14)=2$ 整除 $8$，方程有两个模 $14$ 的解。除以 $2$ 得 $3x\equiv4\pmod7$；$3^{-1}\equiv5\pmod7$，所以 $x\equiv20\equiv6\pmod7$，在模 $14$ 下为 $x\equiv6,13$。代回可验证两解。}{For $6x\equiv8\pmod{14}$, the gcd is $2$, which divides $8$, so there are two solutions modulo $14$. Dividing by $2$ gives $3x\equiv4\pmod7$. Since $3^{-1}\equiv5\pmod7$, $x\equiv6\pmod7$, giving $x\equiv6,13\pmod{14}$.}
 
-\noindent \textbf{中国剩余定理。} 若 $m,n$ 互素，则任意指定的余数条件 $x\equiv a\pmod m$、$x\equiv b\pmod n$ 在模 $mn$ 下有唯一解。它把一个较大的周期问题拆成互素的小周期问题。若模数不互素，需先检查余数差是否被模数的 gcd 整除。
+\noindent \textbf{中国剩余定理。} 若 $m,n$ 互素，则任意指定的余数条件 $x\equiv a\pmod m$、$x\equiv b\pmod n$ 在模 $mn$ 下有唯一解。它把一个较大的周期问题拆成互素的小周期问题。若模数不互素，令 $d=\gcd(m,n)$；有解当且仅当 $d\mid(b-a)$，有解时在模 $\operatorname{lcm}(m,n)$ 下唯一。
 \EN{When $m$ and $n$ are coprime, the Chinese remainder theorem gives a unique residue modulo $mn$ satisfying any two prescribed residues modulo $m$ and $n$. If the moduli are not coprime, solvability requires their gcd to divide the difference between the prescribed residues.}
-\EX{解 $x\equiv2\pmod5$、$x\equiv3\pmod7$。数列 $2,7,12,17,\ldots$ 中第一个模 $7$ 余 $3$ 的数是 $17$，所以唯一解为 $x\equiv17\pmod{35}$。这可表达两个周期分别为 $5$ 和 $7$ 的设备在不同相位后何时同时达到指定状态。}{For $x\equiv2\pmod5$ and $x\equiv3\pmod7$, the numbers congruent to two modulo five are $2,7,12,17,\ldots$. The first that is three modulo seven is $17$, so the unique solution is $x\equiv17\pmod{35}$. This describes when two devices with periods five and seven reach specified phases simultaneously.}
+
+\FORMULA{中国剩余定理的构造公式}{constructive form of the Chinese remainder theorem}
+\[
+\begin{aligned}
+M&=mn,& M_1&=n,& M_2&=m,\\
+y_1M_1&\equiv1\pmod m,& y_2M_2&\equiv1\pmod n,\\
+x&\equiv ay_1M_1+by_2M_2\pmod M.
+\end{aligned}
+\]
+\EN{For coprime $m,n$, this construction uses inverses of $n$ modulo $m$ and $m$ modulo $n$. The resulting $x$ satisfies both congruences and is unique modulo $M=mn$.}
+\READ{“M equals m n; x is congruent to a y one M one plus b y two M two modulo M.”}
+\EX{解 $x\equiv2\pmod5$、$x\equiv3\pmod7$。$7^{-1}\equiv3\pmod5$ 且 $5^{-1}\equiv3\pmod7$，所以 $x\equiv2\cdot3\cdot7+3\cdot3\cdot5=87\equiv17\pmod{35}$。}{Since seven has inverse three modulo five and five has inverse three modulo seven, the construction gives $x\equiv2\cdot3\cdot7+3\cdot3\cdot5=87\equiv17\pmod{35}$.}
+\BOTH{若模数不互素，方程组有解当且仅当 $d=\gcd(m,n)$ 整除 $b-a$；有解时在 $\operatorname{lcm}(m,n)$ 模下唯一。例如 $x\equiv2\pmod6,\ x\equiv5\pmod9$ 的解为 $14\pmod{18}$，但把 $5$ 改成 $4$ 就无解。}{For non-coprime moduli, a solution exists exactly when $d=\gcd(m,n)$ divides $b-a$; if it exists, it is unique modulo $\operatorname{lcm}(m,n)$. For example, $x\equiv2\pmod6$, $x\equiv5\pmod9$ gives $x\equiv14\pmod{18}$, while replacing five by four makes the system inconsistent.}
 
 \section{Fermat、Euler 与平方剩余 | Fermat, Euler, and quadratic residues}
-\noindent Euler 函数 $\varphi(n)$ 计数 $1\le k\le n$ 中与 $n$ 互素的整数。若 $\gcd(a,n)=1$，Euler 定理断言 $a^{\varphi(n)}\equiv1\pmod n$；当 $p$ 为素数且 $p\nmid a$，Fermat 小定理给出 $a^{p-1}\equiv1\pmod p$。它们把较大的幂化为较小余数，可用于快速模幂。
+\noindent Euler 函数 $\varphi(n)$ 计数 $1\le k\le n$ 中与 $n$ 互素的整数。\FORMULA{Euler 定理与 Fermat 小定理}{Euler's theorem and Fermat's little theorem} 若 $\gcd(a,n)=1$，则 $a^{\varphi(n)}\equiv1\pmod n$；当 $p$ 为素数且 $p\nmid a$，Fermat 小定理给出 $a^{p-1}\equiv1\pmod p$。它们把较大的幂化为较小余数，可用于快速模幂。
 \EN{Euler's totient $\varphi(n)$ counts the integers from one to $n$ that are coprime to $n$. Euler's theorem says that $a^{\varphi(n)}\equiv1\pmod n$ when $a$ and $n$ are coprime. For prime $p$, Fermat's little theorem is the special case $a^{p-1}\equiv1\pmod p$. These results reduce large powers modulo an integer.}
 \READ{“If a and n are coprime, a to the phi of n is congruent to one modulo n.”}
-\noindent 若 $n=\prod_jp_j^{\alpha_j}$，则 $\varphi(n)=n\prod_{p\mid n}(1-1/p)$。对 $55=5\cdot11$，有 $\varphi(55)=55(1-1/5)(1-1/11)=40$。用快速平方可把指数对 $\varphi(n)$ 约化：例如 $7^{100}\pmod{13}$，Fermat 小定理给 $7^{12}\equiv1$，而 $100\equiv4\pmod{12}$，故结果为 $7^4\equiv9\pmod{13}$。
+\FORMULA{Euler 函数的素因数乘积公式}{product formula for Euler's totient function}
+\[
+\varphi(n)=n\prod_{p\mid n}\left(1-\frac1p\right).
+\]
+\noindent 例如 $\varphi(55)=55(1-1/5)(1-1/11)=40$。对 $7^{100}\pmod{13}$，Fermat 小定理给 $7^{12}\equiv1$，而 $100\equiv4\pmod{12}$，故结果为 $7^4\equiv9\pmod{13}$。
 \EN{If $n$ is factored into prime powers, then $\varphi(n)=n\prod_{p\mid n}(1-1/p)$. For $55=5\cdot11$, this gives $\varphi(55)=40$. To reduce a large exponent, use the relevant theorem: $7^{100}\equiv7^4\equiv9\pmod{13}$ because $7^{12}\equiv1\pmod{13}$.}
 
-\noindent 模奇素数 $p$ 的非零平方余数，是形如 $x^2\pmod p$ 的非零余数。Euler 判别准则为
+\subsection{快速模幂与 RSA | Fast modular powers and RSA}
+\FORMULA{平方乘算法}{square-and-multiply algorithm}
+\BOTH{若指数很大，不构造完整的 $a^k$，而是将 $k$ 写成二进制，用连续平方得到 $a,a^2,a^4,a^8,\ldots$，只乘上二进制位为 $1$ 的幂，并在每一步取模。模乘法与同余相容，所以中间约简不改变结果。用 Euler 或 Fermat 定理约简指数前，必须确认底数与模数互素。}{For a large exponent, write $k$ in binary, generate $a,a^2,a^4,a^8,\ldots$ by repeated squaring, multiply only the powers corresponding to nonzero binary digits, and reduce modulo $n$ at every step. Congruence is compatible with multiplication, so intermediate reduction preserves the answer. Before reducing an exponent by Euler's or Fermat's theorem, check coprimality.}
+\EX{求 $2^{20}\pmod{13}$。因 $2^{12}\equiv1\pmod{13}$，$2^{20}\equiv2^8$。逐次平方得 $2^2\equiv4$、$2^4\equiv3$、$2^8\equiv9\pmod{13}$，所以答案为 $9$。}{Since $2^{12}\equiv1\pmod{13}$, we reduce to $2^8$. Repeated squaring gives $2^2\equiv4$, $2^4\equiv3$, and $2^8\equiv9\pmod{13}$.}
+\subsection{RSA 的模幂原理 | The modular-power principle in RSA}
+\FORMULA{RSA 加密与解密公式}{RSA encryption and decryption equations}
+\[
+n=pq,\quad \varphi(n)=(p-1)(q-1),\quad ed\equiv1\pmod{\varphi(n)},\qquad
+c\equiv m^e\pmod n,\quad m\equiv c^d\pmod n.
+\]
+\BOTH{这里 $p,q$ 是不同素数，$n,e$ 可公开，$d$ 是私钥指数。若 $\gcd(m,n)=1$，Euler 定理直接说明解密恢复 $m$；一般消息还需利用模 $p$ 和模 $q$ 分别证明后再用中国剩余定理合并。}{Here $p,q$ are distinct primes, $n,e$ are public, and $d$ is the private exponent. For $\gcd(m,n)=1$, Euler's theorem directly proves decryption. For arbitrary messages, prove the congruence separately modulo $p$ and $q$, then combine with the Chinese remainder theorem.}
+\READ{“N equals p q; e d is congruent to one modulo phi of n; c is congruent to m to the e modulo n.”}
+\EX{取教学参数 $p=5,q=11$，则 $n=55,\ \varphi(n)=40$。选 $e=3,d=27$，因为 $3\cdot27\equiv1\pmod{40}$。消息 $m=7$ 加密为 $c\equiv7^3\equiv13\pmod{55}$；解密时，模 $5$ 得 $13^{27}\equiv2$，模 $11$ 得 $13^{27}\equiv7$，CRT 合并为 $m\equiv7\pmod{55}$。这些小素数只适合手算演示，完全不安全。}{Take the teaching values $p=5,q=11$, so $n=55$ and $\varphi(n)=40$. Choose $e=3,d=27$, since their product is one modulo forty. The message seven encrypts to thirteen. Decryption gives residue two modulo five and seven modulo eleven, which combine by CRT to seven modulo fifty-five. These tiny primes are only for hand calculation and are insecure.}
+
+\noindent 模奇素数 $p$ 的非零平方余数，是形如 $x^2\pmod p$ 的非零余数。\FORMULA{Euler 平方判别准则}{Euler's criterion for quadratic residues}
 \[
 a^{(p-1)/2}\equiv\begin{cases}1\pmod p,&a\text{ 是平方剩余},\\-1\pmod p,&a\text{ 是非平方剩余},\end{cases}
 \qquad p\nmid a.
 \]
 它把“是否存在 $x^2\equiv a\pmod p$”转化为一次幂运算；更深的二次互反律说明不同素数模数下的平方剩余性如何关联。
 \EN{A nonzero residue is a quadratic residue modulo an odd prime $p$ if it is congruent to a square. Euler's criterion tests this by raising $a$ to the power $(p-1)/2$. Quadratic reciprocity relates the solvability of square congruences for different primes.}
-\noindent Legendre 符號 $\left(\frac ap\right)$ 在 $a$ 非零模 $p$ 時，若 $a$ 是平方剩餘取 $1$，若是非剩餘取 $-1$；若 $p\mid a$ 則取 $0$。對不同奇素數 $p,q$，二次互反律为
+\noindent Legendre 符号 $\left(\frac ap\right)$ 在 $a$ 非零模 $p$ 时，若 $a$ 是平方剩余取 $1$，若是非剩余取 $-1$；若 $p\mid a$ 则取 $0$。对不同奇素数 $p,q$，二次互反律为
+\FORMULA{二次互反律}{quadratic reciprocity law}
 \[
 \left(\frac pq\right)\left(\frac qp\right)=(-1)^{((p-1)/2)((q-1)/2)}.
 \]
 它使两个模素数平方剩余问题可以互相转换；当 $p,q$ 中至少一个模 $4$ 余 $1$ 时，右边为 $1$，否则为 $-1$。
 \READ{“The Legendre symbol of p over q times the Legendre symbol of q over p equals negative one to the power of p minus one over two times q minus one over two.”}
+\EX{判断 $3$ 是否为模 $11$ 的平方。因为 $3,11\equiv3\pmod4$，二次互反律给出 $(3/11)=-(11/3)=-(2/3)=1$；模 $3$ 的非零平方只有 $1$，所以 $(2/3)=-1$。直接核对 $5^2\equiv3\pmod{11}$。}{Since three and eleven are both congruent to three modulo four, quadratic reciprocity gives $(3/11)=-(11/3)=-(2/3)=1$. The only nonzero square modulo three is one, so $(2/3)=-1$. Directly, $5^2\equiv3\pmod{11}$.}
 
 \EX{模 $7$ 的非零平方为 $1^2\equiv1$、$2^2\equiv4$、$3^2\equiv2$，所以平方剩余为 $1,2,4$。检验 $3$：$3^3=27\equiv6\equiv-1\pmod7$，因此 $3$ 不是模 $7$ 的平方。}{The nonzero squares modulo seven are $1,4,2$, so the quadratic residues are $1,2,4$. Since $3^3\equiv-1\pmod7$, Euler's criterion shows that $3$ is not a square modulo seven.}
 
@@ -77,6 +116,8 @@ a^{(p-1)/2}\equiv\begin{cases}1\pmod p,&a\text{ 是平方剩余},\\-1\pmod p,&a\
 \EN{For $\gcd(a,n)=1$, the multiplicative order $\operatorname{ord}_n(a)$ is the smallest positive $r$ with $a^r\equiv1\pmod n$. It divides $\varphi(n)$. A primitive root has order $\varphi(n)$ and its powers enumerate all invertible residues. Not every modulus has one: every odd square is one modulo eight, so no residue has order four.}
 
 \EX{计算模 $7$ 的 $3$ 的幂：$3,2,6,4,5,1$，首次回到 $1$ 在第 $6$ 次，所以 $\operatorname{ord}_7(3)=6=\varphi(7)$，$3$ 是原根。解 $3^x\equiv5\pmod7$ 时，由列表 $3^5\equiv5$ 得 $x\equiv5\pmod6$。}{Modulo seven, successive powers of three are $3,2,6,4,5,1$. The order is six, equal to $\varphi(7)$, so three is a primitive root. Since $3^5\equiv5$, the solutions of $3^x\equiv5\pmod7$ satisfy $x\equiv5\pmod6$.}
+\FORMULA{原根判定准则}{criterion for a primitive root}
+\BOTH{要检验 $g$ 是否为模 $n$ 的原根，先确认 $\gcd(g,n)=1$，再分解 $\varphi(n)$。对每个素因子 $q\mid\varphi(n)$，若 $g^{\varphi(n)/q}\not\equiv1\pmod n$，则 $g$ 的阶为 $\varphi(n)$。模 $7$ 时 $\varphi(7)=6$，只需检查 $q=2,3$：$3^3\equiv6$、$3^2\equiv2$，都不等于 $1$，所以 $3$ 是原根。}{To test whether $g$ is a primitive root, first check $\gcd(g,n)=1$ and factor $\varphi(n)$. For every prime divisor $q$ of $\varphi(n)$, verify $g^{\varphi(n)/q}\not\equiv1\pmod n$. Modulo seven, the tests are $3^3\equiv6$ and $3^2\equiv2$, so three has order six and is a primitive root.}
 
 \noindent 如果 $g$ 是模 $n$ 的原根，且 $a$ 与 $n$ 互素，满足 $g^k\equiv a\pmod n$ 的 $k$ 模 $\varphi(n)$ 的余数称 $a$ 以 $g$ 为底的指标，也称离散对数。指标将乘法转为指数加法：$\operatorname{ind}_g(ab)\equiv\operatorname{ind}_g(a)+\operatorname{ind}_g(b)\pmod{\varphi(n)}$。在小模数下可列幂表；大规模计算离散对数可能困难，这与某些密码系统相关。
 \EN{Given a primitive root $g$, the index or discrete logarithm of an invertible residue $a$ is the exponent $k$ satisfying $g^k\equiv a\pmod n$, considered modulo $\varphi(n)$. Indices turn multiplication into addition of exponents. A small example can be solved by listing powers, while large discrete-log problems can be computationally difficult.}
@@ -89,85 +130,19 @@ a^{(p-1)/2}\equiv\begin{cases}1\pmod p,&a\text{ 是平方剩余},\\-1\pmod p,&a\
 \READ{“A primitive Pythagorean triple can be parameterized by m squared minus n squared, two m n, and m squared plus n squared.”}
 
 \EX{取 $m=2,n=1$，得到 $(x,y,z)=(3,4,5)$，因为 $3^2+4^2=5^2$。若要检验方程 $x^2\equiv3\pmod7$ 是否可解，上一节的平方剩余表立刻排除所有整数解；模运算能先给出必要条件，但一般还需要额外论证才能证明充分性。}{Taking $m=2,n=1$ gives $(3,4,5)$, since $3^2+4^2=5^2$. To test whether $x^2\equiv3\pmod7$ is solvable, the list of quadratic residues rules out every integer solution. Modular arithmetic gives useful necessary conditions, though additional arguments may be needed for sufficiency.}
-
-\section{模运算的应用：RSA 的小型演示 | A modular-arithmetic application}
-\noindent 教学型 RSA 例子取 $p=5,q=11$，于是 $n=pq=55$、$\varphi(n)=40$。取 $e=3$，因 $\gcd(3,40)=1$，其模 $40$ 逆元为 $d=27$，因为 $3\cdot27=81\equiv1\pmod{40}$。对消息 $m=7$，加密得 $c\equiv7^3\equiv13\pmod{55}$；解密计算 $13^{27}\pmod{55}$，得到 $7$。一般性正确性来自 Euler 定理，并需按 $p,q$ 的情形处理非互素消息。这个玩具参数极易被试除分解，不能用于真实安全。
-\EN{For a teaching example of RSA, take $p=5$ and $q=11$, so $n=55$ and $\varphi(n)=40$. Choose $e=3$ and its inverse $d=27$ modulo $40$. For message $m=7$, encryption gives $c\equiv7^3\equiv13\pmod{55}$, and decryption computes $13^{27}\pmod{55}=7$. Correctness follows from Euler's theorem with separate handling when the message is not coprime to $n$. These tiny parameters are insecure and are only for illustration.}
-\noindent 逐步解密可用中国剩余定理核对：模 $5$，$13^{27}\equiv3^{27}\equiv3^3\equiv2$；模 $11$，$13^{27}\equiv2^{27}\equiv2^7\equiv7$。同时满足 $x\equiv2\pmod5$、$x\equiv7\pmod{11}$ 的唯一模 $55$ 余数是 $x=7$。因此解密恢复原消息。这里 $p,q$ 是私密素数，$n,e$ 可公开，$d$ 是由 $e$ 的模 $\varphi(n)$ 逆元得到的私钥指数。
-\EN{To verify decryption, reduce modulo each prime. Modulo five, $13^{27}\equiv3^{27}\equiv2$; modulo eleven, $13^{27}\equiv2^{27}\equiv7$. The unique residue modulo $55$ satisfying both congruences is seven, the original message. The primes $p,q$ are secret, $n,e$ may be public, and $d$ is the inverse exponent modulo $\varphi(n)$.}
-
-\ASK{解线性同余时为什么不能随意约掉公因子？}{Why can we not cancel a common factor freely in a congruence?}{模运算中的约分会改变模数。如果 $d=\gcd(a,n)$，方程 $ax\equiv b\pmod n$ 只有在 $d\mid b$ 时才有解；有解时约去 $d$ 并把模数从 $n$ 改为 $n/d$，且原模数下有 $d$ 个解。}{Cancellation changes the modulus. If $d=\gcd(a,n)$, the congruence has a solution only when $d$ divides $b$. After cancellation the modulus becomes $n/d$, and there are $d$ solutions modulo the original $n$.}
-\ASK{中国剩余定理在实际计算中做什么？}{What does the Chinese remainder theorem do in computation?}{它把互素模数下的多个余数约束合并成一个模乘积的唯一余数。这样可以分块计算大整数模幂或表示多个周期条件，再将各部分合并。}{It combines residue constraints modulo coprime moduli into one residue modulo their product. This can split large modular exponentiation into smaller computations or combine several periodic conditions.}
-\ASK{Fermat 小定理与 Euler 定理有什么区别？}{How do Fermat's little theorem and Euler's theorem differ?}{Fermat 小定理是 Euler 定理在模数为素数时的特例。Euler 定理要求底数与模数互素，并使用 $\varphi(n)$；素数模数 $p$ 下 $\varphi(p)=p-1$。}{Fermat's little theorem is the prime-modulus case of Euler's theorem. Euler's theorem requires the base to be coprime to the modulus and uses $\varphi(n)$; for a prime $p$, $\varphi(p)=p-1$.}
-
-\section{把中国剩余定理变成算法 | Constructing a Chinese remainder solution}
-\noindent 中国剩余定理不仅保证解存在，也能直接构造解。设两模数 $m,n$ 互素，令 $M=mn$、$M_1=n$、$M_2=m$。用扩展 Euclid 算法求 $y_1M_1\equiv1\pmod m$、$y_2M_2\equiv1\pmod n$，则
+\BOTH{模数筛选给出另一个类型的例子：若 $x^2+y^2=3$，模 $4$ 的平方只能为 $0$ 或 $1$，故两个平方之和只能余 $0,1,2$，不可能余 $3$。所以原方程没有整数解。}{For another modular filter, suppose $x^2+y^2=3$. A square modulo four is zero or one, so a sum of two squares can only be congruent to zero, one, or two, never three. Thus the equation has no integer solutions.}
+\subsection{Pell 方程与递推解 | Pell's equation and a recurrence}
+\FORMULA{Pell 方程及其解递推}{Pell equation and recurrence for its solutions}
 \[
-x=a y_1M_1+b y_2M_2\pmod M
+x^2-2y^2=1,\qquad x_{k+1}=3x_k+4y_k,\quad y_{k+1}=2x_k+3y_k.
 \]
-同时满足 $x\equiv a\pmod m$ 与 $x\equiv b\pmod n$。$M$ 是总周期，$M_1,M_2$ 分别在一个模数下为零、在另一个模数下可逆。
-\EN{The Chinese remainder theorem also gives a construction. For coprime moduli $m,n$, set $M=mn$, $M_1=n$, and $M_2=m$. Find inverses $y_1M_1\equiv1\pmod m$ and $y_2M_2\equiv1\pmod n$. Then the displayed value of $x$ satisfies both congruences modulo $M$.}
-\READ{“X is congruent to a y one M one plus b y two M two modulo M.”}
-\EX{求 $x\equiv2\pmod5$、$x\equiv3\pmod7$。取 $M=35$；$M_1=7$ 在模 $5$ 下的逆元为 $3$，$M_2=5$ 在模 $7$ 下的逆元为 $3$。因此 $x\equiv2\cdot3\cdot7+3\cdot3\cdot5=87\equiv17\pmod{35}$。}{For the system modulo five and seven, take $M=35$. The inverse of seven modulo five and the inverse of five modulo seven are both three. Thus $x\equiv2\cdot3\cdot7+3\cdot3\cdot5=87\equiv17\pmod{35}$.}
-
-\section{快速模幂：把大指数拆开 | Fast modular exponentiation}
-\noindent 当指数很大时，不先算完整整数幂，而是每一步平方并取余。恒等式 $(a^r)^2=a^{2r}$ 允许把指数按二进制展开；每次乘法后取模不会改变最终余数，因为同余与乘法相容。使用 Fermat 定理前，必须先确认底数与素数模数互素。
-\EN{For a large exponent, repeatedly square and reduce modulo $n$ instead of constructing the full integer power. Binary expansion of the exponent tells us which powers to multiply. Each reduction preserves the final residue. Fermat's theorem requires the base to be coprime to the prime modulus.}
-\READ{“Two to the twentieth power is congruent to nine modulo thirteen.”}
-\EX{求 $2^{20}\pmod{13}$。因为 $2^{12}\equiv1\pmod{13}$，所以 $2^{20}\equiv2^8$。逐次平方：$2^2\equiv4$、$2^4\equiv16\equiv3$、$2^8\equiv3^2\equiv9\pmod{13}$。只进行少量小数运算，就得到结果 $9$。}{Since two is coprime to thirteen, Fermat's theorem gives $2^{12}\equiv1$. Hence $2^{20}\equiv2^8$. Repeated squaring gives $2^2\equiv4$, $2^4\equiv3$, and $2^8\equiv9\pmod{13}$.}
-\noindent 若 $\gcd(a,n)\ne1$，不能机械地将指数对 $\varphi(n)$ 取余；此时应分解模数并直接分析各素数幂下的余数。
-\EN{If $a$ is not coprime to $n$, do not mechanically reduce the exponent modulo $\varphi(n)$. Factor the modulus and analyze the residue modulo each prime power.}
-
-\section{平方剩余与二次互反律的手算 | A worked reciprocity example}
-\noindent 二次互反律把模 $p$ 的平方问题换成模 $q$ 的问题，符号是否变号取决于两个素数模 $4$ 的余数。判断 $3$ 是否为模 $11$ 的平方：$3,11$ 都是奇素数，且都模 $4$ 余 $3$，所以互反律带负号：
-\[
-\left(\frac{3}{11}\right)=-\left(\frac{11}{3}\right)=-\left(\frac{2}{3}\right)=1.
-\]
-模 $3$ 的非零平方只有 $1$，故 $2$ 是非平方剩余，$\left(\frac23\right)=-1$。因此 $3$ 是模 $11$ 的平方剩余；直接验证 $5^2=25\equiv3\pmod{11}$。
-\EN{Quadratic reciprocity transfers a square-residue question from one prime modulus to another. Since both three and eleven are congruent to three modulo four, the reciprocity sign is negative. Modulo three, two is a nonresidue, so $(2/3)=-1$ and therefore $(3/11)=1$. Directly, $5^2\equiv3\pmod{11}$ confirms the result.}
-\READ{“The Legendre symbol of three over eleven equals negative the Legendre symbol of eleven over three.”}
-\noindent 手算顺序是：确定互反律的符号，把分子对新模数取余，再判断较小模数下的平方。Legendre 符号对分子有乘法性，但它不是普通分数，不能随意约分。
-\EN{The hand calculation proceeds by determining the reciprocity sign, reducing the numerator modulo the new prime, and solving the smaller square-residue question. The Legendre symbol is multiplicative in its numerator, but it is not an ordinary fraction that can be cancelled freely.}
-
-\section{原根判定与离散对数 | Testing primitive roots}
-\noindent 若 $g$ 与 $n$ 互素，$g$ 是模 $n$ 的原根当且仅当其阶为 $\varphi(n)$。实际检验时，分解 $\varphi(n)$ 的素因子：对每个素因子 $q\mid\varphi(n)$，检查 $g^{\varphi(n)/q}\not\equiv1\pmod n$。若这些检查全通过，$g$ 的阶就不可能是 $\varphi(n)$ 的真因子。
-\EN{An invertible residue $g$ is a primitive root modulo $n$ exactly when its order is $\varphi(n)$. To test this, factor $\varphi(n)$ and verify $g^{\varphi(n)/q}\not\equiv1\pmod n$ for every prime divisor $q$ of $\varphi(n)$. If these tests pass, the order cannot be a proper divisor.}
-\READ{“G to the phi of n over q is not congruent to one modulo n for every prime q dividing phi of n.”}
-\EX{检验 $3$ 是否为模 $7$ 的原根。$\varphi(7)=6$ 的素因子为 $2,3$。计算 $3^{6/2}=3^3\equiv6\not\equiv1\pmod7$，$3^{6/3}=3^2\equiv2\not\equiv1\pmod7$，故 $3$ 的阶是 $6$，确为原根。又因 $3^5\equiv5\pmod7$，方程 $3^x\equiv5\pmod7$ 的解为 $x\equiv5\pmod6$。}{For modulo seven, $\varphi(7)=6$ has prime divisors two and three. We have $3^3\equiv6\ne1$ and $3^2\equiv2\ne1$, so three has order six and is a primitive root. Since $3^5\equiv5$, the solutions of $3^x\equiv5\pmod7$ satisfy $x\equiv5\pmod6$.}
-
-\section{用同余排除整数解 | Congruences as a Diophantine filter}
-\noindent 若整数方程有整数解，把等式对任意模数取余，所得同余方程必须有解。因此同余可以排除候选解；反过来，几个模数下都有解一般不保证原方程有整数解。
-\EN{If an integer equation has an integer solution, reducing it modulo any positive integer gives a solvable congruence. Congruences can therefore rule out candidates. Solvability modulo several moduli does not by itself guarantee an integer solution.}
-\EX{证明 $x^2+y^2=3$ 没有整数解。平方模 $4$ 只可能是 $0$ 或 $1$，所以两个平方和模 $4$ 只能是 $0,1,2$，不可能等于 $3$。这是完全的排除证明，不需要估计 $x,y$ 的大小。}{Squares modulo four are zero or one, so a sum of two squares can only be zero, one, or two modulo four. It cannot be congruent to three. Thus $x^2+y^2=3$ has no integer solution.}
-\noindent 本原勾股数组的参数式为 $x=m^2-n^2$、$y=2mn$、$z=m^2+n^2$。其平方关系来自 $(m^2+n^2)^2-(m^2-n^2)^2=(2mn)^2$；$m>n>0$、互素且奇偶相反时得到本原数组。
-\EN{A primitive Pythagorean triple can be parameterized by $x=m^2-n^2$, $y=2mn$, and $z=m^2+n^2$. The identity shown proves the equation; coprime parameters of opposite parity produce a primitive triple.}
-\READ{“M squared plus n squared, squared, minus m squared minus n squared, squared, equals two m n, squared.”}
-\EX{取 $m=3,n=2$，得到 $(x,y,z)=(5,12,13)$。直接验算 $5^2+12^2=25+144=169=13^2$，并且三个数的最大公因数为 $1$。}{Taking $m=3$ and $n=2$ gives $(5,12,13)$. Indeed, $25+144=169$, and the three entries have gcd one.}
+\BOTH{从基本解 $(x_1,y_1)=(3,2)$ 出发，乘以 $3+2\sqrt2$ 会产生下一个解，因为范数 $(x+y\sqrt2)(x-y\sqrt2)=x^2-2y^2$ 在乘法下保持。上述递推因此不断生成新的整数解。}{Starting with $(x_1,y_1)=(3,2)$, multiplication by $3+2\sqrt2$ produces the next solution because the norm $(x+y\sqrt2)(x-y\sqrt2)=x^2-2y^2$ is multiplicative. The recurrence therefore generates further integer solutions.}
+\EX{由 $(3+2\sqrt2)^2=17+12\sqrt2$ 得 $(17,12)$，并有 $17^2-2\cdot12^2=289-288=1$。再迭代得到 $(577,408)$。这展示特定 Pell 方程有无限解，不意味着所有二次方程都如此。}{Squaring $3+2\sqrt2$ gives $17+12\sqrt2$, hence $17^2-2\cdot12^2=1$. A further iteration gives $(577,408)$. This proves infinitely many solutions for this Pell equation, not for every quadratic equation.}
 
 \section{数论口试的短回答 | Short oral answers}
 \ASK{如何判断线性同余方程有没有解？}{How do you decide whether a linear congruence is solvable?}{对 $ax\equiv b\pmod n$ 先计算 $d=\gcd(a,n)$。若 $d$ 不整除 $b$，无解；若整除，约去 $d$ 后在模 $n/d$ 下求逆元，并得到原模数下 $d$ 个解。}{For $ax\equiv b\pmod n$, compute $d=\gcd(a,n)$. There is no solution if $d$ does not divide $b$. Otherwise divide by $d$, find an inverse modulo $n/d$, and recover the $d$ solutions modulo $n$.}
 \ASK{中国剩余定理为什么需要互素条件？}{Why does the standard Chinese remainder theorem require coprime moduli?}{互素时两个余数条件能在模乘积下唯一拼合。若不互素，条件可能冲突；例如 $x\equiv0\pmod4$ 与 $x\equiv1\pmod6$ 无解，因为余数差 $1$ 不被 $\gcd(4,6)=2$ 整除。}{Coprime moduli give a unique combined residue modulo their product. With non-coprime moduli, conditions may conflict. The two congruences shown are incompatible because their residue difference is not divisible by the gcd two.}
 \ASK{小 RSA 例子说明了什么，又没有说明什么？}{What does the small RSA example demonstrate, and what does it not demonstrate?}{它说明 Euclid 算法求私钥指数、Euler 定理和中国剩余定理如何协同恢复消息；由于素数太小，任何人都能迅速分解模数，所以它不说明真实 RSA 的安全性。}{It shows how the Euclidean algorithm, Euler's theorem, and the Chinese remainder theorem work together to recover a message. The tiny primes make the modulus trivial to factor, so the example says nothing about real-world security.}
-\section{Euclid 算法如何构造逆元 | Constructing a modular inverse}
-\noindent 若 $\gcd(a,n)=1$，Bezout 定理保证存在整数 $u,v$ 使 $ua+vn=1$。对模 $n$ 取余得到 $ua\equiv1\pmod n$，因此 $u$ 就是 $a$ 的乘法逆元。Euclid 算法先求最大公因数，回代再给出 $u,v$；互素条件既是逆元存在的充分必要条件，也是回代能够得到 $1$ 的原因。
-\EN{If $\gcd(a,n)=1$, Bezout's identity gives integers $u,v$ such that $ua+vn=1$. Reducing modulo $n$ yields $ua\equiv1\pmod n$, so $u$ is the inverse of $a$. The Euclidean algorithm finds the gcd, and back-substitution finds the coefficients. Coprimality is exactly the condition for an inverse to exist.}
-\EX{求 $37$ 在模 $101$ 下的逆元，并解 $37x\equiv5\pmod{101}$。Euclid 算法给出
-\[
-101=2\cdot37+27,\quad37=27+10,\quad27=2\cdot10+7,\quad10=7+3,\quad7=2\cdot3+1.
-\]
-回代得 $1=11\cdot101-30\cdot37$，所以 $37^{-1}\equiv-30\equiv71\pmod{101}$。方程的解为 $x\equiv71\cdot5=355\equiv52\pmod{101}$；代回可验 $37\cdot52=1924=19\cdot101+5$。}{To invert $37$ modulo $101$, the Euclidean algorithm ends in gcd one. Back-substitution gives $1=11\cdot101-30\cdot37$, so the inverse is $-30\equiv71$. Therefore $37x\equiv5$ has solution $x\equiv71\cdot5\equiv52\pmod{101}$. Substitution verifies the result.}
-\READ{“A times u plus n times v equals one; therefore u is the inverse of a modulo n.”}
-
-\section{模数不互素时的中国剩余定理 | Chinese remainders with non-coprime moduli}
-\noindent 对方程组 $x\equiv a\pmod m$、$x\equiv b\pmod n$，令 $d=\gcd(m,n)$。有解当且仅当 $d\mid(b-a)$；若有解，解在模 $\operatorname{lcm}(m,n)$ 下唯一。互素是常见版本的简化条件，不是一般问题唯一可行的情形。
-\EN{For $x\equiv a\pmod m$ and $x\equiv b\pmod n$, let $d=\gcd(m,n)$. A solution exists exactly when $d$ divides $b-a$. When it exists, it is unique modulo $\operatorname{lcm}(m,n)$. Coprime moduli are a convenient special case, not the only solvable case.}
-\EX{解 $x\equiv2\pmod6$、$x\equiv5\pmod9$。写 $x=2+6k$，代入第二式得 $6k\equiv3\pmod9$，约去公因数 $3$ 得 $2k\equiv1\pmod3$，所以 $k\equiv2\pmod3$，即 $x\equiv14\pmod{18}$。检查 $14$ 对 $6$ 余 $2$、对 $9$ 余 $5$。若把第二个余数改为 $4$，则余数差为 $2$，不被 $d=3$ 整除，因而无解。}{Write $x=2+6k$. The second congruence becomes $6k\equiv3\pmod9$, hence $2k\equiv1\pmod3$ and $k\equiv2\pmod3$. Thus $x\equiv14\pmod{18}$, which satisfies both conditions. Replacing the second residue by four gives no solution because the residue difference is not divisible by the gcd three.}
-\ASK{为什么解只在最小公倍数模下唯一？}{Why is the solution unique modulo the least common multiple?}{若 $x_1,x_2$ 都满足同一组同余，则它们的差同时被 $m,n$ 整除，因而被 $\operatorname{lcm}(m,n)$ 整除；所以两个解代表同一个最小公倍数模下的剩余类。}{The difference of two solutions is divisible by both moduli, hence by their least common multiple. Therefore the solutions represent the same residue class modulo that least common multiple.}
-
-\section{Pell 方程：从递推得到无限多个整数解 | Pell's equation and a recurrence}
-\noindent 方程 $x^2-2y^2=1$ 是一个典型的二次 Diophantine 方程。恒等式 $(x+y\sqrt2)(u+v\sqrt2)=(xu+2yv)+(xv+yu)\sqrt2$ 表明若 $(x,y)$ 与 $(u,v)$ 都满足该方程，则乘积对应的新整数对仍满足方程，因为范数 $(x+y\sqrt2)(x-y\sqrt2)=x^2-2y^2$ 可乘。
-\EN{The equation $x^2-2y^2=1$ is a basic quadratic Diophantine equation. Multiplication of expressions $x+y\sqrt2$ corresponds to an integer recurrence, and the norm $(x+y\sqrt2)(x-y\sqrt2)=x^2-2y^2$ is multiplicative. Thus multiplying two norm-one solutions produces another one.}
-\EX{从 $3+2\sqrt2$ 开始取幂：$(3+2\sqrt2)^2=17+12\sqrt2$，得到解 $(17,12)$；再平方得 $(577,408)$。递推式为 $x_{k+1}=3x_k+4y_k$、$y_{k+1}=2x_k+3y_k$，起始值 $(x_1,y_1)=(3,2)$。例如 $17^2-2\cdot12^2=289-288=1$。这给出无限多个解；它不表示任意二次整数方程都有相同形式的解族。}{Starting from $3+2\sqrt2$, squaring gives $17+12\sqrt2$, so $(17,12)$ is a solution; another squaring gives $(577,408)$. The recurrence is $x_{k+1}=3x_k+4y_k$ and $y_{k+1}=2x_k+3y_k$. For example, $17^2-2\cdot12^2=1$. This constructs infinitely many solutions to this equation, not to every quadratic equation.}
 \section*{来源与范围 | Source and scope}
 本稿按你指定的第 1、3--6 章范围，参考闵嗣鹤、严士健《初等数论》第四版，并将整除、同余、剩余类、原根和整数方程组织成可口述的定义—例子—方法链条。密码学例子只用于展示模运算，不替代现代密码学的安全性分析。
 \EN{This review follows the requested scope of Chapters 1 and 3--6 of Min Sihe and Yan Shijian's fourth edition of \emph{Elementary Number Theory}. It organizes divisibility, congruences, residue classes, primitive roots, and Diophantine equations as definitions, examples, and methods. The cryptography example illustrates modular arithmetic, not a security analysis.}
