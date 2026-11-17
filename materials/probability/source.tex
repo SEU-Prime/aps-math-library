@@ -346,9 +346,9 @@ $\mu$ 是均值和对称中心，$\sigma>0$ 是标准差，$\sigma^2$ 是方差�
 \rho_{XY}&=\frac{\operatorname{Cov}(X,Y)}{\sigma_X\sigma_Y}.
 \end{aligned}
 \]
-若变量独立且期望存在，$E(XY)=E(X)E(Y)$，故协方差为零；反向一般不成立。
+上述方差恒等式按有限二阶矩使用；协方差和相关系数在此假设 $E(X^2),E(Y^2)<\infty$，相关系数还要求 $\sigma_X,\sigma_Y>0$。若 $X,Y$ 独立且 $E|X|,E|Y|<\infty$，则 $E(XY)=E(X)E(Y)$，故协方差为零；反向一般不成立。例如 $X\sim U(-1,1)$、$Y=X^2$ 时，$E(X)=E(X^3)=0$，所以协方差为零，但 $Y$ 完全由 $X$ 决定，两者不独立。
 \READ{“The variance of X equals the expected value of X squared minus the square of the expected value of X.” “The covariance of X and Y equals the expected value of the product of their centered values.”}
-\EN{Expectation is the probability-weighted average, or the integral of the value against its density. The variance is $E(X^2)-(EX)^2$. Covariance measures joint linear variation, and correlation is normalized covariance. Independence implies zero covariance when moments exist, but zero covariance does not generally imply independence.}
+\EN{Expectation is a probability-weighted average. Here the variance identity, covariance, and correlation are used with finite second moments; correlation additionally requires positive standard deviations. Independence with finite absolute first moments gives $E(XY)=E(X)E(Y)$ and zero covariance, but the converse fails. For example, if $X$ is uniform on $(-1,1)$ and $Y=X^2$, symmetry gives $E(X)=E(X^3)=0$, hence zero covariance, although $Y$ is determined by $X$ and they are not independent.}
 
 \EX{若 $X$ 取值 $0,1$，成功概率为 $p$，则 $EX=p$，$E(X^2)=p$，从而 $\operatorname{Var}(X)=p-p^2=p(1-p)$。}{For a Bernoulli variable with success probability $p$, $EX=p$ and $E(X^2)=p$, so $\operatorname{Var}(X)=p-p^2=p(1-p)$.}
 
@@ -370,7 +370,10 @@ $\mu$ 是均值和对称中心，$\sigma>0$ 是标准差，$\sigma^2$ 是方差�
 \section{收敛、大数定律与中心极限定理 | Convergence and limit theorems}
 \noindent\textbf{收敛方式。} 依概率收敛要求对每个 $\varepsilon>0$，$P(|X_n-X|>\varepsilon)\to0$；几乎必然收敛要求 $P(X_n\to X)=1$；$L^r$ 收敛要求 $E|X_n-X|^r\to0$；依分布收敛要求分布函数在极限分布函数的连续点收敛。常见蕴含为几乎必然收敛推出依概率收敛，$L^r$ 收敛推出依概率收敛；反向通常不成立。
 
-\EN{Convergence in probability means $P(|X_n-X|>\varepsilon)\to0$ for every $\varepsilon>0$. Almost-sure convergence means $P(X_n\to X)=1$. Convergence in $L^r$ means $E|X_n-X|^r\to0$. Convergence in distribution is convergence of distribution functions at continuity points of the limit distribution. Almost-sure and $L^r$ convergence each imply convergence in probability under the usual conditions; the converses generally fail.}
+\EN{Convergence in probability means $P(|X_n-X|>\varepsilon)\to0$ for every $\varepsilon>0$. Almost-sure convergence means $P(X_n\to X)=1$. For $r\ge1$ and $X_n,X\in L^r$, convergence in $L^r$ means $E|X_n-X|^r\to0$. Convergence in distribution is convergence of distribution functions at continuity points of the limit distribution. Almost-sure and $L^r$ convergence each imply convergence in probability, which implies convergence in distribution. The converses generally fail.}
+
+\noindent 这里 $L^r$ 取 $r\ge1$ 且 $X_n,X\in L^r$。依概率收敛还蕴含依分布收敛；但依分布只比较各变量的分布，不保证它们在同一样本上的取值接近。例如对称的 $X\in\{-1,1\}$，令 $X_n=-X$，则每个 $X_n$ 与 $X$ 同分布，故 $X_n\xrightarrow{d}X$，但 $P(|X_n-X|>1)=1$。若极限是常数 $c$，则依分布收敛到 $c$ 等价于依概率收敛到 $c$。
+\EN{Convergence in distribution compares marginal laws, not closeness of values on the same outcome. For a symmetric variable $X$ taking values $-1$ and $1$, let $X_n=-X$. Each $X_n$ has the same law as $X$, so $X_n$ converges in distribution to $X$, but $P(|X_n-X|>1)=1$. When the limit is a constant $c$, convergence in distribution to $c$ is equivalent to convergence in probability to $c$.}
 
 \noindent\textbf{大数定律。} 若 $X_i$ 独立同分布且 $E|X_1|<\infty$，强大数定律给出
 \FORMULA{强大数定律的样本均值结论}{sample-mean conclusion of the strong law of large numbers}
@@ -387,7 +390,7 @@ $\mu$ 是均值和对称中心，$\sigma>0$ 是标准差，$\sigma^2$ 是方差�
 
 \EX{若每日需求 $X_i$ 独立同分布且均值为 $\mu$、方差为 $\sigma^2$，则样本平均需求约为 $N(\mu,\sigma^2/n)$，可用正态近似估算平均需求落入给定区间的概率。}{If daily demands $X_i$ are iid with mean $\mu$ and variance $\sigma^2$, the sample mean is approximately normal with mean $\mu$ and variance $\sigma^2/n$. This approximates the probability that average demand lies in a given interval.}
 
-\ASK{大数定律与中心极限定理有什么不同？}{How do the law of large numbers and the central limit theorem differ?}{大数定律说明样本平均趋近总体均值；中心极限定理描述其误差经 $\sqrt n$ 缩放后近似服从标准正态分布。}{The law of large numbers says the sample average approaches the population mean. The central limit theorem describes the distribution of the centered error after scaling by $\sqrt n$.}
+\ASK{大数定律与中心极限定理有什么不同？}{How do the law of large numbers and the central limit theorem differ?}{大数定律说明样本平均趋近总体均值；在独立同分布且有限正方差条件下，中心极限定理给出 $\sqrt n(\bar X_n-\mu)/\sigma\xrightarrow{d}N(0,1)$。若只乘 $\sqrt n$ 而不除以 $\sigma$，极限为 $N(0,\sigma^2)$，一般不是标准正态。}{The law of large numbers says the sample average approaches the population mean. For iid observations with finite positive variance, the central limit theorem gives $\sqrt n(\bar X_n-\mu)/\sigma\xrightarrow{d}N(0,1)$. Without dividing by $\sigma$, the scaled error converges to $N(0,\sigma^2)$, generally not the standard normal.}
 
 \ASK{中心极限定理有哪些常见条件和用途？}{What are common conditions and uses of the central limit theorem?}{常见版本要求独立同分布、有限正方差。它使大量独立小影响之和可以用正态分布近似，从而进行概率计算和统计推断。}{A common version assumes iid variables with finite positive variance. It allows sums of many independent small effects to be approximated by a normal distribution, supporting probability calculations and statistical inference.}
 
