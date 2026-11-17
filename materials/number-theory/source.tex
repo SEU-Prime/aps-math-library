@@ -11,15 +11,15 @@
 \title{初等数论 APS 面试准备\\[4pt]\large 第 1、3--6 章范围：整除、同余与整数方程}
 \author{Elementary Number Theory: Bilingual Review}
 \date{}
+\newcommand{\APS}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par\smallskip}
 \begin{document}\maketitle
 \section*{课程概述 | Course overview}
-\noindent\textbf{课程主线 / Course roadmap.} 我按整除与最大公因数、Euclid 算法、同余与线性同余方程、中国剩余定理、Fermat 小定理与 Euler 定理、平方剩余/阶/原根，最后到整数方程和 Pell 方程的顺序复习。先判断 $ax\equiv b\pmod n$ 是否有解：充要条件是 $\gcd(a,n)\mid b$；若互素，Bézout 等式构造逆元；若模数互素，中国剩余定理把局部同余合成一个解。比如 $3x\equiv1\pmod7$ 的解为 $x\equiv5$，RSA 只作为快速模幂的应用说明。
-\EN{Within the stated scope, I review divisibility, greatest common divisors and the Euclidean algorithm, congruences and linear congruences, the Chinese remainder theorem, Fermat's little theorem and Euler's theorem, quadratic residues, orders, primitive roots and indices, and finally Diophantine and Pell equations. A central calculation is to determine whether an inverse exists: $ax\equiv b\pmod n$ is solvable exactly when $\gcd(a,n)$ divides $b$. When the relevant numbers are coprime, the Euclidean algorithm constructs an inverse, and the Chinese remainder theorem combines congruences with coprime moduli. RSA illustrates fast modular exponentiation, although small examples explain only the principle and are not secure.}
-\noindent \textbf{中文口述稿。} 我在数论课研究整数的整除与余数。比如要解 $3x\equiv1\pmod7$，我寻找一个与 $3$ 相乘余 $1$ 的整数；因为 $3\cdot5=15\equiv1\pmod7$，所以 $x\equiv5\pmod7$。这里 $5$ 是 $3$ 模 $7$ 的乘法逆元。更一般地，我可以用 Euclid 算法检查最大公因数并构造逆元，再用中国剩余定理合并不同模数下的条件。这些方法也出现在密码学的模运算中。
-\EN{In number theory, I studied divisibility and remainders of integers. To solve $3x\equiv1\pmod7$, I look for a number whose product with three leaves remainder one. Since $3\cdot5=15\equiv1\pmod7$, the solution is $x\equiv5\pmod7$; five is the inverse of three modulo seven. More generally, I can use the Euclidean algorithm to find a greatest common divisor and construct an inverse, then use the Chinese remainder theorem to combine congruences. These modular calculations also appear in cryptography.}
+\APS{数论先学习整除、素数分解、最大公因数、Euclid 算法与 Bézout 等式，再进入同余、模逆元、线性同余方程与中国剩余定理。之后是 Fermat/Euler 定理、Euler 函数、平方剩余与 Legendre 符号、二次互反律，以及乘法阶、原根和指标，最后讨论整数方程与 Pell 方程。RSA 是模幂、互素和逆元的应用例子；解释时要先说明定理要求，不能把任意模数都当成域。}{Number theory starts with divisibility, prime factorization, greatest common divisors, Euclid\textquotesingle s algorithm and Bézout\textquotesingle s identity. Congruences, modular inverses, linear congruences and the Chinese remainder theorem follow. Later topics are Fermat and Euler theorems, the totient, quadratic residues, Legendre symbols and quadratic reciprocity, multiplicative orders, primitive roots and indices, and integer and Pell equations. RSA illustrates modular powers and inverses. Conditions such as coprimality must be stated; arithmetic modulo a general integer is not a field.}
+\subsection*{例一：Euclid 算法算出逆元 | Euclid produces an inverse}
+\APS{求 $7$ 模 $26$ 的逆元。辗转相除为 $26=3\cdot7+5$、$7=5+2$、$5=2\cdot2+1$。回代得 $1=3\cdot26-11\cdot7$，故 $7^{-1}\equiv-11\equiv15\pmod{26}$，验证 $7\cdot15=105\equiv1$。因此 $7x\equiv3\pmod{26}$ 的唯一剩余类解为 $x\equiv45\equiv19$。逆元存在的原因是最大公因数为 $1$，不是因为模数为素数。}{To invert seven modulo 26, compute $26=3\cdot7+5$, $7=5+2$, and $5=2\cdot2+1$. Back substitution gives $1=3\cdot26-11\cdot7$, so $7^{-1}\equiv15\pmod{26}$. Indeed $7\cdot15=105\equiv1$. Therefore $7x\equiv3\pmod{26}$ has the unique residue-class solution $x\equiv45\equiv19$. The inverse exists because the gcd is one; the modulus need not be prime.}
+\subsection*{例二：中国剩余定理的构造 | Constructing a CRT solution}
+\APS{解 $x\equiv2\pmod3$、$x\equiv3\pmod5$。设 $M=15,M_1=5,M_2=3$，它们分别在模 $3$、模 $5$ 下的逆元为 $2$、$2$，因此 $x\equiv2\cdot5\cdot2+3\cdot3\cdot2=38\equiv8\pmod{15}$。检查 $8$ 除以 $3$ 余 $2$，除以 $5$ 余 $3$。模数互素使逆元存在，并保证模乘积的唯一性；非互素情形必须另外检查余数相容。}{To solve $x\equiv2\pmod3$ and $x\equiv3\pmod5$, take $M=15$, $M_1=5$, $M_2=3$. Their inverses modulo three and five are both two. Hence $x\equiv2\cdot5\cdot2+3\cdot3\cdot2=38\equiv8\pmod{15}$. Checking the remainders verifies the result. Coprime moduli ensure the required inverses and uniqueness modulo the product. Noncoprime moduli require a separate compatibility check.}
 
-\noindent \textbf{可解释的实际联系。} 模运算描述“只关心余数”的计算，能解释时钟、循环计数、校验码和公钥密码中的整数运算。以 RSA 为例，公钥加密使用 $c\equiv m^e\pmod n$，私钥解密利用模指数运算恢复消息；真正系统使用数百至数千位的大素数，本讲义中的小数字只用于展示原理，不能用于安全通信。
-\EN{Modular arithmetic describes calculations where only remainders matter, as in clocks, cyclic counters, check digits, and public-key cryptography. RSA encryption uses $c\equiv m^e\pmod n$ and modular exponentiation to recover the message with a private key. Real systems use primes hundreds or thousands of bits long; the small numbers here only illustrate the mathematics and are not secure.}
 
 \section{整除、最大公因数与 Euclid 算法 | Divisibility and gcd}
 \noindent 对整数 $a,b$，若存在整数 $k$ 使 $b=ak$，记 $a\mid b$。最大公因数 $\gcd(a,b)$ 是同时整除 $a,b$ 的最大正整数。带余除法写作 $a=bq+r$，其中 $0\le r<|b|$；反复应用它得到 Euclid 算法。回代可得 Bézout 等式
@@ -93,6 +93,8 @@ c\equiv m^e\pmod n,\quad m\equiv c^d\pmod n.
 \READ{“N equals p q; e d is congruent to one modulo phi of n; c is congruent to m to the e modulo n.”}
 \EX{取教学参数 $p=5,q=11$，则 $n=55,\ \varphi(n)=40$。选 $e=3,d=27$，因为 $3\cdot27\equiv1\pmod{40}$。消息 $m=7$ 加密为 $c\equiv7^3\equiv13\pmod{55}$；解密时，模 $5$ 得 $13^{27}\equiv2$，模 $11$ 得 $13^{27}\equiv7$，CRT 合并为 $m\equiv7\pmod{55}$。这些小素数只适合手算演示，完全不安全。}{Take the teaching values $p=5,q=11$, so $n=55$ and $\varphi(n)=40$. Choose $e=3,d=27$, since their product is one modulo forty. The message seven encrypts to thirteen. Decryption gives residue two modulo five and seven modulo eleven, which combine by CRT to seven modulo fifty-five. These tiny primes are only for hand calculation and are insecure.}
 
+\subsection{平方剩余、Legendre 符号与互反律 | Quadratic residues and reciprocity}
+
 \noindent 模奇素数 $p$ 的非零平方余数，是形如 $x^2\pmod p$ 的非零余数。\FORMULA{Euler 平方判别准则}{Euler's criterion for quadratic residues}
 \[
 a^{(p-1)/2}\equiv\begin{cases}1\pmod p,&a\text{ 是平方剩余},\\-1\pmod p,&a\text{ 是非平方剩余},\end{cases}
@@ -114,6 +116,11 @@ a^{(p-1)/2}\equiv\begin{cases}1\pmod p,&a\text{ 是平方剩余},\\-1\pmod p,&a\
 \section{阶、原根与指标 | Orders, primitive roots, and indices}
 \noindent 对 $\gcd(a,n)=1$，$a$ 模 $n$ 的阶 $\operatorname{ord}_n(a)$ 是满足 $a^r\equiv1\pmod n$ 的最小正整数 $r$。Euler 定理保证这样的 $r$ 存在，并且 $r\mid\varphi(n)$。若阶恰为 $\varphi(n)$，则称 $a$ 是模 $n$ 的原根；此时它的幂遍历所有与 $n$ 互素的余数类。不是每个模数都有原根，例如模 $8$ 的所有奇数平方都同余 $1$，不可能有阶 $\varphi(8)=4$。
 \EN{For $\gcd(a,n)=1$, the multiplicative order $\operatorname{ord}_n(a)$ is the smallest positive $r$ with $a^r\equiv1\pmod n$. It divides $\varphi(n)$. A primitive root has order $\varphi(n)$ and its powers enumerate all invertible residues. Not every modulus has one: every odd square is one modulo eight, so no residue has order four.}
+
+\subsection{阶为什么整除，以及何时存在原根 | Orders and existence of primitive roots}
+\APS{若 $r=\operatorname{ord}_n(a)$ 且 $a^k\equiv1$，把 $k=qr+s$、$0\le s<r$，得 $a^s\equiv1$。由最小性 $s=0$，所以 $r\mid k$；取 $k=\varphi(n)$ 即得到阶整除 Euler 函数。$\varphi(n)$ 定义为 $1\le a\le n$ 中与 $n$ 互素的整数个数；若 $n=\prod p^{\alpha_p}$，则 $\varphi(n)=n\prod_{p\mid n}(1-1/p)$，由排除各素因子的倍数得到。}{If $r=\operatorname{ord}_n(a)$ and $a^k\equiv1$, divide $k=qr+s$ with $0\le s<r$. Then $a^s\equiv1$, so minimality forces $s=0$ and $r\mid k$. Euler\textquotesingle s theorem gives $r\mid\varphi(n)$. The totient counts integers from one to $n$ coprime to $n$, and $\varphi(n)=n\prod_{p\mid n}(1-1/p)$ follows by excluding multiples of its prime factors.}
+\APS{对 $n\ge2$，存在原根的模数恰为 $2,4,p^k,2p^k$，其中 $p$ 是奇素数、$k\ge1$。例如模 $9$，$2$ 的幂为 $2,4,8,7,5,1$，阶为 $6=\varphi(9)$，所以复合模数也可有原根；模 $8$ 的单位群虽有四个元素，却每个元素平方都为 $1$，故没有阶为四的生成元。存在性定理和检验某个候选数是否原根是两件事。}{For $n\ge2$, primitive roots exist exactly for $2,4,p^k,2p^k$, where $p$ is an odd prime and $k\ge1$. Modulo nine, powers of two are $2,4,8,7,5,1$, so two has order six and is primitive. Modulo eight every unit squares to one, so no element generates all four units. Existence for a modulus and checking an individual candidate are separate questions.}
+
 
 \EX{计算模 $7$ 的 $3$ 的幂：$3,2,6,4,5,1$，首次回到 $1$ 在第 $6$ 次，所以 $\operatorname{ord}_7(3)=6=\varphi(7)$，$3$ 是原根。解 $3^x\equiv5\pmod7$ 时，由列表 $3^5\equiv5$ 得 $x\equiv5\pmod6$。}{Modulo seven, successive powers of three are $3,2,6,4,5,1$. The order is six, equal to $\varphi(7)$, so three is a primitive root. Since $3^5\equiv5$, the solutions of $3^x\equiv5\pmod7$ satisfy $x\equiv5\pmod6$.}
 \FORMULA{原根判定准则}{criterion for a primitive root}
@@ -143,7 +150,9 @@ x^2-2y^2=1,\qquad x_{k+1}=3x_k+4y_k,\quad y_{k+1}=2x_k+3y_k.
 \ASK{如何判断线性同余方程有没有解？}{How do you decide whether a linear congruence is solvable?}{对 $ax\equiv b\pmod n$ 先计算 $d=\gcd(a,n)$。若 $d$ 不整除 $b$，无解；若整除，约去 $d$ 后在模 $n/d$ 下求逆元，并得到原模数下 $d$ 个解。}{For $ax\equiv b\pmod n$, compute $d=\gcd(a,n)$. There is no solution if $d$ does not divide $b$. Otherwise divide by $d$, find an inverse modulo $n/d$, and recover the $d$ solutions modulo $n$.}
 \ASK{中国剩余定理为什么需要互素条件？}{Why does the standard Chinese remainder theorem require coprime moduli?}{互素时两个余数条件能在模乘积下唯一拼合。若不互素，条件可能冲突；例如 $x\equiv0\pmod4$ 与 $x\equiv1\pmod6$ 无解，因为余数差 $1$ 不被 $\gcd(4,6)=2$ 整除。}{Coprime moduli give a unique combined residue modulo their product. With non-coprime moduli, conditions may conflict. The two congruences shown are incompatible because their residue difference is not divisible by the gcd two.}
 \ASK{小 RSA 例子说明了什么，又没有说明什么？}{What does the small RSA example demonstrate, and what does it not demonstrate?}{它说明 Euclid 算法求私钥指数、Euler 定理和中国剩余定理如何协同恢复消息；由于素数太小，任何人都能迅速分解模数，所以它不说明真实 RSA 的安全性。}{It shows how the Euclidean algorithm, Euler's theorem, and the Chinese remainder theorem work together to recover a message. The tiny primes make the modulus trivial to factor, so the example says nothing about real-world security.}
-\section*{来源与范围 | Source and scope}
-本稿按你指定的第 1、3--6 章范围，参考闵嗣鹤、严士健《初等数论》第四版，并将整除、同余、剩余类、原根和整数方程组织成可口述的定义—例子—方法链条。密码学例子只用于展示模运算，不替代现代密码学的安全性分析。
-\EN{This review follows the requested scope of Chapters 1 and 3--6 of Min Sihe and Yan Shijian's fourth edition of \emph{Elementary Number Theory}. It organizes divisibility, congruences, residue classes, primitive roots, and Diophantine equations as definitions, examples, and methods. The cryptography example illustrates modular arithmetic, not a security analysis.}
+\par\medskip\begingroup\small
+\noindent\textbf{来源与范围 | Source and scope.}
+依据闵嗣鹤、严士健《初等数论》第四版，仅取指定的第 1、3--6 章。密码学算例用于说明模运算，不作现代密码学安全性分析。
+\EN{The source is the fourth edition of Min Sihe and Yan Shijian, restricted to the requested Chapters 1 and 3--6. Cryptographic examples illustrate modular arithmetic rather than modern security analysis.}
+\par\endgroup
 \end{document}

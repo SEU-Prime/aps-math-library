@@ -10,21 +10,15 @@
 \title{数值分析 APS 面试准备\\[4pt]\large 双语课程概述、知识点与口试题}
 \author{Numerical Analysis: Bilingual Review}
 \date{}
+\newcommand{\APS}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par\smallskip}
 \begin{document}\maketitle
 \section*{课程概述 | Course overview}
-\noindent\textbf{课程主线 / Course roadmap.} 我按误差与收敛、非线性方程求根、线性方程组、插值与最佳逼近、数值积分/微分、常微分方程数值解的顺序复习，并区分问题条件数、算法稳定性、截断误差和舍入误差。每种方法都要写出离散公式、误差阶和适用条件。比如 Newton 法解 $x^2-2=0$ 时 $x_{k+1}=(x_k+2/x_k)/2$，从 $x_0=1$ 得到 $1.5,1.4167,\ldots$；它在简单根附近二次收敛，但初值不当或导数接近零时可能失败。
-\EN{I review the main numerical-analysis problems: error and convergence, nonlinear root finding, linear systems, interpolation and best approximation, numerical integration and differentiation, numerical ODEs, and the distinction between conditioning, stability, and algorithmic error. Each method should be described by its discrete formula, sources of error, and assumptions. Newton's method is a concrete example: to solve $f(x)=x^2-2=0$, iterate $x_{k+1}=(x_k+2/x_k)/2$. Starting at $x_0=1$ gives $1.5,1.4167,\ldots$, but rapid convergence depends on a suitable initial value near the root, and the method cannot be applied directly where the derivative is zero.}
-\noindent\textbf{中文口述稿。} 我在这门课学习怎样用计算机求近似解，并判断结果是否可靠。例如求 $\sqrt2$ 可以转化为 $f(x)=x^2-2=0$，Newton 迭代为 $x_{k+1}=x_k-f(x_k)/f'(x_k)=(x_k+2/x_k)/2$。从 $x_0=1$ 出发，得到 $x_1=1.5$、$x_2\approx1.4167$，逐步接近 $1.4142$。这个方法在根附近且初值合适时收敛很快，但导数为零或初值不合适时可能失败。我还学习用插值从离散数据构造近似函数，用数值积分估算面积；关键是同时检查误差和算法的收敛条件。
+\APS{数值分析按六章展开：误差、条件数与稳定性；二分、不动点和 Newton 求根；Gauss 消元、主元与线性迭代；Lagrange/Newton 插值、样条和最小二乘；梯形、Simpson、Gauss 求积与差分求导；Euler、Runge--Kutta 等常微分方程算法。每种方法要回答四件事：离散公式是什么、何时存在或收敛、误差怎样估计、浮点扰动怎样传播。条件数属于问题，稳定性属于算法，收敛阶描述误差随迭代或步长变化的速度。}{The six chapters cover errors, conditioning and stability; bisection, fixed-point and Newton root finding; Gaussian elimination, pivoting and linear iterations; Lagrange and Newton interpolation, splines and least squares; trapezoidal, Simpson and Gaussian quadrature and numerical differentiation; and Euler and Runge--Kutta ODE methods. For each method I state the formula, existence or convergence conditions, error estimate and propagation of floating-point perturbations. Conditioning describes the problem, stability the algorithm, and convergence order the rate of error reduction.}
+\subsection*{例一：Newton 迭代与二次误差 | Newton iteration and quadratic error}
+\APS{解 $x^2-2=0$ 时，Newton 公式为 $x_{k+1}=(x_k+2/x_k)/2$。从 $x_0=1$ 得到 $x_1=1.5,x_2=17/12\approx1.416667,x_3=577/408\approx1.414216$。令真根 $\alpha=\sqrt2$、误差 $e_k=x_k-\alpha$，可直接算出 $e_{k+1}=e_k^2/(2x_k)$；当 $x_k\to\alpha>0$，误差约等于 $e_k^2/(2\alpha)$，所以二次收敛。这个结论依赖简单根及合适初值，不能推广到任意 Newton 迭代。}{For $x^2-2=0$, Newton gives $x_{k+1}=(x_k+2/x_k)/2$. Starting at one yields $1.5$, $17/12\approx1.416667$, and $577/408\approx1.414216$. With $\alpha=\sqrt2$ and $e_k=x_k-\alpha$, direct algebra gives $e_{k+1}=e_k^2/(2x_k)$. As $x_k\to\alpha>0$, the error is asymptotic to $e_k^2/(2\alpha)$, proving quadratic convergence. The general conclusion requires a simple root and a suitable initial value.}
+\subsection*{例二：稳定步长并不等于准确 | A stable step may still be inaccurate}
+\APS{对 $y^{\prime}=-10y,y(0)=1$，显式 Euler 给 $y_{n+1}=(1-10h)y_n$。要让数值解衰减，需要 $|1-10h|<1$，即 $0<h<0.2$。取 $h=0.1$ 时，第一步就得到零，而精确值为 $e^{-1}\approx0.368$，因此虽在稳定区间内，误差仍很大。取 $h=0.3$ 时放大因子为 $-2$，数值解振荡增长，与真实衰减相反。这个例子分别检验稳定性和精度。}{For $y^{\prime}=-10y$ with $y(0)=1$, explicit Euler gives $y_{n+1}=(1-10h)y_n$. Decay requires $|1-10h|<1$, or $0<h<0.2$. At $h=0.1$ the first numerical value is zero, while the exact value is $e^{-1}\approx0.368$, so stability still allows a large error. At $h=0.3$ the multiplier is $-2$ and the method oscillates with growing magnitude. Stability and accuracy require separate checks.}
 
-\EN{In numerical analysis, I learned to compute approximate answers and assess their reliability. To find $\sqrt2$, I can solve $f(x)=x^2-2=0$ with Newton's iteration, $x_{k+1}=(x_k+2/x_k)/2$. Starting at one gives $1.5$ and then approximately $1.4167$, approaching $1.4142$. The method converges rapidly near a simple root with a suitable starting value, but it can fail when the derivative is zero or the initial guess is unsuitable. I also studied interpolation for constructing a function from data and numerical integration for estimating areas. In each case, I check the error and the conditions for the method.}
-
-\noindent\textbf{学科联系与现实应用（拓展口述）。} 数值分析回答的是：已建立数学模型以后，怎样在有限精度和有限计算资源下可靠地求近似解。它连接微积分（Taylor 展开和误差阶）、线性代数（大型方程组）、常微分方程（时间演化）、计算机科学（算法与浮点运算）和数学建模（模型离散化与结果解释）。天气预报、结构受力、流体运动和药物浓度变化都可能形成无法手算的方程或积分，需要数值算法近似求解。以药物浓度为例，先由药代动力学模型得到微分方程，再用 Euler 或 Runge--Kutta 方法计算浓度随时间的变化，并通过减小步长、比较高阶方法或与已知解对照来检查误差。数值结果依赖模型假设，也必须进行收敛性和稳定性检查。
-\EN{\textbf{Connections and applications (extension for an interview).} Numerical analysis asks how to compute reliable approximate solutions after a mathematical model has been formulated, using finite precision and limited resources. It connects calculus through Taylor expansions and error orders, linear algebra through large systems, differential equations through time evolution, computer science through algorithms and floating-point arithmetic, and mathematical modeling through discretization and interpretation. Weather prediction, structural mechanics, fluid flow, and changing drug concentrations can all lead to equations or integrals that cannot be solved by hand. For a drug-concentration model, one first obtains an ordinary differential equation from pharmacokinetic assumptions, then uses Euler or Runge--Kutta methods to approximate concentration over time. Reducing the step size, comparing a higher-order method, or using a known exact solution helps assess error. Numerical results depend on the model and require convergence and stability checks.}
-
-\ASK{数值分析在应用数学中起什么作用？}{What role does numerical analysis play in applied mathematics?}{它把微分方程、积分或优化模型转化为可由计算机执行的近似算法，并分析误差、收敛和稳定性。例如可用 Runge--Kutta 法模拟药物浓度随时间变化；结果是否可信，还要检查模型假设和步长误差。}{It turns differential equations, integrals, or optimization models into approximate algorithms a computer can execute, then analyzes error, convergence, and stability. For example, Runge--Kutta methods can simulate drug concentration over time. The model assumptions and step-size error must still be checked.}
-
-\noindent\textbf{口述提示。} 讲义目录显示六章：绪论、非线性方程、线性方程组、多项式插值与函数最佳逼近、数值积分与数值微分、常微分方程数值解。
-\EN{The six chapters in the lecture slides are introduction, nonlinear equations, linear systems, polynomial interpolation and best approximation, numerical integration and differentiation, and numerical solutions of ordinary differential equations.}
 
 \section{误差、收敛与稳定 | Error, convergence and stability}
 \noindent\textbf{误差定义。} 真值 $x$ 与近似值 $\tilde x$ 的绝对误差为 $|x-\tilde x|$；真值非零时，相对误差为 $|x-\tilde x|/|x|$。截断误差来自用有限过程近似无限过程（如截断 Taylor 展开或积分公式）；舍入误差来自计算机有限位数表示和运算。模型误差、观测误差、截断误差与舍入误差是不同来源。数值算法的\textbf{收敛性}讨论步长趋于零或迭代次数增加时近似解是否趋于目标解；\textbf{稳定性}讨论输入、舍入误差和中间误差是否被算法过度放大。
@@ -48,7 +42,23 @@ $\kappa(A)$ 大表示输入数据的小相对误差可能造成解的较大相�
 
 \ASK{问题条件数和算法稳定性有什么区别？}{What is the difference between problem conditioning and algorithmic stability?}{条件数是问题本身对输入误差的敏感度；算法稳定性是计算过程对输入或舍入扰动的放大程度。病态问题即使使用稳定算法也可能难以得到高精度结果。}{Conditioning is the sensitivity of the problem itself to input errors. Algorithmic stability concerns how the computation amplifies input or rounding perturbations. An ill-conditioned problem can remain difficult even with a stable algorithm.}
 
+\subsection{同一问题的病态性与算法不稳定 | Problem conditioning versus algorithm stability}
+\noindent 计算 $\sqrt{1+x}-1$ 在很小正 $x$ 时，直接相减会把两个接近 $1$ 的浮点数相减，造成有效数字丢失。代数有理化给出等价形式
+\FORMULA{平方根差式的有理化恒等式}{rationalization identity for a square-root difference}
+\[
+\sqrt{1+x}-1=\frac{x}{\sqrt{1+x}+1}.
+\]
+右边不发生两个近似相等大数相减，通常数值更稳定。例如若机器舍入使 $1+x$ 直接变成 $1$，原式可能计算为 $0$；有理化形式仍可保留约 $x/2$ 的量级。同一个数学问题可以有数值性质不同的算法。
+\EN{For small positive $x$, directly computing $\sqrt{1+x}-1$ subtracts nearly equal floating-point numbers and can lose significant digits. Rationalization gives the equivalent quotient, which avoids that cancellation. If rounding turns $1+x$ into one, the direct formula may return zero, while the rationalized expression retains the scale $x/2$. Equivalent formulas can lead to algorithms with different numerical behavior.}
+\noindent \textbf{条件数与稳定性是两件事。} 条件数描述输入小扰动对精确解的敏感程度；算法稳定性描述计算过程是否额外放大舍入误差。即使问题本身条件良好，不稳定算法仍可能给出差结果；反过来，稳定算法也无法消除病态问题对输入误差的固有放大。
+\EN{Conditioning measures how sensitive the exact solution is to perturbations in the input. Algorithmic stability measures whether the computational procedure adds further amplification of rounding errors. A well-conditioned problem can still be computed poorly by an unstable algorithm, and a stable algorithm cannot remove sensitivity inherent in an ill-conditioned problem.}
+\EX{矩阵方程 $Ax=b$ 中，若 $A$ 的条件数很大，输入 $b$ 的相对扰动可能造成解 $x$ 的大相对变化；使用带主元的 Gaussian 消去可以改善算法稳定性，但不能改变 $A$ 本身的条件数。口试时应分别说明“问题是否敏感”和“算法是否稳定”。}{For $Ax=b$, a large condition number of $A$ means a small relative perturbation in $b$ may cause a large relative change in $x$. Pivoted Gaussian elimination improves algorithmic stability but does not change the condition number of $A$. State separately whether the problem is sensitive and whether the algorithm is stable.}
+\ASK{为什么公式代数等价，计算结果却可能差很多？}{Why can algebraically equivalent formulas behave differently numerically?}{浮点运算有舍入误差，减去接近的数会产生消去误差，运算顺序也会改变误差传播。应选择稳定的等价表达式，并结合问题条件数判断可达到的精度。}{Floating-point operations round, subtraction of nearby numbers causes cancellation, and operation order changes error propagation. Choose a stable equivalent formula and use the condition number to judge achievable accuracy.}
+
 \section{非线性方程求根 | Nonlinear equations}
+\subsection{从残差到误差，再推导 Newton 阶数 | Residual, error and Newton convergence}
+\APS{残差 $|f(x_k)|$ 是方程满足程度，误差 $|x_k-\alpha|$ 是到真根的距离，二者不同。若根与迭代点之间 $|f^{\prime}|\ge m>0$，中值定理给误差上界 $|x_k-\alpha|\le|f(x_k)|/m$。若 $f\in C^2$、$f(\alpha)=0,f^{\prime}(\alpha)\ne0$，在 $x_k$ 处展开 $f(\alpha)$ 并代入 Newton 公式，得到 $e_{k+1}=f^{\prime\prime}(\xi_k)e_k^2/(2f^{\prime}(x_k))$，所以局部二次收敛。重根时分母也趋零，需另行分析或修改算法。}{The residual $|f(x_k)|$ measures equation satisfaction; the error $|x_k-\alpha|$ measures distance to the root. If $|f^{\prime}|\ge m>0$ between them, the mean-value theorem gives $|x_k-\alpha|\le|f(x_k)|/m$. For $f\in C^2$ and a simple root, Taylor expansion of $f(\alpha)$ at $x_k$ and the Newton update give $e_{k+1}=f^{\prime\prime}(\xi_k)e_k^2/(2f^{\prime}(x_k))$, establishing local quadratic convergence. At multiple roots the denominator also tends to zero and requires separate analysis.}
+
 \noindent\textbf{二分法。} 若 $f$ 在 $[a,b]$ 连续且 $f(a)f(b)<0$，则至少存在一个根。每次取中点 $m=(a+b)/2$，保留仍满足端点异号的一半区间。$n$ 步后区间长度为 $(b-a)/2^n$，因此误差上界随步数几何下降；方法稳健但通常线性收敛。
 \FORMULA{二分法的中点与区间误差界}{midpoint and interval-error bound for bisection}
 \[
@@ -112,6 +122,11 @@ Jacobi 的整步都使用旧向量；Gauss--Seidel 一旦算出新分量就立�
 \ASK{SOR 在什么常见条件下收敛？}{Under what common condition does SOR converge?}{若矩阵对称正定，SOR 对 $0<\omega<2$ 收敛；$\omega$ 控制松弛或超松弛程度。一般矩阵上不能不加条件地保证该结论。}{For a symmetric positive-definite matrix, SOR converges when $0<\omega<2$. The parameter controls relaxation or over-relaxation. This guarantee does not hold unconditionally for arbitrary matrices.}
 
 \section{插值与最佳逼近 | Interpolation and best approximation}
+\subsection{插值的定义、唯一性与差商 | Interpolation and divided differences}
+\APS{给定互异节点 $x_0,\ldots,x_n$ 和数据 $y_i$，插值要求次数不超过 $n$ 的 $p$ 满足 $p(x_i)=y_i$，不是最小化残差。Lagrange 基函数 $\ell_i(x)=\prod_{j\ne i}(x-x_j)/(x_i-x_j)$ 在节点上为 Kronecker 符号，故 $p=\sum y_i\ell_i$ 存在。若有两个解，其差至多 $n$ 次却有 $n+1$ 个不同零点，只能恒零，所以唯一。}{For distinct nodes $x_0,\ldots,x_n$ and data $y_i$, interpolation requires $p(x_i)=y_i$ with degree at most $n$; it does not minimize a residual. The Lagrange functions $\ell_i(x)=\prod_{j\ne i}(x-x_j)/(x_i-x_j)$ have the required nodal values, proving existence. The difference of two candidates has degree at most $n$ and $n+1$ distinct zeros, proving uniqueness.}
+\APS{Newton 差商递推为 $f[x_i]=y_i$，$f[x_i,\ldots,x_{i+k}]=(f[x_{i+1},\ldots,x_{i+k}]-f[x_i,\ldots,x_{i+k-1}])/(x_{i+k}-x_i)$，插值式为 $p_n=\sum_{k=0}^n f[x_0,\ldots,x_k]\prod_{j=0}^{k-1}(x-x_j)$。例如 $(0,1),(1,2),(2,5)$ 的一阶差商为 $1,3$，二阶为 $1$，所以 $p=1+x+x(x-1)=1+x^2$。}{Newton divided differences satisfy $f[x_i]=y_i$ and $f[x_i,\ldots,x_{i+k}]=(f[x_{i+1},\ldots,x_{i+k}]-f[x_i,\ldots,x_{i+k-1}])/(x_{i+k}-x_i)$. The polynomial is $p_n=\sum_{k=0}^n f[x_0,\ldots,x_k]\prod_{j<k}(x-x_j)$. For $(0,1),(1,2),(2,5)$, first differences are one and three and the second is one, yielding $p=1+x+x(x-1)=1+x^2$.}
+\APS{若 $f\in C^{n+1}$，误差为 $f(x)-p_n(x)=f^{(n+1)}(\xi)\prod_{i=0}^n(x-x_i)/(n+1)!$，$\xi$ 在节点和 $x$ 所在区间中。提高次数并不必然改善全区间误差，等距高次插值可出现 Runge 现象。三次样条改用每段三次多项式并要求整体 $C^2$，还需自然端点 $S^{\prime\prime}=0$ 或夹持端点导数等条件来唯一确定；Hermite 插值则直接匹配指定导数。}{For $f\in C^{n+1}$, the interpolation error is $f^{(n+1)}(\xi)\prod_i(x-x_i)/(n+1)!$. Increasing degree does not necessarily improve the error over the full interval; equally spaced nodes can show Runge behavior. A cubic spline uses piecewise cubics with global $C^2$ continuity and endpoint conditions such as natural second derivatives or prescribed first derivatives. Hermite interpolation instead matches specified derivative data.}
+
 互异节点 $(x_i,y_i)$ 唯一确定次数不超过 $n$ 的插值多项式。Lagrange 公式为
 \FORMULA{Lagrange 插值公式与余项}{Lagrange interpolation formula and remainder}
 \[
@@ -263,18 +278,6 @@ y_{n+1}^{\mathrm{AM2}}=y_n+\frac h{12}(5f_{n+1}+8f_n-f_{n-1}),
 
 \ASK{Runge--Kutta 法和多步法有什么区别？}{How do Runge--Kutta and multistep methods differ?}{Runge--Kutta 法每一步用当前点多次计算斜率，通常不需要历史解；多步法在新步计算中使用多个已算出的历史点，可能更省函数评估但需要启动值并分析零稳定性。}{Runge--Kutta methods evaluate several slopes within each step and usually do not need past solution values. Multistep methods use several previous points, which can reduce function evaluations but require starting values and a zero-stability analysis.}
 
-\section[条件数与稳定性 | Conditioning and stability]{同一问题的病态性与算法不稳定 | Problem conditioning versus algorithm stability}
-\noindent 计算 $\sqrt{1+x}-1$ 在很小正 $x$ 时，直接相减会把两个接近 $1$ 的浮点数相减，造成有效数字丢失。代数有理化给出等价形式
-\FORMULA{平方根差式的有理化恒等式}{rationalization identity for a square-root difference}
-\[
-\sqrt{1+x}-1=\frac{x}{\sqrt{1+x}+1}.
-\]
-右边不发生两个近似相等大数相减，通常数值更稳定。例如若机器舍入使 $1+x$ 直接变成 $1$，原式可能计算为 $0$；有理化形式仍可保留约 $x/2$ 的量级。同一个数学问题可以有数值性质不同的算法。
-\EN{For small positive $x$, directly computing $\sqrt{1+x}-1$ subtracts nearly equal floating-point numbers and can lose significant digits. Rationalization gives the equivalent quotient, which avoids that cancellation. If rounding turns $1+x$ into one, the direct formula may return zero, while the rationalized expression retains the scale $x/2$. Equivalent formulas can lead to algorithms with different numerical behavior.}
-\noindent \textbf{条件数与稳定性是两件事。} 条件数描述输入小扰动对精确解的敏感程度；算法稳定性描述计算过程是否额外放大舍入误差。即使问题本身条件良好，不稳定算法仍可能给出差结果；反过来，稳定算法也无法消除病态问题对输入误差的固有放大。
-\EN{Conditioning measures how sensitive the exact solution is to perturbations in the input. Algorithmic stability measures whether the computational procedure adds further amplification of rounding errors. A well-conditioned problem can still be computed poorly by an unstable algorithm, and a stable algorithm cannot remove sensitivity inherent in an ill-conditioned problem.}
-\EX{矩阵方程 $Ax=b$ 中，若 $A$ 的条件数很大，输入 $b$ 的相对扰动可能造成解 $x$ 的大相对变化；使用带主元的 Gaussian 消去可以改善算法稳定性，但不能改变 $A$ 本身的条件数。口试时应分别说明“问题是否敏感”和“算法是否稳定”。}{For $Ax=b$, a large condition number of $A$ means a small relative perturbation in $b$ may cause a large relative change in $x$. Pivoted Gaussian elimination improves algorithmic stability but does not change the condition number of $A$. State separately whether the problem is sensitive and whether the algorithm is stable.}
-\ASK{为什么公式代数等价，计算结果却可能差很多？}{Why can algebraically equivalent formulas behave differently numerically?}{浮点运算有舍入误差，减去接近的数会产生消去误差，运算顺序也会改变误差传播。应选择稳定的等价表达式，并结合问题条件数判断可达到的精度。}{Floating-point operations round, subtraction of nearby numbers causes cancellation, and operation order changes error propagation. Choose a stable equivalent formula and use the condition number to judge achievable accuracy.}
 \section*{口试表达 | Oral response structure}
 介绍数值算法时，说明输入条件、迭代或求积公式、误差阶、收敛条件和适用场景。若比较算法，应同时比较稳定性、精度、计算量和存储需求；给出数值结果时说明停止准则与误差控制。
 

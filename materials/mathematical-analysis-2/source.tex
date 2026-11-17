@@ -10,10 +10,16 @@
 \title{数学分析（二）APS 面试准备\\[4pt]\large 多变量微分、重积分、曲线曲面积分与场论}
 \author{Mathematical Analysis II: Bilingual Oral Review}
 \date{}
+\newcommand{\APS}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par\smallskip}
 \begin{document}\maketitle
 
 \section*{课程概述 | Course overview}
-\BOTH{第二学期把一元微积分推广到空间。我先学习多元函数的偏导、方向导数、全微分、Jacobian 和链式法则，再学习二重/多重积分、Fubini 定理与变量替换；之后是第一型和第二型曲线积分、曲面积分、梯度、散度、旋度，以及 Green、Gauss、Stokes 公式。一个具体计算是向量场 $F=(-y,x)$ 沿逆时针单位圆的环流：Green 公式给出 $\oint_{\partial D}P\,dx+Q\,dy=\iint_D(Q_x-P_y)\,dA=\iint_D2\,dA=2\pi$，其中 $D$ 是单位圆盘。另一个判别例子是 $f(x,y)=xy/\sqrt{x^2+y^2}$（原点定义为 $0$）：原点两个偏导都存在且为零，但沿 $y=x$ 有 $f(x,x)=|x|/\sqrt2$，故函数在原点不可微；这说明多元可微要求同一个线性近似控制所有方向。遇到题目时，我先区分局部变化、区域总量、路径功和曲面通量，再核对光滑性、区域条件及方向。}{The second semester extends calculus to space. I studied partial and directional derivatives, total differentials, Jacobians, and the chain rule; then multiple integrals, Fubini's theorem, and change of variables; followed by scalar and vector line integrals, surface integrals, gradient, divergence, curl, and Green's, Gauss's, and Stokes' theorems. For a concrete calculation, the circulation of $F=(-y,x)$ around the counterclockwise unit circle follows from Green's theorem: the boundary integral equals the disk integral of $Q_x-P_y=2$, which is $2\pi$. Here $D$ is the unit disk. A differentiability counterexample is $f(x,y)=xy/\sqrt{x^2+y^2}$, defined as zero at the origin. Both partial derivatives exist and equal zero there, but along $y=x$ the function equals $|x|/\sqrt2$, so it is not differentiable at the origin. Multivariable differentiability requires one linear approximation to control every direction. In applications, I distinguish local change, a total over a region, work along a path, and flux through a surface, then check smoothness, domain conditions, and orientation.}
+\APS{第二学期把微积分推广到多变量。微分部分依次包括偏导、方向导数、全微分、Jacobian、链式法则、梯度、Hessian 与极值；积分部分从二重、三重积分和 Fubini 定理进入变量替换，再区分弧长/功的曲线积分与面积/通量的曲面积分，最后用 Green、Gauss 和 Stokes 公式连接边界与内部。多元可微要控制所有方向的误差，积分公式则必须先选对参数化与定向。}{The second semester extends calculus to several variables. Differential topics include partial and directional derivatives, total differentiability, Jacobians, the chain rule, gradients, Hessians and extrema. Integration proceeds from double and triple integrals and Fubini to coordinate changes, scalar and work line integrals, scalar and flux surface integrals, and the Green, Gauss and Stokes theorems. Differentiability requires error control in every direction, while integral formulas require suitable parametrizations and consistent orientations.}
+\subsection*{例一：Hessian 解释驻点 | The Hessian classifies a stationary point}
+\APS{设 $f(x,y)=x^2+xy+y^2$。梯度为 $(2x+y,x+2y)$，唯一驻点为原点；Hessian 是 $H=\left(\begin{smallmatrix}2&1\\1&2\end{smallmatrix}\right)$，主子式 $2$、$3$ 都正，所以正定。并且 $f=(x+y/2)^2+3y^2/4\ge0$，只有原点取零，因此这里还是全局严格最小点。一般 $C^2$ 函数的正定 Hessian 只保证该驻点的局部严格最小；不能把局部判据自动推广为全局结论。}{For $f(x,y)=x^2+xy+y^2$, the gradient $(2x+y,x+2y)$ vanishes only at the origin. The Hessian $H=\left(\begin{smallmatrix}2&1\\1&2\end{smallmatrix}\right)$ has positive leading minors two and three, so it is positive definite. Completing squares gives $f=(x+y/2)^2+3y^2/4$, proving a strict global minimum here. For a general $C^2$ function, a positive-definite Hessian at a stationary point ensures only a strict local minimum.}
+\subsection*{例二：Green 公式与直接参数化核对 | Checking Green by parametrization}
+\APS{取单位圆逆时针定向，向量场 $(P,Q)=(-y,x)$。用 $x=\cos t,y=\sin t$，$0\le t\le2\pi$，得 $P\,dx+Q\,dy=(\sin^2t+\cos^2t)dt$，故环流为 $2\pi$。Green 公式给出相同结果：$Q_x-P_y=2$，圆盘面积为 $\pi$，所以面积积分为 $2\pi$。若反转圆周方向，曲线积分变号；内部积分也必须匹配正向边界约定。}{Orient the unit circle counterclockwise and take $(P,Q)=(-y,x)$. With $x=\cos t$, $y=\sin t$ for $0\le t\le2\pi$, the form $P\,dx+Q\,dy$ becomes $dt$, giving circulation $2\pi$. Green\textquotesingle s theorem agrees: $Q_x-P_y=2$ and the disk has area $\pi$. Reversing the boundary reverses the line integral, so orientation is part of the theorem.}
+
 \setcounter{section}{11}
 \section{多元微分 | Multivariable differentiation}
 \subsection{偏导、方向导数与全微分}
@@ -24,6 +30,9 @@
 \BOTH{若 $f$ 可微，梯度给出最大增长方向，方向导数公式为 $D_uf=\nabla f\cdot u$。二阶偏导组成 Hessian 矩阵，用于描述曲率和局部二次近似。若混合二阶偏导在邻域连续，则 $f_{xy}=f_{yx}$。}{For a differentiable scalar function, the gradient points in the direction of greatest increase and $D_uf=\nabla f\cdot u$. Second partial derivatives form the Hessian and describe curvature in a quadratic approximation. If the mixed second partials are continuous nearby, then $f_{xy}=f_{yx}$.}
 \BOTH{对二元二次可微函数，二阶微分为 $d^2f=f_{xx}(dx)^2+2f_{xy}dxdy+f_{yy}(dy)^2$（使用 $f_{xy}=f_{yx}$）。它是 Hessian 对增量向量的二次型；正定表示各个非零小方向上的二阶变化为正，是局部极小判别的重要条件之一。}{For a twice continuously differentiable function of two variables, the second differential is the displayed quadratic form, using equality of mixed partials. It is the Hessian quadratic form evaluated on the increment and is positive in every nonzero direction when the Hessian is positive definite, an important condition for a local minimum.}
 \READ{“The directional derivative of f in direction u equals the gradient of f dotted with u.”}
+
+\subsection{驻点、Taylor 展开与 Hessian | Stationary points and the Hessian}
+\APS{对内点局部极值，可微性给出必要条件 $\nabla f(a)=0$。若 $f\in C^2$，Taylor 展开为 $f(a+h)=f(a)+\nabla f(a)\cdot h+\tfrac12 h^{\mathsf T}H(a)h+o(\|h\|^2)$。驻点处 Hessian 正定给严格局部最小，负定给严格局部最大，不定给鞍点；半正定不能判定，例如 $x^4+y^4$ 与 $x^4-y^4$ 在原点的 Hessian 都为零，结论却不同。}{At an interior local extremum, differentiability requires $\nabla f(a)=0$. For $C^2$ functions, Taylor expansion has quadratic term $\tfrac12h^{\mathsf T}H(a)h$ and remainder $o(\|h\|^2)$. At a stationary point a positive-definite Hessian gives a strict local minimum, a negative-definite one a maximum, and an indefinite one a saddle. Semidefiniteness is inconclusive: $x^4+y^4$ and $x^4-y^4$ both have zero Hessian at the origin but different behavior.}
 
 \subsection{向量值函数、链式法则与微分不变性}
 \BOTH{向量值函数 $F:\mathbb R^n\to\mathbb R^m$ 的导数是 $m\times n$ Jacobian 矩阵 $J_F$，第 $i,j$ 项为输出分量 $F_i$ 对输入 $x_j$ 的偏导。若 $G$ 和 $F$ 可微，则 $J_{F\circ G}(x)=J_F(G(x))J_G(x)$。这说明多步变量依赖通过矩阵乘法传递变化。}{For a map $F:\mathbb R^n\to\mathbb R^m$, the derivative is the $m\times n$ Jacobian matrix, whose $(i,j)$ entry is $\partial F_i/\partial x_j$. For differentiable maps, the chain rule is $J_{F\circ G}(x)=J_F(G(x))J_G(x)$. It propagates changes through a sequence of variable transformations.}
@@ -63,7 +72,7 @@
 \[
 M=\int_0^{2\pi}\int_0^2 r^2\,r\,dr\,d\theta=8\pi.
 \]
-外层的 $r$ 来自极坐标 Jacobian；若漏掉它，结果会错误地减半。}{A disk of radius two has surface density $\rho(x,y)=x^2+y^2$. In polar coordinates, the Jacobian contributes the factor $r$, so the mass is the displayed integral, equal to $8\pi$. Omitting the Jacobian would halve the result.}
+外层的 $r$ 来自极坐标 Jacobian；若漏掉它，会得到错误结果 $16\pi/3$。}{A disk of radius two has surface density $\rho(x,y)=x^2+y^2$. In polar coordinates, the Jacobian contributes the factor $r$, so the mass is the displayed integral, equal to $8\pi$. Omitting the Jacobian would incorrectly give $16\pi/3$.}
 
 \subsection{曲线积分与曲面积分}
 \BOTH{第一型曲线积分 $\int_C f\,ds$ 按弧长累加标量密度，与方向无关。若 $r(t)$（$a\le t\le b$）参数化曲线，则

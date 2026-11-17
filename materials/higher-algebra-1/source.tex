@@ -11,15 +11,18 @@
 \title{高等代数（一）APS 面试准备\\[4pt]\large 第 1--5 章：多项式、行列式、线性方程组、矩阵与二次型}
 \author{Advanced Algebra I: Bilingual Oral Review}
 \date{}
+\newcommand{\APS}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par\smallskip}
 \begin{document}\maketitle
 
 {\footnotesize\noindent\textbf{来源与范围 / Source and scope.} 主要参考北京大学数学系前线代小组《高等代数》第五版，并与文件夹中的修订版核对；覆盖第 1--5 章：多项式、行列式、线性方程组、矩阵与二次型。 Based on the fifth edition of \emph{Advanced Algebra} by Peking University's Frontline Linear Algebra Group, cross-checked against the revised edition; covers Chapters 1--5.\par}
 
 \section*{课程概述 | Course overview}
-\BOTH{我按第 1--5 章的顺序学习多项式整除与因式分解、行列式、线性方程组和矩阵秩，最后研究二次型的合同变换、标准形与惯性定理。多项式中，若 $f(a)=0$，因式定理说明 $x-a$ 整除 $f(x)$；行列式判断方阵是否可逆，并给出线性变换对面积或体积的缩放因子；在线性方程组 $Ax=b$ 中，秩比较可以判断有无解，而自由变量数决定解集维数。二次型则能通过配方看出符号结构，例如 $x^2+4xy+5y^2=(x+2y)^2+y^2$，所以它对所有非零 $(x,y)$ 都为正。课程由此把代数计算、解的存在性和几何意义连在一起。}{Following Chapters 1--5, I studied polynomial divisibility and factorization, determinants, linear systems and matrix rank, and finally congruence, canonical forms, and inertia for quadratic forms. If $f(a)=0$, the factor theorem says that $x-a$ divides $f(x)$. A determinant tells whether a square matrix is invertible and gives the volume-scaling factor of its linear map. For a system $Ax=b$, rank comparisons determine consistency, and the number of free variables determines the dimension of the solution set. A quadratic form can be analyzed by completing the square: $x^2+4xy+5y^2=(x+2y)^2+y^2$, which is positive for every nonzero pair $(x,y)$. These topics connect algebraic computation with solvability and geometry.}
+\APS{高等代数（一）包括五条相连的主线：多项式的带余除法、最大公因式与因式分解；行列式的定义、展开与性质；线性方程组的消元、秩和解的结构；矩阵的乘法、逆与初等变换；实二次型的配方、合同变换和惯性。多项式与整数都能做 Euclid 算法；行列式判定方阵可逆，但一般方程组要靠秩；二次型则用坐标变换判断正负性。}{Higher Algebra I has five connected parts: polynomial division, greatest common divisors and factorization; determinants, expansions and identities; elimination, rank and the structure of linear-system solutions; matrix multiplication, inverses and elementary operations; and real quadratic forms, congruence and inertia. Euclid\textquotesingle s algorithm works for polynomials as well as integers. Determinants characterize invertibility of square matrices, whereas general systems require rank. Coordinate changes then classify the signs of quadratic forms.}
+\subsection*{例一：消元给出全部解 | Elimination gives every solution}
+\APS{对 $x+y+z=2$、$2x+2y+2z=4$，第二行减第一行的两倍后得到零行，因此系数矩阵和增广矩阵的秩都为 $1$，方程组相容。令 $y=s,z=t$，则 $(x,y,z)=(2,0,0)+s(-1,1,0)+t(-1,0,1)$。这里一个特解决定平移位置，两个齐次解方向决定自由度；未知数有 $3$ 个，故自由度为 $3-1=2$。若把第二式右端改为 $5$，消元得到 $0=1$，增广秩变成 $2$，系统无解。}{For $x+y+z=2$ and $2x+2y+2z=4$, subtracting twice the first row from the second leaves a zero row. Both the coefficient and augmented matrices have rank one, so the system is consistent. Set $y=s$ and $z=t$ to obtain $(x,y,z)=(2,0,0)+s(-1,1,0)+t(-1,0,1)$. A particular solution gives the translation and two homogeneous directions give the freedom, of dimension $3-1=2$. Changing the second right-hand side to five yields $0=1$ after elimination; the augmented rank becomes two and the system is inconsistent.}
+\subsection*{例二：配方与惯性 | Completing squares and inertia}
+\APS{对 $q(x,y)=x^2+2xy+3y^2$，配方得到 $q=(x+y)^2+2y^2$。令 $u=x+y,v=y$，这是可逆线性替换，得到两个正平方项，所以该型正定，正惯性指数为 $2$。矩阵形式中 $A=\left(\begin{smallmatrix}1&1\\1&3\end{smallmatrix}\right)$，若旧坐标 $x=Py$，新矩阵为 $P^{\mathsf T}AP$。这叫合同；它保留惯性，不能直接当成保留特征值的相似变换。}{For $q(x,y)=x^2+2xy+3y^2$, completing the square gives $(x+y)^2+2y^2$. The invertible substitution $u=x+y$, $v=y$ produces two positive squares, so the form is positive definite with positive index two. Its symmetric matrix is $A=\left(\begin{smallmatrix}1&1\\1&3\end{smallmatrix}\right)$. Under a coordinate change $x=Py$, its matrix becomes $P^{\mathsf T}AP$. This is congruence: it preserves inertia and should be distinguished from similarity, which preserves eigenvalues.}
 
-\noindent\textbf{具体应用。} 电路中的节点电流守恒、化学反应的物料平衡和小型网络的流量平衡，都能写成 $Ax=b$。消元法求解；秩比较判断方程是否矛盾；若有唯一解，$A^{-1}$ 或 Cramer 法则提供理论表达。二次型可表示弹簧系统或优化问题附近的能量：正定表示除平衡点外能量为正，因此是稳定性和局部最小值判断的重要工具。这里的模型假设关系是线性的，若元件或约束是非线性的，就需要线性化或其他方法。
-\EN{Circuit laws, material balances in chemical reactions, and flow balances in small networks can be written as $Ax=b$. Gaussian elimination solves the system, while rank detects inconsistency. A quadratic form can represent energy in a coupled spring system or a local optimization model. Positive definiteness means the energy is positive away from equilibrium and is useful for stability or local-minimum tests. These models assume linear relationships; nonlinear systems require additional methods or linearization.}
 
 \section{第 1 章：多项式与整除 | Polynomials and divisibility}
 \noindent\textbf{数域和多项式。} 数域 $F$ 是可进行加、减、乘、除（除数非零）的数集，常见例子是 $\mathbb Q,\mathbb R,\mathbb C$。$F[x]$ 中的多项式是形式和 $f(x)=a_nx^n+\cdots+a_0$，系数 $a_i\in F$；最高非零项的指数是次数 $\deg f$。零多项式的次数通常不定义。多项式是形式对象，不能只看它在某个数上的取值：非零多项式可能在一些点取零。
@@ -71,6 +74,10 @@ f=xg+(x-1),\qquad g=(x+1)(x-1).
 \READ{“F equals x times g plus x minus one; therefore the greatest common divisor is x minus one.”}
 
 \section{第 2 章：行列式 | Determinants}
+\subsection{定义先于展开 | Definition before expansion}
+\APS{对 $n\times n$ 矩阵 $A=(a_{ij})$，定义 $\det A=\sum_{\sigma\in S_n}\operatorname{sgn}(\sigma)\prod_{i=1}^n a_{i,\sigma(i)}$；$S_n$ 是排列集，符号由逆序数的奇偶决定。每项从每行、每列各取一个元素。交换两行变号，一行加另一行的倍数不变，一行乘 $c$ 则行列式乘 $c$；这些性质使消元可用于计算。}{For $A=(a_{ij})\in F^{n\times n}$, define $\det A=\sum_{\sigma\in S_n}\operatorname{sgn}(\sigma)\prod_i a_{i,\sigma(i)}$. The sign is determined by the parity of the inversion count. Each product selects one entry per row and column. A row swap reverses the sign, adding a multiple of another row preserves the determinant, and scaling a row scales it by the same factor. These rules justify computation by elimination.}
+\APS{删去第 $i$ 行第 $j$ 列得到子式 $M_{ij}$，代数余子式为 $C_{ij}=(-1)^{i+j}M_{ij}$。按第 $i$ 行分组排列求和得到 $\det A=\sum_j a_{ij}C_{ij}$。例如 $\det\left(\begin{smallmatrix}1&2&0\\0&3&4\\0&0&5\end{smallmatrix}\right)=15$，因为三角矩阵只有对角排列产生非零项。非零行列式等价于满秩和可逆，而非方阵不定义这一行列式判据。}{Deleting row $i$ and column $j$ gives the minor $M_{ij}$, and $C_{ij}=(-1)^{i+j}M_{ij}$ is the cofactor. Grouping the defining permutation sum yields $\det A=\sum_j a_{ij}C_{ij}$. An upper triangular matrix with diagonal $1,3,5$ has determinant 15, since only the diagonal permutation contributes. For square matrices a nonzero determinant is equivalent to full rank and invertibility.}
+
 \noindent\textbf{定义和几何意义。} $n\times n$ 方阵 $A$ 的行列式 $\det A$ 是由矩阵元素按带符号排列求和得到的标量。二阶时
 \FORMULA{二阶行列式公式}{formula for a $2\times2$ determinant}
 \[
@@ -97,6 +104,9 @@ f=xg+(x-1),\qquad g=(x+1)(x-1).
 \EX{方程 $2x+y=5,\ x-y=1$ 的系数行列式是 $-3\ne0$，所以唯一解存在。替换第一列求得 $x=2$，替换第二列求得 $y=1$；代回两式均成立。}{The coefficient determinant is nonzero, so the system has a unique solution. Cramer's rule gives $x=2$ and $y=1$, which satisfy both equations.}
 
 \section{第 3 章：线性方程组与秩 | Linear systems and rank}
+\subsection{线性组合、张成和零空间 | Span and the homogeneous solution space}
+\APS{向量的线性组合为 $\sum_j\alpha_jv_j$，所有组合组成张成空间；若只有全部系数为零才能组合成零，称线性无关。$Ax=b$ 的左边就是 $A$ 的列向量按 $x_j$ 作线性组合，所以可解等价于 $b$ 在列空间内，秩就是列空间维数。零空间 $\ker A=\{x:Ax=0\}$ 是齐次解空间。若 $x_p$ 是一个特解，则全部解恰为 $x_p+\ker A$，因为任意两解之差在核中，反过来加核元素仍是解。}{A linear combination is $\sum_j\alpha_jv_j$; all such combinations form the span. Independence means only zero coefficients produce zero. Since $Ax$ combines the columns of $A$, solvability means $b$ belongs to the column space, whose dimension is the rank. The kernel $\ker A=\{x:Ax=0\}$ is the homogeneous solution space. Given one solution $x_p$, every solution is exactly $x_p+\ker A$: differences of solutions lie in the kernel, and adding any kernel vector preserves the equation.}
+
 \noindent\textbf{系数矩阵和增广矩阵。} $m$ 个线性方程、$n$ 个未知量写为 $Ax=b$。$A$ 是 $m\times n$ 系数矩阵，$x$ 是未知列向量，$b$ 是常数列。增广矩阵 $[A\mid b]$ 把常数列并到系数矩阵右边；对方程作合法消元等价于对增广矩阵作初等行变换。
 \EN{A system of $m$ linear equations in $n$ unknowns is written as $Ax=b$. The coefficient matrix $A$ contains the coefficients, $x$ is the unknown vector, and $b$ is the right-hand side. The augmented matrix appends $b$ to $A$, and elementary row operations preserve the solution set.}
 \READ{“A x equals b, where A is the coefficient matrix and b is the right-hand-side vector.”}
@@ -149,6 +159,9 @@ x+y+z=2,\qquad 2x+2y+2z=4,\qquad x-y+z=0.
 \EX{映射 $A(x,y,z)=(x+y,2x+2y)$ 的矩阵秩为 $1$，因为第二行是第一行的两倍。像空间是一条直线；核由 $x+y=0$ 且 $z$ 任意组成，是二维平面。}{The two output coordinates are dependent, so the matrix has rank one. Its image is a line, while its kernel is the plane $x+y=0$ with arbitrary $z$.}
 
 \section{第 5 章：二次型 | Quadratic forms}
+\subsection{二次型为何用合同 | Why forms transform by congruence}
+\APS{实二次型可写为 $q(x)=x^{\mathsf T}Ax$，其中 $A=A^{\mathsf T}$；交叉项 $b x_ix_j$ 在矩阵的 $(i,j)$、$(j,i)$ 位置各放 $b/2$。可逆替换 $x=Py$ 同时改变两个输入，故得到 $P^{\mathsf T}AP$。线性算子的基变换则为 $P^{-1}AP$，因为输入、输出坐标各变一次。两种变换对象不同，不应仅因矩阵形式相近就互换。}{A real quadratic form is $q(x)=x^{\mathsf T}Ax$ with symmetric $A$. A cross term $b x_ix_j$ contributes $b/2$ to each symmetric entry. Substitution $x=Py$ changes both inputs and yields $P^{\mathsf T}AP$. For a linear operator, a basis change instead gives $P^{-1}AP$, accounting for input and output coordinates. Congruence and similarity describe different objects.}
+
 \noindent\textbf{定义与对称矩阵。} 实二次型是形如 $Q(x)=\sum_{i,j}a_{ij}x_ix_j$ 的齐次二次多项式，可写成
 \FORMULA{二次型的矩阵表示}{matrix representation of a quadratic form}
 \[

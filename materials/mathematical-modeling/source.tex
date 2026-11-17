@@ -6,25 +6,19 @@
 \newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
 \newcommand{\FORMULA}[2]{\par\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
 \newcommand{\EX}[2]{\par\noindent\textbf{例子 / Example.} #1\par\EN{#2}}
-\newcommand{\ASK}[4]{\par\noindent\textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent\textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
+\newcommand{\ASK}[4]{\par\noindent\textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent\textbf{回答要点 / Key answer.} #3\par\EN{#4}\smallskip}
 \title{数学建模与数学实验 APS 面试准备\\[4pt]\large 双语课程概述、模型知识点与口试题}
 \author{Mathematical Modeling: Bilingual Review}
 \date{}
+\newcommand{\APS}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par\smallskip}
 \begin{document}\maketitle
 \section*{课程概述 | Course overview}
-\noindent\textbf{课程主线 / Course roadmap.} 我按“提出问题—定义变量与单位—说明假设—建立方程或约束—选择解析/数值方法—用数据验证—分析敏感性和局限”的顺序复习。课件中的知识点包括量纲分析、层次分析法、拟合与插值、求根、常微分和差分方程、优化与图网络、随机模型、更新更换策略及 SIR 模型。比如药物清除用 $C'=-kC$，传染病用 $S,I,R$ 三类人群方程，二者都必须解释参数含义并检查模型假设。
-\EN{I organize the course as a sequence: formulate a question, choose variables and assumptions, build equations, compute, compare with data, and state limitations. The notes cover elementary models and dimensional analysis, the analytic hierarchy process, fitting, interpolation and root finding, differential and difference equations, optimization and graph networks, stochastic models, renewal and replacement policies, and the SIR epidemic model. Different questions require different mathematics; modeling is not formula matching but explaining how variables, parameters, and assumptions represent the real problem.}
-\noindent\textbf{中文口述稿。} 在数学建模课上，我学习把现实问题转化为可计算的模型。例如描述药物浓度时，先假设药物在体内充分混合，且单位时间清除量与当前浓度成正比。若 $C(t)$ 是浓度、$k>0$ 是清除速率，我可以写出 $C'(t)=-kC(t)$，由初始浓度 $C(0)=C_0$ 得到 $C(t)=C_0e^{-kt}$。这说明浓度随时间衰减，半衰期为 $\ln2/k$。再用观测数据估计 $k$，并比较预测与实际浓度；如果清除速率并不恒定，就需要修改模型。这个例子把微分方程、数据拟合和模型检验联系起来。
+\APS{数学建模的课程内容包括建模流程与初等模型、量纲分析与层次分析法、拟合插值与求根、人口/传染病/药物/生态的微分方程与差分模型、线性与非线性优化、变分和图论网络、随机库存与更换策略。我按“现实问题—假设—变量参数—方程或目标—求解—验证”的顺序介绍模型。模型名只是入口，还必须讲清变量单位、参数如何估计、结论依赖哪些简化，以及怎样用未参与拟合的数据验证。}{The course includes elementary modeling, dimensional analysis and AHP; fitting, interpolation and root finding; differential and difference models for population, epidemics, drugs and ecology; linear and nonlinear optimization, variational problems and networks; and stochastic inventory and replacement policies. I explain a model through the problem, assumptions, variables and parameters, equations or objectives, solution and validation. Naming a model is only the start: units, parameter estimation, simplifications and validation on unused data complete the explanation.}
+\subsection*{例一：从观测估计药物消除率 | Estimating a drug-elimination parameter}
+\APS{假设药物充分混合、无后续输入，且排除速率正比于浓度，则 $C^{\prime}=-kC$，$k>0$，解为 $C(t)=C_0e^{-kt}$。若 $C_0=10$、两小时后 $C(2)=5$，则 $k=\log2/2$ 每小时，半衰期为两小时，预测 $C(4)=2.5$。该预测还需用其他时刻的观测检查；若残差系统偏离，可能是单房室或一级排除假设失效，而不只是数值求解误差。}{Assume uniform mixing, no further input and elimination proportional to concentration. Then $C^{\prime}=-kC$ with $k>0$, giving $C(t)=C_0e^{-kt}$. If $C_0=10$ and $C(2)=5$, then $k=\log2/2$ per hour, the half-life is two hours, and $C(4)=2.5$. Other observations must check this prediction. Systematic residuals may indicate failure of the one-compartment or first-order assumption, rather than an error in solving the equation.}
+\subsection*{例二：SIR 阈值来自哪一项 | Deriving an epidemic threshold}
+\APS{用 $s,i,r$ 表示易感、感染和康复比例，均匀混合、封闭人群和永久免疫假设给出 $i^{\prime}=(\beta s-\gamma)i$。参数 $\beta$ 是传播率，$\gamma$ 是康复率，单位均为每日。若 $\beta=0.3,\gamma=0.1,s_0=0.99$，则初始增长率为 $0.197$ 每日，有效再生数为 $\beta s_0/\gamma=2.97>1$。干预使 $\beta=0.08$ 后，该数降到 $0.792$，初期感染转为下降。由于 $s$ 随时间变化，不能用初始指数增长一直外推。}{Let $s,i,r$ be susceptible, infectious and recovered fractions. Homogeneous mixing, a closed population and lasting immunity give $i^{\prime}=(\beta s-\gamma)i$. Transmission and recovery rates $\beta,\gamma$ are per day. With $\beta=0.3$, $\gamma=0.1$ and $s_0=0.99$, the initial growth rate is $0.197$ per day and the effective reproduction number is $2.97>1$. Reducing $\beta$ to $0.08$ lowers it to $0.792$, producing initial decline. Since $s$ changes, the initial exponential approximation cannot be extrapolated indefinitely.}
 
-\EN{In mathematical modeling, I learned to turn a practical question into a model that can be computed and checked. For drug concentration, suppose the drug is well mixed and the elimination rate is proportional to the current concentration. If $C(t)$ is concentration and $k>0$ is the elimination rate, then $C'(t)=-kC(t)$. Starting from $C(0)=C_0$, the solution is $C(t)=C_0e^{-kt}$, with half-life $\ln2/k$. I can estimate $k$ from observations and compare predictions with measured concentrations. If the elimination rate is not constant, the model needs to change. This example connects differential equations, data fitting, and model validation.}
-
-\noindent\textbf{课程与其他数学领域的联系及应用（拓展口述）。} 数学建模不是单独的一种公式，而是把实际问题和数学工具组织起来的流程：微积分和微分方程描述连续变化，差分方程与马氏链描述离散演化，概率论处理不确定性，优化选择成本最低或效益最高的方案，图论表达网络关系，数值分析负责计算复杂模型。文件夹中的课件给出了人口增长、药物体内分布、传染病传播、多种群生态、Leslie 年龄结构、运输网络和零件预防性更换等应用。以传染病为例，先把人群划分为易感、感染和康复等状态，说明接触率、传染率等参数的含义与假设，再写成微分方程并求解，最后用数据或基本极限行为检查预测。模型结论只在其假设和参数适用的范围内成立。
-\EN{\textbf{Connections and applications (extension for an interview).} Mathematical modeling is not a single formula but a process that organizes real questions and mathematical tools. Calculus and differential equations describe continuous change; difference equations and Markov chains describe discrete evolution; probability represents uncertainty; optimization selects a low-cost or high-benefit decision; graph theory represents networks; and numerical analysis computes models that are too complex for hand calculation. The lecture files include population growth, pharmacokinetics, epidemics, interacting populations, Leslie age structures, transport networks, and preventive replacement of components. For an epidemic model, divide the population into states such as susceptible, infectious, and recovered; define parameters such as contact and transmission rates and state the assumptions; formulate and solve differential equations; then check predictions against data or limiting behavior. Conclusions apply only within the scope of the assumptions and parameters.}
-
-\ASK{数学建模怎样把不同课程知识连接起来？}{How does mathematical modeling connect different mathematical subjects?}{例如传染病模型用微分方程描述人数变化，用概率或数据估计参数，用数值分析求解复杂方程，再用统计方法比较预测与观测。建模者必须说明变量、参数、假设和验证方式；计算出一个解并不等于模型已经可靠。}{An epidemic model can use differential equations for population changes, probability or data to estimate parameters, numerical analysis to solve complex equations, and statistics to compare predictions with observations. A modeler must state variables, parameters, assumptions, and validation methods. Computing a solution does not by itself make the model reliable.}
-
-\noindent\textbf{口述提示。} 本概述依据文件夹内课程讲义和“复习2025”整理；若面试官问你实际做过的实验或项目，应换成自己的真实案例。
-\EN{This overview follows the lecture files and the 2025 review slides. If asked about a specific experiment or project, I should describe one I actually completed.}
 
 \section{建模步骤与初等模型 | Modeling process and elementary models}
 \noindent\textbf{建模流程。} 明确问题和目标；作出并说明假设；定义变量、参数、单位与数据；建立关系式或约束；选择解析、数值或优化方法求解；检验量纲、边界情况和数据拟合；进行敏感性分析；解释结论及适用范围。模型是对现实问题的数学表达，模型求解只是流程中的一个环节。
@@ -79,6 +73,10 @@ CI=\frac{\lambda_{\max}-n}{n-1},\qquad CR=\frac{CI}{RI}.
 \ASK{AHP 为什么要做一致性检验？}{Why does AHP require a consistency check?}{成对比较来自人的判断，可能互相矛盾。一致性比率衡量判断矩阵偏离传递一致性的程度；若过大，应复查比较值。}{Pairwise comparisons are human judgments and may contradict one another. The consistency ratio measures deviation from transitive consistency; if it is too large, the comparisons should be reviewed.}
 
 \section{拟合、插值与数值求根 | Fitting, interpolation and root finding}
+\subsection{参数估计和验证要分开 | Separate fitting from validation}
+\APS{参数是给定模型中待估的常数，状态变量随时间或位置改变。若观测 $y_j=m(t_j;\theta)+\varepsilon_j$，最小二乘选择 $\widehat\theta$ 使 $\sum_j[y_j-m(t_j;\theta)]^2$ 最小；这假定平方损失适合误差尺度。插值要求逐点通过，拟合允许残差。残差 $r_j=y_j-\widehat y_j$ 若随时间呈现趋势，可能表明遗漏机制；训练误差小并不能证明预测可靠，应留出数据或使用交叉验证，并对关键参数作敏感性分析。}{Parameters are unknown constants of a model; state variables change with time or position. With observations $y_j=m(t_j;\theta)+\varepsilon_j$, least squares minimizes $\sum_j[y_j-m(t_j;\theta)]^2$. The squared loss must suit the error scale. Interpolation passes through observations, while fitting permits residuals. Residual trends can indicate omitted mechanisms. Small training error does not establish predictive reliability: use held-out data or cross-validation and examine parameter sensitivity.}
+\APS{例如线性模型 $y=a+bt$ 的设计矩阵每行为 $(1,t_j)$，正规方程为 $X^{\mathsf T}X\widehat\theta=X^{\mathsf T}y$。至少两个不同观测时刻使两列独立，参数才可唯一辨识。若全部 $t_j$ 相同，只能估出 $a+bt_j$，不能分别确定 $a,b$；这属于模型可辨识性，不能靠换一个求解器补救。}{For $y=a+bt$, each design-matrix row is $(1,t_j)$ and the normal equations are $X^{\mathsf T}X\widehat\theta=X^{\mathsf T}y$. At least two distinct times make the columns independent and identify both parameters. If all times coincide, only their combination $a+bt_j$ is identifiable. Changing numerical solvers cannot repair missing information.}
+
 \noindent\textbf{最小二乘拟合。} 给定数据 $(x_i,y_i)$ 和模型 $y\approx\sum_{j=1}^p\beta_j\phi_j(x)$，最小二乘法选择参数使残差平方和最小。矩阵形式为
 \FORMULA{线性最小二乘目标与正规方程}{linear least-squares objective and normal equations}
 \[
@@ -122,6 +120,8 @@ x(t)=\frac{K}{1+(K/x_0-1)e^{-rt}}.
 \READ{“X dot equals r x times one minus x over K.” “X of t equals K divided by a denominator of one plus the quantity K over x zero minus one, multiplied by e to the negative r t.”}
 \EN{The Malthus model has exponential growth. The Logistic model includes a carrying capacity $K$; its growth rate is maximal at $x=K/2$, the inflection point where growth changes from accelerating to decelerating.}
 
+\APS{这里采用封闭总人口 $N$，忽略出生死亡和迁移，$s=S/N,i=I/N,r=R/N$ 分别为易感、感染、康复比例。假设均匀混合、每个感染者按常率康复、康复后永久免疫，则传播流量为 $\beta si$，康复流量为 $\gamma i$。三式相加等于零，故总比例 $s+i+r$ 守恒为 $1$。$R_0$ 中的下标零表示全易感环境下的基本再生数，不能和随时间变化的康复变量 $r$ 混淆。}{Use a closed population $N$, without births, deaths or migration, and fractions $s=S/N$, $i=I/N$, $r=R/N$. Homogeneous mixing, constant per-infective recovery and lasting immunity give transmission flow $\beta si$ and recovery flow $\gamma i$. Summing the equations gives zero, so $s+i+r=1$ is conserved. The basic reproduction number describes a fully susceptible population and is distinct from the time-dependent recovered fraction.}
+
 \noindent\textbf{传染病模型。} 归一化人群中 SIR 模型为
 \FORMULA{SIR 易感--感染--康复模型}{susceptible-infectious-recovered model}
 \[
@@ -163,6 +163,23 @@ x(t)=\frac{K}{1+(K/x_0-1)e^{-rt}}.
 
 \ASK{Leslie 矩阵各部分代表什么？}{What do the parts of a Leslie matrix represent?}{首行表示各年龄组生育贡献，次对角线表示个体存活到下一年龄组的比例；乘以当前年龄分布得到下一期分布。}{The first row represents fertility contributions from age groups, and the subdiagonal represents survival into the next age group. Multiplying by the current age distribution gives the next period's distribution.}
 
+\subsection{SIR 阈值的数值读法与模型边界 | Reading an SIR threshold}
+\noindent 前文的归一化 SIR 模型给出 $i'=\beta si-\gamma i$，其中 $s=S/N$ 是易感比例。感染早期 $s(t)\approx s_0$，故
+\FORMULA{SIR 模型的初期增长率与有效再生数}{initial growth rate and effective reproduction number in the SIR model}
+\[
+I'\approx\left(\beta\frac{S_0}{N}-\gamma\right)I,
+\qquad
+\mathcal R_0=\frac{\beta}{\gamma},\quad
+\mathcal R_{\mathrm e}(0)=\mathcal R_0s_0=\frac{\beta S_0}{\gamma N}.
+\]
+若 $\mathcal R_{\mathrm e}(0)>1$，感染比例初期增长；若小于 $1$，则初期下降。这是局部于疫情早期的判断，不代表感染数一直指数变化，因为易感比例会继续下降。
+\EN{The initial growth condition is $\mathcal R_{\mathrm e}(0)=\mathcal R_0s_0>1$. This is an early-stage conclusion, not a claim that infections grow exponentially forever, since the susceptible fraction changes over time.}
+\EX{取初始易感比例 $s_0=0.99$、传播率 $\beta=0.3$ 每日、康复率 $\gamma=0.1$ 每日，则 $\mathcal R_0=\beta/\gamma=3$，有效阈值为 $\mathcal R_0s_0=2.97$，初始近似增长率为 $\beta s_0-\gamma=0.197$ 每日。若干预使参数 $\beta$ 降至 $0.08$ 每日，则新阈值为 $0.08\cdot0.99/0.1=0.792<1$，初期感染数转为下降。}{With susceptible fraction $s_0=0.99$, transmission rate $\beta=0.3$ per day, and recovery rate $\gamma=0.1$ per day, $\mathcal R_0=3$, the effective threshold is $2.97$, and the initial growth rate is $0.197$ per day. Reducing $\beta$ to $0.08$ per day gives threshold $0.792<1$, so infections initially decline.}
+\par\noindent\begin{minipage}{\linewidth}
+\ASK{模型算出的 $R_0$ 为什么不一定是可直接观测的常数？}{Why is the model's $R_0$ not necessarily a directly observed constant?}{它由模型假设和参数估计定义；接触行为、干预和易感比例变化都会改变实际增长率。SIR 的均匀混合假设不适合所有人群，估计结果必须连同数据来源和适用时段说明。}{It is defined through model assumptions and estimated parameters. Contact behavior, interventions, and changes in susceptibility affect the realized growth rate. The homogeneous-mixing assumption may not fit every population, so estimates should be stated with their data source and time period.}
+\end{minipage}
+
+
 \section{优化、变分与图论网络 | Optimization, variational methods and networks}
 \noindent\textbf{函数优化模型。} 标准约束优化形式为
 \FORMULA{一般非线性约束优化模型}{general nonlinear constrained optimization problem}
@@ -197,28 +214,13 @@ x(t)=\frac{K}{1+(K/x_0-1)e^{-rt}}.
 
 \ASK{随机模型和确定性模型有什么区别？}{How does a stochastic model differ from a deterministic model?}{确定性模型在给定参数和初值后给出单一结果；随机模型显式描述不确定性，输出分布、概率或期望。}{A deterministic model gives one outcome for fixed parameters and initial conditions. A stochastic model explicitly represents uncertainty and produces distributions, probabilities, or expectations.}
 
-\section{SIR 阈值的数值读法与模型边界 | Reading an SIR threshold}
-\noindent 前文的归一化 SIR 模型给出 $i'=\beta si-\gamma i$，其中 $s=S/N$ 是易感比例。感染早期 $s(t)\approx s_0$，故
-\FORMULA{SIR 模型的初期增长率与有效再生数}{initial growth rate and effective reproduction number in the SIR model}
-\[
-I'\approx\left(\beta\frac{S_0}{N}-\gamma\right)I,
-\qquad
-\mathcal R_0=\frac{\beta}{\gamma},\quad
-\mathcal R_{\mathrm e}(0)=\mathcal R_0s_0=\frac{\beta S_0}{\gamma N}.
-\]
-若 $\mathcal R_{\mathrm e}(0)>1$，感染比例初期增长；若小于 $1$，则初期下降。这是局部于疫情早期的判断，不代表感染数一直指数变化，因为易感比例会继续下降。
-\EN{The initial growth condition is $\mathcal R_{\mathrm e}(0)=\mathcal R_0s_0>1$. This is an early-stage conclusion, not a claim that infections grow exponentially forever, since the susceptible fraction changes over time.}
-\EX{取初始易感比例 $s_0=0.99$、传播率 $\beta=0.3$ 每日、康复率 $\gamma=0.1$ 每日，则 $\mathcal R_0=\beta/\gamma=3$，有效阈值为 $\mathcal R_0s_0=2.97$，初始近似增长率为 $\beta s_0-\gamma=0.197$ 每日。若干预使参数 $\beta$ 降至 $0.08$ 每日，则新阈值为 $0.08\cdot0.99/0.1=0.792<1$，初期感染数转为下降。}{With susceptible fraction $s_0=0.99$, transmission rate $\beta=0.3$ per day, and recovery rate $\gamma=0.1$ per day, $\mathcal R_0=3$, the effective threshold is $2.97$, and the initial growth rate is $0.197$ per day. Reducing $\beta$ to $0.08$ per day gives threshold $0.792<1$, so infections initially decline.}
-\par\noindent\begin{minipage}{\linewidth}
-\ASK{模型算出的 $R_0$ 为什么不一定是可直接观测的常数？}{Why is the model's $R_0$ not necessarily a directly observed constant?}{它由模型假设和参数估计定义；接触行为、干预和易感比例变化都会改变实际增长率。SIR 的均匀混合假设不适合所有人群，估计结果必须连同数据来源和适用时段说明。}{It is defined through model assumptions and estimated parameters. Contact behavior, interventions, and changes in susceptibility affect the realized growth rate. The homogeneous-mixing assumption may not fit every population, so estimates should be stated with their data source and time period.}
-\end{minipage}
-
 \section*{口试表达 | Oral response structure}
 介绍任何一个模型时，可依次说明现实问题、关键假设、变量与参数、模型方程或优化目标、求解方法、主要结论和验证方式。解释预测结果时说明参数敏感性与模型局限，不把相关关系直接说成因果关系。
 
 \EN{When presenting a model, explain the real problem, key assumptions, variables and parameters, equations or objective, solution method, main result, and validation. Discuss parameter sensitivity and limitations, and do not interpret correlation as causation without justification.}
 
-\section*{来源与范围 | Source and scope}
-本讲义依据“数学建模”文件夹中的讲义 PDF 和《复习2025》整理，覆盖初等模型、量纲分析、AHP、拟合插值、非线性求根、常微分与差分模型、马氏链、Leslie 模型、优化、图论和随机模型。抢渡长江等模型按课件问题背景概括；具体数据、参数和边界条件须以题目为准。
-\EN{This handout follows the lecture PDFs and 2025 review slides in the Mathematical Modeling folder. It covers elementary models, dimensional analysis, AHP, fitting and interpolation, nonlinear root finding, ODE and difference models, Markov chains, the Leslie model, optimization, graph theory, and stochastic models. The Yangtze crossing and other applications are summarized from their course context; use the exact data, parameters, and boundary conditions given in a specific problem.}
+\par\medskip\begingroup\small
+\noindent\textbf{来源与范围 | Source and scope.} 依据课程讲义 PDF 与《复习2025》；各应用的数据、参数和边界条件以具体题目为准。
+\EN{Sources: course PDFs and the 2025 review. Use the data from each problem, including, parameters and boundary conditions.}
+\par\endgroup
 \end{document}

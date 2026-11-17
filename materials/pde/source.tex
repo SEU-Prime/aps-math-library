@@ -10,17 +10,21 @@
 \title{数学物理方程 APS 面试准备\\[4pt]\large 讲义第 3 版第 1--4 章：分类、分离变量、变换与 Green 函数}
 \author{Mathematical Physics Equations: Bilingual Review}
 \date{}
+\newcommand{\APS}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par\smallskip}
 \begin{document}\maketitle
 \section*{课程概述 | Course overview}
-\noindent\textbf{课程主线 / Course roadmap.} 我先根据最高阶项的判别式和初边值条件区分一阶、椭圆型、抛物型和双曲型方程，再按方法学习特征线、分离变量与 Fourier 展开、Fourier/Laplace 变换和 Green 函数。热方程描述扩散，波方程描述传播，Laplace 方程描述稳态平衡；每个问题都必须同时满足 PDE、初始条件和边界条件。最基本的热方程模态是 $u=e^{-\kappa\pi^2t}\sin(\pi x)$，正弦项满足端点条件，指数项给出衰减。
-\EN{I first distinguish first-order, wave, heat, and elliptic equations using their highest-order terms and initial or boundary data. I then study solution methods: characteristics reduce first-order PDEs to ODEs; separation of variables and Fourier series treat wave, heat, and potential equations; Fourier transforms are useful on unbounded domains, Laplace transforms incorporate time initial data, and Green functions handle source terms and boundary conditions. A solution must satisfy the PDE as well as its initial and boundary conditions. For a rod, the single heat mode $u=e^{-\kappa\pi^2t}\sin(\pi x)$ is easy to check: the spatial factor satisfies the endpoint conditions and the time factor describes decay.}
-\noindent \textbf{中文口述稿。} 我在这门课学习用偏微分方程描述随时间和位置变化的物理量。例如细杆温度 $u(x,t)$ 在均匀、无热源的理想模型下满足 $u_t=\kappa u_{xx}$，其中 $\kappa>0$ 是热扩散系数。如果杆长为 $1$、两端温度保持为零，初始温度是 $\sin(\pi x)$，分离变量得到 $u(x,t)=e^{-\kappa\pi^2t}\sin(\pi x)$。正弦项满足两端条件，指数项说明温差逐渐衰减。为了确定解，除了方程还必须说明初始状态和边界条件。
-\EN{In this course, I studied partial differential equations for quantities that change in space and time. For example, the temperature $u(x,t)$ in an ideal uniform rod without heat sources satisfies $u_t=\kappa u_{xx}$, where $\kappa>0$ is the thermal diffusivity. For a rod of length one with zero endpoint temperatures and initial profile $\sin(\pi x)$, separation of variables gives $u(x,t)=e^{-\kappa\pi^2t}\sin(\pi x)$. The sine factor satisfies the endpoint conditions, while the exponential factor shows the temperature difference decaying. The PDE needs initial and boundary conditions to determine the solution.}
+\APS{数学物理方程先区分方程阶数、线性与齐次性、椭圆/抛物/双曲类型，以及初值、Dirichlet、Neumann 条件。方法上先学一阶方程的特征线，再用分离变量和 Fourier 特征函数处理有界区域的波动、热和位势方程；全空间问题常用 d\textquotesingle Alembert 公式、热核与 Fourier 变换，半轴时间问题可用 Laplace 变换，非齐次边值问题可用 Green 函数。选择方法前，要明确区域、数据、相容性和解的正则性。}{I begin with order, linearity, homogeneity, elliptic/parabolic/hyperbolic classification, and initial, Dirichlet and Neumann data. Characteristics solve first-order equations; separation and Fourier eigenfunctions handle bounded-domain wave, heat and potential problems. Whole-space problems use d\textquotesingle Alembert\textquotesingle s formula, heat kernels or Fourier transforms; Laplace transforms incorporate initial data; Green functions handle forcing and boundary conditions. Method selection starts with the domain, data, compatibility and regularity of the desired solution.}
+\subsection*{例一：热方程的一条 Fourier 模态 | One heat-equation mode}
+\APS{在 $0<x<L$ 上解 $u_t=\kappa u_{xx}$，两端温度为零，初温 $u(x,0)=\sin(\pi x/L)$。设 $u=X(x)T(t)$，边界条件给 $X(0)=X(L)=0$，最低特征值为 $\lambda=(\pi/L)^2$、特征函数为 $\sin(\pi x/L)$。时间方程 $T^{\prime}=-\kappa\lambda T$ 给出 $u=e^{-\kappa(\pi/L)^2t}\sin(\pi x/L)$。空间形状保持，振幅指数衰减；更高频率因 $n^2$ 因子衰减更快。}{For $u_t=\kappa u_{xx}$ on $0<x<L$ with zero endpoint temperatures and initial value $\sin(\pi x/L)$, set $u=XT$. The boundary conditions give $X(0)=X(L)=0$, with first eigenvalue $(\pi/L)^2$ and eigenfunction $\sin(\pi x/L)$. Solving $T^{\prime}=-\kappa\lambda T$ yields $u=e^{-\kappa(\pi/L)^2t}\sin(\pi x/L)$. The shape remains while its amplitude decays. Higher modes decay faster because their rates contain $n^2$.}
+\subsection*{例二：波与热为何不同 | Propagation differs from diffusion}
+\APS{全直线波动方程 $u_{tt}=c^2u_{xx}$，初位移 $f$、初速度为零时，d\textquotesingle Alembert 公式给 $u(x,t)=[f(x-ct)+f(x+ct)]/2$。初始形状分成左右传播的两半，点 $(x,t)$ 只依赖有限区间 $[x-ct,x+ct]$ 的数据。热方程的高斯核在所有位置为正，紧支撑初温通常会立即影响全空间。这反映双曲方程的有限传播与抛物方程的扩散，不能把两种解的行为混同。}{For the wave equation $u_{tt}=c^2u_{xx}$ on the line with displacement $f$ and zero initial velocity, d\textquotesingle Alembert gives $u(x,t)=[f(x-ct)+f(x+ct)]/2$. The initial profile splits into left- and right-moving parts, and the value at $(x,t)$ depends only on data in $[x-ct,x+ct]$. The heat kernel is positive everywhere, so compactly supported initial heat generally influences the entire line immediately. This distinguishes finite propagation in hyperbolic equations from parabolic diffusion.}
 
-\noindent \textbf{具体应用联系。} 一根长度为 $L$、两端固定的细弦，其横向位移 $u(x,t)$ 可由波动方程描述；细杆温度 $u(x,t)$ 可由热方程描述；无自由电荷区域的电势 $u(x,y,z)$ 满足 Laplace 方程。方程本身只给出局部演化/平衡规律，初始条件规定起始状态，边界条件描述端点如何被固定、加热或施加电势；少了这些条件，通常无法确定唯一物理解。
-\EN{The transverse displacement of a fixed string of length $L$ is modeled by the wave equation. The temperature in a thin rod is modeled by the heat equation, while electrostatic potential in a charge-free region satisfies Laplace's equation. The PDE gives a local evolution or equilibrium law; initial conditions specify the starting state and boundary conditions specify how the ends are fixed, heated, or assigned a potential. Without these conditions, a unique physical solution is generally not determined.}
 
 \section{方程类型与条件 | Equation types and data}
+\subsection{先定义方程与解 | Equations, solutions and well-posedness}
+\APS{偏微分方程联系未知多元函数 $u$ 及其偏导数，阶数是最高导数阶。线性方程可写为 $Lu=f$，$L$ 的系数只依赖自变量；齐次指 $f=0$。拟线性允许系数依赖 $u$ 和低阶导数，但最高阶导数线性出现。经典解须具有方程中所需的连续导数并逐点满足方程；初边值问题还须满足指定数据。}{A PDE relates an unknown multivariable function and its partial derivatives; its order is the highest derivative order. A linear equation is $Lu=f$ with coefficients depending only on independent variables; it is homogeneous when $f=0$. A quasilinear equation is linear in its highest derivatives but may have coefficients depending on lower derivatives and the unknown. A classical solution has the required continuous derivatives and satisfies the equation and prescribed data pointwise.}
+\APS{Hadamard 适定性包含存在、唯一和对数据连续依赖三项。边界/初值不是装饰：在热方程区间问题中若初温为 $f(x)$ 且边界恒零，要求解在角点连续就须 $f(0)=f(L)=0$。Neumann 位势问题还有限制：$\Delta u=f,\ \partial_nu=g$ 必须满足 $\int_\Omega f=\int_{\partial\Omega}g$，且解只唯一到加常数。这由散度定理直接得到。}{Hadamard well-posedness means existence, uniqueness and continuous dependence on data. Compatibility matters: continuous solutions of a heat problem with zero endpoint values require initial data $f(0)=f(L)=0$. For $\Delta u=f$ with Neumann data $\partial_nu=g$, the divergence theorem requires $\int_\Omega f=\int_{\partial\Omega}g$, and uniqueness is only up to an additive constant.}
+
 \noindent 判别式 $B^2-AC<0$、$=0$、$>0$ 分别对应椭圆型、抛物型、双曲型；Laplace 方程、热方程、波方程分别是三类的典型例子。这里 $u$ 是待求的温度、位移或势函数，二阶下标表示连续求两次偏导，例如 $u_{xx}=\partial^2u/\partial x^2$。
 \EN{The sign of $B^2-AC$ classifies the equation: negative is elliptic, zero is parabolic, and positive is hyperbolic. Laplace's equation, the heat equation, and the wave equation are standard examples. The unknown $u$ may represent temperature, displacement, or potential; for instance, $u_{xx}$ is the second partial derivative with respect to $x$.}
 \noindent 一阶方程常写为 $a(x,t)u_x+b(x,t)u_t=c(x,t,u)$；特征线是沿着某些曲线把偏导方程化为常微分方程的路径。二维二阶线性方程主部写为 $Au_{xx}+2Bu_{xy}+Cu_{yy}$，判别式 $B^2-AC$ 的符号区分椭圆型、抛物型和双曲型：分别对应 Laplace 型平衡、heat 型扩散和 wave 型传播。系数会随位置变化时，应逐点判断类型。
@@ -43,6 +47,58 @@
 \READ{“D x by d s equals a, d t by d s equals b, and d u by d s equals c.”}
 \EX{考虑 $u_t+xu_x=0$，初值为 $u(x,0)=f(x)$。特征线满足 $dx/dt=x$，所以 $x(t)=x_0e^t$；同时 $du/dt=0$，故 $u$ 保持为 $f(x_0)$。由 $x_0=xe^{-t}$ 得 $u(x,t)=f(xe^{-t})$。初始位置 $x_0$ 随时间指数移动，解的数值沿每条特征线不变。}{For $u_t+xu_x=0$ with $u(x,0)=f(x)$, characteristics satisfy $dx/dt=x$, giving $x=x_0e^t$. Along them $du/dt=0$, so $u=f(x_0)=f(xe^{-t})$. The solution value is constant on each characteristic.}
 \ASK{特征线方法为什么适合一阶输运方程？}{Why are characteristics useful for first-order transport equations?}{方程描述解沿某个方向的变化。选取与系数相匹配的曲线后，空间和时间偏导合并成沿曲线的全导数，问题就变成常微分方程。}{A transport equation describes change along a direction. Choosing curves aligned with its coefficients combines the partial derivatives into a total derivative, reducing the problem to ordinary differential equations.}
+
+\section{分离变量与 Fourier 展开 | Separation of variables}
+\noindent 对线性方程尝试乘积形式 $u(x,t)=X(x)T(t)$，代回后把只含 $x$ 的式子与只含 $t$ 的式子分开，并令它们等于分离常数。边界条件通常导出 Sturm--Liouville 特征值问题；特征函数组成展开基，再由初值求 Fourier 系数。最后检查级数满足方程、边界条件，并在适当意义下收敛到初值。
+\EN{For a linear PDE, try a product $u(x,t)=X(x)T(t)$. Substitution separates the spatial and temporal equations using a separation constant. Boundary conditions produce a Sturm--Liouville eigenvalue problem; its eigenfunctions form an expansion, and the initial condition determines the Fourier coefficients. The resulting series must satisfy the PDE and boundary conditions and converge to the initial data in an appropriate sense.}
+
+
+\subsection{Sturm--Liouville 问题与正交性 | The eigenproblem behind separation}
+\APS{规则 Sturm--Liouville 问题写成 $-(pX^{\prime})^{\prime}+qX=\lambda wX$，在有限区间上要求 $p>0,w>0$、实系数有足够正则性，并配齐次自伴边界条件。内积为 $\langle X,Y\rangle_w=\int X Y w$。把两个不同特征值的方程分别乘另一个特征函数后相减积分，边界项由条件消失，得 $(\lambda_m-\lambda_n)\int X_mX_nw=0$，所以不同特征值的函数正交。}{A regular Sturm--Liouville problem is $-(pX^{\prime})^{\prime}+qX=\lambda wX$ on a finite interval, with positive $p,w$, sufficiently regular real coefficients and homogeneous self-adjoint boundary conditions. The weighted inner product is $\int XYw$. Multiply two eigen-equations by the other eigenfunction, subtract and integrate; boundary terms vanish, giving $(\lambda_m-\lambda_n)\int X_mX_nw=0$. Distinct eigenvalues therefore give orthogonal eigenfunctions.}
+\APS{对 $-X^{\prime\prime}=\lambda X$、$X(0)=X(L)=0$，$\lambda\le0$ 只有零解；$\lambda>0$ 时 $X=A\sin(\sqrt\lambda x)$，右端条件给 $\sqrt\lambda L=n\pi$。故 $\lambda_n=(n\pi/L)^2$、$X_n=\sin(n\pi x/L)$，展开系数为 $b_n=(2/L)\int_0^L f(x)X_n(x)dx$。热与波方程共享空间特征函数，但时间方程分别是一阶衰减和二阶振荡。}{For $-X^{\prime\prime}=\lambda X$ with zero endpoint values, $\lambda\le0$ gives only the zero solution. Positive $\lambda$ yields $X=A\sin(\sqrt\lambda x)$ and $\sqrt\lambda L=n\pi$. Thus $\lambda_n=(n\pi/L)^2$, $X_n=\sin(n\pi x/L)$, and $b_n=(2/L)\int_0^L fX_n$. Heat and wave equations share these spatial modes but have first-order decaying and second-order oscillating time equations.}
+
+\EX{单位区间上解热方程 $u_t=\kappa u_{xx}$，边界 $u(0,t)=u(1,t)=0$，初值 $u(x,0)=\sin(\pi x)$。取 $X=\sin(\pi x)$ 得到唯一模态
+\FORMULA{单一正弦初值下的热方程解}{heat-equation solution for a single sine-mode initial value}
+\[
+u(x,t)=e^{-\kappa\pi^2t}\sin(\pi x).
+\]
+$\kappa>0$ 是热扩散系数；$e^{-\kappa\pi^2t}$ 表示温差逐渐衰减，空间波形保持第一特征模态。}{For $u_t=\kappa u_{xx}$ on the unit interval with zero endpoint temperatures and initial profile $\sin(\pi x)$, separation gives $u(x,t)=e^{-\kappa\pi^2t}\sin(\pi x)$. Here $\kappa>0$ is the diffusivity. The amplitude decays while the spatial profile remains the first eigenmode.}
+\READ{“u of x and t equals the exponential of negative kappa pi squared t, times sine of pi x.”}
+
+\noindent 对长度 $1$、两端固定的弦，波动方程 $u_{tt}=c^2u_{xx}$ 的单一模态解为 $u(x,t)=\sin(\pi x)(A\cos(c\pi t)+B\sin(c\pi t))$。$c$ 是波速，初始位移决定 $A$，初速度决定 $B$。热方程解随时间衰减，波方程则在理想无阻尼模型中振荡。
+
+\EN{For the string example, $u(x,t)$ is the transverse displacement, $c$ is the wave speed, and the constants $A$ and $B$ are determined by the initial displacement and velocity. The sine factor enforces the fixed-end conditions.}
+
+\subsection{逐步算例：双模态热方程 | Worked example: two heat modes}
+\noindent 考虑 $0<x<1$ 上 $u_t=\kappa u_{xx}$，$\kappa>0$，两端保持零温度。令 $u=X(x)T(t)$ 并在非零处代入，得到 $T'/(\kappa T)=X''/X=-\lambda$。于是空间方程为 $X''+\lambda X=0$，时间方程为 $T'+\kappa\lambda T=0$。空间边界 $X(0)=X(1)=0$ 的非零解对应
+\FORMULA{齐次端点热方程的特征值与分离模态}{eigenvalues and separated modes for the heat equation with zero endpoint data}
+\[
+\lambda_n=n^2\pi^2,\quad X_n(x)=\sin(n\pi x),\quad T_n(t)=e^{-\kappa n^2\pi^2t},\quad n=1,2,\ldots.
+\]
+若初值 $f(x)=\sin(\pi x)+2\sin(2\pi x)$，线性叠加得到
+\FORMULA{多正弦模态的热方程叠加解}{superposition solution of the heat equation using sine modes}
+\[
+u(x,t)=e^{-\kappa\pi^2t}\sin(\pi x)+2e^{-4\kappa\pi^2t}\sin(2\pi x).
+\]
+第二项衰减得更快，说明高频起伏在这个模型中消失得更快；将 $t=0$ 代入可检查初值，每项在两端均为零。
+\EN{For the heat equation on the unit interval with zero endpoint temperatures, set $u=XT$. Substitution separates the equation into $X''+\lambda X=0$ and $T'+\kappa\lambda T=0$. The boundary conditions give the eigenvalues and modes above. For initial data $\sin(\pi x)+2\sin(2\pi x)$, add the two modes. The second, higher-frequency mode decays faster. At $t=0$ the solution returns the initial data, and both boundary values remain zero.}
+
+\subsection{热方程的 Fourier 正弦级数 | Fourier sine series for the heat equation}
+\noindent 区间 $0<x<L$ 上两端零温度的热方程，可将初始温度展开为正弦级数。正弦函数在端点为零，适合 Dirichlet 边界；每个频率 $n$ 随时间乘以 $e^{-\kappa(n\pi/L)^2t}$，所以高频模态衰减更快。
+\EN{For the heat equation on an interval with zero endpoint temperatures, expand the initial temperature in a sine series. Sines satisfy the boundary values. The $n$th frequency is multiplied by $e^{-\kappa(n\pi/L)^2t}$, so higher frequencies decay faster.}
+\FORMULA{热方程的 Fourier 正弦级数解}{Fourier sine-series solution of the heat equation}
+\[
+u(x,t)=\sum_{n=1}^{\infty}b_n e^{-\kappa(n\pi/L)^2t}\sin\frac{n\pi x}{L},\qquad
+b_n=\frac{2}{L}\int_0^L f(x)\sin\frac{n\pi x}{L}\,dx.
+\]
+其中 $f$ 是初始温度，$b_n$ 是它在第 $n$ 个正弦模态上的投影系数；$L$ 是杆长，$\kappa$ 是扩散率。
+\EX{取 $L=1$、$\kappa=1$、初始温度 $f(x)=x(1-x)$。积分得 $b_n=4(1-(-1)^n)/(n^3\pi^3)$，即奇数 $n$ 时 $8/(n^3\pi^3)$、偶数 $n$ 时为零。因此
+\FORMULA{$f(x)=x(1-x)$ 时的热方程级数解}{heat-equation series solution for initial data $f(x)=x(1-x)$}
+\[
+u(x,t)=\sum_{\substack{n\ge1\\n\text{ odd}}}\frac{8}{n^3\pi^3}e^{-n^2\pi^2t}\sin(n\pi x).
+\]
+第一项主导较长时间后的温度分布；$t=0$ 时该级数回到初始曲线，$t>0$ 时尖锐变化被逐渐平滑。}{For $L=1$, diffusivity one, and initial temperature $f(x)=x(1-x)$, the sine coefficients are $4(1-(-1)^n)/(n^3\pi^3)$. Only odd modes remain, giving the displayed series. The first mode dominates at later times, while the full series recovers the initial profile at time zero.}
+
 
 \section{波动方程初值问题 | Initial-value problems for waves}
 \noindent\textbf{达朗贝尔公式。} 对整条实线上的无阻尼弦，若 $u_{tt}=c^2u_{xx}$，初位移 $u(x,0)=\varphi(x)$、初速度 $u_t(x,0)=\psi(x)$，在适当光滑性下解为
@@ -94,52 +150,6 @@ u(x,y)=\sin\!\left(\frac{\pi x}{L}\right)\frac{\sinh(\pi y/L)}{\sinh(\pi H/L)}.
 对 $x,y$ 求二阶偏导可验证 $u_{xx}+u_{yy}=0$；代入四条边也分别得到给定边界值。这是矩形薄板稳态温度场的一个可直接核验的例子。}{On the rectangle, solve $\Delta u=0$ with zero data on the bottom and vertical sides and $\sin(\pi x/L)$ on the top. Separation gives the displayed function. Differentiation verifies the PDE, and substitution verifies all four boundary values. It is a steady temperature profile in a thin plate.}
 \noindent\textbf{变分与近似。} 对 $-u''=f$、$u(0)=u(L)=0$，乘以边界为零的测试函数 $v$ 后积分，分部积分得到弱形式 $\int_0^Lu'v'\,dx=\int_0^Lfv\,dx$。Ritz--Galerkin 方法把 $u$ 近似成有限个基函数的线性组合，在同一有限维空间选测试函数，于是得到线性方程组。这连接数学物理方程、泛函分析和数值分析；收敛还需检查空间、系数及逼近条件。
 \EN{For $-u''=f$ with zero endpoints, multiply by a test function $v$ that also vanishes at the endpoints and integrate by parts to obtain $\int u'v'=\int fv$. Ritz--Galerkin approximates $u$ by a finite linear combination of basis functions and tests against the same finite-dimensional space, producing a linear system. Convergence requires suitable assumptions on the spaces, coefficients, and approximating subspaces.}
-
-\section{分离变量与 Fourier 展开 | Separation of variables}
-\noindent 对线性方程尝试乘积形式 $u(x,t)=X(x)T(t)$，代回后把只含 $x$ 的式子与只含 $t$ 的式子分开，并令它们等于分离常数。边界条件通常导出 Sturm--Liouville 特征值问题；特征函数组成展开基，再由初值求 Fourier 系数。最后检查级数满足方程、边界条件，并在适当意义下收敛到初值。
-\EN{For a linear PDE, try a product $u(x,t)=X(x)T(t)$. Substitution separates the spatial and temporal equations using a separation constant. Boundary conditions produce a Sturm--Liouville eigenvalue problem; its eigenfunctions form an expansion, and the initial condition determines the Fourier coefficients. The resulting series must satisfy the PDE and boundary conditions and converge to the initial data in an appropriate sense.}
-
-\EX{单位区间上解热方程 $u_t=\kappa u_{xx}$，边界 $u(0,t)=u(1,t)=0$，初值 $u(x,0)=\sin(\pi x)$。取 $X=\sin(\pi x)$ 得到唯一模态
-\FORMULA{单一正弦初值下的热方程解}{heat-equation solution for a single sine-mode initial value}
-\[
-u(x,t)=e^{-\kappa\pi^2t}\sin(\pi x).
-\]
-$\kappa>0$ 是热扩散系数；$e^{-\kappa\pi^2t}$ 表示温差逐渐衰减，空间波形保持第一特征模态。}{For $u_t=\kappa u_{xx}$ on the unit interval with zero endpoint temperatures and initial profile $\sin(\pi x)$, separation gives $u(x,t)=e^{-\kappa\pi^2t}\sin(\pi x)$. Here $\kappa>0$ is the diffusivity. The amplitude decays while the spatial profile remains the first eigenmode.}
-\READ{“u of x and t equals the exponential of negative kappa pi squared t, times sine of pi x.”}
-
-\noindent 对长度 $1$、两端固定的弦，波动方程 $u_{tt}=c^2u_{xx}$ 的单一模态解为 $u(x,t)=\sin(\pi x)(A\cos(c\pi t)+B\sin(c\pi t))$。$c$ 是波速，初始位移决定 $A$，初速度决定 $B$。热方程解随时间衰减，波方程则在理想无阻尼模型中振荡。
-
-\EN{For the string example, $u(x,t)$ is the transverse displacement, $c$ is the wave speed, and the constants $A$ and $B$ are determined by the initial displacement and velocity. The sine factor enforces the fixed-end conditions.}
-
-\subsection{逐步算例：双模态热方程 | Worked example: two heat modes}
-\noindent 考虑 $0<x<1$ 上 $u_t=\kappa u_{xx}$，$\kappa>0$，两端保持零温度。令 $u=X(x)T(t)$ 并在非零处代入，得到 $T'/(\kappa T)=X''/X=-\lambda$。于是空间方程为 $X''+\lambda X=0$，时间方程为 $T'+\kappa\lambda T=0$。空间边界 $X(0)=X(1)=0$ 的非零解对应
-\FORMULA{齐次端点热方程的特征值与分离模态}{eigenvalues and separated modes for the heat equation with zero endpoint data}
-\[
-\lambda_n=n^2\pi^2,\quad X_n(x)=\sin(n\pi x),\quad T_n(t)=e^{-\kappa n^2\pi^2t},\quad n=1,2,\ldots.
-\]
-若初值 $f(x)=\sin(\pi x)+2\sin(2\pi x)$，线性叠加得到
-\FORMULA{多正弦模态的热方程叠加解}{superposition solution of the heat equation using sine modes}
-\[
-u(x,t)=e^{-\kappa\pi^2t}\sin(\pi x)+2e^{-4\kappa\pi^2t}\sin(2\pi x).
-\]
-第二项衰减得更快，说明高频起伏在这个模型中消失得更快；将 $t=0$ 代入可检查初值，每项在两端均为零。
-\EN{For the heat equation on the unit interval with zero endpoint temperatures, set $u=XT$. Substitution separates the equation into $X''+\lambda X=0$ and $T'+\kappa\lambda T=0$. The boundary conditions give the eigenvalues and modes above. For initial data $\sin(\pi x)+2\sin(2\pi x)$, add the two modes. The second, higher-frequency mode decays faster. At $t=0$ the solution returns the initial data, and both boundary values remain zero.}
-
-\subsection{热方程的 Fourier 正弦级数 | Fourier sine series for the heat equation}
-\noindent 区间 $0<x<L$ 上两端零温度的热方程，可将初始温度展开为正弦级数。正弦函数在端点为零，适合 Dirichlet 边界；每个频率 $n$ 随时间乘以 $e^{-\kappa(n\pi/L)^2t}$，所以高频模态衰减更快。
-\EN{For the heat equation on an interval with zero endpoint temperatures, expand the initial temperature in a sine series. Sines satisfy the boundary values. The $n$th frequency is multiplied by $e^{-\kappa(n\pi/L)^2t}$, so higher frequencies decay faster.}
-\FORMULA{热方程的 Fourier 正弦级数解}{Fourier sine-series solution of the heat equation}
-\[
-u(x,t)=\sum_{n=1}^{\infty}b_n e^{-\kappa(n\pi/L)^2t}\sin\frac{n\pi x}{L},\qquad
-b_n=\frac{2}{L}\int_0^L f(x)\sin\frac{n\pi x}{L}\,dx.
-\]
-其中 $f$ 是初始温度，$b_n$ 是它在第 $n$ 个正弦模态上的投影系数；$L$ 是杆长，$\kappa$ 是扩散率。
-\EX{取 $L=1$、$\kappa=1$、初始温度 $f(x)=x(1-x)$。积分得 $b_n=4(1-(-1)^n)/(n^3\pi^3)$，即奇数 $n$ 时 $8/(n^3\pi^3)$、偶数 $n$ 时为零。因此
-\FORMULA{$f(x)=x(1-x)$ 时的热方程级数解}{heat-equation series solution for initial data $f(x)=x(1-x)$}
-\[
-u(x,t)=\sum_{\substack{n\ge1\\n\text{ odd}}}\frac{8}{n^3\pi^3}e^{-n^2\pi^2t}\sin(n\pi x).
-\]
-第一项主导较长时间后的温度分布；$t=0$ 时该级数回到初始曲线，$t>0$ 时尖锐变化被逐渐平滑。}{For $L=1$, diffusivity one, and initial temperature $f(x)=x(1-x)$, the sine coefficients are $4(1-(-1)^n)/(n^3\pi^3)$. Only odd modes remain, giving the displayed series. The first mode dominates at later times, while the full series recovers the initial profile at time zero.}
 
 \section{积分变换方法 | Integral transform methods}
 \noindent Fourier 变换把空间微分转换为频率乘法：在常用约定下，$\mathcal F[u_{xx}](\xi)=-\xi^2\widehat u(\xi)$。例如全直线上的热方程变成每个频率分别满足的常微分方程 $\partial_t\widehat u=-\kappa\xi^2\widehat u$，解为 $\widehat u(\xi,t)=e^{-\kappa\xi^2t}\widehat u(\xi,0)$；再作逆变换得到空间解。此法适合全空间或边界简单的问题。
@@ -216,6 +226,6 @@ u(x)=\int_0^x \xi(1-x)\,d\xi+\int_x^1x(1-\xi)\,d\xi=\frac{x(1-x)}2.
 \ASK{Green 函数中的 $\delta$ 表示什么？}{What does the delta in the Green-function equation represent?}{Dirac delta 是集中在一个点、总质量为 $1$ 的广义函数；它表示单位点源。Green 函数是该点源经过线性算子和边界条件作用后的响应，再由积分叠加所有源点。}{The Dirac delta is a generalized function concentrated at one point with total mass one. It represents a unit point source. The Green function is the response to that source, and integration superposes the responses from all source points.}
 \ASK{为什么只写 PDE 还不能确定解？}{Why does a PDE alone not determine the solution?}{偏微分方程给出局部规律，通常还需要区域、初始值和边界条件。不同边界或初值可对应不同解；物理条件同时限定哪些解有意义。}{The PDE gives a local law, but the domain, initial values, and boundary conditions are usually also needed. Different data can lead to different solutions, while physical constraints specify which solution is relevant.}
 \section*{来源与范围 | Source and scope}
-主线参考《数学物理方程讲义》第 3 版第 1--4 章；分离变量、积分变换和 Green 函数部分同时参考“数学物理方程”文件夹中的《分离变量法》《积分变换方法》《格林函数与格林函数法》。本稿重述常见模型和解法，遇到不同教材的符号约定时以本稿定义为准。
-\EN{The main source is Chapters 1--4 of the third edition of the Mathematical Physics Equations lecture notes. The sections on separation of variables, integral transforms, and Green functions also use the corresponding handouts in the Mathematical Physics Equations folder. This review restates common models and methods; when notation differs across sources, the definitions in this review apply.}
+主线依据《数学物理方程讲义》第 3 版第 1--4 章；方法部分另参考课程文件夹中的《分离变量法》《积分变换方法》《格林函数与格林函数法》。符号以本稿定义为准。
+\EN{The main source is Chapters 1--4 of the third-edition lecture notes, supplemented by the course handouts on separation of variables, integral transforms and Green functions. Notation follows the definitions in this review.}
 \end{document}
