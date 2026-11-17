@@ -258,7 +258,7 @@
     "group": "applied",
     "groupLabel": "计算与应用",
     "scope": "常微分方程平衡点与课程课件",
-    "pages": 14,
+    "pages": 15,
     "summary": "以 ẋ = −x 和 Lyapunov 函数 V = x²/2 说明渐近稳定的判断，再整理 LaSalle 原理、线性系统、扰动与 Hopfield 网络。",
     "pdf": "materials/stability/stability-aps.pdf",
     "tex": "materials/stability/source.tex",

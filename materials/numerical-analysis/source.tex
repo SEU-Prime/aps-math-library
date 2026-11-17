@@ -181,7 +181,7 @@ f'(x)&\approx\frac{f(x+h)-f(x-h)}{2h} &&(O(h^2)).
 \]
 三者依次为向前、向后和中心差分；计算 $f(x+h)-f(x-h)$ 时偶次项抵消，除以 $2h$ 后主误差为 $O(h^2)$。减小 $h$ 可降低截断误差，但可能增大舍入误差，因此步长需权衡。
 \READ{“The centered difference is f of x plus h minus f of x minus h, divided by two h.”}
-\EN{These are forward, backward, and centered differences. Taylor expansion shows that the centered formula has second-order truncation error because odd-order terms cancel; the one-sided formulas have first-order error. A smaller step reduces truncation error but can increase rounding error, so the step size must be balanced.}
+\EN{These are forward, backward, and centered differences. In $f(x+h)-f(x-h)$, the even-order Taylor terms cancel; the linear term remains, followed by a cubic remainder. Dividing by $2h$ gives second-order error when $f$ has a continuous third derivative nearby. The one-sided formulas have first-order error with a continuous second derivative. A smaller step reduces truncation error but can increase rounding error.}
 
 \EX{对 $f(x)=x^2$，在 $x=1,h=0.1$ 处中心差分给出 $[f(1.1)-f(0.9)]/0.2=2=f'(1)$。本例中心公式恰好精确，因为二次多项式的三阶导数为零。}{For $f(x)=x^2$ at $x=1$ with $h=0.1$, the centered difference is $[f(1.1)-f(0.9)]/0.2=2=f'(1)$. It is exact here because the third derivative of a quadratic is zero.}
 
@@ -230,7 +230,7 @@ y_{n+1}=y_n+\frac h6(k_1+2k_2+2k_3+k_4).
 \noindent\textbf{误差与稳定性。} 这里的\emph{单步局部误差}指从精确值 $y(t_n)$ 出发，做一步数值推进后与精确解 $y(t_{n+1})$ 的差；阶数为 $p$ 的方法通常为 $O(h^{p+1})$，全局误差为 $O(h^p)$。有些教材把该单步误差除以 $h$ 后称作局部截断误差，此时阶为 $O(h^p)$。引用误差阶时应先说明约定。
 \EN{Here, the local error refers to the one-step error obtained by starting from the exact solution. Some textbooks define the local truncation error after dividing this quantity by the step size.}
 
-\noindent 对测试方程 $y'=\lambda y$，数值方法产生放大因子 $R(z)$，$z=h\lambda$；绝对稳定要求 $|R(z)|\le1$。显式 Euler 有 $R(z)=1+z$，故其稳定区域是复平面上的圆盘 $|1+z|\le1$。对于负实数 $\lambda$，条件为 $0\le h|\lambda|\le2$。一阶 Euler、二阶改进 Euler/梯形和四阶 RK 的全局误差阶分别为 $O(h)$、$O(h^2)$ 和 $O(h^4)$。
+\noindent 对测试方程 $y'=\lambda y$，一步法有放大因子 $R(z)$，$z=h\lambda$。本稿把数值解随步数趋于无穷而衰减到零的条件 $|R(z)|<1$ 称为绝对稳定；$|R(z)|\le1$ 只保证不放大，边界需另查。显式 Euler 有 $R(z)=1+z$，故衰减稳定区域为开圆盘 $|1+z|<1$。对负实数 $\lambda$ 和正步长，条件为 $0<h|\lambda|<2$；在 $h|\lambda|=2$ 时放大因子为 $-1$，数值解持续振荡而不衰减。一阶 Euler、二阶改进 Euler/梯形和四阶 RK 的全局误差阶分别为 $O(h)$、$O(h^2)$ 和 $O(h^4)$，适用于足够光滑且满足相应稳定条件的有限时间区间计算。
 
 \noindent\textbf{Adams 多步法。} 代表性的二步 Adams--Bashforth 显式格式和 Adams--Moulton 隐式格式为
 \FORMULA{二步 Adams--Bashforth 与 Adams--Moulton 公式}{two-step Adams--Bashforth and Adams--Moulton formulas}
@@ -243,15 +243,15 @@ y_{n+1}^{\mathrm{AM2}}=y_n+\frac h{12}(5f_{n+1}+8f_n-f_{n-1}),
 
 \noindent\textbf{一致性、零稳定性与收敛。} 将线性多步法写为 $\sum_{j=0}^k\alpha_jy_{n+j}=h\sum_{j=0}^k\beta_jf_{n+j}$，特征多项式为 $\rho(r)=\sum_{j=0}^k\alpha_jr^j$。零稳定根条件要求 $\rho$ 的根满足 $|r|\le1$，且单位圆上的根只能是单根。一致性控制局部离散误差；零稳定性控制起步误差和舍入扰动在多步递推中是否放大。在常规条件下，一致且零稳定的线性多步法收敛。
 \EN{For a linear multistep method, zero-stability requires every root of its characteristic polynomial to lie in or on the unit disk, with roots on the unit circle being simple. Consistency controls the local discretization error, while zero-stability controls propagation of starting and rounding errors. Under standard assumptions, a consistent and zero-stable method converges.}
-\READ{“The amplification factor for explicit Euler is one plus z. Absolute stability requires the magnitude of R of z to be at most one.”}
-\EN{A method of order $p$ typically has local truncation error $O(h^{p+1})$ and global error $O(h^p)$. For the test equation $y'=\lambda y$, the method has amplification factor $R(h\lambda)$; absolute stability requires $|R(h\lambda)|\le1$. Explicit Euler has $R(z)=1+z$, so the step size must respect its stability region. Adams multistep methods are explicit or implicit; convergence is commonly tied to consistency and zero-stability.}
+\READ{“The amplification factor for explicit Euler is one plus z. Decay requires the magnitude of R of z to be strictly less than one.”}
+\EN{Under the one-step error convention used here, an order-$p$ method typically has local error $O(h^{p+1})$ and global error $O(h^p)$ on a fixed finite time interval under smoothness and stability assumptions. For $y'=\lambda y$, we use $|R(h\lambda)|<1$ for absolute stability with decay; $|R|\le1$ only ensures nonamplification. Explicit Euler has $R(z)=1+z$, so for negative real $\lambda$ decay requires $0<h|\lambda|<2$. At the endpoint two, the factor is minus one and the numerical solution oscillates without decay. Multistep convergence also requires consistency, zero-stability, and suitable starting values.}
 
 \EX{对 $y'=-y,y(0)=1$，显式 Euler 给出 $y_{n+1}=(1-h)y_n$。若 $0<h<2$，测试方程意义下 $|1-h|<1$，数值解稳定；精确解为 $e^{-t}$，可用来比较误差。}{For $y'=-y$, $y(0)=1$, explicit Euler gives $y_{n+1}=(1-h)y_n$. In the test-equation sense it is stable when $0<h<2$, since $|1-h|<1$. The exact solution is $e^{-t}$ and can be used to measure error.}
 
 \EX{对 $y'=-y,y_0=1,h=0.1$，Euler 一步给出 $y_1=0.9$。经典 RK4 的斜率为 $k_1=-1,k_2=-0.95,k_3=-0.9525,k_4=-0.90475$，故 $y_1\approx0.9048375$，而精确值 $e^{-0.1}\approx0.9048374$。}{For $y'=-y$, $y_0=1$, and $h=0.1$, Euler gives $y_1=0.9$. Classical RK4 has slopes $k_1=-1$, $k_2=-0.95$, $k_3=-0.9525$, and $k_4=-0.90475$, giving $y_1\approx0.9048375$. The exact value is $e^{-0.1}\approx0.9048374$.}
 
-\noindent\textbf{刚性方程的直观解释。} 刚性问题含有衰减很快的分量，显式方法为满足稳定性可能被迫使用很小的步长，即使所关心的解变化较慢。对 $y'=-1000y$，显式 Euler 的稳定性要求 $h\le0.002$；后退 Euler 的放大因子为 $1/(1+1000h)$，任意 $h>0$ 都不放大误差。隐式法稳定性较好，但每步计算较贵。
-\EN{A stiff problem contains rapidly decaying components that can force an explicit method to use a very small step for stability, even when the solution of interest changes slowly. For $y'=-1000y$, explicit Euler requires $h\le0.002$ for stability, while backward Euler has amplification factor $1/(1+1000h)$ and is stable for every $h>0$. Implicit methods improve stability but usually cost more per step.}
+\noindent\textbf{刚性方程的直观解释。} 刚性问题含有衰减很快的分量，显式方法为满足稳定性可能被迫使用很小的步长，即使所关心的解变化较慢。对 $y'=-1000y$，显式 Euler 的衰减稳定性要求 $0<h<0.002$；取端点 $h=0.002$ 时只是不放大，数值解不衰减。后退 Euler 的放大因子为 $1/(1+1000h)$，任意 $h>0$ 都严格小于 $1$。稳定性不等于精度，隐式方法仍需根据误差要求选步长，且每步通常要解方程。
+\EN{A stiff problem has rapidly decaying components that may force tiny explicit steps even when the solution of interest changes slowly. For $y'=-1000y$, explicit Euler requires $0<h<0.002$ for decay; the endpoint merely prevents amplification and does not give decay. Backward Euler has factor $1/(1+1000h)$, strictly less than one for every positive step. Stability does not guarantee accuracy: implicit methods still require error-based step selection and usually an equation solve at each step.}
 
 \ASK{局部截断误差和全局误差有什么区别？}{What is the difference between local truncation error and global error?}{局部截断误差衡量单步从精确值出发时引入的误差；全局误差是经过多步传播后数值解与精确解的总偏差。稳定性控制局部误差是否累积放大。}{Local truncation error measures the error introduced in one step when starting from the exact value. Global error is the total difference after errors have propagated through many steps. Stability controls whether local errors accumulate excessively.}
 

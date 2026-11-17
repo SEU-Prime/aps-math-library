@@ -59,10 +59,10 @@ $x$ 是决策变量，$c$ 是收益系数，$A$ 是资源消耗矩阵，$b$ 是�
 对最大化问题，若所有 $\bar c_j\le0$，当前基可行解已经最优；若某个 $\bar c_j>0$，增加 $x_j$ 会提高目标值，选择它入基，再用最小比值检验选择出基变量，以保持可行性。
 \EN{Starting from a basic feasible solution, the simplex method computes the dual prices $y^{\mathsf T}=c_B^{\mathsf T}B^{-1}$ and reduced costs $\bar c_j=c_j-y^{\mathsf T}a_j$. For a maximization problem, if every reduced cost is nonpositive, the current solution is optimal. A positive reduced cost identifies an entering variable; the minimum-ratio test chooses the leaving variable and preserves feasibility.}
 \READ{“c bar j equals c j minus c B transpose B inverse a j.” “All reduced costs are nonpositive, so the current basic feasible solution is optimal.”}
-\EX{在模型的交点 $(4/3,4/3)$，两个资源约束都紧。若把一个变量增加而保持另一个约束满足，至少有一个资源会先达到边界；这就是最小比值检验的几何含义。}{At $(4/3,4/3)$ both resource constraints are binding. If one variable is increased, some resource reaches its boundary first. This is the geometric meaning of the minimum-ratio test.}
+\EX{在工厂模型的初始点 $(0,0)$，固定 $x_2=0$ 并增加 $x_1=t$。两个资源约束分别要求 $t\le2$ 与 $t\le4$，所以最大可行步长为 $2$，第一项资源先用尽。这就是最小比值检验；它沿当前字典确定的方向移动。}{From the factory model's initial point $(0,0)$, keep $x_2=0$ and increase $x_1=t$. The constraints give $t\le2$ and $t\le4$, so the maximum feasible step is two and the first resource becomes binding. The ratio test follows a direction specified by the current dictionary.}
 
 \noindent\textbf{停止与异常。} 若进入变量的方向列在所有约束中都不能限制其增加，目标可以无限提高，问题无界。若初始没有可行基，需用两阶段法或大 $M$ 法寻找可行解。若某一步出现多个相同最小比值，可能发生退化；若目标值不增加而基改变，可能循环，通常用 Bland 规则避免循环。
-\EN{If an entering direction is not restricted by any constraint, the problem is unbounded. If no feasible basis is known, Phase I or the Big-M method finds one. Ties in the ratio test cause degeneracy. A basis may change without improving the objective, and anti-cycling rules such as Bland's rule can be used.}
+\EN{An unrestricted entering direction with positive reduced cost certifies unboundedness. If no feasible basis is known, Phase I or Big-M seeks one and may instead certify infeasibility. Ties in the minimum-ratio test produce a degenerate new basis; degeneracy can also occur without a tie when the minimum ratio is zero. A pivot may change the basis without improving the objective, and Bland's rule prevents cycling.}
 \EX{约束 $x_1-x_2\le1$、$x_1,x_2\ge0$ 下最大化 $x_1+x_2$ 是无界的：取 $x_1=t+1,x_2=t$，目标为 $2t+1\to\infty$。}{Maximizing $x_1+x_2$ subject to $x_1-x_2\le1$ and nonnegativity is unbounded: $x_1=t+1,x_2=t$ is feasible and the objective tends to infinity.}
 
 \subsection{逐步算例：工厂资源分配的单纯形计算 | Worked simplex calculation for factory production}
@@ -89,9 +89,11 @@ t\le\frac{\beta_i}{\bar a_{ij}}.
 \noindent 解出离基行中的 $x_2$ 并代回，得到最终字典：
 \FORMULA{第二次换基后的基变量表示}{basic-variable expressions after the second pivot}
 \[
-x_1=\frac43-\frac23s_1+\frac13s_2,\qquad
-x_2=\frac43+\frac13s_1-\frac23s_2,\\
-z=\frac{20}{3}-\frac43s_1-\frac13s_2
+\begin{aligned}
+x_1&=\frac43-\frac23s_1+\frac13s_2,\\
+x_2&=\frac43+\frac13s_1-\frac23s_2,\\
+z&=\frac{20}{3}-\frac43s_1-\frac13s_2.
+\end{aligned}
 \]
 \READ{“x one equals four thirds minus two thirds s one plus one third s two; x two equals four thirds plus one third s one minus two thirds s two; z equals twenty thirds minus four thirds s one minus one third s two.”}
 此时 $s_1,s_2$ 是非基变量；它们沿可行方向增加都不会改善目标，所以令二者为零，得到
@@ -104,7 +106,7 @@ x_1=x_2=\frac43,\qquad z^*=\frac{20}{3}.
 \EN{Solving for the leaving variable and substituting gives the final dictionary above. The nonbasic slacks $s_1,s_2$ have nonpositive reduced costs, so setting them to zero gives $x_1=x_2=4/3$ and $z^*=20/3$. The two pivots show how to choose entering and leaving variables and verify optimality.}
 
 \section{单纯形最优性判据 | The simplex optimality criterion}
-\noindent 在任意基下，令 $y^{\mathsf T}=c_B^{\mathsf T}B^{-1}$。若最大化问题的所有非基变量检验数都满足 $\bar c_j\le0$，则 $A^{\mathsf T}y\ge c$，$y$ 是对偶可行解。对任意原问题可行解 $x$，弱对偶给出
+\noindent 对最大化问题 $Ax\le b,x\ge0$，先加入松弛变量得到 $Ax+s=b$。取扩充矩阵 $[A\ I]$ 的一个\textbf{可行基} $B$，即 $B^{-1}b\ge0$，松弛变量目标系数为零。令 $y^{\mathsf T}=c_B^{\mathsf T}B^{-1}$。若所有非基变量（包括非基松弛变量）的检验数均满足 $\bar c_j\le0$，则产品列给出 $A^{\mathsf T}y\ge c$，松弛列给出 $y\ge0$；基列检验数为零。因此 $y$ 对偶可行。对任意原问题可行解 $x$，弱对偶给出
 \FORMULA{单纯形最优性判据的对偶界证明}{duality bound proving the simplex optimality criterion}
 \[
 c^{\mathsf T}x\le y^{\mathsf T}Ax\le y^{\mathsf T}b
@@ -112,17 +114,17 @@ c^{\mathsf T}x\le y^{\mathsf T}Ax\le y^{\mathsf T}b
 \]
 \READ{“The primal objective at x is at most y transpose A x, which is at most y transpose b; this equals the objective value at the current basic solution.”}
 所以当前基解 $x^B$ 的目标值不低于任何可行解；检验数判据是弱对偶的直接结果。
-\EN{If every nonbasic reduced cost is nonpositive in a maximization problem, then $A^{\mathsf T}y\ge c$, so $y$ is dual feasible. Weak duality gives the displayed bound for every primal feasible $x$. The current basic solution therefore has at least as large an objective value as any feasible point.}
+\EN{Add nonnegative slacks to obtain $Ax+s=b$, then choose a feasible basis of $[A\ I]$, so $B^{-1}b\ge0$. Slack objective coefficients are zero. If every nonbasic reduced cost, including slack reduced costs, is nonpositive, the original columns imply $A^{\mathsf T}y\ge c$ and slack columns imply $y\ge0$; basic reduced costs are zero. Weak duality then proves optimality of the feasible basic solution. Reduced costs alone do not establish primal feasibility.}
 
-\noindent 基可行解退化，是指某个基变量等于零。退化时换基可能不改变当前点和目标值；连续退化可能导致循环，Bland 规则可排除循环。某个非基变量的检验数为零时，常对应多个最优解：沿相应边移动，目标值保持不变。
-\EN{A basic feasible solution is degenerate when a basic variable is zero. A pivot may then change the basis without changing the point or objective value; repeated degeneracy can cause cycling, which Bland's rule prevents. A zero reduced cost for a nonbasic variable often indicates alternative optima along an edge.}
+\noindent 基可行解退化，是指某个基变量等于零。退化时换基可能不改变当前点和目标值；连续退化可能导致循环，Bland 规则可排除循环。在最优基下，非基变量的检验数为零仅表示沿该方向目标不变；还须有正的可行步长才能由此得到不同的最优点。若最大可行步长为零，换基可能只表示同一个退化顶点，不能仅凭零检验数断定最优解不唯一。
+\EN{A basic feasible solution is degenerate if a basic variable is zero. Pivots may then leave the point and objective unchanged; Bland's rule prevents cycling. At an optimal basis, a zero reduced cost gives another optimal point only if a positive feasible step is possible in that direction. A zero-length pivot may merely give another basis for the same vertex, so a zero reduced cost alone does not prove nonuniqueness.}
 \EX{最大化 $z=x_1+x_2$，约束 $x_1+x_2\le1$、$x_1,x_2\ge0$。线段 $x_1+x_2=1$ 上每个点的目标值都为 $1$，所以最优解不唯一，两个端点只是其中两个基可行最优解。}{For $z=x_1+x_2$ subject to $x_1+x_2\le1$ and nonnegativity, every point on the segment $x_1+x_2=1$ has value one. The optimum is not unique; the endpoints are only two basic optimal solutions.}
 \noindent 若入基变量可无限增加而不使任何基变量降到零，且其检验数为正，则问题无界。若第一阶段最小化人工变量之和的最优值大于零，则原问题不可行。无界表示目标可无限改善；不可行表示没有满足约束的点。
 \EN{If an entering variable can increase without forcing any basic variable to zero and has positive reduced cost, the objective is unbounded. If Phase I has a positive optimum, the original problem is infeasible. Unboundedness means the objective can improve indefinitely; infeasibility means no feasible point exists.}
 
 \section{两阶段法与大 M 法 | Phase I and the Big-M method}
-\noindent 对 $\ge$ 约束先减去剩余变量；由于得到的列不适合作为初始单位列，需要加入人工变量。两阶段法第一阶段最小化人工变量之和 $w=\sum a_i$。若第一阶段最优值大于零，原问题无可行解；若最优值为零，再删除人工变量并进入第二阶段优化原目标。大 $M$ 法把 $-M\sum a_i$ 加入最大化目标，$M$ 是很大的正数，迫使人工变量离开基；实践中两阶段法通常更清晰稳定。
-\EN{For a greater-than constraint, subtract a surplus variable. Artificial variables are then added to create an initial basis. Phase I minimizes the sum of artificial variables. A positive optimum means the original problem is infeasible; a zero optimum allows Phase II to optimize the original objective. The Big-M method penalizes artificial variables by a large negative coefficient in a maximization objective.}
+\noindent 对 $\ge$ 约束先减剩余变量；若尚无可行初始基，可加入人工变量。两阶段法第一阶段最小化人工变量之和 $w=\sum a_i$。最优值大于零表示原问题不可行；为零表示所有人工变量的值为零，但不保证它们已离基。若零值人工变量仍在基中，用非人工的非零系数换出它；若相应行已无此系数，则该行冗余，可删除。清理后删去人工变量列，恢复原目标进入第二阶段。大 $M$ 法在最大化目标中加入 $-M\sum a_i$ 惩罚；实践中两阶段法通常更便于控制数值误差。
+\EN{Subtract a surplus variable for a greater-than constraint and add artificial variables if an initial feasible basis is still needed. Phase I minimizes their sum. A positive optimum certifies infeasibility; a zero optimum makes every artificial value zero, but some may remain basic. Pivot those out using a nonzero nonartificial coefficient, or remove the redundant row if no such coefficient exists. Then remove artificial columns and restore the original objective for Phase II. Big-M instead penalizes artificial variables in the objective.}
 \EX{若约束为 $x_1+x_2\ge2$，写成 $x_1+x_2-s+a=2$，其中 $s,a\ge0$。第一阶段会尽量使 $a=0$；如果无论如何都不能让 $a$ 为零，就不存在满足原约束的解。}{For $x_1+x_2\ge2$, write $x_1+x_2-s+a=2$ with $s,a\ge0$. Phase I tries to make $a=0$. If this is impossible, the original constraints are infeasible.}
 
 \section{对偶问题与经济解释 | The dual problem}
