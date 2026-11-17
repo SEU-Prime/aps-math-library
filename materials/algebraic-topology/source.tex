@@ -222,8 +222,8 @@ p_n(z)=z^n.
 \]
 \READ{“P sub n maps z to z to the n-th power.”}
 \EN{For each positive integer $n$, the map $p_n(z)=z^n$ is an $n$-sheeted covering of the circle.}
-\noindent 每个底空间点恰有 $n$ 个原像，所以这是 $n$ 层覆盖；它在基本群上诱导 $k\mapsto nk$，像子群为 $n\mathbb Z$，指数为 $n$。提升一圈的闭路不会闭合，必须绕底圆 $n$ 圈才回到原覆盖点。子群 $\{0\}$ 的指数无穷，对应普遍覆盖 $\mathbb R\to S^1$。这给出圆周全部连通覆盖的分类：有限层的圆周覆盖和实线普遍覆盖。
-\EN{Every point in the base circle has exactly $n$ preimages, so this is an $n$-sheeted cover. The induced map on fundamental groups is $k\mapsto nk$, whose image is $n\mathbb Z$ and whose index is $n$. A lift of one turn is not closed; the lift closes after the base loop makes $n$ turns. The trivial subgroup $\{0\}$ has infinite index and corresponds to the universal cover $\mathbb R\to S^1$. These are all connected covers of the circle: finite-sheeted circle covers and the universal cover by the real line.}
+\noindent 每个底空间点恰有 $n$ 个原像，所以这是 $n$ 层覆盖；它在基本群上诱导 $k\mapsto nk$，像子群为 $n\mathbb Z$，指数为 $n$。绕底圆 $k$ 圈的闭路提升后闭合，当且仅当 $n$ 整除 $k$；因此 $n>1$ 时绕一圈的提升不闭合，而 $n=1$ 时每条闭路的提升都闭合。子群 $\{0\}$ 的指数无穷，对应普遍覆盖 $\mathbb R\to S^1$。这给出圆周全部连通覆盖的分类：有限层的圆周覆盖和实线普遍覆盖。
+\EN{Every point in the base circle has exactly $n$ preimages, so this is an $n$-sheeted cover. The induced map on fundamental groups is $k\mapsto nk$, whose image is $n\mathbb Z$ and whose index is $n$. A loop making $k$ turns has a closed lift exactly when $n$ divides $k$. Thus a single turn has a nonclosed lift when $n>1$, whereas every loop lifts to a closed loop when $n=1$. The trivial subgroup $\{0\}$ has infinite index and corresponds to the universal cover $\mathbb R\to S^1$. These are all connected covers of the circle: finite-sheeted circle covers and the universal cover by the real line.}
 \ASK{如何用覆盖空间读出圆周闭路的绕数？}{How can a covering space reveal the winding number of a loop in the circle?}{把闭路从实线覆盖中的指定点开始提升。若底圆绕 $k$ 圈，提升终点相对起点平移整数 $k$；因此终点位移就是绕数，提升闭合当且仅当 $k=0$。}{Lift the loop from a chosen point in the real-line cover. If it winds $k$ times around the base circle, its lift ends at the starting point translated by the integer $k$. This displacement is the winding number, and the lift closes exactly when $k=0$.}
 
 \end{document}
