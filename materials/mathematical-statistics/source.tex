@@ -34,9 +34,9 @@
 阶段 & 本讲义位置 & 关键对象 & 回答的问题\\
 建模 & 第 1 章 & 总体、样本、统计量、参数 & 数据由什么机制产生？未知参数在现实中代表什么？\\
 分布 & 第 1 章 & 抽样分布、$\chi^2$、$t$、$F$ 分布 & 重复抽样时估计量怎样波动？\\
-估计 & 第 2 章 & 充分统计量、矩估计、MLE、无偏性、MSE & 参数的点估计是多少？估计量有什么性质？\\
-区间 & 第 2 章 & 枢轴量、置信水平、覆盖率 & 参数可能落在什么范围？\\
-检验 & 第 3 章 & 原假设、拒绝域、$p$ 值、功效 & 数据是否支持某个断言？\\
+估计 & 第 4 章 & 充分统计量、矩估计、MLE、无偏性、MSE & 参数的点估计是多少？估计量有什么性质？\\
+区间 & 第 4 章 & 枢轴量、置信水平、覆盖率 & 参数可能落在什么范围？\\
+检验 & 第 5 章 & 原假设、拒绝域、$p$ 值、功效 & 数据是否支持某个断言？\\
 \end{tabular}
 \end{center}
 
@@ -208,7 +208,7 @@ $F_{\nu_1,\nu_2}$ & $x>0$ & 右偏 & $\nu_2/(\nu_2-2)$（$\nu_2>2$） & 两个�
 \EN{Quantiles invert probabilities: $P(\chi^2_\nu\le\chi^2_{q,\nu})=q$. With ten degrees of freedom, $\chi^2_{0.95,10}\approx18.31$, so $P(\chi^2_{10}>18.31)=0.05$. The value $t_{0.975,15}\approx2.131$ exceeds $z_{0.975}=1.96$, reflecting the heavier tails caused by replacing $\sigma$ with $S$. Also $F_{0.95,9,9}\approx3.18$ and $F_{0.05,9,9}=1/F_{0.95,9,9}\approx0.315$. Before using a table, check whether it lists lower-tail or upper-tail quantiles; otherwise two-sided critical values will be wrong.}
 
 \noindent\textbf{非正态总体的大样本情况。} 若 $X_i$ 独立同分布、均值 $\mu$ 与方差 $\sigma^2$ 有限，中心极限定理给出 $\sqrt n(\bar X-\mu)/\sigma\xrightarrow{\ d\ }N(0,1)$；用 $S$ 代替 $\sigma$ 后（Slutsky 定理）仍近似标准正态。所以大样本时 $z$ 方法可用于非正态数据，$t$ 与 $z$ 也几乎相同。但“样本量足够大”没有统一门槛：分布越偏、越重尾，所需样本量越大；若数据有强相关或异常值，近似可能失效，此时应改用稳健方法、bootstrap 或非参数检验。
-\EN{If the observations are iid with finite mean and variance, the central limit theorem gives $\sqrt n(\bar X-\mu)/\sigma\to_d N(0,1)$, and replacing $\sigma$ by $S$ (Slutsky) leaves a statistic that is still asymptotically standard normal. Hence $z$ methods can be used for nonnormal data with large samples, and $t$ and $z$ nearly coincide. There is no universal threshold for "large": skewer and heavier-tailed data need larger samples, and strong dependence or outliers can invalidate the approximation, in which case robust methods, the bootstrap or nonparametric tests are preferable.}
+\EN{If the observations are iid with finite mean and variance, the central limit theorem gives $\sqrt n(\bar X-\mu)/\sigma\to_d N(0,1)$, and replacing $\sigma$ by $S$ (Slutsky) leaves a statistic that is still asymptotically standard normal. Hence $z$ methods can be used for nonnormal data with large samples, and $t$ and $z$ nearly coincide. There is no universal threshold for "large": skewed and heavier-tailed data need larger samples, and strong dependence or outliers can invalidate the approximation, in which case robust methods, the bootstrap or nonparametric tests are preferable.}
 
 \EX{某非正态总体抽 $n=100$，得 $\bar x=50$、$s=10$。样本均值的标准误为 $s/\sqrt n=1$，由中心极限定理得均值的 95\% 近似区间 $50\pm1.96=[48.04,51.96]$。这个区间依赖 $n=100$ 时 $\bar X$ 已近似正态；若数据高度偏斜，应报告偏度、画出直方图，并说明近似可能不准确，或改用 bootstrap 区间。}{For a nonnormal population, a sample of size 100 gives $\bar x=50$ and $s=10$. The standard error of the mean is $1$, so the central limit theorem gives the approximate 95\% interval $50\pm1.96=[48.04,51.96]$. This relies on $\bar X$ being approximately normal at $n=100$. For strongly skewed data, report the skewness, show a histogram, state that the approximation may be poor, or use a bootstrap interval.}
 
@@ -445,7 +445,7 @@ T=\frac{(\bar X-\bar Y)-(\mu_1-\mu_2)}
 \frac{S_1^2/S_2^2}{F_{\alpha/2,\nu_1,\nu_2}}\right],
 \quad \nu_i=n_i-1.
 \]
-\noindent 若方差不假定相等，不应使用合并方差，而应改用 Welch 统计量 $T_W=(\bar X-\bar Y-\Delta_0)/\sqrt{S_1^2/n_1+S_2^2/n_2}$ 与 Welch--Satterthwaite 近似自由度；方差是否齐平可用残差图或 Levene 检验辅助判断，但不能用同一批数据临时挑选方法。
+\noindent 若方差不假定相等，不应使用合并方差，而应改用 Welch 统计量 $T_W=(\bar X-\bar Y-\Delta_0)/\sqrt{S_1^2/n_1+S_2^2/n_2}$ 与 Welch--Satterthwaite 近似自由度；方差是否齐性可用残差图或 Levene 检验辅助判断，但不能用同一批数据临时挑选方法。
 \EN{When equal variances are not assumed, the pooled variance is inappropriate; use the Welch statistic with its Satterthwaite approximate degrees of freedom instead. Residual plots or Levene-type tests can support the equal-variance decision, but the method must not be chosen after looking at the same data.}
 
 \EN{For independent normal samples with a common variance, the pooled variance and $t$ pivot above give a confidence interval for $\mu_1-\mu_2$. This method requires independent normal samples and an equal-variance assumption. For paired observations, analyze the within-pair differences as a one-sample problem. The $F$ pivot gives the stated interval for a ratio of population variances.}

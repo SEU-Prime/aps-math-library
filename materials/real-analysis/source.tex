@@ -38,7 +38,7 @@
 \]
 \READ{“The complement of a union is the intersection of the complements; the complement of an intersection is the union of the complements.”}
 \EN{The complement is always taken relative to a fixed universe. De Morgan's laws exchange unions and intersections when taking complements.}
-\noindent 映射 $f:A\to B$ 给每个输入唯一指定一个输出。单射表示不同输入不映到同一值；满射表示每个目标值都被取到；双射同时满足二者。例如 $f:[0,1]\to[0,1]$、$f(x)=x^2$ 是双射，因为每个 $y\in[0,1]$ 都有唯一原像 $\sqrt y$。若把值域改为 $[-1,1]$，同一公式仍是单射但不再满射，因为负数没有原像；因此是否满射取决于指定的目标集合 $B$。函数列 $f_n$ 点态收敛到 $f$，是指每个固定 $x$ 上都有 $f_n(x)\to f(x)$；一致收敛则要求误差对整个定义域同时变小：
+\noindent 映射 $f:A\to B$ 给每个输入唯一指定一个输出。单射表示不同输入不映到同一值；满射表示每个目标值都被取到；双射同时满足二者。例如 $f:[0,1]\to[0,1]$、$f(x)=x^2$ 是双射，因为每个 $y\in[0,1]$ 都有唯一原像 $\sqrt y$。若把目标集合（陪域）改为 $[-1,1]$，同一公式仍是单射但不再满射，因为负数没有原像；因此是否满射取决于指定的目标集合 $B$。函数列 $f_n$ 点态收敛到 $f$，是指每个固定 $x$ 上都有 $f_n(x)\to f(x)$；一致收敛则要求误差对整个定义域同时变小：
 \FORMULA{函数列点态收敛的定义}{the definition of pointwise convergence}
 \[
 f_n\to f\text{ pointwise on }E
@@ -132,7 +132,7 @@ D_f=\{x:\omega_f(x)>0\}.
 
 \chaptersection{第 2 章：度量空间与连续性 | Chapter 2: Metric spaces and continuity}
 \subsection{度量、开集、闭集与收敛 | Metrics, open sets, closed sets, and convergence}
-\noindent 度量 $d:X\times X\to[0,\infty)$ 对任意 $x,y,z\in X$ 满足：$d(x,y)\ge0$ 且 $d(x,y)=0$ 当且仅当 $x=y$；$d(x,y)=d(y,x)$；以及三角不等式 $d(x,z)\le d(x,y)+d(y,z)$。开球是 $B(x,r)=\{y\in X:d(x,y)<r\}$。集合 $U$ 开，若每个 $x\in U$ 都有某个 $r>0$ 使 $B(x,r)\subseteq U$；闭集是补集开集的集合。序列 $x_n$ 收敛到 $x$，若 $d(x_n,x)\to0$。
+\noindent 度量 $d:X\times X\to[0,\infty)$ 对任意 $x,y,z\in X$ 满足：$d(x,y)\ge0$ 且 $d(x,y)=0$ 当且仅当 $x=y$；$d(x,y)=d(y,x)$；以及三角不等式 $d(x,z)\le d(x,y)+d(y,z)$。开球是 $B(x,r)=\{y\in X:d(x,y)<r\}$。集合 $U$ 开，若每个 $x\in U$ 都有某个 $r>0$ 使 $B(x,r)\subseteq U$；闭集是补集为开集的集合。序列 $x_n$ 收敛到 $x$，若 $d(x_n,x)\to0$。
 \EN{A metric $d:X\times X\to[0,\infty)$ is symmetric, satisfies the triangle inequality, and has $d(x,y)=0$ exactly when $x=y$. The open ball is $B(x,r)=\{y\in X:d(x,y)<r\}$. A set $U$ is open if every $x\in U$ has a ball contained in $U$; a set is closed if its complement is open. A sequence converges to $x$ when its distance from $x$ tends to zero.}
 \noindent 点 $x$ 属于 $A$ 的闭包 $\overline A$，若每个以 $x$ 为中心的开球都与 $A$ 相交；$A$ 稠密，若 $\overline A=X$。在度量空间中，$x\in\overline A$ 等价于存在 $A$ 中的序列收敛到 $x$。
 \EX{在 $\mathbb R^2$ 中，欧氏距离的球是圆盘，最大范数距离 $d_\infty(x,y)=\max_i|x_i-y_i|$ 的球是正方形，但两种距离生成相同的开集，因为有限维空间中的范数等价。$\mathbb Q$ 在 $\mathbb R$ 中稠密却不闭：有理数列可以收敛到 $\sqrt2$，所以 $\sqrt2\in\overline{\mathbb Q}$ 但 $\sqrt2\notin\mathbb Q$。}{In $\mathbb R^2$, Euclidean balls are disks, while balls for the maximum norm are squares. Both metrics generate the same open sets because norms on a finite-dimensional space are equivalent. The rationals are dense but not closed in $\mathbb R$: rational numbers can converge to $\sqrt2$, so $\sqrt2$ lies in their closure but not in $\mathbb Q$.}
@@ -146,7 +146,7 @@ D_f=\{x:\omega_f(x)>0\}.
 d_Y(f(x),f(x_0))<\varepsilon.
 \]
 \READ{“For every epsilon greater than zero, there is a delta greater than zero such that every x within delta of x-zero maps within epsilon of f of x-zero.”}
-\EN{A map is continuous at $x$ if every output tolerance $\varepsilon$ has an input tolerance $\delta$ as described above. Uniform continuity requires one $\delta$ to work throughout the domain. In metric spaces, continuity is also equivalent to open preimages being open and to preservation of sequential limits.}
+\EN{A map is continuous at $x_0$ if every output tolerance $\varepsilon$ has an input tolerance $\delta$ as described above. Uniform continuity requires one $\delta$ to work throughout the domain. In metric spaces, continuity is also equivalent to open preimages being open and to preservation of sequential limits.}
 \FORMULA{一致连续的 $\varepsilon$--$\delta$ 定义}{epsilon-delta definition of uniform continuity}
 \[
 \forall\varepsilon>0\ \exists\delta>0\ \forall x,y\in X,
@@ -185,7 +185,7 @@ x_{n+1}=\cos x_n,\qquad x_0\in[0,1].
 \]
 \READ{“The measure of a countable disjoint union equals the sum of the measures.”}
 \EN{A measure space consists of a set, a sigma-algebra, and a measure. The measure assigns zero to the empty set and is countably additive over pairwise disjoint measurable sets.}
-\noindent 可列可加性带来单调性：$A\subseteq B$ 时 $\mu(A)\le\mu(B)$；也带来可数次次可加性。可数性至关重要，因为极限事件和函数列的极限会用到可数并、交和补；只有有限并封闭不足以建立这些理论。
+\noindent 可列可加性带来单调性：$A\subseteq B$ 时 $\mu(A)\le\mu(B)$；也带来可数次可加性。可数性至关重要，因为极限事件和函数列的极限会用到可数并、交和补；只有有限并封闭不足以建立这些理论。
 \FORMULA{测度的单调性与次可加性}{monotonicity and countable subadditivity of a measure}
 \[
 A\subseteq B\Longrightarrow\mu(A)\le\mu(B),\qquad
@@ -198,7 +198,7 @@ A\subseteq B\Longrightarrow\mu(A)\le\mu(B),\qquad
 \ASK{为什么测度论要从 $\sigma$-代数开始？}{Why does measure theory begin with a sigma-algebra?}{因为测度只能对指定集合族定义，而可数并、交和补会在极限过程中自然出现。$\sigma$-代数保证这些极限集合仍在定义域内，测度才有意义。}{A measure is defined on a specified family of sets, while countable unions, intersections, and complements arise naturally in limits. A sigma-algebra keeps these limit sets in the domain of the measure.}
 
 \subsection{外测度与可测性判据 | Outer measure and measurability}
-\noindent Lebesgue 外测度先对实数轴的任意子集定义：用可数个区间 $I_j$ 覆盖 $E$，将区间长度相加，再对所有覆盖取下确界。它对每个集合都能定义，但此时只保证可数次次可加、未必可列可加；因此还要用判据挑出可测集合。
+\noindent Lebesgue 外测度先对实数轴的任意子集定义：用可数个区间 $I_j$ 覆盖 $E$，将区间长度相加，再对所有覆盖取下确界。它对每个集合都能定义，但此时只保证可数次可加、未必可列可加；因此还要用判据挑出可测集合。
 \FORMULA{Lebesgue 外测度}{Lebesgue outer measure}
 \[
 m^*(E)=\inf\left\{\sum_{j=1}^{\infty}|I_j|:
@@ -319,7 +319,7 @@ f_n\to f\text{ in measure}
 \forall\varepsilon>0\ \exists A:\ \mu(A)<\varepsilon,\ f_n\to f\ \text{uniformly on }X\setminus A.
 \]
 \READ{“On a finite measure space, almost-everywhere convergence becomes uniform after removing a set of arbitrarily small measure.”}
-\EN{For fixed $k$ the sets where some late error exceeds $1/k$ decrease to a null set; continuity from above chooses an index from which their union has measure below $\varepsilon/2^k$. Removing the union of these sets for all $k$ leaves measure above $1-\varepsilon$ and uniform convergence. Finite measure is essential; on the line the moving indicator of $[n,n+1]$ converges pointwise but not almost uniformly.}
+\EN{For fixed $k$ the sets where some late error exceeds $1/k$ decrease to a null set; continuity from above chooses an index from which their union has measure below $\varepsilon/2^k$. Removing the union of these sets for all $k$ leaves measure above $\mu(X)-\varepsilon$ and uniform convergence. Finite measure is essential; on the line the moving indicator of $[n,n+1]$ converges pointwise but not almost uniformly.}
 \FORMULA{Lusin 定理}{Lusin's theorem}
 \[
 \begin{gathered}
@@ -378,7 +378,7 @@ f\in L^1(\mu)
 \mu(E)<\delta\Rightarrow\int_E|f|\,d\mu<\varepsilon.
 \]
 \READ{“For an integrable function and every positive epsilon there is a delta such that every set of measure below delta contributes less than epsilon to the integral of the absolute value.”}
-\EN{Proof idea: truncate the integrand and split the integral over E into the part where the absolute value is at most a large level M and the tail beyond M. The bounded part is controlled by M times the measure of E, while the tail is small uniformly in E by monotone convergence applied to the decreasing tails of the absolute value.}
+\EN{Proof idea: truncate the integrand and split the integral over E into the part where the absolute value is at most a large level M and the tail beyond M. The bounded part is controlled by M times the measure of E, while the tail is small uniformly in E by monotone convergence applied to the increasing truncations of the absolute value.}
 \noindent\textbf{具体应用：元件寿命。} 若元件寿命 $T$ 服从参数 $\lambda>0$ 的指数分布，密度为 $f_T(t)=\lambda e^{-\lambda t}$（$t\ge0$），则故障晚于时刻 $t$ 的概率是密度在 $[t,\infty)$ 上的积分，平均寿命是 $t f_T(t)$ 的积分：
 \FORMULA{指数寿命的生存概率与期望}{survival probability and mean of an exponential lifetime}
 \[

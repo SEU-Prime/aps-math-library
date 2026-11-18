@@ -29,7 +29,7 @@
 \EX{有理数集 $\mathbb Q\cap[0,1]$ 是可数无限集，Lebesgue 测度为 $0$；区间 $[0,1]$ 不可数，测度为 $1$。基数与测度回答的是不同问题。}{The rationals in $[0,1]$ are countably infinite but have Lebesgue measure zero. The interval $[0,1]$ is uncountable and has measure one. Cardinality and measure answer different questions.}
 
 \subsection{Jordan 测度到 Lebesgue 测度 | From Jordan to Lebesgue measure}
-\noindent 在 $\mathbb R^d$ 中，矩形 $B=I_1\times\cdots\times I_d$ 的体积定义为各边长之积。有限个矩形的并构成基本集，可把基本集的测度定义为不相交矩形体积之和。Jordan 内测度用基本集从内部逼近一个集合，Jordan 外测度用基本集从外部覆盖它；两者相等时，集合的边界不会留下正的体积误差，集合称为 Jordan 可测。这个方法能处理许多边界规则的有界集合，但可测集对可数次并不一定封闭，因而不足以支撑概率论常用的极限事件和可列可加性。Lebesgue 的构造改用可数覆盖，正是为了处理这类可数运算。
+\noindent 在 $\mathbb R^d$ 中，矩形 $B=I_1\times\cdots\times I_d$ 的体积定义为各边长之积。有限个矩形的并构成基本集，可把基本集的测度定义为不相交矩形体积之和。Jordan 内测度用基本集从内部逼近一个集合，Jordan 外测度用基本集从外部覆盖它；两者相等时，集合的边界不会留下正的体积误差，集合称为 Jordan 可测。这个方法能处理许多边界规则的有界集合，但可测集对可数并并不一定封闭，因而不足以支撑概率论常用的极限事件和可列可加性。Lebesgue 的构造改用可数覆盖，正是为了处理这类可数运算。
 \EN{In $\mathbb R^d$, the volume of a rectangle $B=I_1\times\cdots\times I_d$ is the product of its side lengths. A finite union of rectangles is an elementary set, measured by a disjoint rectangular decomposition. Jordan inner measure approximates a set from inside by elementary sets; Jordan outer measure covers it from outside. When they agree, the boundary contributes no positive volume error, and the set is Jordan measurable. This handles many bounded sets with regular boundaries, but Jordan measurable sets need not be closed under countable unions. Lebesgue's construction uses countable covers to support the countable operations and limit events used in probability.}
 
 \noindent\textbf{Lebesgue 外测度。} 对任意集合 $E$，用有限个或可数个矩形覆盖它；每个覆盖的总代价是矩形体积之和。取所有覆盖总代价的下确界，得到
@@ -191,7 +191,7 @@ P(X=k)=\binom nkp^k(1-p)^{n-k},\qquad k=0,1,\ldots,n.
 这里 $\binom nk=n!/[k!(n-k)!]$ 数的是哪些 $k$ 次试验成功；每一种指定排列的概率是 $p^k(1-p)^{n-k}$。均值为 $np$，方差为 $np(1-p)$。关键条件是试验次数预先固定、结果独立、每次成功率相同；若从有限批次不放回抽样，通常应考虑超几何分布。
 \EN{If we conduct $n$ independent Bernoulli trials with the same success probability $p$, their total number of successes $X=\sum_iX_i$ follows a binomial distribution. In the formula, $\binom nk$ counts the choices of which $k$ trials succeed, and each such pattern has probability $p^k(1-p)^{n-k}$. The mean is $np$ and the variance is $np(1-p)$. The number of trials must be fixed, trials independent, and the success probability constant. Sampling without replacement from a finite batch usually calls for a hypergeometric model instead.}
 
-\EX{一台设备每个零件独立地以 $p=0.02$ 的概率不合格，抽检 $n=10$ 个。恰有一个不合格的概率为 $\binom{10}{1}(0.02)(0.98)^9\approx0.1667$；至少一个不合格的概率为 $1-(0.98)^{10}\approx0.1830$。平均不合格数是 $np=0.2$。}{Suppose each part is independently defective with probability $p=0.02$, and we inspect $10$ parts. The probability of exactly one defective part is $\binom{10}{1}(0.02)(0.98)^9\approx0.1667$. The probability of at least one is $1-(0.98)^{10}\approx0.1830$. The expected number of defectives is $np=0.2$.}
+\EX{一台设备每个零件独立地以 $p=0.02$ 的概率不合格，抽检 $n=10$ 个。恰有一个不合格的概率为 $\binom{10}{1}(0.02)(0.98)^9\approx0.1667$；至少一个不合格的概率为 $1-(0.98)^{10}\approx0.1829$。平均不合格数是 $np=0.2$。}{Suppose each part is independently defective with probability $p=0.02$, and we inspect $10$ parts. The probability of exactly one defective part is $\binom{10}{1}(0.02)(0.98)^9\approx0.1667$. The probability of at least one is $1-(0.98)^{10}\approx0.1829$. The expected number of defectives is $np=0.2$.}
 
 \subsection{几何与负二项分布：等到成功需要多久 | Geometric and negative-binomial waiting counts}
 若每次独立试验成功率为 $p$，令 $T$ 为“第一次成功发生在第几次试验”，则几何分布采用从 $1$ 开始计数：
@@ -276,7 +276,7 @@ f(t)=\frac{\beta^\alpha}{\Gamma(\alpha)}t^{\alpha-1}e^{-\beta t},\quad t>0,
 \[
 f_X(x)=\frac{1}{\sqrt{2\pi}\sigma}\exp\!\left[-\frac{(x-\mu)^2}{2\sigma^2}\right],\qquad -\infty<x<\infty.
 \]
-$\mu$ 是均值和对称中心，$\sigma>0$ 是标准差，$\sigma^2$ 是方差；约 $68\%$、$95\%$、$99.7\%$ 的质量分别位于 $\mu\pm\sigma$、$\mu\pm2\sigma$、$\mu\pm3\sigma$ 内（后两者是近似经验法则）。标准化 $Z=(X-\mu)/\sigma$ 将任意正态变量转换为 $N(0,1)$，以便查标准正态表。正态模型允许负值，因此对严格正值、强偏态数据需评估其合理性。
+$\mu$ 是均值和对称中心，$\sigma>0$ 是标准差，$\sigma^2$ 是方差；约 $68\%$、$95\%$、$99.7\%$ 的质量分别位于 $\mu\pm\sigma$、$\mu\pm2\sigma$、$\mu\pm3\sigma$ 内（三者均为近似经验法则）。标准化 $Z=(X-\mu)/\sigma$ 将任意正态变量转换为 $N(0,1)$，以便查标准正态表。正态模型允许负值，因此对严格正值、强偏态数据需评估其合理性。
 \EN{A normal model is useful for a variable that is symmetric around a center and results from many approximately independent small contributions. The mean $\mu$ is the center, $\sigma$ is the standard deviation, and $\sigma^2$ is the variance. Approximately 68\%, 95\%, and 99.7\% of its probability lie within one, two, and three standard deviations of the mean. Standardization converts $X$ to a standard normal variable. Since a normal model allows negative values, it may be unsuitable for strictly positive or strongly skewed data.}
 
 \EX{机器加工直径近似服从 $N(10,0.2^2)$ 毫米。直径落在 $9.6$ 到 $10.4$ 毫米内等价于 $|Z|\le2$，概率约为 $0.9545$；落在规格外的概率约为 $0.0455$。这可用于估算不合格率，但前提是正态模型和参数经生产数据检查。}{Suppose a machined diameter is approximately $N(10,0.2^2)$ millimeters. Falling between 9.6 and 10.4 millimeters is equivalent to $|Z|\le2$, with probability about $0.9545$. The probability outside the specification is about $0.0455$. This estimates the defect rate only if production data support the normal model and its parameters.}
@@ -307,10 +307,10 @@ z_{0.90}=1.282,\quad z_{0.95}=1.645,\quad z_{0.975}=1.960,\quad z_{0.99}=2.326,\
 \EX{一批 $1000$ 件产品每件不合格率为 $0.002$，用二项模型计算恰有两个不合格的概率为 $\binom{1000}{2}(0.002)^2(0.998)^{998}$；Poisson 近似取 $\lambda=np=2$，得到 $e^{-2}2^2/2!\approx0.2707$。两者数值接近，但最终是否采用近似应看所需精度。}{For $1000$ items with independent defect probability $0.002$, the exact binomial probability of two defectives is $\binom{1000}{2}(0.002)^2(0.998)^{998}$. The Poisson approximation uses $\lambda=np=2$ and gives $e^{-2}2^2/2!\approx0.2707$. They are close here, but the required accuracy should determine whether approximation is acceptable.}
 
 \subsection{快速选模与易混点 | Model-selection guide and common confusions}
-\noindent 建模时先问：试验次数是否固定、抽样有无放回、成功概率或事件率是否恒定、区间是否等可能。上表“关键条件”与“典型应用”两列给出对应选择，不要只凭变量是否非负来选分布。
-\EN{Before modelling, ask whether the number of trials is fixed, whether sampling is with or without replacement, whether the success or event rate is constant, and whether intervals are equally likely. The key-condition and typical-use columns of the table above give the corresponding choice; do not select a model merely because a variable is nonnegative.}
+\noindent 建模时先问：试验次数是否固定、抽样有无放回、成功概率或事件率是否恒定、区间是否等可能。下表“关键条件”与“典型应用”两列给出对应选择，不要只凭变量是否非负来选分布。
+\EN{Before modelling, ask whether the number of trials is fixed, whether sampling is with or without replacement, whether the success or event rate is constant, and whether intervals are equally likely. The key-condition and typical-use columns of the table below give the corresponding choice; do not select a model merely because a variable is nonnegative.}
 
-二项分布计数“固定次数中的成功”；几何/负二项计数“等到成功前的试验或失败”；超几何来自不放回；泊松数事件，指数量事件间隔，伽马量等多个事件的总等待时间。正态的概率由密度积分得到，不能把密度值本身当作区间概率。各符号的参数化和假设应随模型一起陈述。
+二项分布计数“固定次数中的成功”；几何/负二项计数“等到成功前的试验或失败”；超几何来自不放回；泊松数事件，指数量事件间隔，伽马量多个事件的总等待时间。正态的概率由密度积分得到，不能把密度值本身当作区间概率。各符号的参数化和假设应随模型一起陈述。
 \EN{A binomial variable counts successes in a fixed number of trials. Geometric and negative-binomial variables count trials or failures until a success target. Hypergeometric sampling is without replacement. Poisson counts events; exponential models time between events; gamma models the total wait for several events. For a normal variable, interval probability is an integral of the density, not the density value itself. State parameter conventions and assumptions with every model.}
 
 \subsection{分布速查表 | Distribution reference table}
@@ -358,7 +358,7 @@ Beta$(a,b)$ & $f(p)=\frac{p^{a-1}(1-p)^{b-1}}{B(a,b)}$\newline $0<p<1$ & $\frac{
 \end{longtable}
 }
 
-\APS{分布之间的关系：Poisson 是二项极限（$n$ 大、$p$ 小、$np\to\lambda$）；Gamma 是独立指数和（等待第 $r$ 个 Poisson 事件）；指数是 $\operatorname{Gamma}(1,\beta)$；卡方 $\chi^2(k)$ 是形状 $k/2$、率 $1/2$ 的 Gamma；正态由中心极限定理产生；二项与超几何在小样本时近似。}{Relations: Poisson is the binomial limit for large $n$, small $p$, fixed $np$; gamma is a sum of independent exponentials; exponential is $\operatorname{Gamma}(1,\beta)$; chi-square is $\operatorname{Gamma}(k/2,1/2)$; normal arises from the CLT; and binomial approximates hypergeometric for small samples.}
+\APS{分布之间的关系：Poisson 是二项极限（$n$ 大、$p$ 小、$np\to\lambda$）；Gamma 是独立指数和（等待第 $r$ 个 Poisson 事件）；指数是 $\operatorname{Gamma}(1,\beta)$；卡方 $\chi^2(k)$ 是形状 $k/2$、率 $1/2$ 的 Gamma；正态由中心极限定理产生；二项与超几何在抽样比例很小时近似。}{Relations: Poisson is the binomial limit for large $n$, small $p$, fixed $np$; gamma is a sum of independent exponentials; exponential is $\operatorname{Gamma}(1,\beta)$; chi-square is $\operatorname{Gamma}(k/2,1/2)$; normal arises from the CLT; and binomial approximates hypergeometric when the sampling fraction is small.}
 
 \APS{实际意义：质量控制用二项/超几何抽检，保险与呼叫中心用 Poisson 数事件，排队与可靠性用指数/Gamma 描述寿命与等待，抽样调查用超几何，金融用正态近似收益率但须警惕尾部风险，Beta 描述比例并常作先验。}{Practical meaning: binomial or hypergeometric inspection in quality control, Poisson counts in insurance and call centres, exponential or gamma waits in queueing and reliability, hypergeometric sampling in surveys, normal returns with tail risk in finance, and beta proportions as priors.}
 
@@ -461,7 +461,7 @@ Y\mid X=x\sim N\!\left(\mu_Y+\rho\frac{\sigma_Y}{\sigma_X}(x-\mu_X),\ \sigma_Y^2
 P(|X-EX|\ge k)\le\frac{\operatorname{Var}(X)}{k^2},
 \qquad\text{即}\qquad P(|X-EX|\ge k\sigma)\le\frac1{k^2}.
 \]
-它只使用均值和方差，不要求知道具体分布。例如 $k=2$ 时，偏差超过两个标准差的概率不超过 $1/4=25\%$。为什么说它“保守”？因为这个界对一切二阶矩存在的分布都成立，包括极端偏斜或双峰的分布；有些分布（例如在 $\mu\pm k\sigma$ 各取概率 $1/(2k^2)$、其余取 $0$ 的分布）能使等号成立，所以一般不能再改进。但对正态分布，同样事件的实际概率约为 $4.55\%$，远小于 $25\%$：$\operatorname{Var}(X)/k^2$ 只利用了前两阶矩，没有利用分布形状，因此给出的是安全但宽松的保证。
+它只使用均值和方差，不要求知道具体分布。例如 $k=2$ 时，偏差超过两个标准差的概率不超过 $1/4=25\%$。为什么说它“保守”？因为这个界对一切二阶矩存在的分布都成立，包括极端偏斜或双峰的分布；有些分布（例如在 $\mu\pm k\sigma$ 各取概率 $1/(2k^2)$、其余质量集中在 $\mu$ 的分布）能使等号成立，所以一般不能再改进。但对正态分布，同样事件的实际概率约为 $4.55\%$，远小于 $25\%$：$\operatorname{Var}(X)/k^2$ 只利用了前两阶矩，没有利用分布形状，因此给出的是安全但宽松的保证。
 \EN{Chebyshev's inequality uses only the mean and variance. For $k=2$, a deviation above two standard deviations has probability at most one quarter. It is conservative because the bound holds for every distribution with finite second moment; for a normal variable the actual probability is only about 4.55 percent.}
 
 \EX{某考试分数均值 $70$、标准差 $10$。由 Chebyshev 不等式，分数与 $70$ 相差至少 $20$ 分（即 $k=2$ 个标准差）的概率不超过 $10^2/20^2=1/4=25\%$；若分数近似正态，实际概率约为 $4.55\%$，可见界很保守。$k=3$ 时界为 $1/9\approx11.1\%$，正态实际仅约 $0.27\%$。}{An exam score has mean $70$ and standard deviation $10$. Chebyshev's inequality says the probability of a deviation of at least 20 points, that is two standard deviations, is at most $10^2/20^2=1/4=25\%$. If scores are approximately normal, the actual probability is about 4.55 percent, so the bound is conservative. For $k=3$ the bound is $1/9\approx11.1\%$, while the normal value is only about 0.27 percent.}

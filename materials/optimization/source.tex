@@ -490,7 +490,7 @@ A^{\mathsf T}y\ge0,\ b^{\mathsf T}y<0.
 
 
 \section{灵敏度分析 | Sensitivity analysis}
-\noindent 对偶最优变量 $y_i^*$ 是右端资源 $b_i$ 的影子价格：在当前最优基保持不变的范围内，$b_i$ 增加一个小量 $\Delta b_i$ 时最优目标值近似改变 $y_i^*\Delta b_i$。这个结论是局部的，超过允许范围后最优基可能改变，不能无限外推。目标系数的约化成本表示非基变量要改善多少才可能进入最优基。
+\noindent 对偶最优变量 $y_i^*$ 是右端资源 $b_i$ 的影子价格：在当前最优基保持不变的范围内，$b_i$ 增加一个小量 $\Delta b_i$ 时最优目标值近似改变 $y_i^*\Delta b_i$。这个结论是局部的，超过允许范围后最优基可能改变，不能无限外推。非基变量的约化成本表示其目标系数要改善多少才可能入基。
 \EN{The optimal dual variable $y_i^*$ is the shadow price of resource $b_i$. While the current basis remains optimal, a small change $\Delta b_i$ changes the optimal value approximately by $y_i^*\Delta b_i$. This is local; a larger change may alter the optimal basis. The reduced cost of a nonbasic variable measures how much its objective coefficient must improve before it can enter.}
 \EX{在工厂模型中，最优对偶价格为 $y_1=4/3,y_2=1/3$。在允许范围内，第一项资源增加 $0.1$ 单位，利润约增加 $(4/3)(0.1)=0.1333$；这不是重新求解后的全球保证。}{The shadow prices are $4/3$ and $1/3$. Within the allowable range, adding $0.1$ unit of the first resource increases profit by approximately $0.1333$. This is a local sensitivity statement, not a global guarantee.}
 

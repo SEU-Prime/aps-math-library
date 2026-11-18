@@ -41,7 +41,7 @@
 \subsection{为什么需要抽象线性空间 | Why an abstract vector space}
 \noindent\textbf{动机.} $\mathbb R^2,\mathbb R^3$ 中的加法与数乘足以做平面几何，但多项式的加法与数乘、矩阵的加法与数乘、连续函数的加法与数乘、齐次线性方程组解集的加法与数乘，也服从完全相同的运算规律。若对每个具体集合分别重做“基、维数、线性映射、特征值”的全部理论，就是重复劳动。公理化只保留运算规则，让一份证明同时适用于所有例子；这就是“抽象”的实际收益。
 \EN{Addition and scalar multiplication in $\mathbb R^2$ and $\mathbb R^3$ suffice for plane geometry, but the same operations on polynomials, on matrices, on continuous functions, and on solution sets of homogeneous linear systems obey exactly the same rules. Repeating the entire theory of bases, dimension, linear maps and eigenvalues for every concrete set would be wasted work. The axioms keep only the operational rules, so that one proof serves all examples; this is the practical gain of abstraction.}
-\noindent\textbf{定义.} 设 $F$ 为数域（含 $0,1$、对加、减、乘、除封闭的数集，如 $\mathbb Q,\mathbb R,\mathbb C$），$V$ 为非空集合，带有加法 $V\times V\to V$ 与数乘 $F\times V\to V$。若对任意 $u,v,w\in V$ 和 $a,b\in F$ 满足以下八条，则称 $V$ 是 $F$ 上的\textbf{线性空间}（向量空间），$V$ 的元素称为\textbf{向量}，$F$ 的元素称为\textbf{标量}。
+\noindent\textbf{定义.} 设 $F$ 为数域（含 $0,1$、对加、减、乘、除（除数非零）封闭的数集，如 $\mathbb Q,\mathbb R,\mathbb C$），$V$ 为非空集合，带有加法 $V\times V\to V$ 与数乘 $F\times V\to V$。若对任意 $u,v,w\in V$ 和 $a,b\in F$ 满足以下八条，则称 $V$ 是 $F$ 上的\textbf{线性空间}（向量空间），$V$ 的元素称为\textbf{向量}，$F$ 的元素称为\textbf{标量}。
 \EN{Let $F$ be a number field (a set of numbers containing $0,1$ and closed under addition, subtraction, multiplication and division by nonzero elements, such as $\mathbb Q,\mathbb R,\mathbb C$), and let $V$ be a nonempty set with addition $V\times V\to V$ and scalar multiplication $F\times V\to V$. If the following eight axioms hold for all $u,v,w\in V$ and $a,b\in F$, then $V$ is a \textbf{linear space} (vector space) over $F$; elements of $V$ are \textbf{vectors} and elements of $F$ are \textbf{scalars}.}
 \begin{enumerate}[label=(V\arabic*),leftmargin=3.4em,itemsep=1pt,topsep=2pt]
 \item $u+v=v+u$（加法交换律 / commutativity of addition）；
@@ -162,7 +162,7 @@ A'=P^{-1}AP.
 \[
 \dim V=\dim\ker T+\dim\operatorname{im}T.
 \]
-\noindent\textbf{证明思路.} 设 $\dim V=n$、$\dim\ker T=k$。取核的基 $v_1,\dots,v_k$，扩充为 $V$ 的基 $v_1,\dots,v_k,v_{k+1},\dots,v_n$。则 $T(v_{k+1}),\dots,T(v_n)$ 张成 $\operatorname{im}T$：任一 $T(v)$ 中属于核的部分被消去，只剩后面系数的像。它们还线性无关：若 $\sum_{j>k}c_jT(v_j)=0$，则 $T(\sum c_jv_j)=0$，该向量属于核，故它是 $v_1,\dots,v_k$ 的组合；由整组基的独立性得所有 $c_j=0$。于是 $\dim\operatorname{im}T=n-k$，定理成立。
+\noindent\textbf{证明思路.} 设 $\dim V=n$、$\dim\ker T=k$。取核的基 $v_1,\dots,v_k$，扩充为 $V$ 的基 $v_1,\dots,v_k,v_{k+1},\dots,v_n$。则 $T(v_{k+1}),\dots,T(v_n)$ 张成 $\operatorname{im}T$：任一 $v$ 的展开式中属于核的部分被消去，只剩后面系数的像。它们还线性无关：若 $\sum_{j>k}c_jT(v_j)=0$，则 $T(\sum c_jv_j)=0$，该向量属于核，故它是 $v_1,\dots,v_k$ 的组合；由整组基的独立性得所有 $c_j=0$。于是 $\dim\operatorname{im}T=n-k$，定理成立。
 \EN{Proof idea: let $\dim V=n$ and $\dim\ker T=k$. Take a basis $v_1,\dots,v_k$ of the kernel and extend it to a basis $v_1,\dots,v_n$ of $V$. Then $T(v_{k+1}),\dots,T(v_n)$ span the image: the kernel part of any $T(v)$ is killed, leaving only the images of the later coefficients. They are independent: if $\sum_{j>k}c_jT(v_j)=0$, then $T(\sum c_jv_j)=0$, so this vector lies in the kernel and is a combination of $v_1,\dots,v_k$; independence of the full basis forces all $c_j=0$. Hence $\dim\operatorname{im}T=n-k$.}
 \EX{令 $T(x,y,z)=(x+y,0)$。核由 $x+y=0$ 且 $z$ 任意组成，维数为 $2$；值域是 $x$ 轴，维数为 $1$。因此 $3=2+1$。}{For this map, the kernel is the plane $x+y=0$ and has dimension two. The image is the $x$-axis and has dimension one, so rank--nullity gives $3=2+1$.}
 \subsection{不变子空间 | Invariant subspaces}

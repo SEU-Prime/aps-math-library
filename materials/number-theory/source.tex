@@ -34,7 +34,7 @@
 \noindent\textbf{素因数分解。} 每个大于 $1$ 的整数都可唯一写成素数幂的乘积 $N=\prod_p p^{\alpha_p}$（忽略因子顺序）。若 $A=\prod_p p^{a_p}$、$B=\prod_p p^{b_p}$，则 $\gcd(A,B)=\prod_p p^{\min(a_p,b_p)}$、$\operatorname{lcm}(A,B)=\prod_p p^{\max(a_p,b_p)}$。唯一分解把整除问题转为比较素数指数。
 \EN{Every integer greater than one has a unique prime factorization, up to the order of its factors. The gcd takes the smaller exponent of each prime, while the least common multiple takes the larger exponent. Divisibility can therefore be checked by comparing prime exponents.}
 
-\EX{求 $\gcd(252,105)$：$252=2\cdot105+42$，$105=2\cdot42+21$，$42=2\cdot21$，故最大公因数为 $21$。回代得 $21=105-2(252-2\cdot105)=5\cdot105-2\cdot252$。这既给出 gcd，也构造出 Bézout 系数。}{The Euclidean algorithm gives $252=2\cdot105+42$, $105=2\cdot42+21$, and $42=2\cdot21$, so the gcd is $21$. Back-substitution gives $21=5\cdot105-2\cdot252$, producing the Bezout coefficients.}
+\EX{求 $\gcd(252,105)$：$252=2\cdot105+42$，$105=2\cdot42+21$，$42=2\cdot21$，故最大公因数为 $21$。回代得 $21=105-2(252-2\cdot105)=5\cdot105-2\cdot252$。这既给出 gcd，也构造出 Bézout 系数。}{The Euclidean algorithm gives $252=2\cdot105+42$, $105=2\cdot42+21$, and $42=2\cdot21$, so the gcd is $21$. Back-substitution gives $21=5\cdot105-2\cdot252$, producing the Bézout coefficients.}
 
 \noindent\textbf{用 Bézout 求逆元。} 若 $\gcd(a,n)=1$，从 $sa+tn=1$ 得 $sa\equiv1\pmod n$，所以 $s$ 是 $a$ 的模 $n$ 乘法逆元。逆元唯一到模 $n$ 同余类；若 gcd 大于 $1$，逆元不存在。
 \EX{例如，$43=2\cdot17+9$、$17=9+8$、$9=8+1$。回代得 $1=2\cdot43-5\cdot17$，故 $17^{-1}\equiv-5\equiv38\pmod{43}$。逆元例子展示了 Euclid 算法如何从 gcd 计算继续得到实际可用的系数。}{For example, $43=2\cdot17+9$, $17=9+8$, and $9=8+1$. Back-substitution gives $1=2\cdot43-5\cdot17$, so $17^{-1}\equiv-5\equiv38\pmod{43}$. The example shows how the Euclidean algorithm produces an actual inverse after finding the gcd.}
@@ -45,10 +45,9 @@
 \[
 ax\equiv b\pmod n
 \]
-\FORMULA{线性同余方程的可解判据}{solvability criterion for a linear congruence}
 有解当且仅当 $d=\gcd(a,n)$ 整除 $b$；若有解，模 $n$ 恰有 $d$ 个不同解。若 $d=1$，Bézout 等式给出 $a$ 在模 $n$ 下的乘法逆元。
-\EN{The congruence $a\equiv b\pmod n$ means that $a-b$ is divisible by $n$, so the two integers have the same remainder. Addition and multiplication preserve congruence. The linear congruence $ax\equiv b\pmod n$ is solvable exactly when $\gcd(a,n)$ divides $b$; if solvable, it has that many solutions modulo $n$.}
-\READ{“A x is congruent to b modulo n has a solution if and only if the greatest common divisor of a and n divides b.”}
+\EN{The congruence $a\equiv b\pmod n$ means that $a-b$ is divisible by $n$, so the two integers have the same remainder. Addition and multiplication preserve congruence. The linear congruence $ax\equiv b\pmod n$ is solvable exactly when $\gcd(a,n)$ divides $b$; if solvable, it has $\gcd(a,n)$ solutions modulo $n$.}
+\READ{“The congruence a x is congruent to b modulo n has a solution if and only if the greatest common divisor of a and n divides b.”}
 
 \EX{解 $6x\equiv8\pmod{14}$。因为 $\gcd(6,14)=2$ 整除 $8$，方程有两个模 $14$ 的解。除以 $2$ 得 $3x\equiv4\pmod7$；$3^{-1}\equiv5\pmod7$，所以 $x\equiv20\equiv6\pmod7$，在模 $14$ 下为 $x\equiv6,13$。代回可验证两解。}{For $6x\equiv8\pmod{14}$, the gcd is $2$, which divides $8$, so there are two solutions modulo $14$. Dividing by $2$ gives $3x\equiv4\pmod7$. Since $3^{-1}\equiv5\pmod7$, $x\equiv6\pmod7$, giving $x\equiv6,13\pmod{14}$.}
 
@@ -126,7 +125,7 @@ a^{(p-1)/2}\equiv\begin{cases}1\pmod p,&a\text{ 是平方剩余},\\-1\pmod p,&a\
 \FORMULA{原根判定准则}{criterion for a primitive root}
 \BOTH{要检验 $g$ 是否为模 $n$ 的原根，先确认 $\gcd(g,n)=1$，再分解 $\varphi(n)$。对每个素因子 $q\mid\varphi(n)$，若 $g^{\varphi(n)/q}\not\equiv1\pmod n$，则 $g$ 的阶为 $\varphi(n)$。模 $7$ 时 $\varphi(7)=6$，只需检查 $q=2,3$：$3^3\equiv6$、$3^2\equiv2$，都不等于 $1$，所以 $3$ 是原根。}{To test whether $g$ is a primitive root, first check $\gcd(g,n)=1$ and factor $\varphi(n)$. For every prime divisor $q$ of $\varphi(n)$, verify $g^{\varphi(n)/q}\not\equiv1\pmod n$. Modulo seven, the tests are $3^3\equiv6$ and $3^2\equiv2$, so three has order six and is a primitive root.}
 
-\noindent 如果 $g$ 是模 $n$ 的原根，且 $a$ 与 $n$ 互素，满足 $g^k\equiv a\pmod n$ 的 $k$ 模 $\varphi(n)$ 的余数称 $a$ 以 $g$ 为底的指标，也称离散对数。指标将乘法转为指数加法：$\operatorname{ind}_g(ab)\equiv\operatorname{ind}_g(a)+\operatorname{ind}_g(b)\pmod{\varphi(n)}$。在小模数下可列幂表；大规模计算离散对数可能困难，这与某些密码系统相关。
+\noindent 如果 $g$ 是模 $n$ 的原根，且 $a$ 与 $n$ 互素，满足 $g^k\equiv a\pmod n$ 的 $k$ 模 $\varphi(n)$ 的余数称为 $a$ 以 $g$ 为底的指标，也称离散对数。指标将乘法转为指数加法：$\operatorname{ind}_g(ab)\equiv\operatorname{ind}_g(a)+\operatorname{ind}_g(b)\pmod{\varphi(n)}$。在小模数下可列幂表；大规模计算离散对数可能困难，这与某些密码系统相关。
 \EN{Given a primitive root $g$, the index or discrete logarithm of an invertible residue $a$ is the exponent $k$ satisfying $g^k\equiv a\pmod n$, considered modulo $\varphi(n)$. Indices turn multiplication into addition of exponents. A small example can be solved by listing powers, while large discrete-log problems can be computationally difficult.}
 
 \ASK{原根与普通可逆余数有什么区别？}{How does a primitive root differ from an arbitrary invertible residue?}{任何与模数互素的数都有乘法逆元；原根要求它的幂生成全部可逆余数类，因此其阶必须等于 $\varphi(n)$。可逆并不自动是原根。}{Every residue coprime to the modulus has an inverse. A primitive root must generate all invertible residues through its powers, so its order must equal $\varphi(n)$. Being invertible alone is not enough.}
@@ -136,7 +135,7 @@ a^{(p-1)/2}\equiv\begin{cases}1\pmod p,&a\text{ 是平方剩余},\\-1\pmod p,&a\
 \EN{A Diophantine equation requires integer solutions. One often uses congruences to rule out impossible cases, then uses factorization, gcd conditions, or a parameterization to find solutions. Every primitive positive Pythagorean triple has the form $m^2-n^2$, $2mn$, and $m^2+n^2$, where $m>n$ are coprime and have opposite parity.}
 \READ{“A primitive Pythagorean triple can be parameterized by m squared minus n squared, two m n, and m squared plus n squared.”}
 
-\EX{取 $m=2,n=1$，得到 $(x,y,z)=(3,4,5)$，因为 $3^2+4^2=5^2$。若要检验方程 $x^2\equiv3\pmod7$ 是否可解，上一节的平方剩余表立刻排除所有整数解；模运算能先给出必要条件，但一般还需要额外论证才能证明充分性。}{Taking $m=2,n=1$ gives $(3,4,5)$, since $3^2+4^2=5^2$. To test whether $x^2\equiv3\pmod7$ is solvable, the list of quadratic residues rules out every integer solution. Modular arithmetic gives useful necessary conditions, though additional arguments may be needed for sufficiency.}
+\EX{取 $m=2,n=1$，得到 $(x,y,z)=(3,4,5)$，因为 $3^2+4^2=5^2$。若要检验方程 $x^2\equiv3\pmod7$ 是否可解，第 3 节的平方剩余表立刻排除所有整数解；模运算能先给出必要条件，但一般还需要额外论证才能证明充分性。}{Taking $m=2,n=1$ gives $(3,4,5)$, since $3^2+4^2=5^2$. To test whether $x^2\equiv3\pmod7$ is solvable, the list of quadratic residues rules out every integer solution. Modular arithmetic gives useful necessary conditions, though additional arguments may be needed for sufficiency.}
 \BOTH{模数筛选给出另一个类型的例子：若 $x^2+y^2=3$，模 $4$ 的平方只能为 $0$ 或 $1$，故两个平方之和只能余 $0,1,2$，不可能余 $3$。所以原方程没有整数解。}{For another modular filter, suppose $x^2+y^2=3$. A square modulo four is zero or one, so a sum of two squares can only be congruent to zero, one, or two, never three. Thus the equation has no integer solutions.}
 \subsection{Pell 方程与递推解 | Pell's equation and a recurrence}
 \FORMULA{Pell 方程及其解递推}{Pell equation and recurrence for its solutions}
@@ -144,7 +143,7 @@ a^{(p-1)/2}\equiv\begin{cases}1\pmod p,&a\text{ 是平方剩余},\\-1\pmod p,&a\
 x^2-2y^2=1,\qquad x_{k+1}=3x_k+4y_k,\quad y_{k+1}=2x_k+3y_k.
 \]
 \BOTH{从基本解 $(x_1,y_1)=(3,2)$ 出发，乘以 $3+2\sqrt2$ 会产生下一个解，因为范数 $(x+y\sqrt2)(x-y\sqrt2)=x^2-2y^2$ 在乘法下保持。上述递推因此不断生成新的整数解。}{Starting with $(x_1,y_1)=(3,2)$, multiplication by $3+2\sqrt2$ produces the next solution because the norm $(x+y\sqrt2)(x-y\sqrt2)=x^2-2y^2$ is multiplicative. The recurrence therefore generates further integer solutions.}
-\EX{由 $(3+2\sqrt2)^2=17+12\sqrt2$ 得 $(17,12)$，并有 $17^2-2\cdot12^2=289-288=1$。再迭代得到 $(577,408)$。这展示特定 Pell 方程有无限解，不意味着所有二次方程都如此。}{Squaring $3+2\sqrt2$ gives $17+12\sqrt2$, hence $17^2-2\cdot12^2=1$. A further iteration gives $(577,408)$. This proves infinitely many solutions for this Pell equation, not for every quadratic equation.}
+\EX{由 $(3+2\sqrt2)^2=17+12\sqrt2$ 得 $(17,12)$，并有 $17^2-2\cdot12^2=289-288=1$。再迭代两次得到 $(577,408)$。这展示特定 Pell 方程有无限解，不意味着所有二次方程都如此。}{Squaring $3+2\sqrt2$ gives $17+12\sqrt2$, hence $17^2-2\cdot12^2=1$. Two more steps give $(577,408)$. This proves infinitely many solutions for this Pell equation, not for every quadratic equation.}
 
 \section{数论口试的短回答 | Short oral answers}
 \ASK{如何判断线性同余方程有没有解？}{How do you decide whether a linear congruence is solvable?}{对 $ax\equiv b\pmod n$ 先计算 $d=\gcd(a,n)$。若 $d$ 不整除 $b$，无解；若整除，约去 $d$ 后在模 $n/d$ 下求逆元，并得到原模数下 $d$ 个解。}{For $ax\equiv b\pmod n$, compute $d=\gcd(a,n)$. There is no solution if $d$ does not divide $b$. Otherwise divide by $d$, find an inverse modulo $n/d$, and recover the $d$ solutions modulo $n$.}
