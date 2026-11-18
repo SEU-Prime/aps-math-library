@@ -140,6 +140,242 @@ x_1=x_2=\frac43,\qquad z^*=\frac{20}{3}.
 这两次换基依次展示了选入基变量、最小比值检验、换基和检验数最优性判据。
 \EN{Solving for the leaving variable and substituting gives the final dictionary above. The nonbasic slacks $s_1,s_2$ have nonpositive reduced costs, so setting them to zero gives $x_1=x_2=4/3$ and $z^*=20/3$. The two pivots show how to choose entering and leaving variables and verify optimality.}
 
+\section{单纯形表：结构与计算 | The simplex tableau: structure and computation}
+
+\APS{上一节用字典写基变量，每换一次基都要重新解方程、再代回目标式，清楚但手算易错。单纯形表把同一个方程组按“基变量列是单位列”排成表，换基只需三步行变换，检验数作为最后一行同步更新。表与字典信息相同，只是表把“已解出的字典”还原成“未解出的方程组”，更适合考试中快速、可核对地计算。}{A dictionary is clear for proofs but error-prone by hand. A tableau arranges the same equations so that the basic columns are unit columns; a pivot becomes three row operations and the reduced-cost row updates with the table. Both carry the same information, but the tableau keeps the equations unsolved, which is faster and easier to check.}
+
+\subsection{单纯形表的结构与读法 | How to build and read a simplex tableau}
+
+\noindent 先化标准形：每个 $\le$ 约束加松弛变量 $s_i\ge0$，右端项保持非负，初始基取松弛变量，于是 $s_i=b_i$、$z=0$。表固定分四块：顶端写目标系数 $c_j$；左侧两列写基变量的目标系数 $c_B$ 与基变量名；中间是约束系数与右端项 $b$；底端写检验数
+\FORMULA{表内检验数与当前目标值}{reduced costs and the current objective value in a tableau}
+\[
+z_j=\sum_{i}c_{B_i}a_{ij}=c_B^{\mathsf T}B^{-1}a_j,
+\qquad
+\sigma_j=c_j-z_j,
+\qquad
+z=\sum_{i}c_{B_i}b_i=c_B^{\mathsf T}B^{-1}b.
+\]
+最大化时 $\sigma_j>0$ 表示增加 $x_j$ 能提高 $z$，故 $\sigma_j$ 也叫\textbf{约化成本}（reduced cost），是 $x_j$ 相对当前基的“净收益”。
+\EN{Add a slack to every $\le$ constraint and take the slacks as the initial basis, so $s_i=b_i$ and $z=0$. The blocks are the $c_j$ row, the $c_B$ column, the coefficients with $b$, and the reduced-cost row; a positive $\sigma_j$ means increasing $x_j$ raises $z$.}
+
+\noindent 工厂模型 $2x_1+x_2+s_1=4$、$x_1+2x_2+s_2=4$、$\max z=3x_1+2x_2$ 的初始表如表 1：$c_B$ 列的两个 0 是松弛变量的目标系数，$b$ 列 $(4,4)$ 是当前基解，$x_1$ 列的 $(2,1)$ 表示每单位产品 1 的资源消耗；检验数按 $\sigma_j=c_j-z_j$ 算，得 $(3,2,0,0)$。
+\EN{For the factory model, Table 1 is the initial tableau: the zeros in $c_B$ are the slack coefficients, $b=(4,4)$ is the current solution, and $\sigma_j=c_j-z_j$ gives $(3,2,0,0)$.}
+
+\noindent\textbf{表 1．工厂模型的初始单纯形表 / Table 1: the initial tableau of the factory model.}
+{\small\renewcommand{\arraystretch}{1.05}
+\begin{center}
+\begin{tabular}{c|c|c|cccc|c}
+\hline
+ & & $c_j$ & 3 & 2 & 0 & 0 & \\
+\hline
+$c_B$ & 基变量 & $b$ & $x_1$ & $x_2$ & $s_1$ & $s_2$ & $z$ \\
+\hline
+0 & $s_1$ & 4 & 2 & 1 & 1 & 0 & \\
+0 & $s_2$ & 4 & 1 & 2 & 0 & 1 & \\
+\hline
+ & & $\sigma_j$ & 3 & 2 & 0 & 0 & 0 \\
+\hline
+\end{tabular}
+\end{center}
+}
+\noindent \textbf{这一行/这一列在算什么。}$\sigma_1=3>0$ 说明产品 1 的净收益为正，表 1 尚未最优；$b$ 列是两种资源的剩余量；$z=0$ 表示尚未生产。
+\EN{\textbf{Reading it.} The positive $\sigma_1=3$ says product 1 is worth producing, so the table is not optimal; $b$ gives unused resources and $z=0$.}
+
+\noindent\textbf{入基与比值检验。}入基取检验数最大的正列（Dantzig 规则），也可用 Bland 规则取正检验数中\textbf{下标最小}者；本例 $\sigma_1=3>\sigma_2=2$，$x_1$ 入基。入基列 $k$ 定后用\textbf{最小比值检验}选离基行，主元（pivot element）取二者交点：$\theta=\min_{i:\,a_{ik}>0}b_i/a_{ik}$。$x_1$ 列 $\theta_1=4/2=2$（$s_1$ 行）、$\theta_2=4/1=4$（$s_2$ 行），最小者为 2，所以 $s_1$ 出基、主元为 2。只对 $a_{ik}>0$ 的行求比值：$a_{ik}\le0$ 时增加 $x_k$ 不会让该基变量下降，不能限制步长。
+\EN{\textbf{Entering variable and ratio test.} Enter the largest positive reduced cost (Dantzig) or the smallest positive index (Bland); here $x_1$ enters. The ratio test $\theta=\min b_i/a_{ik}$ over $a_{ik}>0$ gives $4/2=2$ and $4/1=4$, so $s_1$ leaves with pivot 2. Only rows with $a_{ik}>0$ bound the step.}
+
+\noindent\textbf{行变换三步。}(1) 主元行除以主元：$(2,1,1,0\mid4)/2=(1,\tfrac12,\tfrac12,0\mid2)$。(2) 其余行减去“该行主元列系数 $\times$ 新主元行”：$s_2$ 行系数为 1，$(1,2,0,1\mid4)-(1,\tfrac12,\tfrac12,0\mid2)=(0,\tfrac32,-\tfrac12,1\mid2)$。(3) 检验数行：$\sigma_j\leftarrow\sigma_j-\sigma_k(\text{new pivot row})_j$、$z\leftarrow z+\sigma_k(\text{new pivot RHS})$；$\sigma_k=3$ 时 $(3,2,0,0)-3(1,\tfrac12,\tfrac12,0)=(0,\tfrac12,-\tfrac32,0)$，$z=0+3\cdot2=6$。也可以用新的 $c_B$ 重算 $\sigma_j$，作为检查。
+\EN{\textbf{Three row operations.} Divide the pivot row by the pivot; subtract from every other row its pivot-column coefficient times the new pivot row; update the reduced-cost row by $\sigma_j\leftarrow\sigma_j-\sigma_k(\text{new pivot row})_j$ and $z\leftarrow z+\sigma_k(\text{new pivot RHS})$. Here they produce $(0,\tfrac12,-\tfrac32,0)$ and $z=6$; recomputing from the new $c_B$ is a good check.}
+
+\noindent\textbf{表 2．第一次换基后的单纯形表 / Table 2: the tableau after the first pivot.}
+{\small\renewcommand{\arraystretch}{1.05}
+\begin{center}
+\begin{tabular}{c|c|c|cccc|c}
+\hline
+ & & $c_j$ & 3 & 2 & 0 & 0 & \\
+\hline
+$c_B$ & 基变量 & $b$ & $x_1$ & $x_2$ & $s_1$ & $s_2$ & $z$ \\
+\hline
+3 & $x_1$ & 2 & 1 & $\tfrac12$ & $\tfrac12$ & 0 & \\
+0 & $s_2$ & 2 & 0 & $\tfrac32$ & $-\tfrac12$ & 1 & \\
+\hline
+ & & $\sigma_j$ & 0 & $\tfrac12$ & $-\tfrac32$ & 0 & 6 \\
+\hline
+\end{tabular}
+\end{center}
+}
+\noindent \textbf{这一行/这一列在算什么。}$c_B$ 列变成 $(3,0)$；$x_1$ 列与 $s_2$ 列成为单位列 $(1,0)$、$(0,1)$，这是换基成功的标志；$b$ 列 $(2,2)$ 读出 $x_1=2$、$x_2=0$、$z=6$；$\sigma_2=\tfrac12>0$，$x_2$ 仍值得生产。
+\EN{\textbf{Reading it.} $x_1$ and $s_2$ are unit columns, so the pivot worked; $b=(2,2)$ gives $x_1=2$, $z=6$, and $\sigma_2=\tfrac12>0$.}
+
+\noindent 第二轮：$x_2$ 入基，$\theta=\min\{2/\tfrac12=4,\ 2/\tfrac32=\tfrac43\}=\tfrac43$，$s_2$ 出基，主元 $\tfrac32$。主元行除以 $\tfrac32$ 得 $(0,1,-\tfrac13,\tfrac23\mid\tfrac43)$；$x_1$ 行减 $\tfrac12$ 倍新主元行得 $(1,0,\tfrac23,-\tfrac13\mid\tfrac43)$；$\sigma_k=\tfrac12$ 时 $(0,\tfrac12,-\tfrac32,0)-\tfrac12(0,1,-\tfrac13,\tfrac23)=(0,0,-\tfrac43,-\tfrac13)$，$z=6+\tfrac12\cdot\tfrac43=\tfrac{20}{3}$，得到表 3。
+\EN{In the second round $x_2$ enters with $\theta=\tfrac43$, so $s_2$ leaves with pivot $\tfrac32$. The row operations give the new rows and reduced-cost row $(0,0,-\tfrac43,-\tfrac13)$ with $z=\tfrac{20}{3}$, which is Table 3.}
+
+\noindent\textbf{表 3．第二次换基后的最终单纯形表 / Table 3: the final tableau after the second pivot.}
+{\small\renewcommand{\arraystretch}{1.05}
+\begin{center}
+\begin{tabular}{c|c|c|cccc|c}
+\hline
+ & & $c_j$ & 3 & 2 & 0 & 0 & \\
+\hline
+$c_B$ & 基变量 & $b$ & $x_1$ & $x_2$ & $s_1$ & $s_2$ & $z$ \\
+\hline
+3 & $x_1$ & $\tfrac43$ & 1 & 0 & $\tfrac23$ & $-\tfrac13$ & \\
+2 & $x_2$ & $\tfrac43$ & 0 & 1 & $-\tfrac13$ & $\tfrac23$ & \\
+\hline
+ & & $\sigma_j$ & 0 & 0 & $-\tfrac43$ & $-\tfrac13$ & $\tfrac{20}{3}$ \\
+\hline
+\end{tabular}
+\end{center}
+}
+\noindent \textbf{这一行/这一列在算什么。}全部 $\sigma_j\le0$，当前基可行解最优；$b$ 列给 $x_1=x_2=\tfrac43$、$s_1=s_2=0$、$z=\tfrac{20}{3}$。$s_1,s_2$ 列的系数就是 $B^{-1}=\tfrac13\begin{pmatrix}2&-1\\-1&2\end{pmatrix}$，其检验数 $\sigma_{s_1}=-\tfrac43$、$\sigma_{s_2}=-\tfrac13$ 是影子价格的相反数：松弛列是 $e_i$，$\sigma_{s_i}=0-c_B^{\mathsf T}B^{-1}e_i=-y_i$，故 $y=(\tfrac43,\tfrac13)$，与“对偶问题与经济解释”一节的 $B^{-1}$ 计算一致。
+\EN{\textbf{Reading it.} All reduced costs are nonpositive, so the basis is optimal: $x_1=x_2=\tfrac43$, $z=\tfrac{20}{3}$. The slack columns contain $B^{-1}$ and $\sigma_{s_i}=-y_i$, so $y=(\tfrac43,\tfrac13)$, matching the duality section.}
+
+\noindent\textbf{单纯形表法步骤清单 / A checklist for the tableau method.}
+\begin{enumerate}[label=\arabic*,leftmargin=2.2em]
+\item 化标准形（$\le$ 加松弛、$\ge$ 减剩余再加人工变量，初始基取松弛或人工变量），写出 $c_j$ 行与 $c_B$ 列，并按 $z_j=\sum_i c_{B_i}a_{ij}$、$\sigma_j=c_j-z_j$、$z=\sum_i c_{B_i}b_i$ 填检验数。
+\item 判最优：最大化时全部 $\sigma_j\le0$ 即停；否则选入基列（最大正检验数，或 Bland 规则的最左正检验数）。
+\item 比值检验：只对 $a_{ik}>0$ 的行算 $\theta_i=b_i/a_{ik}$，取最小者定出基行；该列没有正元素则无界。
+\item 主元行整体除以主元 $a_{rk}$。
+\item 其余各行（含检验数行）减去“该行主元列系数 $\times$ 新主元行”，并按 $\sigma$ 行规则更新 $z$。
+\item 更新 $c_B$ 与基变量名，回到第 2 步；用“基变量列是否仍为单位列”检查算术。
+\item 读结果：$b$ 列给基变量值，非基变量取 0；松弛列检验数给影子价格；核对 $z=c^{\mathsf T}x$。
+\end{enumerate}
+\EN{\textbf{Checklist.} Standard form; fill reduced costs and $z$; stop when all are nonpositive, otherwise enter the largest (Bland: smallest index); ratio test only on $a_{ik}>0$, else unbounded; divide the pivot row; eliminate the pivot column from all rows including the cost row; update $c_B$; read the solution and shadow prices; verify $z=c^{\mathsf T}x$.}
+
+\noindent\textbf{常见错误 / Common errors.}
+\begin{enumerate}[label=\arabic*,leftmargin=2.2em]
+\item \textbf{比值取错行}：只对 $a_{ik}>0$ 的行求比值；负系数行不限制步长。
+\item \textbf{忘记同步更新检验数行或 $c_B$ 列}：检验数、$c_B$、基变量名必须一起改，否则会拿旧表判断最优。
+\item \textbf{退化时误以为算错}：最小比值为 0 或多个比值并列时，换基可能不改变目标；按并列取下标小者或 Bland 规则继续。
+\item \textbf{最小化问题的符号}：$\sigma_j=c_j-z_j$ 的定义不变，但判据相反——入基取\textbf{最负}的 $\sigma_j$，全部 $\sigma_j\ge0$ 才最优。
+\item \textbf{无界判断错误}：入基列所有 $a_{ik}\le0$ 时是问题无界，不是“没有换基对象”。
+\item \textbf{主元列没消干净}：换基后基变量列必须是单位列，否则说明漏算。
+\end{enumerate}
+\EN{\textbf{Common errors.} Nonpositive coefficients or negative ratios in the ratio test; forgetting the cost row or $c_B$; treating a zero ratio as an error; mixing up the minimization criterion; calling an all-nonpositive entering column a failed pivot; leaving a nonzero entry in the pivot column.}
+
+\subsection{完整算例：三变量、含“至少”约束的两阶段计算 | A full worked example with an at-least constraint}
+
+\noindent 下面的例子有三个变量，第二条约束是“至少”型，必须先做第一阶段（Phase I）才能得到可行基，共三次换基、四张表。化标准形时第一、三条加松弛变量 $s_1,s_3\ge0$，第二条减剩余变量 $s_2\ge0$ 并加人工变量 $a_2\ge0$：
+\FORMULA{两阶段法算例的标准形}{standard form for the two-phase worked example}
+\[
+\begin{gathered}
+\max z=4x_1+2x_2+5x_3,\\
+3x_1+x_2+x_3+s_1=7,\quad
+3x_1+2x_2+x_3-s_2+a_2=9,\quad
+x_1+x_2+x_3+s_3=5,\\
+x_1,x_2,x_3,s_1,s_2,s_3,a_2\ge0.
+\end{gathered}
+\]
+第一阶段最小化 $w=a_2$，检验数记作 $\sigma^I_j=c^I_j-z^I_j$，$c^I$ 是 $w$ 的系数（人工变量取 1，其余取 0）。\textbf{第一阶段是最小化，判据方向与最大化相反}：$\sigma^I_j<0$ 表示增加 $x_j$ 能降低 $w$，入基取\textbf{最负}者；全部 $\sigma^I_j\ge0$ 时 $w$ 不能再降。$w>0$ 说明不可行；$w=0$ 时人工变量全为零，擦掉人工变量列进入第二阶段。
+\EN{This example has three variables and an at-least constraint, so Phase I is required; it needs three pivots and four tableaux. Phase I minimizes $w=a_2$; since it is a minimization, a negative $\sigma^I_j$ lowers $w$ and the most negative enters, while all nonnegative means Phase I is optimal. A positive optimum is infeasible; $w=0$ allows dropping the artificial columns.}
+
+\noindent\textbf{表 4．第一阶段初始表（含 $w$ 行）/ Table 4: Phase I initial tableau (with the $w$ row).}
+{\footnotesize\renewcommand{\arraystretch}{1.04}\setlength{\tabcolsep}{3.5pt}
+\begin{center}
+\begin{tabular}{c|c|c|ccccccc|c}
+\hline
+ & & $c^I_j$ & 0 & 0 & 0 & 0 & 0 & 0 & 1 & \\
+\hline
+$c^I_B$ & 基变量 & $b$ & $x_1$ & $x_2$ & $x_3$ & $s_1$ & $s_2$ & $s_3$ & $a_2$ & $w$ \\
+\hline
+0 & $s_1$ & 7 & 3 & 1 & 1 & 1 & 0 & 0 & 0 & \\
+1 & $a_2$ & 9 & 3 & 2 & 1 & 0 & $-1$ & 0 & 1 & \\
+0 & $s_3$ & 5 & 1 & 1 & 1 & 0 & 0 & 1 & 0 & \\
+\hline
+ & & $\sigma^I_j$ & $-3$ & $-2$ & $-1$ & 0 & 1 & 0 & 0 & 9 \\
+\hline
+\end{tabular}
+\end{center}
+}
+\noindent \textbf{这一行/这一列在算什么。}$w$ 列是 $c^I_B$ 与 $b$ 列的内积，$1\cdot9=9$ 表示没有生产时人工变量还差 9 单位。$\sigma^I_j=c^I_j-\sum_i c^I_{B_i}a_{ij}$：$x_1$ 列 $0-(1\cdot3)=-3$，$s_2$ 列 $0-(1\cdot(-1))=1$；负检验数给出降低 $w$ 的方向，$x_1$ 最负，入基。
+\EN{\textbf{Reading it.} The $w$ entry $9$ says the artificial variable is nine units from feasibility; the most negative reduced cost, $x_1$ with $-3$, enters.}\noindent 入基 $x_1$：其列系数全为正，$\theta=\min\{7/3,3,5\}=7/3$，故 $s_1$ 出基、主元为 3；行变换后得表 5。
+\EN{Enter $x_1$: all coefficients in its column are positive and $\theta=\min\{7/3,3,5\}=7/3$, so $s_1$ leaves with pivot 3, giving Table 5.}
+
+\noindent\textbf{表 5．第一阶段第一次换基后 / Table 5: after the first Phase I pivot.}
+{\footnotesize\renewcommand{\arraystretch}{1.04}\setlength{\tabcolsep}{3.5pt}
+\begin{center}
+\begin{tabular}{c|c|c|ccccccc|c}
+\hline
+ & & $c^I_j$ & 0 & 0 & 0 & 0 & 0 & 0 & 1 & \\
+\hline
+$c^I_B$ & 基变量 & $b$ & $x_1$ & $x_2$ & $x_3$ & $s_1$ & $s_2$ & $s_3$ & $a_2$ & $w$ \\
+\hline
+0 & $x_1$ & $\tfrac73$ & 1 & $\tfrac13$ & $\tfrac13$ & $\tfrac13$ & 0 & 0 & 0 & \\
+1 & $a_2$ & 2 & 0 & 1 & 0 & $-1$ & $-1$ & 0 & 1 & \\
+0 & $s_3$ & $\tfrac83$ & 0 & $\tfrac23$ & $\tfrac23$ & $-\tfrac13$ & 0 & 1 & 0 & \\
+\hline
+ & & $\sigma^I_j$ & 0 & $-1$ & 0 & 1 & 1 & 0 & 0 & 2 \\
+\hline
+\end{tabular}
+\end{center}
+}
+\noindent \textbf{这一行/这一列在算什么。}$b$ 列变为 $(7/3,2,8/3)$，$w$ 从 9 降到 2；$x_1$ 列成为单位列。只有 $x_2$ 的 $\sigma^I_2=-1<0$，故 $x_2$ 入基；$x_2$ 列 $\theta=\min\{7,2,4\}=2$，$a_2$ 出基，主元为 1。
+\EN{\textbf{Reading it.} $w$ drops to 2 and the $x_1$ column is a unit column; the only negative reduced cost is $\sigma^I_2=-1$, so $x_2$ enters and its ratio $2$ in the artificial row makes $a_2$ leave.}
+
+\noindent 主元为 1 时主元行不变：$x_1$ 行减 $\tfrac13$ 倍 $a_2$ 行，$s_3$ 行减 $\tfrac23$ 倍 $a_2$ 行，检验数行加 1 倍 $a_2$ 行（$\sigma^I_2=-1$），得表 6。
+\EN{With a unit pivot the pivot row is unchanged: subtract $\tfrac13$ times the $a_2$ row from the $x_1$ row, $\tfrac23$ times it from the $s_3$ row, and add one copy of it to the reduced-cost row, giving Table 6.}
+
+\noindent\textbf{表 6．第一阶段结束（$w=0$）/ Table 6: end of Phase I, where $w=0$.}
+{\footnotesize\renewcommand{\arraystretch}{1.04}\setlength{\tabcolsep}{3.5pt}
+\begin{center}
+\begin{tabular}{c|c|c|ccccccc|c}
+\hline
+ & & $c^I_j$ & 0 & 0 & 0 & 0 & 0 & 0 & 1 & \\
+\hline
+$c^I_B$ & 基变量 & $b$ & $x_1$ & $x_2$ & $x_3$ & $s_1$ & $s_2$ & $s_3$ & $a_2$ & $w$ \\
+\hline
+0 & $x_1$ & $\tfrac53$ & 1 & 0 & $\tfrac13$ & $\tfrac23$ & $\tfrac13$ & 0 & $-\tfrac13$ & \\
+0 & $x_2$ & 2 & 0 & 1 & 0 & $-1$ & $-1$ & 0 & 1 & \\
+0 & $s_3$ & $\tfrac43$ & 0 & 0 & $\tfrac23$ & $\tfrac13$ & $\tfrac23$ & 1 & $-\tfrac23$ & \\
+\hline
+ & & $\sigma^I_j$ & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\
+\hline
+\end{tabular}
+\end{center}
+}
+\noindent \textbf{这一行/这一列在算什么。}$w=0$ 且人工变量已出基，原问题可行；$\sigma^I$ 行全部非负，第一阶段停止，$b$ 列给出基可行解 $(x_1,x_2,s_3)=(5/3,2,4/3)$。若人工变量仍留在基中但值为 0，用它所在行的非人工非零系数换出；若没有这种系数，该约束冗余，删去整行。
+\EN{\textbf{Reading it.} $w=0$ and the artificial variable is out, so the problem is feasible and $(x_1,x_2,s_3)=(5/3,2,4/3)$. If an artificial stayed basic at zero, pivot it out or delete the redundant row.}
+
+\noindent 第二阶段：删去人工变量列，目标换回 $c=(4,2,5,0,0,0)$ 并重算检验数。基为 $x_1,x_2,s_3$、$c_B=(4,2,0)$，故 $\sigma_3=5-\tfrac43=\tfrac{11}{3}$、$z=4\cdot\tfrac53+2\cdot2+0\cdot\tfrac43=\tfrac{32}{3}$，检验数行为 $(0,0,\tfrac{11}{3},-\tfrac23,\tfrac23,0)$（$s_1,s_3$ 属 $\le$ 行；$s_2$ 属 $\ge$ 行，列为 $-e_2$）。$x_3$ 检验数最大，入基；$\theta=\min\{5,2\}=2$（第二行系数为 0，跳过），$s_3$ 出基、主元为 $\tfrac23$。主元行除以 $\tfrac23$ 得 $(0,0,1,\tfrac12,1,\tfrac32\mid2)$，$x_1$ 行减 $\tfrac13$ 倍新主元行得 $(1,0,0,\tfrac12,0,-\tfrac12\mid1)$，$x_2$ 行不变，检验数行按 $\sigma_k=\tfrac{11}{3}$ 消去后得表 7。
+\EN{Phase II drops the artificial column, restores $c=(4,2,5,0,0,0)$, and recomputes: the reduced-cost row is $(0,0,\tfrac{11}{3},-\tfrac23,\tfrac23,0)$ with $z=\tfrac{32}{3}$. $x_3$ enters with ratio $2$, $s_3$ leaves with pivot $\tfrac23$, and the row operations give Table 7.}
+
+\noindent\textbf{表 7．最终单纯形表 / Table 7: the final tableau.}
+{\small\renewcommand{\arraystretch}{1.05}
+\begin{center}
+\begin{tabular}{c|c|c|cccccc|c}
+\hline
+ & & $c_j$ & 4 & 2 & 5 & 0 & 0 & 0 & \\
+\hline
+$c_B$ & 基变量 & $b$ & $x_1$ & $x_2$ & $x_3$ & $s_1$ & $s_2$ & $s_3$ & $z$ \\
+\hline
+4 & $x_1$ & 1 & 1 & 0 & 0 & $\tfrac12$ & 0 & $-\tfrac12$ & \\
+2 & $x_2$ & 2 & 0 & 1 & 0 & $-1$ & $-1$ & 0 & \\
+5 & $x_3$ & 2 & 0 & 0 & 1 & $\tfrac12$ & 1 & $\tfrac32$ & \\
+\hline
+ & & $\sigma_j$ & 0 & 0 & 0 & $-\tfrac52$ & $-3$ & $-\tfrac{11}{2}$ & 18 \\
+\hline
+\end{tabular}
+\end{center}
+}
+\noindent \textbf{这一行/这一列在算什么。}全部 $\sigma_j\le0$，第二阶段结束；$b$ 列给 $(x_1,x_2,x_3)=(1,2,2)$、$z=18$，三条约束都取等号，$4\cdot1+2\cdot2+5\cdot2=18$ 一致。松弛列检验数给出影子价格：$s_1,s_3$ 属 $\le$ 行，$\sigma_{s_1}=-\tfrac52=-y_1$、$\sigma_{s_3}=-\tfrac{11}{2}=-y_3$；$s_2$ 属 $\ge$ 行，列为 $-e_2$，$\sigma_{s_2}=y_2=-3$。对偶解 $y=(\tfrac52,-3,\tfrac{11}{2})$ 满足符号条件，对偶目标也是 18；$y_2<0$ 正说明“至少”型约束的影子价格为负。
+\EN{\textbf{Reading it.} All reduced costs are nonpositive, so $(x_1,x_2,x_3)=(1,2,2)$ and $z=18$. The slack reduced costs give $y_1=\tfrac52$, $y_3=\tfrac{11}{2}$ and $y_2=-3$, and the dual objective is also 18; a negative $y_2$ means an at-least constraint has a negative shadow price.}
+
+\subsection{表格与字典的对应 | How tableaux correspond to dictionaries}
+
+\noindent 对 $Ax=b,\ x\ge0$ 取基 $B$（其余列为 $N$），字典是 $x_B=B^{-1}b-B^{-1}Nx_N$、$z=c_B^{\mathsf T}B^{-1}b+(c_N^{\mathsf T}-c_B^{\mathsf T}B^{-1}N)x_N$。把 $Ax=b$ 左乘 $B^{-1}$ 得 $x_B+B^{-1}Nx_N=B^{-1}b$，这就是表中的方程组：基变量列是单位矩阵，非基列是 $B^{-1}a_j$，右端是 $B^{-1}b$，检验数是 $c_j-c_B^{\mathsf T}B^{-1}a_j$，常数是 $c_B^{\mathsf T}B^{-1}b$。字典把这组方程对 $x_B$ 解出，表保持未解出的形式，两者只差“有没有把基变量移到等号左边”；表 2 的两行正是工厂字典 $x_1=2-\tfrac12x_2-\tfrac12s_1$、$s_2=2-\tfrac32x_2+\tfrac12s_1$。
+\EN{With basis $B$, multiplying $Ax=b$ by $B^{-1}$ gives $x_B+B^{-1}Nx_N=B^{-1}b$, which is the tableau: basic columns form the identity, nonbasic columns are $B^{-1}a_j$, the right-hand side is $B^{-1}b$, and the reduced costs are $c_j-c_B^{\mathsf T}B^{-1}a_j$. The dictionary solves for $x_B$, the tableau does not; the two rows of Table 2 are exactly the factory dictionary.}
+
+\noindent \textbf{为什么手算与考试用表。}表格法机械、可核对：换基只是三步行变换，不必重写表达式；比值所需数字就在入基列；基变量列是否为单位列可立即检查算术；最终表的松弛列还直接给出 $B^{-1}$ 与影子价格。字典法概念清楚，适合写证明：$z$ 写成非基变量的显式函数，$\sigma_j$ 的意义、退化与目标不变都容易解释。面试可以这样说：表格法是字典的紧凑记账方式，信息相同，一个便于算，一个便于讲。
+\EN{\textbf{Why use tables in exams.} A pivot is three row operations, the ratio-test numbers sit in the entering column, the unit-column property checks the arithmetic, and the final slack columns give $B^{-1}$ and the shadow prices. The dictionary is clearer for proofs; in an oral answer, the tableau is a compact bookkeeping form of it.}
+
+\subsection{退化、循环与无界在表上的表现 | Degeneracy, cycling and unboundedness in the tableau}
+
+\noindent \textbf{退化。}某个基变量等于零时，$b$ 列出现 0，该行比值也为 0，最小比值可能为 0 或与别的行并列；换基后目标不增加、基变了但解点没变，这就是退化。应对：比值并列时取离基变量下标最小者；Bland 规则要求入基变量取正检验数中\textbf{下标最小}者、离基变量取并列比值中\textbf{基变量下标最小}者，可保证有限步终止、不循环。
+\EN{\textbf{Degeneracy.} A zero basic variable gives a zero in the $b$ column and a zero ratio, so the minimum may be zero or tied; a pivot may change the basis without changing the objective or the solution point. Break ties by the smallest index; Bland's rule guarantees termination.}
+
+\noindent \textbf{无界。}若入基列 $k$ 的所有 $a_{ik}\le0$，列中没有正元素，比值检验无定义；增大 $x_k$ 不会让任何基变量降到零，目标可无限增大，问题无界。例如 $\max z=2x_2$、$x_1-x_2\le1$、$x\ge0$ 的表只有一行 $(x_1,x_2,s_1\mid b)=(1,-1,1\mid1)$、$\sigma=(0,2,0)$：$x_2$ 检验数为正而列中无正元素，故无界。不可行则是“根本没有可行解”，由第一阶段 $w>0$ 判定。
+\EN{\textbf{Unboundedness.} If every $a_{ik}$ in the entering column is nonpositive, the ratio test is undefined; increasing $x_k$ never drives a basic variable to zero and the objective grows without bound. For $\max z=2x_2$ with $x_1-x_2\le1$ and nonnegativity, the row is $(1,-1,1\mid1)$ with $\sigma=(0,2,0)$: $x_2$ has positive reduced cost but no positive entry, so the problem is unbounded. Infeasibility instead means no feasible point and is detected by $w>0$.}
+
 \section{单纯形最优性判据 | The simplex optimality criterion}
 \noindent 对最大化问题 $Ax\le b,x\ge0$，先加入松弛变量得到 $Ax+s=b$。取扩充矩阵 $[A\ I]$ 的一个\textbf{可行基} $B$，即 $B^{-1}b\ge0$，松弛变量目标系数为零。令 $y^{\mathsf T}=c_B^{\mathsf T}B^{-1}$。若所有非基变量（包括非基松弛变量）的检验数均满足 $\bar c_j\le0$，则产品列给出 $A^{\mathsf T}y\ge c$，松弛列给出 $y\ge0$；基列检验数为零。因此 $y$ 对偶可行。对任意原问题可行解 $x$，弱对偶给出
 \FORMULA{单纯形最优性判据的对偶界证明}{duality bound proving the simplex optimality criterion}
@@ -311,4 +547,12 @@ x_1=\frac{4+2(-1)}3=\frac23,\qquad x_2=\frac{4-(-1)}3=\frac53,
 \section*{来源与范围 | Source and scope}
 本稿主要参考陈宝林《最优化理论与算法》（第 2 版）目录中第 3 章“单纯形方法”和第 4 章“对偶原理及灵敏度分析”，并参考“最优化方法”文件夹中的课程讲义、单纯形法材料、凸规划和 Farkas 引理资料。扫描教材文字提取有限，因此本稿按章节主题整理核心理论，不声称逐页转录；线性规划符号以本稿显示的最大化标准形式为准，其他教材的符号约定可能相反。
 \EN{This review is mainly based on Chapters 3 and 4 of Bao-Lin Chen's Optimization Theory and Algorithms, supplemented by the course materials on simplex methods, convex programming, and Farkas' lemma. The scanned book has limited text extraction, so this is a structured review of the main results rather than a page-by-page transcription. The displayed maximization convention fixes the signs; other textbooks may use different conventions.}
+\section*{参考文献 | References}
+\noindent 与前面“来源与范围”一节相同：本稿只依据其章节范围与课程材料，不声称逐页引用或页码级对应。\textit{Same sources as the Source and scope note; no page-level correspondence is claimed.}
+\begin{enumerate}[label={[\arabic*]},leftmargin=2.4em]
+\item 陈宝林. \textit{最优化理论与算法}（第 2 版）. 北京: 清华大学出版社. 第 3 章“单纯形方法”、第 4 章“对偶原理及灵敏度分析”. [Chen Bao-Lin, \textit{Optimization Theory and Algorithms}, 2nd ed., Tsinghua University Press, Chapters 3--4.]
+\item 《最优化方法》课程讲义与课件（2025 年秋季学期），线性规划、单纯形法、对偶与 Farkas 引理部分. [Course notes and slides, autumn 2025.]
+\item 第四讲阅读材料：韩伟一《单纯形法检验数的新计算方法》、雍龙泉《单纯形法的复杂性与计算效率》. [Lecture 4 readings.]
+\end{enumerate}
+
 \end{document}

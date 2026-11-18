@@ -1,6 +1,7 @@
 \documentclass[UTF8,11pt,a4paper]{ctexart}
-\usepackage{amsmath,amssymb,geometry,enumitem,hyperref}
+\usepackage{amsmath,amssymb,geometry,enumitem,hyperref,longtable}
 \geometry{margin=2.1cm}\setlist{itemsep=2pt,topsep=3pt}
+\setlength{\abovedisplayskip}{5pt plus 1pt minus 1pt}\setlength{\belowdisplayskip}{5pt plus 1pt minus 1pt}
 \hypersetup{colorlinks=true,linkcolor=blue}
 \newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
 \newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
@@ -88,6 +89,10 @@ A_1,A_2,\ldots\in\mathcal F\Rightarrow\bigcup_{i=1}^{\infty}A_i\in\mathcal F,
 \EN{A measure on $(\Omega,\mathcal F)$ is a set function $\mu:\mathcal F\to[0,\infty]$ that assigns zero to the empty set and is countably additive over pairwise disjoint sets. Countable additivity extends finite additivity to countably many disjoint pieces. If $A\subseteq B$, writing $B=A\cup(B\setminus A)$ gives monotonicity. For any sequence of sets, countable additivity implies countable subadditivity. If $A_n$ increases to $A$, decompose $A$ into the first set and the disjoint pieces added at each step; this gives $\mu(A_n)\to\mu(A)$. If $A_n$ decreases to $A$ and $\mu(A_1)<\infty$, continuity from below applied to complements gives $\mu(A_n)\to\mu(A)$. The finite-measure condition matters. These properties let us pass to increasing or decreasing limit events.}
 
 \EX{Lebesgue 测度下，$m([a,b])=b-a$，单点集的测度为 $0$；有限或可数个单点的并仍为零测集。对互不相交区间 $I_i$，$m(\bigcup_i I_i)=\sum_i m(I_i)$，只要这些区间可测。}{Under Lebesgue measure, $m([a,b])=b-a$ and a singleton has measure zero; a finite or countable union of singletons still has measure zero. The measure of a disjoint countable union of measurable intervals is the sum of their lengths.}
+
+
+
+
 
 \subsection{Lebesgue 积分的基本思想 | Basic idea of the Lebesgue integral}
 \noindent 黎曼积分主要按定义域分割，再累加小区间上的函数值；Lebesgue 积分按函数值分层，测量每一层对应的集合有多大。若非负简单函数
@@ -276,6 +281,22 @@ $\mu$ 是均值和对称中心，$\sigma>0$ 是标准差，$\sigma^2$ 是方差�
 
 \EX{机器加工直径近似服从 $N(10,0.2^2)$ 毫米。直径落在 $9.6$ 到 $10.4$ 毫米内等价于 $|Z|\le2$，概率约为 $0.9545$；落在规格外的概率约为 $0.0455$。这可用于估算不合格率，但前提是正态模型和参数经生产数据检查。}{Suppose a machined diameter is approximately $N(10,0.2^2)$ millimeters. Falling between 9.6 and 10.4 millimeters is equivalent to $|Z|\le2$, with probability about $0.9545$. The probability outside the specification is about $0.0455$. This estimates the defect rate only if production data support the normal model and its parameters.}
 
+\subsection{分位数与查表 | Quantiles and table lookup}
+\noindent 对 $0<\alpha<1$，分布函数 $F$ 的 $\alpha$-分位数是满足 $F(x)\ge\alpha$ 的最小 $x$，记作 $x_\alpha$。当 $F$ 连续且严格递增时 $F(x_\alpha)=\alpha$，即不超过 $x_\alpha$ 的概率恰为 $\alpha$；右尾概率为 $\alpha$ 的门槛是 $x_{1-\alpha}$：
+\FORMULA{分位数与右侧尾概率}{quantiles and right-tail probabilities}
+\[
+P(X\le x_\alpha)=\alpha,\qquad P(X>x_{1-\alpha})=\alpha.
+\]
+标准正态分位数的常用值为
+\[
+z_{0.90}=1.282,\quad z_{0.95}=1.645,\quad z_{0.975}=1.960,\quad z_{0.99}=2.326,\quad z_{0.995}=2.576.
+\]
+单侧 $5\%$ 尾部对应 $1.645$，双侧 $95\%$ 区间对应 $1.96$，双侧 $99\%$ 区间对应 $2.576$。对 $X\sim N(\mu,\sigma^2)$，$P(X>x)=1-\Phi((x-\mu)/\sigma)$；反过来给定右尾概率 $\alpha$，门槛为 $\mu+\sigma z_{1-\alpha}$。查表时先标准化，再找概率，方向不要弄反。
+\EN{For $0<\alpha<1$, the $\alpha$-quantile is the smallest $x$ with $F(x)\ge\alpha$; when $F$ is continuous and strictly increasing, $F(x_\alpha)=\alpha$, and the threshold for a right-tail probability $\alpha$ is $x_{1-\alpha}$. The standard normal quantiles above are 1.645 for a one-sided five-percent tail, 1.96 for a two-sided 95-percent interval, and 2.576 for a two-sided 99-percent interval. For $X\sim N(\mu,\sigma^2)$, $P(X>x)=1-\Phi((x-\mu)/\sigma)$, and a right-tail probability $\alpha$ has threshold $\mu+\sigma z_{1-\alpha}$.}
+
+\EX{某考试成绩近似服从 $N(70,10^2)$。成绩最高的 $5\%$ 从多少分开始？要求 $P(X>x)=0.05$，即 $x=70+10z_{0.95}=70+16.45=86.45$ 分。反过来问“超过 $86.45$ 分的概率”，标准化得 $z=(86.45-70)/10=1.645$，所以 $P(X>86.45)=1-\Phi(1.645)\approx0.05$。中央 $95\%$ 的成绩区间为 $70\pm1.96\times10=[50.4,89.6]$。}{An exam score is approximately $N(70,10^2)$. Where does the top five percent start? We need $P(X>x)=0.05$, so $x=70+10z_{0.95}=70+16.45=86.45$. Conversely, the probability of exceeding 86.45 is obtained by standardizing: $z=(86.45-70)/10=1.645$, hence $P(X>86.45)=1-\Phi(1.645)\approx0.05$. The central 95 percent interval is $70\pm1.96\times10=[50.4,89.6]$.}
+
+
 \subsection{常用扩展：贝塔分布与泊松近似 | Common extensions: beta and Poisson approximation}
 贝塔分布定义在 $0<p<1$ 上，密度为 $f(p)=p^{a-1}(1-p)^{b-1}/B(a,b)$，其中 $a,b>0$ 控制形状，$B(a,b)$ 是归一化常数；均值为 $a/(a+b)$。它适合描述概率、比例等未知的 $[0,1]$ 参数。在贝叶斯二项模型中，若先验 $p\sim\operatorname{Beta}(a,b)$，观察 $n$ 次中 $x$ 次成功后，后验为 $\operatorname{Beta}(a+x,b+n-x)$。先验并非额外观测数据；应解释其来源并做敏感性分析。
 \EN{The beta distribution has support $0<p<1$. Its shape parameters $a,b>0$ determine the density, while $B(a,b)$ normalizes its integral to one. Its mean is $a/(a+b)$. It is useful for an unknown probability or proportion. In a Bayesian binomial model, a beta prior updates to $\operatorname{Beta}(a+x,b+n-x)$ after observing $x$ successes in $n$ trials. A prior is not additional observed data; explain its source and check sensitivity to it.}
@@ -286,23 +307,68 @@ $\mu$ 是均值和对称中心，$\sigma>0$ 是标准差，$\sigma^2$ 是方差�
 \EX{一批 $1000$ 件产品每件不合格率为 $0.002$，用二项模型计算恰有两个不合格的概率为 $\binom{1000}{2}(0.002)^2(0.998)^{998}$；Poisson 近似取 $\lambda=np=2$，得到 $e^{-2}2^2/2!\approx0.2707$。两者数值接近，但最终是否采用近似应看所需精度。}{For $1000$ items with independent defect probability $0.002$, the exact binomial probability of two defectives is $\binom{1000}{2}(0.002)^2(0.998)^{998}$. The Poisson approximation uses $\lambda=np=2$ and gives $e^{-2}2^2/2!\approx0.2707$. They are close here, but the required accuracy should determine whether approximation is acceptable.}
 
 \subsection{快速选模与易混点 | Model-selection guide and common confusions}
-\begin{center}
-\begin{tabular}{p{0.27\linewidth}p{0.31\linewidth}p{0.32\linewidth}}
-随机问题 & 先问什么 & 常用模型及条件\\
-一次成败 & 只做一次吗？ & Bernoulli$(p)$\\
-固定次数的成功总数 & 次数固定、成功率固定且独立吗？ & Binomial$(n,p)$\\
-抽样直到达到若干成功 & 目标成功数固定吗？ & Geometric / negative binomial\\
-有限批次不放回抽样 & 总体数量能列出吗？ & Hypergeometric$(N,K,n)$\\
-固定曝光量的事件数 & 事件率大致恒定且事件独立吗？ & Poisson$(\lambda)$\\
-相邻事件等待时间 & 是否来自恒定率 Poisson 过程？ & Exponential$(\lambda)$\\
-等待第 $r$ 次事件 & 是否累加 $r$ 个指数间隔？ & Gamma$(r,\lambda)$\\
-有界区间内等可能 & 等长子区间概率真的相等吗？ & Uniform$(a,b)$\\
-对称连续测量/误差 & 分布是否近似钟形且允许实数全域？ & Normal$(\mu,\sigma^2)$\\
-未知概率/比例 & 参数只在 $(0,1)$ 内吗？ & Beta$(a,b)$（常作先验）
-\end{tabular}
-\end{center}
+\noindent 建模时先问：试验次数是否固定、抽样有无放回、成功概率或事件率是否恒定、区间是否等可能。上表“关键条件”与“典型应用”两列给出对应选择，不要只凭变量是否非负来选分布。
+\EN{Before modelling, ask whether the number of trials is fixed, whether sampling is with or without replacement, whether the success or event rate is constant, and whether intervals are equally likely. The key-condition and typical-use columns of the table above give the corresponding choice; do not select a model merely because a variable is nonnegative.}
+
 二项分布计数“固定次数中的成功”；几何/负二项计数“等到成功前的试验或失败”；超几何来自不放回；泊松数事件，指数量事件间隔，伽马量等多个事件的总等待时间。正态的概率由密度积分得到，不能把密度值本身当作区间概率。各符号的参数化和假设应随模型一起陈述。
 \EN{A binomial variable counts successes in a fixed number of trials. Geometric and negative-binomial variables count trials or failures until a success target. Hypergeometric sampling is without replacement. Poisson counts events; exponential models time between events; gamma models the total wait for several events. For a normal variable, interval probability is an integral of the density, not the density value itself. State parameter conventions and assumptions with every model.}
+
+\subsection{分布速查表 | Distribution reference table}
+\noindent 下表把常见离散分布与连续分布放在一起。建模时先看“关键条件”和“典型应用”两列，确认随机机制，再查公式；不要只背密度。表中几何分布按“试验次数从 $1$ 开始”计数，负二项分布按“第 $r$ 次成功前的失败次数”计数，Gamma 采用形状 $\alpha$、率 $\beta$ 的参数化。这些约定与部分教材不同，口试时必须随公式说明。
+\EN{The table below collects the common discrete and continuous distributions. When modelling, first read the key-condition and typical-use columns to check the random mechanism, then look up the formula; do not memorize densities alone. Here the geometric distribution counts trials starting from one, the negative-binomial distribution counts failures before the $r$th success, and the gamma distribution uses shape $\alpha$ and rate $\beta$. These conventions differ from some textbooks and must be stated together with the formula in an oral exam.}
+
+\noindent\textbf{表 / Table. 常见分布速查表 / Quick reference for common distributions}
+{\small
+\setlength{\tabcolsep}{2.5pt}
+\begin{longtable}{p{2.2cm}p{3.8cm}p{2.15cm}p{2.35cm}p{2.7cm}p{2.45cm}}
+\hline
+\textbf{分布}\newline\textbf{Distribution} & \textbf{质量或密度}\newline\textbf{PMF or PDF} & \textbf{均值 / 方差}\newline\textbf{Mean / Var} & \textbf{参数含义}\newline\textbf{Parameters} & \textbf{典型应用}\newline\textbf{Typical use} & \textbf{关键条件}\newline\textbf{Key condition} \\
+\hline
+\endfirsthead
+\hline
+\textbf{分布}\newline\textbf{Distribution} & \textbf{质量或密度}\newline\textbf{PMF or PDF} & \textbf{均值 / 方差}\newline\textbf{Mean / Var} & \textbf{参数含义}\newline\textbf{Parameters} & \textbf{典型应用}\newline\textbf{Typical use} & \textbf{关键条件}\newline\textbf{Key condition} \\
+\hline
+\endhead
+\hline
+\endfoot
+\hline
+\endlastfoot
+Bernoulli$(p)$ & $P(X=1)=p$\newline $P(X=0)=1-p$ & $p$\newline $p(1-p)$ & $p$：成功概率 success prob. & 一次成败 one trial & 两种结果、单次 two outcomes, once \\
+\hline
+Binomial$(n,p)$ & $P(X=k)=\binom nk p^k(1-p)^{n-k}$\newline $k=0,\ldots,n$ & $np$\newline $np(1-p)$ & $n$：次数，$p$：成功率 trials, success prob. & 抽检不合格数 defectives & $n$ 固定、独立 fixed $n$, independent \\
+\hline
+Geometric$(p)$ & $P(T=k)=(1-p)^{k-1}p$\newline $k=1,2,\ldots$ & $1/p$\newline $(1-p)/p^2$ & $p$：每次成功率 per-trial prob. & 首次成功的试验数 trials to first success & 独立重复、从 $1$ 计数 iid, count from $1$ \\
+\hline
+Neg.\ binomial$(r,p)$ & $P(Y=k)=\binom{k+r-1}{r-1}$\newline $\times p^r(1-p)^k,\ k\ge0$ & $r(1-p)/p$\newline $r(1-p)/p^2$ & $r$：目标成功数 target successes & 第 $r$ 次成功前失败数 failures before $r$th success & 等待第 $r$ 次成功 wait for $r$th success \\
+\hline
+Hypergeom.\ $(N,K,n)$ & $P(X=k)=\binom Kk\binom{N-K}{n-k}$\newline $\big/\binom Nn$ & $np$\newline $np(1-p)$\newline $\times\frac{N-n}{N-1}$ & $N,K,n$：总体、特征数、样本 population, feature, sample & 不放回抽检 sampling w/o replacement & 有限总体、无放回 finite population \\
+\hline
+Poisson$(\lambda)$ & $P(N=k)=e^{-\lambda}\lambda^k/k!$\newline $k=0,1,\ldots$ & $\lambda$\newline $\lambda$ & $\lambda$：区间平均事件数 mean count & 来电、理赔、到达 calls, claims & 独立稀疏事件 rare events, constant rate \\
+\hline
+Uniform$(a,b)$ & $f(x)=\frac{1}{b-a}$\newline $a\le x\le b$ & $\frac{a+b}{2}$\newline $\frac{(b-a)^2}{12}$ & $a,b$：区间端点 endpoints & 等可能位置 random position & 等长区间等概率 equal-length intervals \\
+\hline
+Exponential\newline$(\lambda)$ & $f(t)=\lambda e^{-\lambda t}$\newline $t\ge0$ & $1/\lambda$\newline $1/\lambda^2$ & $\lambda$：事件率 event rate & 寿命、等待间隔 lifetimes, gaps & 恒定危险率、无记忆 constant hazard, memoryless \\
+\hline
+Gamma$(\alpha,\beta)$ & $f(t)=\frac{\beta^\alpha}{\Gamma(\alpha)}$\newline $\times t^{\alpha-1}e^{-\beta t}$ & $\alpha/\beta$\newline $\alpha/\beta^2$ & $\alpha$：形状，$\beta$：率 shape, rate & 等第 $r$ 个事件 wait for $r$th event & 独立指数和（$\alpha$ 整数） sum of exponentials \\
+\hline
+Normal\newline$(\mu,\sigma^2)$ & $f(x)=\frac{1}{\sqrt{2\pi}\sigma}$\newline $\times e^{-(x-\mu)^2/(2\sigma^2)}$ & $\mu$\newline $\sigma^2$ & $\mu$：中心，$\sigma$：标准差 center, s.d. & 误差、身高、收益、CLT errors, heights, CLT & 对称钟形、可负 symmetric, can be negative \\
+\hline
+Beta$(a,b)$ & $f(p)=\frac{p^{a-1}(1-p)^{b-1}}{B(a,b)}$\newline $0<p<1$ & $\frac{a}{a+b}$\newline $\frac{ab}{(a+b)^2}$\newline $\times\frac{1}{a+b+1}$ & $a,b$：形状参数 shape & 未知比例、先验 proportions, prior & 支撑 $(0,1)$ support $(0,1)$ \\
+\hline
+\end{longtable}
+}
+
+\APS{分布之间的关系：Poisson 是二项极限（$n$ 大、$p$ 小、$np\to\lambda$）；Gamma 是独立指数和（等待第 $r$ 个 Poisson 事件）；指数是 $\operatorname{Gamma}(1,\beta)$；卡方 $\chi^2(k)$ 是形状 $k/2$、率 $1/2$ 的 Gamma；正态由中心极限定理产生；二项与超几何在小样本时近似。}{Relations: Poisson is the binomial limit for large $n$, small $p$, fixed $np$; gamma is a sum of independent exponentials; exponential is $\operatorname{Gamma}(1,\beta)$; chi-square is $\operatorname{Gamma}(k/2,1/2)$; normal arises from the CLT; and binomial approximates hypergeometric for small samples.}
+
+\APS{实际意义：质量控制用二项/超几何抽检，保险与呼叫中心用 Poisson 数事件，排队与可靠性用指数/Gamma 描述寿命与等待，抽样调查用超几何，金融用正态近似收益率但须警惕尾部风险，Beta 描述比例并常作先验。}{Practical meaning: binomial or hypergeometric inspection in quality control, Poisson counts in insurance and call centres, exponential or gamma waits in queueing and reliability, hypergeometric sampling in surveys, normal returns with tail risk in finance, and beta proportions as priors.}
+
+\EX{质量控制：一批产品单件不合格概率为 $p=0.04$，独立抽检 $n=50$ 件，令 $X$ 为不合格数，则 $X\sim\operatorname{Bin}(50,0.04)$。$P(X\ge3)=1-P(X=0)-P(X=1)-P(X=2)\approx1-(0.1299+0.2706+0.2762)\approx0.3233$。均值 $np=2$，方差 $np(1-p)=1.92$，标准差约为 $1.39$。}{Quality control: with defect probability $p=0.04$ and 50 independent inspections, $P(X\ge3)=1-P(X=0)-P(X=1)-P(X=2)\approx0.3233$, with mean $2$, variance $1.92$ and standard deviation about $1.39$.}
+
+\EX{保险理赔：某险种每天平均理赔 $5$ 件，假定理赔件数近似服从 $\operatorname{Poisson}(5)$。一天内至少 $8$ 件理赔的概率为 $1-\sum_{k=0}^{7}e^{-5}5^k/k!\approx1-0.8666\approx0.1334$；一天没有理赔的概率为 $e^{-5}\approx0.0067$。Poisson 模型假设各保单相互独立、单件理赔概率小且稳定；若发生灾害使理赔成批出现，实际波动会更大。}{Insurance: with five claims per day on average, $P(N\ge8)=1-\sum_{k=0}^{7}e^{-5}5^k/k!\approx0.1334$, and $P(N=0)=e^{-5}\approx0.0067$. The Poisson model assumes independent policies and a small stable claim rate; catastrophes that cluster claims increase variability.}
+
+\EX{可靠性：某元件寿命服从均值为 $1000$ 小时的指数分布，即率 $\lambda=0.001$/小时。$P(T>1500)=e^{-1.5}\approx0.2231$。若系统要等到第 $3$ 个元件失效才更换整套设备，则总等待时间 $T\sim\operatorname{Gamma}(3,0.001)$，均值 $3000$ 小时，且 $P(T>4000)=P(\operatorname{Poisson}(4)\le2)=e^{-4}(1+4+8)\approx0.2381$。这里用到“等待第 $r$ 个事件超过 $t$”等价于“$t$ 内事件数不超过 $r-1$”。}{Reliability: with exponential lifetime of mean 1000 hours and rate $0.001$, $P(T>1500)=e^{-1.5}\approx0.2231$. Waiting for the third failure gives $\operatorname{Gamma}(3,0.001)$ with mean 3000 hours, and $P(T>4000)=P(\operatorname{Poisson}(4)\le2)=e^{-4}(1+4+8)\approx0.2381$.}
+
+\ASK{你能说出哪些常见分布，分别用在哪里？}{Which common distributions can you name, and where are they used?}{离散型：Bernoulli 一次成败，二项固定次数成功数，几何/负二项等待成功，超几何不放回抽样，Poisson 固定区间事件数；连续型：均匀等可能位置，指数等待与寿命，Gamma 等待多个事件，正态误差与极限，Beta 比例与先验。}{Discrete: Bernoulli for one trial, binomial for a fixed number of successes, geometric and negative binomial for waiting, hypergeometric for sampling without replacement, and Poisson for counts in an interval. Continuous: uniform for equally likely positions, exponential for waits, gamma for waiting for several events, normal for errors and limits, and beta for proportions and priors.}
 
 \ASK{随机变量和分布函数是什么？}{What are a random variable and its distribution function?}{随机变量把随机结果映射为实数；分布函数 $F_X(x)=P(X\le x)$ 描述变量不超过任意阈值 $x$ 的概率。}{A random variable maps outcomes to real numbers. Its distribution function $F_X(x)=P(X\le x)$ gives the probability that it does not exceed a threshold $x$.}
 
@@ -330,6 +396,40 @@ $\mu$ 是均值和对称中心，$\sigma>0$ 是标准差，$\sigma^2$ 是方差�
 
 \EX{若 $X$ 以 $1/2$ 的概率取 $-1$，以 $1/2$ 的概率取 $1$，令 $Z=X^2$，则 $P(Z=1)=1$。求函数分布时，可先写出 $\{Z=z\}=\{f(X)=z\}$ 并合并所有原像。}{If $X$ equals $-1$ or $1$ with probability $1/2$ each and $Z=X^2$, then $P(Z=1)=1$. To find a transformed distribution, identify all preimages of each value and combine their probabilities.}
 
+\subsection{二元正态、条件期望与和的方差 | Bivariate normal, conditional expectation, variance of sums}
+\noindent 二元正态是二维连续模型中最重要的例子：$X,Y$ 的联合密度由五个参数 $\mu_X,\mu_Y,\sigma_X,\sigma_Y,\rho$ 决定，其中 $\sigma_X,\sigma_Y>0$，$-1<\rho<1$：
+\FORMULA{二元正态密度}{bivariate normal density}
+\[
+f_{X,Y}(x,y)=\frac{1}{2\pi\sigma_X\sigma_Y\sqrt{1-\rho^2}}
+\exp\!\left[-\frac{1}{2(1-\rho^2)}
+\left(\frac{(x-\mu_X)^2}{\sigma_X^2}
+-\frac{2\rho(x-\mu_X)(y-\mu_Y)}{\sigma_X\sigma_Y}
++\frac{(y-\mu_Y)^2}{\sigma_Y^2}\right)\right].
+\]
+两个边际分布分别是 $N(\mu_X,\sigma_X^2)$ 和 $N(\mu_Y,\sigma_Y^2)$，$\rho$ 是相关系数。$\rho$ 描述线性关联的方向和强度，也决定密度等高线的椭圆形状：$|\rho|$ 越接近 $1$，等高线越狭长，$Y$ 越能被 $X$ 线性解释。给定 $X=x$ 后，条件分布仍是正态：
+\FORMULA{二元正态的条件分布}{conditional distribution under bivariate normality}
+\[
+Y\mid X=x\sim N\!\left(\mu_Y+\rho\frac{\sigma_Y}{\sigma_X}(x-\mu_X),\ \sigma_Y^2(1-\rho^2)\right).
+\]
+条件均值是 $x$ 的线性函数；当 $\rho=0$ 时条件分布与 $x$ 无关，所以 $X,Y$ 独立。这解释了“正态下不相关等价于独立”：一般变量协方差为零只排除线性关系，而二元正态的密度完全由二阶矩决定，线性无关就是完全无关。
+\EN{The bivariate normal law is the most important two-dimensional continuous model. Its density is fixed by five parameters, and its two marginals are normal with correlation $\rho$, which fixes the elliptical contours. Conditional on $X=x$ the law is normal with a linear mean and residual variance $\sigma_Y^2(1-\rho^2)$; when $\rho=0$ it does not depend on $x$, so $X$ and $Y$ are independent. Under bivariate normality, uncorrelatedness is therefore equivalent to independence, because the density is determined entirely by its second moments.}
+
+\APS{条件期望作为最佳预测：在所有 $X$ 的函数中，$E[Y\mid X]$ 使均方误差 $E[(Y-g(X))^2]$ 最小。二元正态下它恰为线性 $E[Y\mid X]=\mu_Y+\rho\frac{\sigma_Y}{\sigma_X}(X-\mu_X)$，称为最佳线性预测；$|\rho|$ 越大，残差方差 $\sigma_Y^2(1-\rho^2)$ 越小。}{Conditional expectation is the best predictor: among all functions of $X$, it minimizes the mean squared error $E[(Y-g(X))^2]$. Under bivariate normality it is linear, $E[Y\mid X]=\mu_Y+\rho(\sigma_Y/\sigma_X)(X-\mu_X)$, the best linear predictor; the larger $|\rho|$ is, the smaller the residual variance $\sigma_Y^2(1-\rho^2)$.}
+
+\noindent 对任意二阶矩存在的 $X,Y$，和的方差为
+\FORMULA{和的方差公式}{variance of a sum}
+\[
+\operatorname{Var}(X+Y)=\operatorname{Var}(X)+\operatorname{Var}(Y)+2\operatorname{Cov}(X,Y).
+\]
+独立时协方差为零，方差可直接相加；正相关时和的波动被放大，负相关时相互抵消。这正是“分散投资降低风险”的数学来源：组合方差不仅取决于各资产的方差，还取决于它们之间的协方差。
+\EN{For $X,Y$ with finite second moments, $\operatorname{Var}(X+Y)=\operatorname{Var}(X)+\operatorname{Var}(Y)+2\operatorname{Cov}(X,Y)$. Independent variables add variances; positive correlation amplifies the fluctuation of the sum and negative correlation cancels it. This is why diversification reduces risk.}
+
+\EX{设 $(X,Y)$ 服从二元正态分布，$\mu_X=10$，$\sigma_X=2$，$\mu_Y=20$，$\sigma_Y=3$，$\rho=0.5$。则 $\operatorname{Cov}(X,Y)=\rho\sigma_X\sigma_Y=3$，$\operatorname{Var}(X+Y)=4+9+2\cdot3=19$，标准差约为 $4.36$。当 $X=12$ 时，条件均值 $E[Y\mid X=12]=20+0.5\cdot(3/2)\cdot(12-10)=21.5$，条件方差为 $9(1-0.25)=6.75$。若错误地假设两者独立，会算成 $\operatorname{Var}(X+Y)=13$，从而低估波动。}{Suppose $(X,Y)$ is bivariate normal with means $10$ and $20$, standard deviations $2$ and $3$, and correlation $0.5$. Then $\operatorname{Cov}(X,Y)=3$ and $\operatorname{Var}(X+Y)=4+9+2\cdot3=19$, with standard deviation about $4.36$. When $X=12$, the conditional mean is $E[Y\mid X=12]=20+0.5\cdot(3/2)\cdot(12-10)=21.5$, and the conditional variance is $9(1-0.25)=6.75$. Incorrectly assuming independence would give $\operatorname{Var}(X+Y)=13$ and underestimate the variability.}
+
+\ASK{二元正态中相关系数说明什么？为什么正态下不相关等价于独立？}{What does the correlation coefficient mean in a bivariate normal law, and why does uncorrelatedness imply independence there?}{$\rho$ 描述线性关联的方向和强度，决定条件均值 $\mu_Y+\rho(\sigma_Y/\sigma_X)(X-\mu_X)$ 与残差方差 $\sigma_Y^2(1-\rho^2)$。二元正态密度完全由二阶矩决定，所以 $\rho=0$ 时联合密度分解为边际密度之积，即独立；一般变量没有这个性质。}{The correlation describes the direction and strength of the linear association and determines the conditional mean and residual variance. A bivariate normal density is determined entirely by its second moments, so when $\rho=0$ the joint density factorizes into the product of the marginals, which is independence. General variables do not have this property.}
+
+\ASK{条件期望为什么可以看作最佳预测？}{Why can conditional expectation be regarded as the best predictor?}{它是在所有 $X$ 的函数中使均方误差 $E[(Y-g(X))^2]$ 最小的那一个；信息完整时它就是 $Y$。二元正态下最优预测为线性 $\mu_Y+\rho(\sigma_Y/\sigma_X)(X-\mu_X)$，残差方差 $\sigma_Y^2(1-\rho^2)$。}{It is the function of $X$ that minimizes the mean squared error over all measurable functions; with complete information it equals $Y$. Under bivariate normality the optimal predictor is linear, with residual variance $\sigma_Y^2(1-\rho^2)$.}
+
 \ASK{怎样由联合分布求边际分布？}{How do you obtain a marginal distribution from a joint distribution?}{离散情形对另一变量求和；连续情形对联合密度积分。边际化就是把不关心的坐标累加或积分掉。}{For a discrete pair, sum over the other variable. For a continuous pair, integrate the joint density over the other variable. Marginalization sums or integrates out the coordinate of no interest.}
 
 \ASK{随机变量函数的分布通常怎样求？}{How do you usually find the distribution of a function of a random variable?}{可先求 $P(g(X)\le z)$；离散情形合并映到同一结果的概率，连续且单调可微时可用变量变换并乘雅可比因子。}{First compute $P(g(X)\le z)$. For a discrete variable, combine probabilities that map to the same value. For a differentiable monotone transformation, use the change-of-variables formula with its Jacobian factor.}
@@ -354,6 +454,26 @@ $\mu$ 是均值和对称中心，$\sigma>0$ 是标准差，$\sigma^2$ 是方差�
 
 \ASK{不相关是否意味着独立？}{Does uncorrelatedness imply independence?}{一般不意味着。独立且二阶矩存在可推出协方差为零；零协方差只排除了线性相关。对联合正态变量，不相关才可推出独立。}{Not in general. Independence with finite second moments implies zero covariance, but zero covariance only rules out linear correlation. For jointly normal variables, uncorrelatedness does imply independence.}
 
+\subsection{Chebyshev 不等式、指示变量与和的方差 | Chebyshev's inequality, indicators, and variance of sums}
+\noindent Chebyshev 不等式：若 $E(X^2)<\infty$，则对任意 $k>0$，
+\FORMULA{Chebyshev 不等式}{Chebyshev's inequality}
+\[
+P(|X-EX|\ge k)\le\frac{\operatorname{Var}(X)}{k^2},
+\qquad\text{即}\qquad P(|X-EX|\ge k\sigma)\le\frac1{k^2}.
+\]
+它只使用均值和方差，不要求知道具体分布。例如 $k=2$ 时，偏差超过两个标准差的概率不超过 $1/4=25\%$。为什么说它“保守”？因为这个界对一切二阶矩存在的分布都成立，包括极端偏斜或双峰的分布；有些分布（例如在 $\mu\pm k\sigma$ 各取概率 $1/(2k^2)$、其余取 $0$ 的分布）能使等号成立，所以一般不能再改进。但对正态分布，同样事件的实际概率约为 $4.55\%$，远小于 $25\%$：$\operatorname{Var}(X)/k^2$ 只利用了前两阶矩，没有利用分布形状，因此给出的是安全但宽松的保证。
+\EN{Chebyshev's inequality uses only the mean and variance. For $k=2$, a deviation above two standard deviations has probability at most one quarter. It is conservative because the bound holds for every distribution with finite second moment; for a normal variable the actual probability is only about 4.55 percent.}
+
+\EX{某考试分数均值 $70$、标准差 $10$。由 Chebyshev 不等式，分数与 $70$ 相差至少 $20$ 分（即 $k=2$ 个标准差）的概率不超过 $10^2/20^2=1/4=25\%$；若分数近似正态，实际概率约为 $4.55\%$，可见界很保守。$k=3$ 时界为 $1/9\approx11.1\%$，正态实际仅约 $0.27\%$。}{An exam score has mean $70$ and standard deviation $10$. Chebyshev's inequality says the probability of a deviation of at least 20 points, that is two standard deviations, is at most $10^2/20^2=1/4=25\%$. If scores are approximately normal, the actual probability is about 4.55 percent, so the bound is conservative. For $k=3$ the bound is $1/9\approx11.1\%$, while the normal value is only about 0.27 percent.}
+
+\APS{指示变量法：把“计数”或“是否发生”写成示性变量之和 $X=\sum_{i=1}^n I_i$，其中 $I_i=\mathbf1_{A_i}$。则 $E(X)=\sum_iP(A_i)$，这一点不需要独立性；方差则需要各 $I_i$ 的方差与两两协方差，$\operatorname{Var}(X)=\sum_i\operatorname{Var}(I_i)+2\sum_{i<j}\operatorname{Cov}(I_i,I_j)$。这个方法把复杂事件拆成容易计算的小事件，是求计数变量期望和方差的标准工具。}{Indicator method: write a count or an indicator of occurrence as a sum of indicator variables, $X=\sum_{i=1}^n I_i$ with $I_i=\mathbf1_{A_i}$. Then $E(X)=\sum_iP(A_i)$, and independence is not needed for this identity. For the variance, use the variances and pairwise covariances of the indicators. This method decomposes a complicated event into simple pieces and is the standard tool for means and variances of counting variables.}
+
+\EX{集齐 $n$ 种优惠券：已集齐 $i-1$ 种后，再抽到新种类的概率为 $p_i=(n-i+1)/n$，所需抽数 $T_i$ 服从几何分布，且各 $T_i$ 相互独立。$n=6$ 时 $E(T)=\sum_{i=1}^6 6/(6-i+1)=6H_6=14.7$；方差为 $\sum_i(1-p_i)/p_i^2=36\sum_{k=1}^6k^{-2}-6H_6\approx38.99$，标准差约 $6.24$。平均约抽 $15$ 次集齐，波动不小。}{For $n=6$ coupon types, the number of draws at stage $i$ is geometric with success probability $p_i=(n-i+1)/n$, independent across stages. The total has mean $6H_6=14.7$ and variance $36\sum_{k=1}^6k^{-2}-6H_6\approx38.99$, with standard deviation about $6.24$.}
+
+\APS{和的方差展开：协方差是双线性的，故 $\operatorname{Var}(\sum_{i=1}^nX_i)=\sum_i\operatorname{Var}(X_i)+2\sum_{i<j}\operatorname{Cov}(X_i,X_j)$，且 $\operatorname{Cov}(\sum_iX_i,\sum_jY_j)=\sum_{i,j}\operatorname{Cov}(X_i,Y_j)$。独立或不相关时交叉项为零，方差才能直接相加；负相关时和的方差可能小于任一分量方差。}{Expanding the variance of a sum: covariance is bilinear, so the variance of a sum equals the sum of the variances plus twice the pairwise covariances. With independence or zero correlation the cross terms vanish and variances add; with negative covariance the variance of the sum can be smaller than any individual variance.}
+
+\ASK{Chebyshev 不等式有什么用？为什么说它保守？}{What is Chebyshev's inequality good for, and why is it called conservative?}{它只用均值和方差给出偏差概率的上界，不需要具体分布，可用于证明弱大数定律。它保守，是因为界对所有二阶矩存在的分布一致成立，某些偏斜分布可使等号成立，而正态的实际尾部概率远小于该界。}{It bounds a deviation probability using only the mean and variance, with no distributional assumption, and proves the weak law of large numbers. It is conservative because the bound holds uniformly over all distributions with finite second moment, equality can occur for some skewed laws, and a normal variable has much smaller actual tail probabilities.}
+
 \subsection{条件期望本身是随机变量 | Conditional expectation is a random variable}
 \APS{对 $X\in L^1$ 和子 $\sigma$-代数 $\mathcal G$，$Z=E[X\mid\mathcal G]$ 由两条性质定义：$Z$ 是 $\mathcal G$-可测且可积，并且对所有 $A\in\mathcal G$ 有 $\int_A Z\,dP=\int_A X\,dP$，结果只在几乎处处意义下唯一。条件期望保留可由当前信息区分的每个事件上的平均值。写 $E[X\mid Y]$ 就是 $E[X\mid\sigma(Y)]$；它一般是 $Y$ 的函数，而非一个常数。}{For $X\in L^1$ and a sub-sigma-algebra $\mathcal G$, conditional expectation is a $\mathcal G$-measurable integrable variable $Z$ satisfying $\int_A Z\,dP=\int_A X\,dP$ for every $A\in\mathcal G$, unique almost surely. It preserves averages over all events distinguishable by the available information. The notation $E[X\mid Y]$ means conditioning on $\sigma(Y)$ and generally gives a function of $Y$, not a constant.}
 \APS{例如独立公平硬币指标 $U,V\in\{0,1\}$，令 $X=U+V$。只观察 $U$ 时，$E[X\mid U]=U+1/2$，它以相同概率取 $1/2,3/2$；再平均得到 $E(E[X\mid U])=1=EX$。这就是塔式性质。若进一步忘掉全部信息，条件期望退化成常数 $EX$；若知道全部 $X$，则 $E[X\mid X]=X$。}{For independent fair Bernoulli indicators $U,V$ and $X=U+V$, observing only $U$ gives $E[X\mid U]=U+1/2$, taking values one half and three halves. Averaging again yields $E(E[X\mid U])=1=EX$, illustrating the tower property. With no information it becomes the constant $EX$; with full information about $X$, $E[X\mid X]=X$.}
@@ -377,6 +497,24 @@ $\mu$ 是均值和对称中心，$\sigma>0$ 是标准差，$\sigma^2$ 是方差�
 \noindent 这里 $L^r$ 取 $r\ge1$ 且 $X_n,X\in L^r$。依概率收敛还蕴含依分布收敛；但依分布只比较各变量的分布，不保证它们在同一样本上的取值接近。例如对称的 $X\in\{-1,1\}$，令 $X_n=-X$，则每个 $X_n$ 与 $X$ 同分布，故 $X_n\xrightarrow{d}X$，但 $P(|X_n-X|>1)=1$。若极限是常数 $c$，则依分布收敛到 $c$ 等价于依概率收敛到 $c$。
 \EN{Convergence in distribution compares marginal laws, not closeness of values on the same outcome. For a symmetric variable $X$ taking values $-1$ and $1$, let $X_n=-X$. Each $X_n$ has the same law as $X$, so $X_n$ converges in distribution to $X$, but $P(|X_n-X|>1)=1$. When the limit is a constant $c$, convergence in distribution to $c$ is equivalent to convergence in probability to $c$.}
 
+\noindent\textbf{收敛方式对照表 / Table of convergence modes.}
+{\small
+\setlength{\tabcolsep}{2.5pt}
+\begin{center}
+\begin{tabular}{p{2.3cm}p{6.1cm}p{7.3cm}}
+\hline
+\textbf{收敛方式 / Mode} & \textbf{定义 / Definition} & \textbf{直观与关系 / Intuition and relations} \\
+\hline
+几乎必然\newline almost surely & $P(\lim_{n\to\infty}X_n=X)=1$ & 除概率为零的样本路径外最终收敛；最强，推出依概率\newline converges on almost every path; strongest, implies probability \\
+依概率\newline in probability & 对任意 $\varepsilon>0$，$P(|X_n-X|>\varepsilon)\to0$ & 大偏差出现的概率趋于零；推出依分布\newline large deviations become unlikely; implies distribution \\
+$L^r$ 收敛\newline in $L^r$ & $E|X_n-X|^r\to0$（$r\ge1$） & 误差的 $r$ 阶矩趋于零；推出依概率\newline the $r$th error moment vanishes; implies probability \\
+依分布\newline in distribution & $F_n(x)\to F(x)$ 在 $F$ 的连续点 & 只比较分布形状；最弱，极限为常数时等价于依概率\newline compares laws only; weakest; constant limit gives probability \\
+\hline
+\end{tabular}
+\end{center}
+}
+\APS{一句话：几乎必然收敛管路径，依概率收敛管大偏差概率，依分布收敛只比较分布函数；三者依次减弱。}{In one sentence: almost-sure convergence concerns paths, probability convergence concerns large deviations, and distribution convergence compares laws only; the implications go one way.}
+
 \noindent\textbf{大数定律。} 若 $X_i$ 独立同分布且 $E|X_1|<\infty$，强大数定律给出
 \FORMULA{强大数定律的样本均值结论}{sample-mean conclusion of the strong law of large numbers}
 \[
@@ -390,10 +528,63 @@ $\mu$ 是均值和对称中心，$\sigma>0$ 是标准差，$\sigma^2$ 是方差�
 \READ{“The sample average converges almost surely to the population mean.” “The sum of X i minus n mu, divided by sigma times the square root of n, converges in distribution to a standard normal random variable.”}
 \EN{The strong law says that the sample average converges almost surely to the population mean when the variables are independent and identically distributed with finite absolute mean. The central limit theorem says that the standardized sum converges in distribution to the standard normal when the variables are iid with finite positive variance.}
 
-\EX{若每日需求 $X_i$ 独立同分布且均值为 $\mu$、方差为 $\sigma^2$，则样本平均需求约为 $N(\mu,\sigma^2/n)$，可用正态近似估算平均需求落入给定区间的概率。}{If daily demands $X_i$ are iid with mean $\mu$ and variance $\sigma^2$, the sample mean is approximately normal with mean $\mu$ and variance $\sigma^2/n$. This approximates the probability that average demand lies in a given interval.}
+\subsection{弱大数定律与强大数定律 | Weak and strong laws of large numbers}
+\APS{设 $X_i$ 独立同分布且 $E|X_1|<\infty$。弱大数定律说样本均值依概率收敛到 $\mu$：对每个很大的 $n$，$\bar X_n$ 靠近 $\mu$ 的概率很高。强大数定律说 $\bar X_n\to\mu$ 几乎必然，即几乎每条样本路径最终稳定在 $\mu$。方差有限时可由 Chebyshev 不等式直接推出弱定律：$P(|\bar X_n-\mu|\ge\varepsilon)\le\sigma^2/(n\varepsilon^2)\to0$。}{Suppose the $X_i$ are iid with finite absolute mean. The weak law says the sample mean converges to $\mu$ in probability; the strong law says it converges almost surely, so almost every path eventually settles near $\mu$. With finite variance, Chebyshev's inequality proves the weak law.}
 
-\ASK{大数定律与中心极限定理有什么不同？}{How do the law of large numbers and the central limit theorem differ?}{大数定律说明样本平均趋近总体均值；在独立同分布且有限正方差条件下，中心极限定理给出 $\sqrt n(\bar X_n-\mu)/\sigma\xrightarrow{d}N(0,1)$。若只乘 $\sqrt n$ 而不除以 $\sigma$，极限为 $N(0,\sigma^2)$，一般不是标准正态。}{The law of large numbers says the sample average approaches the population mean. For iid observations with finite positive variance, the central limit theorem gives $\sqrt n(\bar X_n-\mu)/\sigma\xrightarrow{d}N(0,1)$. Without dividing by $\sigma$, the scaled error converges to $N(0,\sigma^2)$, generally not the standard normal.}
+\subsection{De Moivre--Laplace 定理与连续性修正 | The De Moivre--Laplace theorem and continuity correction}
+\APS{De Moivre--Laplace 定理是中心极限定理的二项特例：若 $X\sim\operatorname{Bin}(n,p)$，则
+\[
+\frac{X-np}{\sqrt{np(1-p)}}\xrightarrow{d}N(0,1).
+\]
+由于二项变量是 $n$ 个独立 Bernoulli 变量之和，这正是 CLT 的直接应用。用正态近似二项概率时，二项分布是离散的而正态是连续的，通常要做连续性修正：把“$X\le k$”换成“$X\le k+0.5$”，把“$X\ge k$”换成“$X\ge k-0.5$”。}{The De Moivre--Laplace theorem is the binomial special case of the CLT: a standardized binomial variable converges to the standard normal. Since a binomial variable is a sum of independent Bernoulli variables, this is a direct application. Because the binomial law is discrete and the normal law continuous, a continuity correction is usually applied: replace $X\le k$ by $X\le k+0.5$ and $X\ge k$ by $X\ge k-0.5$.}
 
-\ASK{几种随机变量收敛方式的区别是什么？}{How do common modes of convergence differ?}{依分布只比较分布函数；依概率控制偏差超过任意阈值的概率；几乎必然要求样本路径最终收敛；$L^r$ 控制偏差的 $r$ 阶矩。}{Convergence in distribution compares distribution functions. Convergence in probability controls the chance of an error exceeding any threshold. Almost-sure convergence concerns sample paths, while $L^r$ convergence controls the $r$th moment of the error.}
+\subsection{中心极限定理的完整数值例 | A complete numerical CLT example}
+
+\EX{抛 $100$ 次公平硬币，令 $X$ 为正面次数，则 $X\sim\operatorname{Bin}(100,0.5)$，$\mu=50$，$\sigma=5$。精确计算 $P(45\le X\le55)\approx0.7287$。不加修正时用正态近似得 $\Phi(1)-\Phi(-1)\approx0.6827$，明显偏低；加连续性修正后区间端点取 $44.5$ 与 $55.5$，得 $\Phi(1.1)-\Phi(-1.1)\approx0.7287$，与精确值吻合。再看 $P(X\ge60)$：精确值约 $0.0284$，不加修正得 $1-\Phi(2)\approx0.0228$，加修正得 $1-\Phi(1.9)\approx0.0287$。}{Toss a fair coin 100 times and let $X$ be the number of heads, so $X\sim\operatorname{Bin}(100,0.5)$ with mean $50$ and standard deviation $5$. Exactly, $P(45\le X\le55)\approx0.7287$. Without correction the normal approximation gives $\Phi(1)-\Phi(-1)\approx0.6827$; with the continuity correction, using endpoints $44.5$ and $55.5$, it gives $0.7287$, matching the exact value. For $P(X\ge60)$ the exact value is about $0.0284$, without correction $1-\Phi(2)\approx0.0228$, with correction $1-\Phi(1.9)\approx0.0287$.}
+
+\subsection{中心极限定理何时不适用 | When the CLT does not apply}
+\APS{中心极限定理不适用的情形：重尾分布（如 Cauchy 或方差无穷的 Pareto）经 $\sqrt n$ 标准化的极限可能不是正态；强相关或长记忆序列的有效样本量远小于 $n$；样本量小或分布强烈偏斜时正态近似可能给出负数区间或错误的尾部概率；异分布但方差不占主导时 Lindeberg 条件失效。实务中应检查数据或使用精确分布、模拟方法。}{The CLT fails with heavy tails such as Cauchy or infinite-variance Pareto laws; with strong dependence, where the effective sample size is far below $n$; with small samples or strongly skewed laws; and for non-identical laws when no term is negligible. In practice one should check the data or use exact or simulated distributions.}
+
+\ASK{弱大数定律与强大数定律有什么区别？}{What is the difference between the weak and strong laws of large numbers?}{弱定律说样本均值依概率收敛到 $\mu$：对每个很大的 $n$，$\bar X_n$ 靠近 $\mu$ 的概率高；强定律说 $\bar X_n\to\mu$ 几乎必然。差别就是依概率收敛与几乎必然收敛的差别。}{The weak law says the sample mean converges to $\mu$ in probability; the strong law says it converges almost surely. The difference is exactly that between convergence in probability and almost-sure convergence.}
+
+\ASK{中心极限定理为什么重要？}{Why is the central limit theorem important?}{它说明大量独立同分布变量之和经标准化后近似标准正态，与原始分布形状无关，因此 $n$ 足够大时可用正态分布计算和与均值的区间概率；它是抽样误差与置信区间的理论基础。但重尾或强相关时不能默认成立。}{It says standardized sums of many iid variables are approximately standard normal regardless of the original law, so for large $n$ a normal law gives interval probabilities for sums and averages. It underlies sampling-error estimates and confidence intervals, but fails for heavy tails or strong dependence.}
+
+\ASK{大数定律与中心极限定理有什么不同？}{How do the law of large numbers and the central limit theorem differ?}{大数定律说明样本平均趋近总体均值；在独立同分布且有限正方差条件下，中心极限定理给出 $\sqrt n(\bar X_n-\mu)/\sigma\xrightarrow{d}N(0,1)$，即标准化误差的分布趋近标准正态。}{The law of large numbers says the sample average approaches the population mean. For iid observations with finite positive variance, the central limit theorem gives $\sqrt n(\bar X_n-\mu)/\sigma\xrightarrow{d}N(0,1)$, so the standardized error approaches a standard normal law.}
+
+\ASK{几种随机变量收敛方式的区别是什么？}{How do common modes of convergence differ?}{依分布只比较分布函数；依概率控制偏差超过阈值的概率；几乎必然要求样本路径最终收敛；$L^r$ 控制偏差的 $r$ 阶矩。}{Convergence in distribution compares distribution functions; convergence in probability controls the chance of an error exceeding a threshold; almost-sure convergence concerns paths; $L^r$ convergence controls the $r$th moment of the error.}
+
+\section*{中英术语对照表 | Chinese--English glossary}
+\noindent 口试时可先用下表对照中英文术语；术语按课程顺序排列。
+\EN{Use the table below to match Chinese and English terms; it follows the order of the course.}
+
+{\footnotesize
+\setlength{\tabcolsep}{2pt}
+\begin{center}
+\begin{tabular}{p{1.9cm}p{3.4cm}p{1.9cm}p{3.4cm}p{1.9cm}p{3.4cm}}
+\hline
+\textbf{中文} & \textbf{English} & \textbf{中文} & \textbf{English} & \textbf{中文} & \textbf{English} \\
+\hline
+样本空间 & sample space & 事件 & event & $\sigma$-代数 & sigma-algebra \\
+测度 & measure & 条件概率 & conditional probability & 全概率公式 & law of total probability \\
+贝叶斯公式 & Bayes' theorem & 独立性 & independence & 随机变量 & random variable \\
+分布函数 & distribution function & 概率质量函数 & probability mass function & 概率密度函数 & probability density function \\
+期望 & expectation & 方差 & variance & 协方差 & covariance \\
+相关系数 & correlation coefficient & 联合分布 & joint distribution & 边际分布 & marginal distribution \\
+条件期望 & conditional expectation & 分位数 & quantile & 依概率收敛 & convergence in probability \\
+几乎必然收敛 & almost-sure convergence & 依分布收敛 & convergence in distribution & 中心极限定理 & central limit theorem \\
+大数定律 & law of large numbers & 指示变量 & indicator variable & 重尾 & heavy tail \\
+\hline
+\end{tabular}
+\end{center}
+}
+
+\section*{参考文献与来源范围 | References and scope}
+\APS{本讲义覆盖“概率论”部分，不含数理统计的参数估计与假设检验；依据课程讲义、课堂笔记与 APS 官方课程概述整理。公式采用标准表述，不逐条标注页码；教材只用于核对定义、条件与符号，不表示逐页引用，数值例子均按所给参数重算。}{This handout covers probability theory only, not estimation or hypothesis testing. It follows the course handout, class notes, and the official APS course overview. Formulas are stated in standard form without page-by-page citation; the textbook was used only to check definitions and notation. Numerical examples are recomputed and rounded to four decimal places.}
+
+\begin{enumerate}[label={[\arabic*]},leftmargin=1.8em,itemsep=0pt,topsep=1pt]
+\item 陈希孺.《概率论与数理统计》. 合肥：中国科学技术大学出版社，2009.（相关章节：随机变量及其分布、多维随机向量、极限定理。）
+\item 课程讲义：《Main-Prob-2024-All 5》. 2024.（概率论部分：常见分布、多维分布与极限定理。）
+\item APS 审核部课程概述材料：《概率论与数理统计》课程内容与口试问题清单.
+\end{enumerate}
 
 \end{document}

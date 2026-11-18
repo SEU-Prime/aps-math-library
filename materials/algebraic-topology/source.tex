@@ -17,12 +17,31 @@
 \maketitle
 
 \section*{课程概述 | Course overview}
-\APS{我按几何复形、单纯同调、单纯逼近、基本群和覆盖空间五部分复习。先定义单形、面、三角剖分和定向，再建立链群、边界算子、圈与边界，用商群得到同调并计算 Betti 数和 Euler 特征。之后说明连续映射如何诱导同调映射；基本群研究闭路的端点固定同伦，用 van Kampen 定理拼接计算；覆盖空间用局部同胚结构、路径提升和基本群子群联系起来。}{I review five parts: geometric complexes, simplicial homology, simplicial approximation, fundamental groups and covering spaces. Simplices, faces, triangulations and orientations lead to chain groups, boundary maps, cycles, boundaries, homology, Betti numbers and Euler characteristic. Simplicial approximation connects continuous maps to induced maps on homology. Fundamental groups classify based loops up to endpoint-fixed homotopy, with van Kampen for computations. Covering spaces connect local sheets and path lifting to subgroups of the fundamental group.}
+\APS{我按几何复形、单纯同调、单纯逼近、基本群和覆盖空间五部分复习。先定义单形、面、三角剖分和定向，再建立链群、边界算子、圈与边界，用商群得到同调并计算 Betti 数、挠部分和 Euler 特征；伪流形理论说明球面 $H_n(S^n)\cong\mathbb Z$。之后用重心细分和单纯逼近证明连续映射诱导同调同态，由此得到映射的度、Brouwer 不动点定理、无收缩定理与毛球定理。基本群研究闭路的端点固定同伦，用 van Kampen 定理计算，并与 $H_1$ 比较；覆盖空间用局部同胚、路径提升、子群对应和普遍覆盖把群结构翻译成空间结构；最后给出非交换基本群与 Borsuk--Ulam 等应用。}{I review five parts: geometric complexes, simplicial homology, simplicial approximation, fundamental groups and covering spaces. Simplices, faces, triangulations and orientations lead to chain groups, boundary maps, cycles, boundaries, homology, Betti numbers, torsion and Euler characteristic; pseudomanifold theory explains why $H_n(S^n)\cong\mathbb Z$. Barycentric subdivision and simplicial approximation then show that continuous maps induce homology homomorphisms, yielding degree, the Brouwer fixed point theorem, the no-retraction theorem and the hairy ball theorem. Fundamental groups classify based loops up to endpoint-fixed homotopy, are computed by van Kampen, and are compared with $H_1$. Covering spaces translate group structure into spaces through local triviality, path lifting, the subgroup correspondence and universal covers. The notes end with nonabelian fundamental groups, Borsuk--Ulam and applications.}
 \subsection*{例一：有边框和填满的三角形 | A triangular loop versus a filled triangle}
 \APS{只取三个顶点和三条边时，定向边 $e_{01},e_{12},e_{02}$ 满足 $\partial e_{ij}=v_j-v_i$。链 $z=e_{01}+e_{12}-e_{02}$ 的边界为零，所以是 $1$-圈；没有 $2$-单形，故它不是边界，$H_1\cong\mathbb Z$。若加入填充的三角面 $\sigma=[v_0v_1v_2]$，则 $\partial\sigma=z$，原来的圈变成边界，$H_1=0$。关键区别是是否存在能填住它的二维链。}{With three vertices and three edges, orient $e_{01},e_{12},e_{02}$ so that $\partial e_{ij}=v_j-v_i$. The chain $z=e_{01}+e_{12}-e_{02}$ has zero boundary and is a one-cycle. Without a two-simplex it is not a boundary, giving $H_1\cong\mathbb Z$. Adding the filled face $\sigma=[v_0v_1v_2]$ gives $\partial\sigma=z$, so the same cycle becomes a boundary and $H_1=0$. The issue is whether a two-chain exists that fills the loop.}
 \subsection*{例二：绕一圈的提升未必闭合 | A lifted loop may not close}
 \APS{覆盖 $p:S^1\to S^1$ 定义为 $p(z)=z^n$，其中 $n\ge1$。基空间闭路 $\gamma(t)=e^{2\pi i kt}$ 从 $1$ 出发，指定提升起点为 $1$ 后，提升为 $\widetilde\gamma(t)=e^{2\pi i kt/n}$。终点是 $e^{2\pi ik/n}$，所以提升闭合当且仅当 $n\mid k$。例如二重覆盖中，下面绕一圈，上面只走半圈；绕两圈才闭合。这个计算把提升性质与子群 $n\mathbb Z\subseteq\pi_1(S^1)\cong\mathbb Z$ 联系起来。}{For the cover $p(z)=z^n$ of $S^1$, with $n\ge1$, take the loop $\gamma(t)=e^{2\pi ikt}$. With lift starting at one, $\widetilde\gamma(t)=e^{2\pi ikt/n}$ and its endpoint is $e^{2\pi ik/n}$. The lift closes exactly when $n$ divides $k$. In a double cover, one turn below gives half a turn above, and two turns below close the lift. This realizes the subgroup $n\mathbb Z$ of $\pi_1(S^1)\cong\mathbb Z$.}
 
+
+\subsection*{例三：绕两圈才成为边界 | A loop that is a boundary only after two turns}
+\APS{在 Klein 瓶的胞腔表示中取一个顶点、两条边 $a,b$ 和一个二维面，面沿词 $abab^{-1}$ 粘上。交换化后 $b$ 抵消，二维面的边界是 $2a$：单条 $a$ 不是边界，但“$a$ 走两遍”是边界，所以 $a$ 的同调类阶为 $2$；$b$ 不成为边界，生成自由部分，$H_1\cong\mathbb Z\oplus\mathbb Z/2$。这个例子说明同调不一定只看“有没有洞”，还要看“绕几圈才填得掉”，后者正是挠部分。}{In the cell decomposition of the Klein bottle with one vertex, two edges $a,b$ and one 2-cell attached along $abab^{-1}$, abelianizing cancels $b$ and the boundary of the 2-cell is $2a$. A single $a$ is not a boundary, but traversing $a$ twice is, so the class of $a$ has order two; $b$ generates the free part, giving $H_1\cong\mathbb Z\oplus\mathbb Z/2$. Homology detects not only whether a hole exists but also how many turns are needed to fill it, which is exactly torsion.}
+
+\noindent\textbf{本讲义与 Croom 第 1--5 章的对应。} 下表把教材章节、本讲义位置和口试时最该记住的一句话放在一起，便于把零散概念接成一条主线。
+\EN{The table aligns the chapters of Croom, the sections of this booklet, and the one-sentence summary worth remembering for each part.}
+\begin{center}
+\small
+\begin{tabular}{p{0.25\linewidth}p{0.3\linewidth}p{0.36\linewidth}}
+教材章节 & 本讲义位置 & 口试一句话\\
+1. 几何复形与多面体 & 第 1 章 & 用单形、复形、三角剖分把空间变成有限组合数据，并固定定向。\\
+2. 单纯同调群 & 第 2 章 & 链、圈、边界取商得到 $H_k$；Betti 数与挠部分分别是自由秩与扭转信息。\\
+3. 单纯逼近 & 第 3 章 & 连续映射经细分可被单纯映射逼近，从而诱导同调同态；由此得到次数与 Brouwer 定理。\\
+4. 基本群 & 第 4 章 & 闭路按端点固定同伦分类，拼接给出群；van Kampen 把空间拆开算群。\\
+5. 覆盖空间 & 第 5 章 & 覆盖的片数与子群指数对应，普遍覆盖记录基本群，路径提升判别闭路是否同伦。\\
+\end{tabular}
+\end{center}
+\noindent 这条主线的逻辑是：先有“可计算的组合对象”，才有“同调不变量”；为了说明同调只依赖同伦型，需要单纯逼近；基本群提供了非交换的、更细的环信息；覆盖空间则把基本群的子群结构翻译成空间结构。面试时按这个顺序讲，比逐条背定义更有说服力。
+\EN{The logic is: combinatorial data first, then computable homology; simplicial approximation shows that homology depends only on the homotopy type; the fundamental group supplies finer nonabelian loop information; covering spaces translate subgroups of that group into spaces. This order makes a more convincing oral answer than reciting definitions.}
 
 \section{几何复形与多面体 | Geometric complexes and polyhedra}
 \subsection{单形、面与仿射独立 | Simplices, faces, and affine independence}
@@ -40,6 +59,22 @@
 \EN{An ordering $[v_0,\ldots,v_k]$ of the vertices specifies an orientation. Swapping two vertices reverses the orientation, so $[v_1,v_0]=-[v_0,v_1]$. In chain calculations, orientation is recorded by signs. A shared face of adjacent simplices appears with opposite orientations and cancels; this is the geometric reason for the alternating signs in the boundary formula.}
 \EX{将三角形边界定向为 $v_0\to v_1\to v_2\to v_0$。若把最后一条边写成 $[v_0,v_2]$，它的方向与沿边界行走的 $[v_2,v_0]$ 相反，所以应使用 $-[v_0,v_2]$。}{Orient the triangle boundary as $v_0\to v_1\to v_2\to v_0$. If the last edge is written as $[v_0,v_2]$, its direction is opposite to the boundary direction $[v_2,v_0]$, so it must appear as $-[v_0,v_2]$.}
 \ASK{为什么单纯复形必须包含每个单形的所有面？}{Why must a simplicial complex contain every face of each simplex?}{边界算子要把一个单形送到它的面组成的链中。若这些面不在复形里，边界就不属于该复形的链群，后续的链复形和同调也无法定义。}{The boundary map sends a simplex to a chain made of its faces. If those faces were absent, the boundary would not belong to the chain group of the complex, so the chain complex and its homology could not be defined.}
+
+\subsection{抽象复形、维数与三角剖分 | Abstract complexes, dimension, and triangulations}
+\noindent 几何复形是欧氏空间中按面关系粘起来的单形族；与之对应，\textbf{抽象单纯复形}只记录组合信息：一个有限集族 $K$，其中每个元素是非空有限集（称为抽象单形），若 $A\in K$ 且 $\varnothing\ne B\subseteq A$，则 $B\in K$。抽象单形的元素叫顶点，基数减一叫维数。抽象复形总能实现为几何复形：把顶点放到 $\mathbb R^N$ 中处于一般位置，再取每个抽象单形对应顶点的凸包。反过来，几何复形的“顶点集合”也给出抽象复形，称为它的顶点模式。
+\EN{A geometric complex is a family of simplices glued along faces in Euclidean space. An abstract simplicial complex records only combinatorics: a finite family $K$ of nonempty finite sets, closed under taking nonempty subsets. Its elements are abstract simplices, their elements are vertices, and dimension is cardinality minus one. Every abstract complex can be realized geometrically by placing its vertices in general position in $\mathbb R^N$ and taking convex hulls; conversely, a geometric complex has an underlying abstract vertex scheme.}
+
+\noindent\textbf{维数、子复形与骨架。} 复形 $K$ 的维数是其中单形的最大维数。若 $L\subseteq K$ 本身也是复形，称 $L$ 为子复形；$K$ 的所有维数不超过 $n$ 的单形组成 $n$-骨架 $K^{(n)}$。空间的\textbf{三角剖分}是一个复形 $K$ 连同同胚 $|K|\cong X$；同一空间可以有许多三角剖分，例如环面既有 $7$ 个顶点的极小三角剖分，也有更对称的 $9$ 顶点剖分。两个复形若存在保持面关系的顶点双射，则称\textbf{组合等价}；组合等价的复形有同胚的几何实现。
+\EN{The dimension of $K$ is the largest dimension of its simplices. A subcomplex is a subfamily that is itself a complex, and the $n$-skeleton $K^{(n)}$ consists of all simplices of dimension at most $n$. A triangulation of a space is a complex $K$ together with a homeomorphism $|K|\cong X$. A space can have many triangulations: the torus has a minimal $7$-vertex one and a more symmetric $9$-vertex one. Two complexes are combinatorially equivalent if a vertex bijection preserves faces; such complexes have homeomorphic realizations.}
+
+\EX{射影平面 $\mathbb R P^2$ 的极小三角剖分有 $6$ 个顶点、$15$ 条边、$10$ 个三角面，$\chi=6-15+10=1$。它与“圆盘边界对径点粘合”得到的空间同胚。环面的极小三角剖分（Császár 多面体）有 $7$ 个顶点、$21$ 条边、$14$ 个三角面，$\chi=7-21+14=0$。这些计数在算同调前就能用来做一致性检查。}{The minimal triangulation of the projective plane has 6 vertices, 15 edges and 10 triangles, so $\chi=6-15+10=1$; it is homeomorphic to the disk with antipodal boundary points identified. The minimal torus triangulation (the Császár polyhedron) has 7 vertices, 21 edges and 14 triangles, giving $\chi=7-21+14=0$. Such counts provide a consistency check before computing homology.}
+
+\noindent\textbf{为什么三角剖分不唯一却足够。} 组合数据依赖剖分，但后面会看到同调群在同伦等价下不变，而任何两个剖分都通过重心细分相互比较，因此所得同调群只依赖空间本身。这也解释了课程为什么反复做重心细分：它是“换剖分不换空间”的桥梁。
+\EN{Combinatorial data depend on the triangulation, but homology is invariant under homotopy equivalence, and any two triangulations can be compared after barycentric subdivision. Hence the homology groups depend only on the space. This is why barycentric subdivision reappears throughout the course: it is the bridge that changes the triangulation without changing the space.}
+
+\ASK{抽象复形与几何复形有什么区别？}{What is the difference between an abstract and a geometric simplicial complex?}{抽象复形只记录顶点集合与包含关系；几何复形是欧氏空间中真正粘好的单形族。抽象复形可以实现为几何复形，几何复形的顶点模式则给出抽象复形。}{An abstract complex records only vertex sets and the subset relation, while a geometric complex is an actual family of glued simplices in Euclidean space. Every abstract complex can be realized geometrically, and every geometric complex has an underlying abstract vertex scheme.}
+
+\ASK{三角剖分不同，为什么还能定义空间的同调？}{Why is a space's homology well defined if triangulations differ?}{同调在同伦等价下不变，而两个剖分可通过重心细分建立单纯逼近，从而诱导同构；所以同调群不依赖所选剖分。}{Homology is invariant under homotopy equivalence, and two triangulations can be compared through barycentric subdivision and simplicial approximation, inducing an isomorphism. The homology groups therefore do not depend on the chosen triangulation.}
 
 \section{单纯同调群 | Simplicial homology groups}
 \subsection{链群与边界算子 | Chain groups and boundary maps}
@@ -114,6 +149,91 @@ H_k(K;\mathbb Z)=Z_k/B_k=\ker\partial_k/\operatorname{im}\partial_{k+1}.
 \noindent 使用整数系数时，同调群可能还含有有限阶元素（挠元）；Betti 数只记录自由部分的秩。要报告完整的整数同调，必须说明挠部分，而不只是列出 Betti 数。
 \EN{With integer coefficients, homology groups may also contain finite-order elements called torsion. Betti numbers record only the rank of the free part. To state the full integer homology, one must include any torsion, not just the Betti numbers.}
 
+\subsection{同调群的结构：自由部分与挠部分 | Structure of homology groups}
+\noindent 由于 $Z_k$ 与 $B_k$ 都是自由阿贝尔群 $C_k$ 的子群，它们本身也是自由阿贝尔群；商群 $H_k=Z_k/B_k$ 未必自由，但一定是有限生成阿贝尔群。有限生成阿贝尔群的基本定理给出唯一的分解：
+\FORMULA{同调群的自由部分与挠部分}{the free part and the torsion part of a homology group}
+\[
+H_k(K;\mathbb Z)\cong \mathbb Z^{\beta_k}\oplus T_k,
+\qquad
+T_k\cong\mathbb Z/d_1\oplus\cdots\oplus\mathbb Z/d_t,
+\]
+其中 $d_i>1$ 且 $d_i\mid d_{i+1}$，$T_k$ 称为挠子群。$\beta_k$ 是自由部分的秩，即 Betti 数；$t=0$ 表示没有挠。
+\EN{Since $Z_k$ and $B_k$ are subgroups of the free abelian group $C_k$, both are free abelian, but the quotient need not be. It is always finitely generated abelian, so the structure theorem gives the displayed unique decomposition into a free part of rank $\beta_k$ and a torsion subgroup $T_k$. The integers $d_i>1$ satisfy $d_i\mid d_{i+1}$.}
+
+\noindent 挠部分来自“扭转”：某些圈绕两圈（或若干圈）后才成为边界，于是它在同调里是阶为 $d$ 的有限元，而不是整数倍可无限区分的自由类。取域系数时秩没有损失，但取 $\mathbb Q$ 或 $\mathbb R$ 系数会消去所有挠元，只剩自由部分；取 $\mathbb Z/p$ 系数则可能把 $p$-挠元重新显现出来。因此“$H_1(\mathbb R P^2;\mathbb Q)=0$”与“$H_1(\mathbb R P^2;\mathbb Z)=\mathbb Z/2$”并不矛盾。
+\EN{Torsion records twisting: a cycle may become a boundary only after being traversed $d$ times, so it becomes a finite-order element instead of a free class. Rational or real coefficients kill all torsion and retain only the free part, while $\mathbb Z/p$ coefficients can reveal $p$-torsion. Thus $H_1(\mathbb R P^2;\mathbb Q)=0$ does not contradict $H_1(\mathbb R P^2;\mathbb Z)=\mathbb Z/2$.}
+
+\EX{射影平面 $H_1(\mathbb R P^2;\mathbb Z)\cong\mathbb Z/2$：非平凡闭路走两圈才是某个二维链的边界，所以同调类阶为 $2$。Klein 瓶 $H_1\cong\mathbb Z\oplus\mathbb Z/2$，同时有一个自由方向和一个扭转方向。这些例子说明只看 Betti 数会丢掉信息，必须同时报告挠部分。}{The projective plane has $H_1(\mathbb R P^2;\mathbb Z)\cong\mathbb Z/2$: a nontrivial loop becomes a boundary only after two turns, so its class has order two. The Klein bottle has $H_1\cong\mathbb Z\oplus\mathbb Z/2$, with one free direction and one twisted direction. Betti numbers alone therefore lose information; the torsion part must be reported too.}
+
+\subsection{用整数矩阵约化计算同调 | Computing homology by integer matrix reduction}
+\noindent 选定单形基后，边界 $\partial_k$ 由整数矩阵 $D_k$ 表示。用整系数可逆的行、列变换（即左乘右乘幺模整数矩阵）可以把 $D_k$ 化成\textbf{Smith 标准形}：
+\FORMULA{整数矩阵的 Smith 标准形}{the Smith normal form of an integer matrix}
+\[
+P D_k Q=\operatorname{diag}(d_1,\ldots,d_r,0,\ldots,0),
+\qquad d_i>0,\quad d_i\mid d_{i+1},
+\]
+其中 $P,Q$ 为幺模整数矩阵，$r=\operatorname{rank}D_k$。对每个 $k$，设 $f_k$ 是 $k$-单形数、$r_k=\operatorname{rank}D_k$，于是
+\FORMULA{由 Smith 标准形读出同调群}{reading homology from Smith normal forms}
+\[
+\beta_k=f_k-r_k-r_{k+1},
+\qquad
+T_k\cong\bigoplus_{d_i>1}\mathbb Z/d_i,
+\]
+其中 $d_i$ 是 $D_{k+1}$ 的非平凡不变因子（按整除顺序排列）。直观上，$D_{k+1}$ 的像在 $k$-链中由 $d_1 e_1,\ldots,d_r e_r$ 张成，非平凡 $d_i$ 表示该方向上的“扭转”。
+\EN{After choosing bases, $\partial_k$ is an integer matrix $D_k$. Unimodular integer row and column operations put it into Smith normal form, displayed above. If $f_k$ is the number of $k$-simplices and $r_k=\operatorname{rank}D_k$, then the Betti number is $f_k-r_k-r_{k+1}$, and the torsion of $H_k$ is the direct sum of $\mathbb Z/d_i$ over the nonunit invariant factors $d_i$ of $D_{k+1}$.}
+
+\noindent\textbf{手工计算步骤。} (1) 选定各维单形的次序与定向，写出 $D_k$；(2) 用整数行、列变换把 $D_k$ 对角化，记录秩与不变因子；(3) 对每个 $k$ 套用上面的公式；(4) 用 Euler 特征 $\chi=\sum(-1)^kf_k=\sum(-1)^k\beta_k$ 与连通性检查结果。这样得到的是完整整数同调，而不只是 Betti 数。
+\EN{The hand procedure is: order and orient simplices to write each $D_k$; diagonalize by integer row and column operations, recording ranks and invariant factors; apply the formulas; check against the Euler characteristic and connectivity. The output is the full integer homology, not only Betti numbers.}
+
+\EX{以 Klein 瓶的胞腔链复形为例：取一个 $0$-胞腔、两个 $1$-胞腔 $a,b$、一个 $2$-胞腔，$2$-胞腔沿词 $abab^{-1}$ 粘上。交换化后 $b$ 抵消，边界为 $2a$，故 $D_1=0_{1\times2}$，$D_2=\begin{pmatrix}2\\0\end{pmatrix}$。于是 $H_0\cong\mathbb Z$；$H_1\cong\mathbb Z^2/\operatorname{im}D_2=\mathbb Z\oplus\mathbb Z/2$；$H_2=\ker D_2=0$。Smith 标准形 $\operatorname{diag}(2,0)$ 的不变因子 $2$ 正好给出 $\mathbb Z/2$ 挠元。换成三角剖分后矩阵更大，但不变因子与同调群不变。}{For the Klein bottle cell complex with one 0-cell, two 1-cells $a,b$ and one 2-cell attached along $abab^{-1}$, abelianizing cancels $b$ and leaves boundary $2a$. Thus $D_1=0$ and $D_2=(2,0)^{\mathsf T}$. Hence $H_0=\mathbb Z$, $H_1=\mathbb Z^2/\operatorname{im}D_2=\mathbb Z\oplus\mathbb Z/2$, and $H_2=\ker D_2=0$. The invariant factor $2$ in the Smith form $\operatorname{diag}(2,0)$ produces the $\mathbb Z/2$ torsion. A triangulation gives larger matrices but the same invariant factors and homology.}
+
+\ASK{为什么同调群会含挠部分？}{Why can homology contain torsion?}{边界群是自由群 $C_{k+1}$ 的同态像，可能是 $C_k$ 中由非单位整数倍生成的子群；取商后这些方向就变成有限阶元素。挠部分反映了空间中“绕 $d$ 圈才成为边界”的扭转结构。}{The boundary group is the image of a homomorphism from the free group $C_{k+1}$, so it may be generated by nonunit integer multiples inside $C_k$; quotienting turns those directions into finite-order elements. Torsion reflects twisting where $d$ turns are needed to become a boundary.}
+
+\subsection{典型空间的同调 | Homology of familiar spaces}
+\noindent 下表汇总面试最常被问到的空间。取整数系数；挠元用 $\mathbb Z/d$ 标出。
+\EN{The table collects the spaces most often asked about in interviews, with integer coefficients and torsion shown explicitly.}
+\begin{center}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{0.24\linewidth}p{0.12\linewidth}p{0.24\linewidth}p{0.14\linewidth}p{0.15\linewidth}}
+空间 & $H_0$ & $H_1$ & $H_2$ & 说明\\
+一点 & $\mathbb Z$ & $0$ & $0$ & 可缩\\
+$S^1$ & $\mathbb Z$ & $\mathbb Z$ & $0$ & 圆周\\
+$S^n$（$n\ge2$） & $\mathbb Z$ & $0$ & $0$（$n\ne2$） & 中间维全为零；$n=2$ 时 $H_2=\mathbb Z$\\
+$k$ 个圆的花束 & $\mathbb Z$ & $\mathbb Z^k$ & $0$ & 一维图，$\beta_1=E-V+1$\\
+环面 $T^2$ & $\mathbb Z$ & $\mathbb Z^2$ & $\mathbb Z$ & 可定向闭曲面 $g=1$\\
+亏格 $g$ 可定向闭曲面 & $\mathbb Z$ & $\mathbb Z^{2g}$ & $\mathbb Z$ & 把手分解\\
+$\mathbb R P^2$ & $\mathbb Z$ & $\mathbb Z/2$ & $0$ & 不可定向，挠元\\
+Klein 瓶 & $\mathbb Z$ & $\mathbb Z\oplus\mathbb Z/2$ & $0$ & 不可定向，挠元\\
+Möbius 带 & $\mathbb Z$ & $\mathbb Z$ & $0$ & 形变收缩到 $S^1$\\
+\end{tabular}
+\end{center}
+
+\noindent 一般地，$k$ 个射影平面做连通和（不可定向亏格 $k$）有 $H_1\cong\mathbb Z^{k-1}\oplus\mathbb Z/2$、$H_2=0$；亏格 $g$ 的可定向闭曲面有 $H_1\cong\mathbb Z^{2g}$、$H_2\cong\mathbb Z$。后者的 $H_2$ 由整体定向的基本闭链生成，这正是伪流形理论要说明的事实。
+\EN{In general, the connected sum of $k$ projective planes has $H_1\cong\mathbb Z^{k-1}\oplus\mathbb Z/2$ and $H_2=0$, while a closed orientable surface of genus $g$ has $H_1\cong\mathbb Z^{2g}$ and $H_2\cong\mathbb Z$. The top class is generated by the fundamental cycle determined by a global orientation, the fact explained by pseudomanifold theory.}
+
+\EX{环面的标准三角剖分有 $f_0=1,f_1=3,f_2=2$（一边粘合表示），$\chi=0$；也可以取 $7$ 顶点、$21$ 边、$14$ 面的极小剖分，$\chi$ 仍是 $0$。这说明 Euler 特征与剖分无关，也提醒数顶点时要按粘合关系数等价类。}{A standard one-vertex triangulation of the torus has $f_0=1,f_1=3,f_2=2$ and $\chi=0$; the minimal $7$-vertex, $21$-edge, $14$-face triangulation also has $\chi=0$. Euler characteristic is independent of the triangulation, while vertex counts must be taken after gluing.}
+
+\subsection{伪流形与球面的同调 | Pseudomanifolds and the homology of spheres}
+\noindent 一个 $n$-\textbf{伪流形}是满足以下条件的有限复形 $K$：$K$ 连通；每个 $(n-1)$-单形恰是两个 $n$-单形的面；任意两个 $n$-单形可沿一串 $n$-单形相连，相邻两个共享一个 $(n-1)$-面。它把“每个局部像 $n$ 维块、没有边界”的直观形式化了。若能为所有 $n$-单形指定定向，使每个 $(n-1)$-面在其两个相邻 $n$-单形中符号相反，则称 $K$ \textbf{可定向}。
+\EN{An $n$-pseudomanifold is a finite complex $K$ that is connected, in which every $(n-1)$-simplex is a face of exactly two $n$-simplices, and in which any two $n$-simplices can be joined by a chain of $n$-simplices with consecutive ones sharing an $(n-1)$-face. This formalizes the idea that the space is locally an $n$-dimensional block without boundary. It is orientable if the $n$-simplices can be oriented so that each $(n-1)$-face appears with opposite signs in its two neighbours.}
+
+\noindent 伪流形的意义在于它把“最高维同调是否非零”与“是否可定向”等同起来：
+\FORMULA{伪流形的最高维同调与可定向性}{top homology and orientability of a pseudomanifold}
+\[
+H_n(K)\cong
+\begin{cases}
+\mathbb Z,&K\text{ 可定向},\\
+0,&K\text{ 不可定向}.
+\end{cases}
+\]
+并且对球面有经典结论：$H_p(S^n)=0\ (0<p<n)$，$H_n(S^n)\cong\mathbb Z$。球面的任一三角剖分都是可定向 $n$-伪流形，因此最高维同调由基本闭链生成；$\mathbb R P^2$、Klein 瓶不可定向，故 $H_2=0$。这个结论是第 3 章定义映射次数、证明 Brouwer 定理的基础。
+\EN{The point of pseudomanifolds is that the top homology detects orientability: $H_n(K)$ is $\mathbb Z$ when $K$ is orientable and zero otherwise. For spheres, $H_p(S^n)=0$ for $0<p<n$ and $H_n(S^n)\cong\mathbb Z$. Any triangulation of the sphere is an orientable $n$-pseudomanifold, so its top class is the fundamental cycle; $\mathbb R P^2$ and the Klein bottle are nonorientable, so $H_2=0$. This result underlies degree theory and the Brouwer theorem in Chapter 3.}
+
+\EX{四面体表面（$n=2$ 伪流形）可定向，$H_2\cong\mathbb Z$ 由所有三角面的定向和生成；Klein 瓶即使给出整体定向的尝试也会在绕行一圈后矛盾，所以不存在 $2$-圈，$H_2=0$。这正是“可定向”与“扭转”在同调上的差别。}{The boundary of a tetrahedron is an orientable 2-pseudomanifold, and $H_2\cong\mathbb Z$ is generated by the sum of coherently oriented triangles. For the Klein bottle, any attempt at a global orientation contradicts itself after one trip around the twist, so there is no 2-cycle and $H_2=0$. This is the homology difference between orientable and twisted spaces.}
+
+\ASK{为什么 $H_n(S^n)\cong\mathbb Z$？}{Why is $H_n(S^n)$ isomorphic to $\mathbb Z$?}{球面的三角剖分是可定向 $n$-伪流形：给它一个整体定向后，所有 $n$-单形的定向和是圈，且没有 $(n+1)$-链可以填它，所以该基本闭链生成无限循环群。}{A triangulation of the sphere is an orientable $n$-pseudomanifold. With a global orientation, the sum of all oriented $n$-simplices is a cycle, and no $(n+1)$-chain can fill it, so this fundamental cycle generates an infinite cyclic group.}
+
 \section{单纯逼近 | Simplicial approximation}
 \subsection{单纯映射与诱导同调映射 | Simplicial maps and induced maps on homology}
 \noindent 单纯映射 $\phi:K\to L$ 首先把顶点映到顶点，并要求每个单形的所有顶点像共同落在 $L$ 的某个单形中。不同顶点可以映到同一顶点，故单形维数可能下降。它在线性单形上延拓为几何实现之间的连续映射，并按下面的规则诱导链映射：若顶点像互异，就把顶点逐个映过去；若有重复像，该维链取零。边界与映射相容，即 $\partial\phi_\#=\phi_\#\partial$，因此圈映到圈、边界映到边界，进而得到同调同态 $\phi_*:H_k(K)\to H_k(L)$。
@@ -138,6 +258,67 @@ H_k(K;\mathbb Z)=Z_k/B_k=\ker\partial_k/\operatorname{im}\partial_{k+1}.
 \EN{Homotopic maps induce the same homomorphism on homology. Simplicial approximation therefore converts a continuous problem into a finite vertex map and boundary-matrix calculation. In particular, homotopy-equivalent spaces have isomorphic homology groups, so changing a triangulation does not change the homology of the underlying space.}
 \EX{若 $f$ 是圆周三角剖分上的恒等映射，顶点可映回自身，单纯逼近就是原映射。对更一般的连续映射，先细分圆周，再按开星条件选目标顶点；得到的顶点映射可写成有限矩阵，并计算它对 $H_1$ 的作用。}{For the identity map on a triangulated circle, each vertex can be sent to itself, and the simplicial approximation is the original map. For a general continuous map, first subdivide the circle and then choose target vertices using the open-star condition. The resulting vertex map is finite and can be used to compute the induced map on $H_1$.}
 \ASK{单纯逼近为什么要先细分？}{Why may subdivision be needed before simplicial approximation?}{原来的单形可能太大，其像会跨过目标中的多个单形，无法由顶点像定义一个单纯映射。细分使顶点开星变小，连续性保证每个小开星的像可落进目标某个顶点的开星。}{An original simplex may be too large: its image can cross several target simplices, so its vertex images may not define a simplicial map. Subdivision makes the vertex stars smaller, and continuity ensures that each small star can map into an open star of a target vertex.}
+
+\subsection{诱导同调映射与同伦不变性 | Induced maps and homotopy invariance}
+\noindent 单纯映射 $\phi:K\to L$ 诱导链映射 $\phi_\#:C_k(K)\to C_k(L)$，满足 $\partial\phi_\#=\phi_\#\partial$。这样的链映射把圈送到圈、把边界送到边界，因此可以取商得到同调同态
+\FORMULA{链映射诱导的同调同态}{the homology homomorphism induced by a chain map}
+\[
+\phi_*:H_k(K;\mathbb Z)\to H_k(L;\mathbb Z),\qquad
+\phi_*([z])=[\phi_\#(z)].
+\]
+良定义性的关键是：若 $z'=z+\partial c$ 与 $z$ 同调，则 $\phi_\#(z')=\phi_\#(z)+\partial\phi_\#(c)$，仍是同一同调类。于是 $(\psi\phi)_*=\psi_*\phi_*$、$(\operatorname{id})_*=\operatorname{id}$，同调是一个函子。
+\EN{A simplicial map $\phi:K\to L$ induces a chain map $\phi_\#:C_k(K)\to C_k(L)$ with $\partial\phi_\#=\phi_\#\partial$. It sends cycles to cycles and boundaries to boundaries, so it descends to a homology homomorphism $\phi_*([z])=[\phi_\#(z)]$. The map is well defined because a homologous representative changes by a boundary, which is again sent to a boundary. Consequently $(\psi\phi)_*=\psi_*\phi_*$ and $(\operatorname{id})_*=\operatorname{id}$; homology is a functor.}
+
+\noindent 一般连续映射要通过单纯逼近来定义诱导同态：先细分定义域，取单纯映射 $\phi\simeq f$，再令 $f_*=\phi_*$。这个定义与逼近的选择无关，理由是\textbf{链同伦}：若两个链映射 $\phi_\#,\psi_\#:C_*(K)\to C_*(L)$ 满足存在 $D_k:C_k\to C_{k+1}$ 使
+\FORMULA{链同伦的条件}{the chain-homotopy relation}
+\[
+\partial_{k+1}D_k+D_{k-1}\partial_k=\phi_\#-\psi_\#,
+\]
+则对任意圈 $z$ 有 $\phi_\#(z)-\psi_\#(z)=\partial D_kz$ 是边界，故 $\phi_*=\psi_*$。同伦映射的单纯逼近之间恰好存在这样的链同伦，于是得到同伦不变性。
+\EN{A general continuous map is handled by simplicial approximation: subdivide the domain, choose a simplicial map $\phi\simeq f$, and set $f_*=\phi_*$. The choice does not matter because of chain homotopy: if chain maps $\phi_\#,\psi_\#$ admit maps $D_k$ satisfying the displayed relation, then $\phi_\#(z)-\psi_\#(z)$ is a boundary for every cycle $z$, so $\phi_*=\psi_*$. Simplicial approximations of homotopic maps admit such a chain homotopy, which yields homotopy invariance.}
+
+\noindent 由此得到本课程最重要的原则：\textbf{同伦等价的空间具有同构的同调群}，同胚当然更是如此；因此同调可以区分不同伦等价的空间（例如 $S^1$ 与圆盘），但不能区分同一同伦型的空间（例如圆环与 $S^1$）。改变三角剖分不改变空间的同伦型，所以也不改变同调。
+\EN{This gives the central principle: homotopy-equivalent spaces have isomorphic homology, and homeomorphic spaces in particular do. Homology can therefore distinguish spaces of different homotopy type, such as the circle and the disk, but it cannot distinguish spaces of the same homotopy type, such as an annulus and a circle. Changing the triangulation does not change the homotopy type, so it does not change homology.}
+
+\ASK{为什么连续映射诱导的同调同态是良定义的？}{Why is the homology homomorphism induced by a continuous map well defined?}{先用单纯逼近得到单纯映射，再证明不同逼近之间由链同伦相联系；链同伦的两个链映射在圈上相差一个边界，因此在同调上相同。}{First use simplicial approximation to obtain a simplicial map, then show that different approximations are related by a chain homotopy. Two chain-homotopic chain maps differ by a boundary on every cycle, hence induce the same map on homology.}
+
+\subsection{映射的度与 Brouwer 不动点定理 | Degree of maps and the Brouwer fixed point theorem}
+\noindent 对连续映射 $f:S^n\to S^n$，$H_n(S^n)\cong\mathbb Z$，所以 $f_*$ 必是乘以某个整数：
+\FORMULA{球面自映射的度}{the degree of a self-map of a sphere}
+\[
+f_*:H_n(S^n)\to H_n(S^n),\qquad f_*(z)=(\deg f)\,z.
+\]
+这个整数 $\deg f$ 称为 $f$ 的\textbf{度}。它满足 $\deg(\operatorname{id})=1$、$\deg(\text{常值映射})=0$、$\deg(f\circ g)=\deg f\cdot\deg g$，并且同伦的映射度数相同。对 $S^1$，把 $z$ 映到 $z^k$ 的映射度为 $k$，正好对应绕数；对 $S^n$，对径映射 $x\mapsto -x$ 的度为 $(-1)^{n+1}$。
+\EN{For a continuous map $f:S^n\to S^n$, the induced map on $H_n(S^n)\cong\mathbb Z$ is multiplication by an integer $\deg f$, called the degree. It satisfies $\deg(\operatorname{id})=1$, $\deg(\text{constant})=0$, $\deg(f\circ g)=\deg f\cdot\deg g$, and homotopic maps have equal degree. On $S^1$, the map $z\mapsto z^k$ has degree $k$, matching the winding number; on $S^n$, the antipodal map $x\mapsto -x$ has degree $(-1)^{n+1}$.}
+
+\noindent 度的概念把同调计算和几何问题连接起来。若 $f$ 是常值映射，$f_*$ 是零映射，度为 $0$；若 $f$ 可延拓到整块球 $B^{n+1}$ 上，则 $f$ 与常值映射同伦（沿半径收缩），度也为 $0$。Hopf 分类定理进一步断言：对 $S^n$ 的自映射，度是同伦分类的完全不变量，即同伦当且仅当度相同。
+\EN{Degree connects homology with geometry. A constant map has degree zero, and a map that extends over the ball $B^{n+1}$ is homotopic to a constant map by radial contraction, so it also has degree zero. The Hopf classification theorem asserts that for self-maps of $S^n$, degree is a complete homotopy invariant: two maps are homotopic exactly when their degrees agree.}
+
+\noindent\textbf{球面不可缩。} 若 $S^n$ 可缩到一点，则恒等映射同伦于常值映射，于是 $1=\deg(\operatorname{id})=\deg(\text{常数})=0$，矛盾。因此任何 $n\ge0$ 的球面都不同伦于一点，这与 $H_n(S^n)\ne0$ 完全一致。
+\EN{If $S^n$ were contractible, the identity would be homotopic to a constant map, giving $1=\deg(\operatorname{id})=\deg(\text{constant})=0$, a contradiction. Hence no sphere is contractible, consistent with $H_n(S^n)\ne0$.}
+
+\noindent\textbf{无收缩定理。} 不存在连续映射 $r:B^{n+1}\to S^n$ 使 $r$ 在 $S^n$ 上等于恒等映射（这样的 $r$ 称为收缩）。若存在，令 $i:S^n\to B^{n+1}$ 为包含映射，则 $r\circ i=\operatorname{id}_{S^n}$，取 $n$ 维同调得
+\FORMULA{收缩若有则将给出矛盾的同调等式}{the contradictory homology identity a retraction would force}
+\[
+r_*\circ i_*=\operatorname{id}_{\mathbb Z}:\mathbb Z\to\mathbb Z,
+\]
+但 $H_n(B^{n+1})=0$，所以 $i_*=0$，左边为零映射，矛盾。注意这里 $n\ge1$；$n=0$ 的情形可直接用连通性说明。
+\EN{There is no continuous retraction $r:B^{n+1}\to S^n$ fixing $S^n$. If one existed, with $i:S^n\to B^{n+1}$ the inclusion, then $r\circ i=\operatorname{id}$, so on top homology $r_*\circ i_*=\operatorname{id}_{\mathbb Z}$. But $H_n(B^{n+1})=0$ forces $i_*=0$, giving the zero map equal to the identity, a contradiction. The argument applies for $n\ge1$; the case $n=0$ follows from connectedness.}
+
+\noindent\textbf{Brouwer 不动点定理。} 对 $n\ge0$，每个连续映射 $f:B^{n+1}\to B^{n+1}$ 都有不动点（存在 $x$ 使 $f(x)=x$）。证明：若 $f$ 没有不动点，对每个 $x$ 从 $f(x)$ 出发经过 $x$ 作射线，交边界球面于 $r(x)$，则 $r$ 连续、在 $S^n$ 上是恒等，构成收缩，与无收缩定理矛盾。
+\EN{Brouwer's fixed point theorem states that every continuous map $f:B^{n+1}\to B^{n+1}$ has a fixed point. If $f$ had none, drawing the ray from $f(x)$ through $x$ to the boundary sphere would define a continuous retraction onto $S^n$ that fixes the sphere, contradicting the no-retraction theorem.}
+
+\noindent\textbf{维数不变性与毛球定理。} Croom 第 3 章还用同调证明：若 $\mathbb R^m$ 与 $\mathbb R^n$ 同胚，则 $m=n$（维数不变性）；以及 \textbf{Brouwer--Poincaré 定理}：球面 $S^n$ 上存在处处非零的连续切向量场当且仅当 $n$ 为奇数。$n$ 为偶数时（例如 $S^2$ 的“毛球”），任何连续切向量场必有零点。证明思路是把恒等映射沿向量场同伦到对径映射，再用 $\deg(\operatorname{id})=1$ 与 $\deg(\text{对径})=(-1)^{n+1}$ 比较。
+\EN{Croom's Chapter 3 also uses homology to prove invariance of dimension: if $\mathbb R^m$ and $\mathbb R^n$ are homeomorphic, then $m=n$. It also proves the Brouwer--Poincaré theorem: $S^n$ admits a nowhere-zero continuous tangent vector field exactly when $n$ is odd. For even $n$, such as the hairy ball $S^2$, every continuous tangent field has a zero. The idea is to homotope the identity to the antipodal map along the field and compare $\deg(\operatorname{id})=1$ with $\deg(\text{antipodal})=(-1)^{n+1}$.}
+
+\EX{$S^2$ 上没有处处非零的切向量场，所以地球表面任意时刻至少有一处风速为零（把风看作切向量场）。$S^1$ 上存在处处非零的切向量场（沿圆周方向的单位向量场），对应 $n=1$ 为奇数；这解释了奇数维球面与偶数维球面的差别。}{There is no nowhere-zero tangent vector field on $S^2$, so at any instant at least one point on Earth's surface has zero wind speed (viewing wind as a tangent field). On $S^1$ the unit tangent field along the circle is nowhere zero, matching the odd case $n=1$. This explains the difference between odd- and even-dimensional spheres.}
+
+\noindent 这些定理体现了同调的用途：把“是否存在某种映射”翻译成“某个整数或群是否可能”，再用线性代数式的计算排除或构造。面试时若被问“同调有什么用”，Brouwer 不动点与毛球定理是最有说服力的回答。
+\EN{These theorems show the use of homology: an existence question about maps becomes a question about integers and groups, which can be ruled out or constructed by computation. If asked what homology is good for in an interview, Brouwer's fixed point theorem and the hairy ball theorem are the most convincing answers.}
+
+\ASK{如何用同调证明 Brouwer 不动点定理？}{How is Brouwer's fixed point theorem proved using homology?}{若连续映射 $f:B^{n+1}\to B^{n+1}$ 无不动点，可构造从球到边界球面的收缩 $r$。收缩满足 $r\circ i=\operatorname{id}_{S^n}$，取 $H_n$ 得 $r_*i_*=\operatorname{id}$；但 $H_n(B^{n+1})=0$，所以 $i_*=0$，矛盾。}{If $f$ has no fixed point, one constructs a retraction from the ball onto its boundary sphere. A retraction satisfies $r\circ i=\operatorname{id}_{S^n}$, so on $H_n$ we get $r_*i_*=\operatorname{id}$; but $H_n(B^{n+1})=0$, hence $i_*=0$, a contradiction.}
+
+\ASK{映射的度有什么性质？}{What properties does the degree of a map have?}{$\deg(\operatorname{id})=1$，$\deg(\text{常数})=0$，$\deg(f\circ g)=\deg f\deg g$，同伦映射度相同；对径映射度为 $(-1)^{n+1}$。Hopf 定理说明度是 $S^n$ 自映射同伦分类的完全不变量。}{$\deg(\operatorname{id})=1$, a constant map has degree zero, $\deg(f\circ g)=\deg f\deg g$, and homotopic maps have equal degree; the antipodal map has degree $(-1)^{n+1}$. The Hopf theorem says degree is a complete homotopy invariant for self-maps of $S^n$.}
 
 \section{基本群 | The fundamental group}
 \subsection{路径、闭路同伦与群运算 | Paths, loop homotopy, and the group operation}
@@ -170,6 +351,24 @@ H_k(K;\mathbb Z)=Z_k/B_k=\ker\partial_k/\operatorname{im}\partial_{k+1}.
 \EX{沿圆周逆时针走两圈的闭路绕数为 $2$，顺时针走一圈的绕数为 $-1$。先走前者再走后者，拼接后的绕数为 $2+(-1)=1$。因此这两条路径的拼接类对应整数 $1$，而不是“走过的总路程”。}{A loop going twice counterclockwise has winding number $2$, while a clockwise loop has winding number $-1$. Concatenating them gives winding number $2+(-1)=1$. The integer records net winding, not the total distance travelled.}
 \ASK{为什么基本群可以证明圆周与圆盘不同胚？}{How can the fundamental group show that the circle and disk are not homeomorphic?}{圆周的基本群是 $\mathbb Z$，圆盘可缩所以基本群平凡。同胚会诱导基本群同构，而这两个群不同构，因此圆周与圆盘不同胚。}{The circle has fundamental group $\mathbb Z$, while the disk is contractible and has trivial fundamental group. A homeomorphism induces an isomorphism of fundamental groups, and these groups are not isomorphic. Hence the circle and disk are not homeomorphic.}
 
+\subsection{覆盖同伦性质与 $\pi_1(S^1)$ 的严格计算 | Lifting properties and a rigorous computation of $\pi_1(S^1)$}
+\noindent 上一节用辐角说明绕数，但要严格证明 $\pi_1(S^1)\cong\mathbb Z$，需要把“提升”作为定理使用。Croom 第 4 章先对圆周证明两个性质：
+\EN{The previous section explained winding numbers using arguments. A rigorous proof that $\pi_1(S^1)\cong\mathbb Z$ uses lifting theorems, which Croom proves first for the circle.}
+\begin{enumerate}[label=(\arabic*)]
+\item \textbf{覆盖路径性质}：若 $\alpha:I\to S^1$ 是路径、$x\in\mathbb R$ 满足 $e^{2\pi ix}=\alpha(0)$，则存在唯一路径 $\widetilde\alpha:I\to\mathbb R$ 使 $e^{2\pi i\widetilde\alpha(t)}=\alpha(t)$ 且 $\widetilde\alpha(0)=x$。
+\item \textbf{覆盖同伦性质}：若 $F:I\times I\to S^1$ 连续且 $F(0,t)=F(1,t)$ 对所有 $t$ 成立（即每个时刻都是闭路），并给定 $\widetilde F(0,0)$ 上方的提升起点，则 $F$ 有唯一起点固定的提升 $\widetilde F:I\times I\to\mathbb R$，且每个 $\widetilde F(\cdot,t)$ 都是 $\mathbb R$ 中的路径。
+\end{enumerate}
+\EN{(1) The covering path property: every path in $S^1$ has a unique lift to $\mathbb R$ once a starting lift of its initial point is chosen. (2) The covering homotopy property: a homotopy of loops based at $1$ lifts uniquely to a homotopy of paths in $\mathbb R$ with a prescribed starting lift, and each time slice is a path.}
+\noindent 由这两条性质：两条基于 $1$ 的闭路端点固定同伦，当且仅当它们从 $0$ 开始的提升有相同的终点，即绕数相同。因此绕数给出群同构
+\FORMULA{圆周基本群的严格同构}{the rigorous isomorphism for the fundamental group of the circle}
+\[
+\pi_1(S^1,1)\cong\mathbb Z,\qquad [\gamma]\mapsto\operatorname{wind}(\gamma).
+\]
+同态性来自“先走一条再走一条，提升也依次拼接”，单射性来自覆盖同伦性质，满射性由 $\gamma_n(t)=e^{2\pi int}$ 实现。这里的关键思想是\textbf{单值化（monodromy）}：把底空间里可能绕圈的路径提升到没有圈的覆盖空间，绕数就变成终点与起点的整数差。
+\EN{By these properties, two loops based at $1$ are endpoint-fixed homotopic exactly when their lifts from $0$ have the same endpoint, that is, the same winding number. Hence winding number is an isomorphism $\pi_1(S^1,1)\cong\mathbb Z$: it is a homomorphism because concatenation lifts to concatenation, injective by the covering homotopy property, and surjective because the loops $\gamma_n(t)=e^{2\pi int}$ realize every integer. The key idea is monodromy: lifting to a cover without loops turns winding into an integer displacement.}
+
+\ASK{为什么覆盖空间可以计算基本群？}{Why do covering spaces compute fundamental groups?}{覆盖的路径提升把底空间中的闭路变成覆盖空间中的路径，其终点记录闭路的同伦信息；覆盖同伦性质保证同伦的闭路提升后有相同终点，于是提升给出从基本群到纤维或到覆盖变换群的同构。}{Path lifting turns loops in the base into paths in the cover, and the endpoint records homotopy information. The covering homotopy property ensures homotopic loops have lifts with the same endpoint, so lifting gives an isomorphism from the fundamental group to (a subgroup of) the fiber or deck group.}
+
 \subsection{Seifert--van Kampen 定理与生成元、关系 | The Seifert--van Kampen theorem and presentations}
 \noindent 基本群的直接闭路计算有时很困难。\textbf{Seifert--van Kampen 定理}的作用是把空间拆成较简单的重叠部分再计算。若 $U,V$ 是 $X$ 的开子集，$X=U\cup V$，$U,V,U\cap V$ 路径连通，且基点 $x_0\in U\cap V$，则 $\pi_1(X,x_0)$ 是 $\pi_1(U,x_0)*\pi_1(V,x_0)$ 对交集中的闭路在两边的像作识别后所得的群。换言之，若 $i_U,i_V$ 是包含映射，需商去由 $i_{U*}(g)i_{V*}(g)^{-1}$ 生成的正规子群，其中 $g\in\pi_1(U\cap V,x_0)$。
 \EN{The Seifert--van Kampen theorem computes a fundamental group by decomposing a space into simpler overlapping pieces. If $U,V$ are open, $X=U\cup V$, the sets $U,V,U\cap V$ are path-connected, and the basepoint lies in the intersection, then $\pi_1(X,x_0)$ is the free product $\pi_1(U,x_0)*\pi_1(V,x_0)$ with loops from the intersection identified through the two inclusion maps. Equivalently, one quotients by the normal subgroup generated by $i_{U*}(g)i_{V*}(g)^{-1}$ for loops $g$ in the intersection.}
@@ -182,6 +381,35 @@ H_k(K;\mathbb Z)=Z_k/B_k=\ker\partial_k/\operatorname{im}\partial_{k+1}.
 \EN{The torus has a cell structure with one vertex, two edges $a,b$, and one two-dimensional face. Its one-dimensional skeleton is a wedge of two circles, with free fundamental group $F(a,b)$. The boundary of the face is the word $aba^{-1}b^{-1}$. Attaching the face makes this word trivial, giving the displayed presentation. The relation says that $a$ and $b$ commute, so the group is $\mathbb Z^2$.}
 \noindent 应用 van Kampen 时，不能只看图就猜关系式；必须给出满足定理条件的开集分解或等价的细胞粘合论证。基本群不同构足以说明空间不同伦等价，因而不同胚；基本群同构则通常不能反推出空间同胚。
 \EN{To use van Kampen, a diagram alone is not enough: one must provide an open-set decomposition satisfying the theorem or an equivalent cell-attachment argument. Nonisomorphic fundamental groups show that spaces are not homotopy equivalent and hence not homeomorphic. Isomorphic fundamental groups usually do not imply that spaces are homeomorphic.}
+
+\subsection{基本群的计算例子与乘积公式 | Worked examples and the product formula}
+\noindent 基本群与同调一样是函子：同胚诱导同构，同伦等价也诱导同构；若 $A$ 是 $X$ 的形变收缩核，则包含映射诱导 $\pi_1(A)\cong\pi_1(X)$（Croom 定理 4.8）。这套性质使很多空间不必重新算闭路，只要找到同伦等价即可。两个空间的积有简单公式：
+\FORMULA{乘积空间的基本群}{the fundamental group of a product}
+\[
+\pi_1(X\times Y,(x_0,y_0))\cong\pi_1(X,x_0)\times\pi_1(Y,y_0).
+\]
+投影 $X\times Y\to X$、$X\times Y\to Y$ 给出同态的两个分量，反方向由 $(x,y)$ 型闭路的两个分量拼接得到。于是 $T^2=S^1\times S^1$ 有 $\pi_1\cong\mathbb Z^2$，$n$ 维环面 $T^n$ 有 $\pi_1\cong\mathbb Z^n$，柱面 $S^1\times[0,1]$ 有 $\pi_1\cong\mathbb Z$。
+\EN{The fundamental group is functorial: homeomorphisms and homotopy equivalences induce isomorphisms, and a deformation retract has the same fundamental group as the ambient space (Croom Theorem 4.8). Products have the displayed product formula, obtained from the two projections and by assembling component loops. Thus $T^2=S^1\times S^1$ has $\pi_1\cong\mathbb Z^2$, the $n$-torus has $\mathbb Z^n$, and the cylinder $S^1\times[0,1]$ has $\mathbb Z$.}
+
+\noindent\textbf{可缩空间与形变收缩。} 可缩空间（例如 $\mathbb R^n$、闭球 $B^n$、星形域）的基本群平凡。平面挖去一点 $\mathbb R^2\setminus\{p\}$ 形变收缩到以 $p$ 为圆心的圆周，所以 $\pi_1\cong\mathbb Z$，正对应“绕 $p$ 点的次数”；圆环（annulus）同样形变收缩到 $S^1$，$\pi_1\cong\mathbb Z$。这说明“有没有洞”在基本群里体现为绕洞的整数。
+\EN{Contractible spaces such as $\mathbb R^n$, balls and star-shaped domains have trivial fundamental group. The punctured plane $\mathbb R^2\setminus\{p\}$ deformation retracts to a circle around $p$, so its fundamental group is $\mathbb Z$, exactly the winding number about $p$; the annulus also retracts to $S^1$. A hole is thus recorded as an integer winding direction.}
+
+\noindent\textbf{球面与楔和。} 对 $n\ge2$，球面 $S^n$ 单连通：取两个开集 $U=S^n\setminus\{N\}$、$V=S^n\setminus\{S\}$，它们都同胚于 $\mathbb R^n$ 可缩，交集 $U\cap V\simeq S^{n-1}$ 路径连通，由 van Kampen 得 $\pi_1(S^n)=0$（$n\ge2$）。$k$ 个圆周的一点楔和的基本群是秩 $k$ 的自由群 $F_k$：一维骨架上的每条边给出生成元，树的部分给出可缩掉的冗余，二维面才引入关系。这个“边生成、面给关系”的规则是胞腔粘合计算基本群的标准模板。
+\EN{For $n\ge2$, $S^n$ is simply connected: with $U=S^n\setminus\{N\}$ and $V=S^n\setminus\{S\}$, both are homeomorphic to $\mathbb R^n$ and contractible, while $U\cap V\simeq S^{n-1}$ is path connected; van Kampen gives $\pi_1(S^n)=0$. The wedge of $k$ circles has free fundamental group $F_k$ of rank $k$: the one-dimensional skeleton contributes generators, tree-like parts can be contracted, and two-cells contribute relations. This “edges generate, faces give relations” rule is the standard template for cell-attachment computations.}
+
+\noindent\textbf{常见曲面的基本群。} 用“一个顶点、若干边、一个面”的胞腔表示和边界词，可以直接写出：
+\FORMULA{常见曲面的基本群表示}{presentations of fundamental groups of familiar surfaces}
+\[
+\pi_1(T^2)=\langle a,b\mid aba^{-1}b^{-1}\rangle,\quad
+\pi_1(\mathbb R P^2)=\langle a\mid a^2\rangle,\quad
+\pi_1(\text{Klein})=\langle a,b\mid abab^{-1}\rangle,
+\]
+亏格 $g$ 的可定向闭曲面为 $\langle a_1,b_1,\ldots,a_g,b_g\mid\prod_{i=1}^g a_ib_ia_i^{-1}b_i^{-1}\rangle$，$k$ 个射影平面的连通和为 $\langle a_1,\ldots,a_k\mid a_1^2a_2^2\cdots a_k^2\rangle$。把每个关系交换化，得到的正是 $H_1$：例如 Klein 瓶给出 $\mathbb Z^2/(2,0)\cong\mathbb Z\oplus\mathbb Z/2$，与上一章的同调表一致。这种“基本群交换化 = $H_1$”的核对是考试中检查计算的好办法。
+\EN{For the standard one-vertex cell presentations, the boundary words give the displayed presentations of the torus, projective plane and Klein bottle. A closed orientable genus-$g$ surface has the product-of-commutators presentation, and a connected sum of $k$ projective planes has the product-of-squares presentation. Abelianizing the relations recovers $H_1$; for the Klein bottle this gives $\mathbb Z^2/(2,0)\cong\mathbb Z\oplus\mathbb Z/2$, matching the homology table. Checking that the abelianization equals $H_1$ is a good consistency test in an exam.}
+
+\EX{环面 $\pi_1=\langle a,b\mid aba^{-1}b^{-1}\rangle\cong\mathbb Z^2$，花束 $S^1\vee S^1$ 的 $\pi_1=F_2$ 非交换，但两者 $H_1$ 都是 $\mathbb Z^2$。这说明基本群保留了同调丢掉的交换次序信息：$ab\ne ba$ 在花束中成立，在环面中被关系 $aba^{-1}b^{-1}=1$ 杀掉。}{The torus has $\pi_1=\langle a,b\mid aba^{-1}b^{-1}\rangle\cong\mathbb Z^2$, while the wedge $S^1\vee S^1$ has nonabelian $\pi_1=F_2$; both have $H_1\cong\mathbb Z^2$. The fundamental group keeps the order information lost by homology: $ab\ne ba$ in the wedge, but the relation $aba^{-1}b^{-1}=1$ kills the difference on the torus.}
+
+\ASK{为什么 $\pi_1(S^2)=0$？}{Why is $\pi_1(S^2)$ trivial?}{把 $S^2$ 写成两个可缩开集之并（去掉南北极），交集同伦等价于 $S^1$ 且路径连通；van Kampen 定理中两边的基本群都平凡，故整体基本群平凡。}{Write $S^2$ as the union of two contractible open sets (complements of the north and south poles); the intersection is path connected and homotopy equivalent to $S^1$. Van Kampen applies with both pieces simply connected, so the whole group is trivial.}
 
 \subsection{基本群与第一同调 | The fundamental group and first homology}
 \noindent 对路径连通的空间，第一同调群是基本群的交换化：
@@ -232,5 +460,104 @@ p_n(z)=z^n.
 \noindent 每个底空间点恰有 $n$ 个原像，所以这是 $n$ 层覆盖；它在基本群上诱导 $k\mapsto nk$，像子群为 $n\mathbb Z$，指数为 $n$。绕底圆 $k$ 圈的闭路提升后闭合，当且仅当 $n$ 整除 $k$；因此 $n>1$ 时绕一圈的提升不闭合，而 $n=1$ 时每条闭路的提升都闭合。子群 $\{0\}$ 的指数无穷，对应普遍覆盖 $\mathbb R\to S^1$。这给出圆周全部连通覆盖的分类：有限层的圆周覆盖和实线普遍覆盖。
 \EN{Every point in the base circle has exactly $n$ preimages, so this is an $n$-sheeted cover. The induced map on fundamental groups is $k\mapsto nk$, whose image is $n\mathbb Z$ and whose index is $n$. A loop making $k$ turns has a closed lift exactly when $n$ divides $k$. Thus a single turn has a nonclosed lift when $n>1$, whereas every loop lifts to a closed loop when $n=1$. The trivial subgroup $\{0\}$ has infinite index and corresponds to the universal cover $\mathbb R\to S^1$. These are all connected covers of the circle: finite-sheeted circle covers and the universal cover by the real line.}
 \ASK{如何用覆盖空间读出圆周闭路的绕数？}{How can a covering space reveal the winding number of a loop in the circle?}{把闭路从实线覆盖中的指定点开始提升。若底圆绕 $k$ 圈，提升终点相对起点平移整数 $k$；因此终点位移就是绕数，提升闭合当且仅当 $k=0$。}{Lift the loop from a chosen point in the real-line cover. If it winds $k$ times around the base circle, its lift ends at the starting point translated by the integer $k$. This displacement is the winding number, and the lift closes exactly when $k=0$.}
+
+\subsection{覆盖变换、正则覆盖与普遍覆盖 | Deck transformations, regular covers, and universal covers}
+\noindent 设 $p:\widetilde X\to X$ 是覆盖，一个\textbf{覆盖变换}（或覆盖自同构）是同胚 $h:\widetilde X\to\widetilde X$ 满足 $p\circ h=p$。所有覆盖变换组成群 $\operatorname{Aut}(\widetilde X,p)$，它把每个纤维 $p^{-1}(x)$ 送到自身。对带基点的覆盖，设对应子群为 $H=p_*\pi_1(\widetilde X,\widetilde x_0)\le G=\pi_1(X,x_0)$，则
+\FORMULA{覆盖变换群与子群的正规化子}{the deck group and the normalizer of the subgroup}
+\[
+\operatorname{Aut}(\widetilde X,p)\cong N_G(H)/H,
+\qquad N_G(H)=\{g\in G:gHg^{-1}=H\}.
+\]
+当 $H$ 是正规子群时，$\operatorname{Aut}\cong G/H$ 在纤维上传递地作用，这样的覆盖称为\textbf{正则覆盖}（正规覆盖）；一般覆盖的覆盖变换群只是正规化子商群，不一定传递。
+\EN{A covering transformation (or deck automorphism) is a homeomorphism $h:\widetilde X\to\widetilde X$ with $p\circ h=p$. All such maps form the group $\operatorname{Aut}(\widetilde X,p)$, which preserves each fiber. If the based cover corresponds to $H\le G=\pi_1(X)$, then the deck group is isomorphic to $N_G(H)/H$, where $N_G(H)$ is the normalizer. When $H$ is normal the cover is regular, and the deck group $G/H$ acts transitively on each fiber.}
+
+\noindent 若 $\widetilde X$ 单连通（即 $H=\{1\}$），则覆盖称为\textbf{普遍覆盖}，此时 $\operatorname{Aut}(\widetilde X,p)\cong\pi_1(X,x_0)$：底空间的每个闭路都对应一个覆盖变换。普遍覆盖是“最强的覆盖”，它覆盖任何连通覆盖，并且在同构意义下唯一（若存在）。其存在性需要底空间连通、局部路径连通且半局部单连通；Croom 指出这组条件并非自动满足，有些病态空间没有普遍覆盖。
+\EN{If $\widetilde X$ is simply connected, the cover is the universal cover, and then $\operatorname{Aut}(\widetilde X,p)\cong\pi_1(X,x_0)$: every loop class in the base corresponds to a deck transformation. The universal cover is the strongest cover, covering every connected cover, and is unique up to isomorphism when it exists. Existence requires the base to be connected, locally path connected and semilocally simply connected; Croom notes that these hypotheses are not automatic, and some pathological spaces have no universal cover.}
+
+\EX{普遍覆盖的例子与覆盖变换群：（1）$p:\mathbb R\to S^1$，$p(t)=e^{2\pi it}$，覆盖变换是整数平移 $t\mapsto t+k$，群为 $\mathbb Z$，恰是 $\pi_1(S^1)$；（2）$p:\mathbb R^2\to T^2$ 为分量取指数，覆盖变换是整数平移格 $\mathbb Z^2$；（3）$p:S^2\to\mathbb R P^2$ 是对径点粘合，覆盖变换是恒等与对径映射，群 $\mathbb Z/2$，故 $\pi_1(\mathbb R P^2)\cong\mathbb Z/2$；（4）$S^1\vee S^1$ 的普遍覆盖是四价无限树，其覆盖变换群是两个圆周生成元作用的自由群 $F_2$，这正是自由群作用的 Cayley 图。}{Examples of universal covers and deck groups: (1) $p(t)=e^{2\pi it}$ from $\mathbb R$ to $S^1$ has deck group the integer translations $\mathbb Z$, which is $\pi_1(S^1)$; (2) the two-coordinate exponential $\mathbb R^2\to T^2$ has deck group $\mathbb Z^2$; (3) the antipodal quotient $S^2\to\mathbb R P^2$ has deck group $\mathbb Z/2$, giving $\pi_1(\mathbb R P^2)\cong\mathbb Z/2$; (4) the universal cover of $S^1\vee S^1$ is the infinite four-valent tree, on which the two generators act freely, and the deck group is the free group $F_2$ — the Cayley graph picture.}
+
+\noindent 由此得到计算基本群的第三种方法：\textbf{找普遍覆盖，读出覆盖变换群}。判断覆盖变换可以直接用“$p\circ h=p$”：它必须在每个纤维内部置换，而单连通性保证这种置换由一条闭路唯一决定。对有限层覆盖，层数等于子群指数，因此 $|\operatorname{Aut}|$ 不超过层数；正则时相等。
+\EN{This gives a third way to compute fundamental groups: find the universal cover and read off its deck group. A cover transformation satisfies $p\circ h=p$, so it permutes each fiber; simple connectivity of the total space ensures that the permutation is determined by a unique loop class. For an $n$-sheeted cover the number of sheets is the subgroup index, so the deck group has order at most $n$, with equality in the regular case.}
+
+\ASK{普遍覆盖与覆盖变换群有什么关系？}{How is the universal cover related to its deck group?}{普遍覆盖的总空间单连通，所以任意底空间闭路提升后决定一个覆盖变换；这个对应给出同构 $\operatorname{Aut}\cong\pi_1(X)$。于是基本群可以看作“重排普遍覆盖纤维的方式”。}{The total space of the universal cover is simply connected, so every loop class in the base determines a deck transformation. This gives an isomorphism $\operatorname{Aut}\cong\pi_1(X)$: the fundamental group is the group of ways of permuting the fibers of the universal cover.}
+
+\subsection{应用：非交换基本群与 Borsuk--Ulam 定理 | Applications: a nonabelian group and the Borsuk--Ulam theorem}
+\noindent 前面所有基本群的例子都是交换群。Croom 第 5 章用覆盖空间构造出一个非交换例子：令底空间 $B$ 为 $S^1\times S^1$ 中两个相切圆周的并 $B=\{(z,w):z=1\text{ 或 }w=1\}$，令总空间 $E=\{(x,y)\in\mathbb R^2:x\text{ 或 }y\text{ 是整数}\}$，映射 $p(x,y)=(e^{2\pi ix},e^{2\pi iy})$。$p$ 是覆盖投影：$E$ 是平面中由整格线组成的网格，每条网格线以不同方式绕对应圆周。
+\EN{All earlier fundamental-group examples were abelian. Croom's Chapter 5 constructs a nonabelian example using covering spaces: let $B=\{(z,w):z=1\text{ or }w=1\}$ be the union of two tangent circles in $S^1\times S^1$, let $E=\{(x,y)\in\mathbb R^2:x\text{ or }y\text{ is an integer}\}$, and let $p(x,y)=(e^{2\pi ix},e^{2\pi iy})$. This $p$ is a covering: $E$ is the grid of integer lines in the plane, and each grid line wraps around the corresponding circle.}
+
+\noindent 在 $E$ 中取绕单位方格一周的闭路 $\gamma$，它投影到底空间后是换位子 $[a,b]=aba^{-1}b^{-1}$，其中 $a,b$ 分别是左、右圆周的生成元。覆盖映射诱导的 $p_*$ 是单射，而 $[\gamma]$ 在 $\pi_1(E)$ 中非零（$E$ 的每个环都对应网格中的一条本质回路），所以 $[a,b]\ne1$，$\pi_1(B)$ 非交换。事实上可以进一步证明
+\FORMULA{两个相切圆周的基本群}{the fundamental group of two tangent circles}
+\[
+\pi_1(B)\cong F(a,b),
+\]
+即两个生成元的自由群。这是“基本群比同调更细”的最直接例子：$H_1(B)\cong\mathbb Z^2$ 是交换的，但 $\pi_1(B)$ 非交换。
+\EN{Take the loop in $E$ going once around a unit square. Its projection to $B$ is the commutator $[a,b]=aba^{-1}b^{-1}$, with $a,b$ the generators of the left and right circles. The covering map induces an injection on fundamental groups, and this loop class is nonzero in $\pi_1(E)$, so $[a,b]\ne1$ and $\pi_1(B)$ is nonabelian. In fact $\pi_1(B)$ is the free group $F(a,b)$. This is the clearest example that the fundamental group is finer than homology: $H_1(B)\cong\mathbb Z^2$ is abelian, while $\pi_1(B)$ is not.}
+
+\noindent\textbf{Borsuk--Ulam 定理。} 不存在连续映射 $f:S^n\to S^{n-1}$ 满足 $f(-x)=-f(x)$（称为奇映射或保对径映射），$n\ge1$。Croom 用覆盖空间证明 $n=2$ 的情形：若存在奇映射 $f:S^2\to S^1$，由于 $f$ 保对径，它诱导商空间之间的映射 $h:\mathbb R P^2\to\mathbb R P^1$。比较商映射 $S^2\to\mathbb R P^2$ 与 $S^1\to\mathbb R P^1$ 的覆盖结构，可知 $h$ 在基本群上必须平凡；另一方面，把 $S^2$ 中连接 $y_0$ 与 $-y_0$ 的路径投影到 $S^1$，得到一条非零的同伦类，推出 $h$ 在基本群上非平凡，矛盾。一般 $n$ 的证明需要同调或上同调工具。
+\EN{Borsuk--Ulam: for $n\ge1$ there is no continuous odd map $f:S^n\to S^{n-1}$ with $f(-x)=-f(x)$. Croom proves the case $n=2$ with covering spaces: an odd map would descend to $h:\mathbb R P^2\to\mathbb R P^1$ between the quotients. Comparing the two covering projections forces $h$ to be trivial on fundamental groups, but projecting a path from $y_0$ to $-y_0$ down to $S^1$ gives a nonzero class, making $h$ nontrivial — a contradiction. The general case needs homology or cohomology.}
+
+\noindent 常用的等价形式是：对任意连续映射 $g:S^n\to\mathbb R^n$，存在 $x$ 使 $g(x)=g(-x)$（对径点取同值）。取 $n=2$，令 $g(x)$ 表示点 $x$ 处的气温与气压，就得到经典结论：地球表面任意时刻存在一对对径点，其气温和气压分别相同。$n=1$ 时结论是圆周上存在一对对径点函数值相同，可用中值定理想象。这些结果展示了覆盖空间如何把“存在某对点”的连续性问题转化为基本群计算。
+\EN{An equivalent form: for every continuous $g:S^n\to\mathbb R^n$ there is $x$ with $g(x)=g(-x)$. Taking $n=2$ and letting $g(x)$ be the temperature and pressure at $x$ gives the classical statement that at any instant there is a pair of antipodal points on Earth with equal temperature and equal pressure. For $n=1$ the statement says a function on the circle takes equal values at an antipodal pair. These results show how covering spaces turn a continuous existence question into a fundamental-group computation.}
+
+\ASK{如何用覆盖空间证明两个相切圆周的基本群非交换？}{How do covering spaces show that two tangent circles have a nonabelian fundamental group?}{网格空间 $E$ 覆盖两个相切圆周，$E$ 中绕单位方格的闭路投影为换位子 $[a,b]$；$p_*$ 单射且该闭路在 $E$ 中非零，所以换位子在底空间中也非零，基本群非交换。}{The grid space $E$ covers the two tangent circles, and the loop around a unit square projects to the commutator $[a,b]$. Since $p_*$ is injective and the loop is nonzero in $E$, the commutator is nonzero in the base, so the fundamental group is nonabelian.}
+
+\section{应用与延伸 | Applications and outlook}
+\noindent\textbf{拓扑数据分析。} 点云数据先按距离阈值构造 Vietoris--Rips 或 Čech 复形，随阈值变化得到一列复形；同调群随参数变化的“持续”结构就是持久同调，它用条形码记录哪些洞在多大尺度上出现和消失。Betti 数在这里是“数据形状”的稳健摘要，比单个 Euler 特征更有信息。
+\EN{Topological data analysis builds Vietoris--Rips or Čech complexes from a point cloud as a distance threshold varies. The homology groups of this filtration give persistent homology, recorded by barcodes that show at which scales holes appear and disappear. Betti numbers become robust summaries of data shape, richer than a single Euler characteristic.}
+
+\noindent\textbf{机器人运动规划与构型空间。} 多机器人系统的构型空间常有洞或扭转，能否无碰撞地从一种构型连续移动到另一种，取决于该空间的路径连通性乃至基本群。例如两个质点在圆周上互相避开时，构型空间的基本群为 $\mathbb Z$，说明“绕行一圈”与“直接交换”属于不同的运动类。
+\EN{Configuration spaces of multi-robot systems often have holes or twists. Whether one configuration can be continuously moved to another without collision depends on path connectivity and even on the fundamental group. For two points avoiding each other on a circle, the configuration space has fundamental group $\mathbb Z$, so going around once and exchanging positions are different motion classes.}
+
+\noindent\textbf{物理中的拓扑缺陷。} 序参量取值在球面或更一般的空间上，绕缺陷的闭路给出基本群元素，不同元素对应不同守恒的拓扑荷；同调与度则用于刻画涡旋、Skyrmion 和连续介质的缺陷分类。Brouwer 度在守恒律与场论中就是以体积分形式出现的拓扑荷。
+\EN{Order parameters take values in spheres or more general spaces. Loops around a defect give elements of the fundamental group, and distinct elements correspond to distinct conserved topological charges; homology and degree classify vortices, skyrmions and defects in continua. The Brouwer degree appears as a topological charge written as a volume integral.}
+
+\noindent\textbf{游戏、经济与公平分配。} Brouwer 不动点定理是博弈论中 Nash 均衡存在性证明的基础；Borsuk--Ulam 定理推出火腿三明治定理与项链分割等公平分配结果。这些“存在性”结论正是拓扑不变量最实用的地方：不需要构造解，也能保证解存在。
+\EN{Brouwer's fixed point theorem underlies existence proofs of Nash equilibria in game theory, while Borsuk--Ulam yields the ham sandwich theorem and fair-division results such as necklace splitting. Such existence conclusions are among the most practical uses of topological invariants: a solution is guaranteed without constructing it.}
+
+\noindent\textbf{与后续课程的关系。} 本讲义停在 Croom 第 5 章。第 6 章的高阶同伦群 $\pi_n$ 把基本群推广到高维，第 7 章引入奇异同调、相对同调、Lefschetz 不动点定理与同调公理。APS 面试若被问到“接下来学什么”，可以按“高阶同伦群→奇异同调→同调代数/谱序列”这条线回答，并说明本课程已经建立了“复形→链复形→同调→不变量”的基本套路。
+\EN{This booklet stops at Croom's Chapter 5. Chapter 6 extends the fundamental group to higher homotopy groups, and Chapter 7 develops singular and relative homology, the Lefschetz fixed point theorem and homology axioms. If asked what comes next, mention higher homotopy groups, singular homology, and then homological algebra and spectral sequences, noting that the course has already built the pattern complex to chain complex to homology to invariant.}
+
+\section*{口试作答框架 | Oral-answer framework}
+\noindent 介绍同调计算时按固定五步说：\textbf{(1) 复形与定向}（列出单形、选定次序和符号）；\textbf{(2) 边界矩阵}（写出 $\partial_k$）；\textbf{(3) 秩与不变因子}（行变换、Smith 标准形）；\textbf{(4) 同调群}（$H_k=Z_k/B_k$，报告自由部分与挠部分）；\textbf{(5) 交叉检查}（Euler 特征、连通性、已知特例）。介绍基本群时按“闭路与同伦—群运算—计算工具（覆盖空间或 van Kampen）—与 $H_1$ 的关系”展开。介绍覆盖空间时按“局部同胚—提升性质—子群对应—普遍覆盖与覆盖变换”展开。
+\EN{For a homology computation, follow five steps: complex and orientations; boundary matrices; ranks and invariant factors via Smith normal form; the homology groups with free and torsion parts; and cross-checks by Euler characteristic, connectivity and known examples. For the fundamental group, present loops and homotopy, the group operation, a computation tool (covering spaces or van Kampen), and the relation to $H_1$. For covering spaces, present local triviality, lifting properties, the subgroup correspondence, and universal covers with deck transformations.}
+
+\section*{术语与记号对照 | Glossary and notation}
+\begin{center}
+\small
+\begin{tabular}{p{0.18\linewidth}p{0.26\linewidth}p{0.18\linewidth}p{0.26\linewidth}}
+中文 & English & 中文 & English\\
+单形 & simplex & 复形 & complex\\
+三角剖分 & triangulation & 定向 & orientation\\
+链群 & chain group & 边界算子 & boundary map\\
+圈 & cycle & 边界 & boundary\\
+同调群 & homology group & Betti 数 & Betti number\\
+挠子群 & torsion subgroup & Smith 标准形 & Smith normal form\\
+单纯逼近 & simplicial approximation & 重心细分 & barycentric subdivision\\
+诱导同态 & induced homomorphism & 链同伦 & chain homotopy\\
+度 & degree & 不动点 & fixed point\\
+收缩 & retraction & 不变性 & invariance\\
+基本群 & fundamental group & 换位子 & commutator\\
+覆盖空间 & covering space & 覆盖变换 & deck transformation\\
+路径提升 & path lifting & 普遍覆盖 & universal cover\\
+伪流形 & pseudomanifold & Euler 特征 & Euler characteristic\\
+自由群 & free group & 生成元与关系 & generators and relations\\
+\end{tabular}
+\end{center}
+
+\section*{来源与范围 | Sources and scope}
+主线和定理编号依据 Fred H. Croom, \emph{Basic Concepts of Algebraic Topology}（Springer, 1978）第 1--5 章：几何复形与多面体、单纯同调群、单纯逼近、基本群、覆盖空间。第 6 章（高阶同伦群）与第 7 章（奇异同调、Lefschetz 定理）不在本讲义范围，只在“应用与延伸”中提及。Croom 的书强调几何直观与经典证明，本讲义保留了这一取向，并补充了 Smith 标准形、极端例子、Borsuk--Ulam 与工程应用。若需更现代的体系，可对照 Hatcher 的 \emph{Algebraic Topology}（第 1--2 章对应基本群与同调）与 Munkres 的 \emph{Topology}（点集部分）。
+\EN{The main line and theorem numbering follow Chapters 1--5 of Fred H. Croom's \emph{Basic Concepts of Algebraic Topology} (Springer, 1978): geometric complexes and polyhedra, simplicial homology, simplicial approximation, the fundamental group, and covering spaces. Chapter 6 (higher homotopy groups) and Chapter 7 (singular homology and the Lefschetz theorem) are outside this booklet and only mentioned in the outlook. The notes keep Croom's geometric and classical style, adding Smith normal form, extreme examples, Borsuk--Ulam and engineering applications. For a more modern treatment, compare Chapter 1--2 of Hatcher's \emph{Algebraic Topology} and the point-set parts of Munkres' \emph{Topology}.}
+
+\begingroup
+\renewcommand{\refname}{参考文献 | References}
+\begin{thebibliography}{9}
+\bibitem{croom} Fred H. Croom. \emph{Basic Concepts of Algebraic Topology}. Undergraduate Texts in Mathematics. Springer-Verlag, New York, 1978.
+\bibitem{hatcher} Allen Hatcher. \emph{Algebraic Topology}. Cambridge University Press, 2002.
+\bibitem{munkres} James R. Munkres. \emph{Topology}, 2nd edition. Prentice Hall, 2000.
+\bibitem{massey} William S. Massey. \emph{Algebraic Topology: An Introduction}. Graduate Texts in Mathematics 56, Springer-Verlag, 1977.
+\end{thebibliography}
+\endgroup
+\noindent 以上文献只用于核对定义、定理陈述与术语；本讲义不声称与某页码逐条对应。课堂上若采用不同约定（例如链的系数、覆盖的“同构”是否要求保基点），口试时应说明所采用的约定。
+\EN{These references were used only to check definitions, theorem statements and terminology; no page-by-page correspondence is claimed. If the course uses different conventions, such as coefficients for chains or based versus unbased cover isomorphisms, state the convention being used.}
 
 \end{document}

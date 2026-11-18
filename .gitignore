@@ -1,0 +1,9 @@
+﻿# Build and editor artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+materials/*/build/
+materials/*/source.pdf
+$out/

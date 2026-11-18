@@ -1,7 +1,12 @@
 \documentclass[UTF8,11pt,a4paper]{ctexart}
-\usepackage{amsmath,amssymb,geometry,enumitem,hyperref}
+\usepackage{amsmath,amssymb,geometry,enumitem,booktabs,array,hyperref}
 \geometry{margin=2.1cm}
 \setlist{itemsep=2pt,topsep=3pt}
+\renewcommand{\arraystretch}{1.10}
+\setlength{\abovedisplayskip}{3pt}
+\setlength{\belowdisplayskip}{3pt}
+\setlength{\abovedisplayshortskip}{1pt}
+\setlength{\belowdisplayshortskip}{2pt}
 \hypersetup{colorlinks=true,linkcolor=blue}
 \pagestyle{plain}
 \newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
@@ -9,162 +14,559 @@
 \newcommand{\FORMULA}[2]{\par\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
 \newcommand{\EX}[2]{\par\noindent\textbf{例子 / Example.} #1\par\EN{#2}}
 \newcommand{\ASK}[4]{\par\noindent\textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent\textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
-\title{拓扑学 APS 面试准备\\[4pt]\large SEU《Topology》全书复习}
+\newcommand{\APS}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par\smallskip}
+\title{拓扑学 APS 面试准备\\[4pt]\large SEU《Topology》讲义双语精讲}
 \author{Topology: Bilingual Review}
 \date{}
-\newcommand{\APS}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par\smallskip}
 \begin{document}
 \maketitle
 
 \section*{课程概述 | Course overview}
-\APS{拓扑学先从度量、开球与有限维范数进入开集公理、基、闭包和边界，再用开集原像定义连续与同胚。之后学习子空间、积空间、分离性与可数性、连通和紧致，以及商拓扑。几何部分用多边形粘合研究曲面、用顶点边面计算 Euler 特征，再区分同胚、同伦等价和变形收缩，理解 CW 复形的逐层附着。贯穿课程的是：哪些性质只依赖开集结构，而不依赖所选的距离或图形画法。}{Topology begins with metrics, balls and finite-dimensional norms, then moves to the open-set axioms, bases, closure and boundary. Inverse images of open sets define continuity and homeomorphisms. Subspaces, products, separation, countability, connectedness, compactness and quotient topology follow. Polygon gluing describes surfaces; vertices, edges and faces yield Euler characteristic; homotopy equivalence, deformation retraction and cell attachments describe broader equivalences. The recurring question is which properties depend only on open-set structure rather than on a chosen distance or drawing.}
-\subsection*{例一：连续双射为何不够 | Why a continuous bijection is insufficient}
-\APS{映射 $f:[0,2\pi)\to S^1$，$f(t)=e^{it}$ 连续且双射，但不是同胚。圆上 $e^{i(2\pi-1/n)}\to1$，其逆像 $2\pi-1/n$ 却不趋于 $f^{-1}(1)=0$，所以逆映射不连续。若定义域改成紧空间，且目标为 Hausdorff，连续双射才自动同胚：闭子集紧，像紧而闭，故该双射是闭映射。这里的紧性和分离性各有具体作用。}{The map $f:[0,2\pi)\to S^1$, $f(t)=e^{it}$, is continuous and bijective but is not a homeomorphism. The points $e^{i(2\pi-1/n)}$ tend to one, while their inverse images do not tend to $f^{-1}(1)=0$. If the domain is compact and the codomain Hausdorff, a continuous bijection is a homeomorphism: closed subsets of the domain are compact, their images are compact and therefore closed, so the map is closed. Both assumptions have a role.}
-\subsection*{例二：商空间与 Euler 特征 | A quotient and its Euler characteristic}
-\APS{将正方形的两对对边分别同向粘合得到环面。四个角都变成一个顶点，两对边成为两条边，内部是一张二维面，所以 $V=1,E=2,F=1$，$\chi=1-2+1=0$。同一环面可以有不同三角剖分，但 Euler 特征不变；这给出可计算的拓扑不变量。闭连通可定向曲面的公式是 $\chi=2-2g$，于是环面的亏格为 $1$，这里必须说明可定向与闭曲面的假设。}{Identify opposite sides of a square with matching directions to obtain a torus. Its four corners become one vertex, the two edge pairs give two edges, and the interior is one face. Thus $\chi=V-E+F=1-2+1=0$. Different triangulations give the same Euler characteristic. For a closed connected orientable surface, $\chi=2-2g$, so the torus has genus one. The assumptions of closedness, connectedness and orientability belong to this formula.}
+\noindent 本讲义按 SEU《Topology》讲义的两章八节组织。第 1 章一般拓扑从度量空间出发，依次讨论有限维向量空间、拓扑与基、拓扑的比较、子空间/不交并/积、连通性、紧性、分离性与可数性。第 2 章转向商空间与几何拓扑：商拓扑、多边形粘合与曲面、曲面分类，以及同伦、CW 复形与 Euler 特征。贯穿全课的问题是：哪些性质只依赖开集结构，而不依赖某个具体的距离或画法？每个概念都配正例、反例，并说明定义中哪条条件不能删。
+\EN{This handout follows the two chapters and eight sections of the SEU Topology notes. Chapter 1 begins with metric spaces and proceeds through finite-dimensional vector spaces, topologies and bases, comparison of topologies, subspaces, disjoint unions and products, connectedness, compactness, and separation and countability. Chapter 2 turns to quotient spaces and geometric topology: the quotient topology, polygon gluing and surfaces, the classification of surfaces, and homotopy, CW complexes and Euler characteristic. The guiding question is which properties depend only on open sets rather than on a particular distance or drawing. Each concept comes with an example, a counterexample, and the hypothesis that cannot be dropped.}
 
+\subsection*{例一：连续双射为什么不一定同胚 | Why a continuous bijection need not be a homeomorphism}
+\noindent 令 $f:[0,2\pi)\to S^1$，$f(t)=e^{it}$。它连续且双射，但逆映射不连续：圆上的点 $e^{i(2\pi-1/n)}\to1$，而逆像 $2\pi-1/n$ 在 $\mathbb R$ 中趋于 $2\pi\ne0=f^{-1}(1)$。若定义域紧、陪域 Hausdorff，则连续双射自动同胚：闭子集紧，连续像紧，Hausdorff 空间中的紧集闭，所以 $f$ 是闭映射。去掉紧性，上例失败；去掉 Hausdorff，恒等映射从两点离散空间到同集合的平凡拓扑是连续双射但不同胚。
+\EN{Let $f:[0,2\pi)\to S^1$ be $f(t)=e^{it}$. It is continuous and bijective, but its inverse is not continuous: the points $e^{i(2\pi-1/n)}$ tend to one, while their preimages tend to $2\pi$ in $\mathbb R$, not to $f^{-1}(1)=0$. If the domain is compact and the codomain Hausdorff, a continuous bijection is automatically a homeomorphism: closed subsets are compact, continuous images of compact sets are compact, and compact subsets of a Hausdorff space are closed, so $f$ is a closed map. Without compactness the example fails; without Hausdorffness the identity from a two-point discrete space to the same set with the trivial topology is a continuous bijection but not a homeomorphism.}
 
-\section{第 1 章：一般拓扑 | Chapter 1: General topology}
-\subsection{度量空间 | Metric spaces}
-\noindent 度量 $d:X\times X\to[0,\infty)$ 满足非负性与分离性 $d(x,y)=0\Leftrightarrow x=y$、对称性以及三角不等式。开球 $B(x,r)=\{y\in X:d(x,y)<r\}$ 给出点 $x$ 附近半径为 $r$ 的邻域。由范数产生的距离 $d(x,y)=\|x-y\|$ 是常见来源；在 $\mathbb R^n$ 中，欧氏距离对应圆球，而 $\ell^\infty$ 距离对应边与坐标轴平行的方盒。
-\EN{A metric $d:X\times X\to[0,\infty)$ is nonnegative, separates distinct points, is symmetric, and satisfies the triangle inequality. The open ball $B(x,r)=\{y\in X:d(x,y)<r\}$ describes points within distance $r$ of $x$. A norm gives the metric $d(x,y)=\|x-y\|$. In $\mathbb R^n$, the Euclidean metric has round balls, while the $\ell^\infty$ metric has axis-parallel boxes.}
-\EX{在连通图的顶点集上，两点间最短路径的边数定义图距离；若每对不同顶点都有边相连，图距离就是离散度量 $d(x,y)=1$（$x\ne y$）。这说明同一集合可由不同距离结构描述。}{On the vertices of a connected graph, the length of a shortest edge path defines the graph metric. If every pair of distinct vertices is joined by an edge, this becomes the discrete metric $d(x,y)=1$ for $x\ne y$. Thus the same set can carry different metric structures.}
+\subsection*{例二：商空间与 Euler 特征 | A quotient space and its Euler characteristic}
+\noindent 把正方形的两对对边分别按同向粘合得到环面：四个角成为同一个顶点，两对边成为两条边，内部是一张面，所以 $V=1,E=2,F=1$，$\chi=V-E+F=0$。换一种三角剖分，$V,E,F$ 都会变，但交错和不变。紧连通可定向闭曲面满足 $\chi=2-2g$，故环面的亏格 $g=1$；这里“紧、连通、无边界、可定向”同时进入公式。Klein 瓶同样 $\chi=0$，却不可定向，对应 $k=2$ 个交叉帽。
+\EN{Identify the two pairs of opposite sides of a square with matching directions to get a torus: the four corners become one vertex, the two edge pairs give two edges, and the interior is one face, so $V=1$, $E=2$, $F=1$ and $\chi=V-E+F=0$. A different triangulation changes $V,E,F$ but not the alternating sum. A closed connected orientable surface satisfies $\chi=2-2g$, so the torus has genus one; the hypotheses compact, connected, boundaryless and orientable all enter the formula. The Klein bottle also has $\chi=0$ but is nonorientable and corresponds to $k=2$ crosscaps.}
+
+\section{一般拓扑 | General topology}
+
+\subsection{度量空间与基本拓扑概念 | Metric spaces and basic topological notions}
+\noindent\textbf{定义（度量空间）.} 集合 $X$ 上的度量是函数 $d:X\times X\to[0,\infty)$，满足：$d(x,y)=0\iff x=y$；$d(x,y)=d(y,x)$；$d(x,y)\le d(x,z)+d(z,y)$。开球 $B(x,r)=\{y:d(x,y)<r\}$，闭球为 $d(x,y)\le r$ 的点集。
+\EN{\textbf{Definition (metric space).} A metric on $X$ is a function $d:X\times X\to[0,\infty)$ with $d(x,y)=0$ if and only if $x=y$, symmetry $d(x,y)=d(y,x)$, and the triangle inequality $d(x,y)\le d(x,z)+d(z,y)$. The open ball is $B(x,r)=\{y:d(x,y)<r\}$, and the closed ball uses $d(x,y)\le r$.}
+
+\EX{$\mathbb R^N$ 上 $\|x\|_p=(|x_1|^p+\cdots+|x_N|^p)^{1/p}$（$1\le p<\infty$）与 $\|x\|_\infty=\max_i|x_i|$ 给出度量 $d(x,y)=\|x-y\|_p$：$p=2$ 是欧氏度量，开球是圆球；$p=\infty$ 的开球是边平行于坐标轴的方盒。连通图顶点上取最短边路径长度得到图度量；若任意两顶点相邻，它就是离散度量 $d(x,y)=1$（$x\ne y$），此时单点集恰为开球 $B(x,1/2)$。}{On $\mathbb R^N$ the norms $\|x\|_p=(|x_1|^p+\cdots+|x_N|^p)^{1/p}$ and $\|x\|_\infty=\max_i|x_i|$ give metrics $d(x,y)=\|x-y\|_p$: for $p=2$ the balls are round, for $p=\infty$ they are axis-parallel boxes. On the vertices of a connected graph the shortest edge-path length is the graph metric; if every two vertices are adjacent this is the discrete metric $d(x,y)=1$ for $x\ne y$, whose singleton sets are the open balls $B(x,1/2)$.}
+
+\noindent\textbf{由度量定义的开集与基本运算.} $U$ 开，若它是若干开球的并；等价地，每个 $x\in U$ 有 $\varepsilon>0$ 使 $B(x,\varepsilon)\subset U$（球中球引理：若 $y\in B(x,r)$，取 $\varepsilon=r-d(x,y)$ 即得 $B(y,\varepsilon)\subset B(x,r)$）。闭集是补集开集的集合。内部 $A^\circ$ 是含于 $A$ 的最大开集，闭包 $\overline A$ 是包含 $A$ 的最小闭集，边界 $\partial A=\overline A\setminus A^\circ$，导集 $A'$ 是 $A$ 的聚点之集。序列 $x_n\to x$ 指 $d(x_n,x)\to0$。
+\EN{\textbf{Open sets and the basic operations.} A set $U$ is open if it is a union of open balls; equivalently every $x\in U$ has $\varepsilon>0$ with $B(x,\varepsilon)\subset U$ (the ball-inside-ball lemma: if $y\in B(x,r)$ and $\varepsilon=r-d(x,y)$, then $B(y,\varepsilon)\subset B(x,r)$). Closed sets are complements of open sets. The interior $A^\circ$ is the largest open set inside $A$, the closure $\overline A$ is the smallest closed set containing $A$, the boundary is $\partial A=\overline A\setminus A^\circ$, and the derived set $A'$ consists of the limit points of $A$. A sequence converges, $x_n\to x$, when $d(x_n,x)\to0$.}
+
+\FORMULA{内部、闭包、边界与导集的关系}{interior, closure, boundary and derived set}
+\[
+A^\circ=X\setminus\overline{X\setminus A},\qquad
+\overline A=X\setminus(X\setminus A)^\circ,\qquad
+\partial A=\overline A\cap\overline{X\setminus A}=\overline A\setminus A^\circ,\qquad
+\overline A=A\cup A'.
+\]
+\READ{``The interior of A is the complement of the closure of the complement; the boundary is the intersection of the closures of A and its complement; the closure is A together with its derived set.''}
+\EN{The first two identities express the duality between interior and closure under complementation. The boundary consists of points whose every neighborhood meets both $A$ and its complement, and the closure adds the limit points to $A$. In particular $x\in\overline A$ exactly when every neighborhood of $x$ meets $A$, which in a metric space is equivalent to the existence of a sequence in $A$ converging to $x$. A set is dense when $\overline A=X$; both $\mathbb Q$ and its complement are dense in $\mathbb R$.}
+
+\noindent 例如 $A=(0,1]$ 的边界是 $\{0,1\}$：$0\notin A$ 但是聚点，$1\in A$ 但不是内点。$A=\{1/n\}$ 中每个点孤立，$0$ 是唯一聚点，所以 $A'=\{0\}$、$\overline A=A\cup\{0\}$。$\mathbb Q$ 的内部为空、闭包为 $\mathbb R$，故边界是整个 $\mathbb R$。Cantor 集闭且无内点，因此边界是自身，可见边界不一定是一条曲线。
+\EN{For $A=(0,1]$ the boundary is $\{0,1\}$: the point $0$ is a limit point outside $A$, while $1$ belongs to $A$ but is not interior. For $A=\{1/n\}$ every point is isolated and $0$ is the only limit point, so $A'=\{0\}$ and $\overline A=A\cup\{0\}$. The rationals have empty interior and closure $\mathbb R$, so their boundary is all of $\mathbb R$. The Cantor set is closed with empty interior, so its boundary is the whole set; a boundary need not look like a curve.}
+
+\noindent\textbf{有限与无限.} 内部和闭包只对有限交、有限并保持等式：
+\EN{\textbf{Finite versus infinite.} Interior and closure preserve identities only for finite intersections and unions:}
+\[
+\overline{A\cup B}=\overline A\cup\overline B,\qquad
+(A\cap B)^\circ=A^\circ\cap B^\circ,\qquad
+\bigcup_i\overline{A_i}\subseteq\overline{\bigcup_iA_i},\qquad
+\bigcap_iA_i^\circ\subseteq\Bigl(\bigcap_iA_i\Bigr)^\circ .
+\]
+\noindent 无限情形可以严格：$\bigcup_n\{1/n\}$ 不闭，其闭包多出 $0$；$\bigcap_n(-1/n,1/n)=\{0\}$ 的内部的空，而每个 $(-1/n,1/n)$ 都开。这正是拓扑公理取“任意并、有限交”的原因：开集要能由开球任意拼成，而“两个邻域的交是邻域”只对有限个正半径成立（取最小者）。取补得对偶结论：任意交闭、有限并闭，无限并闭不一定闭，例如 $\bigcup_{n\ge2}[1/n,1]=(0,1]$。
+\EN{The infinite cases can be strict: $\bigcup_n\{1/n\}=\{1/n\}$ is not closed, and its closure adds $0$; $\bigcap_n(-1/n,1/n)=\{0\}$ has empty interior although every $(-1/n,1/n)$ is open. This is exactly why the axioms allow arbitrary unions but only finite intersections: open sets are generated by unions of balls, while the intersection of neighborhoods is a neighborhood only for finitely many positive radii (take the minimum). Taking complements gives the dual statement: arbitrary intersections and finite unions of closed sets are closed, but an infinite union need not be, as $\bigcup_{n\ge2}[1/n,1]=(0,1]$ shows.}
+
+\noindent\textbf{有界性不是拓扑性质.} $\mathbb R$ 与 $(-1,1)$ 通过 $x\mapsto x/(1+|x|)$ 同胚，前者无界、后者有界。闭性、紧性、连通性由开集决定，才称为拓扑性质；这正是从度量空间过渡到拓扑空间的动机。在一般拓扑空间中序列不能刻画闭包与连续性（1.3、1.8 有反例），度量空间的好处是这些概念都能用 $\varepsilon$-$\delta$ 或序列描述。
+\EN{\textbf{Boundedness is not a topological property.} The line $\mathbb R$ and $(-1,1)$ are homeomorphic via $x\mapsto x/(1+|x|)$, yet one is unbounded and the other bounded. Closedness, compactness and connectedness are determined by open sets and are therefore topological. This motivates passing from metric spaces to topological spaces. In a general topological space sequences no longer detect closures and continuity (counterexamples in Sections 1.3 and 1.8); the advantage of metric spaces is that these notions are captured by epsilons, deltas and sequences.}
 
 \subsection{有限维向量空间 | Finite-dimensional vector spaces}
-\noindent 在有限维实向量空间上，选定一组基就把向量写成 $\mathbb R^n$ 中的坐标；任意线性映射因此由有限矩阵表示。有限维空间上的任意两个范数等价，也就是它们给出相同的收敛列、开集和紧集。这个结论依赖有限维性，在无限维空间中一般不成立。
-\EN{Choosing a basis identifies a finite-dimensional real vector space with $\mathbb R^n$, so every linear map is represented by a finite matrix. Any two norms on a finite-dimensional space are equivalent: they define the same convergent sequences, open sets, and compact sets. Finite dimensionality matters; this need not hold in infinite-dimensional spaces.}
-\FORMULA{$\mathbb R^n$ 上 $\ell^2$ 与 $\ell^\infty$ 范数的比较}{comparison of the $\ell^2$ and $\ell^\infty$ norms on $\mathbb R^n$}
+\noindent 有限维实向量空间选定基后同构于 $\mathbb R^N$，线性映射由矩阵表示。关键事实是 $\mathbb R^N$ 上任意两个范数等价，因此诱导的度量拓扑相同，$\mathbb R^N$ 有一个不依赖范数的标准拓扑。
+\EN{Choosing a basis identifies a finite-dimensional real vector space with $\mathbb R^N$, and linear maps become matrices. The key fact is that any two norms on $\mathbb R^N$ are equivalent and induce the same metric topology, so $\mathbb R^N$ has a standard topology independent of the norm.}
+
+\noindent\textbf{定理（范数等价）.} 对 $\mathbb R^N$ 上任意范数 $\|\cdot\|_1,\|\cdot\|_2$，存在 $C\ge1$ 使 $C^{-1}\|x\|_1\le\|x\|_2\le C\|x\|_1$。证明思路：取 $\|\cdot\|_1=\|\cdot\|_\infty$，单位球面 $S=\{\|x\|_\infty=1\}$ 闭且有界故紧，$x\mapsto\|x\|_2$ 在 $S$ 上连续且不为零，取得正的最小值 $m$ 与最大值 $M$；把 $x/\|x\|_\infty$ 代入即得结论。
+\EN{\textbf{Theorem (equivalence of norms).} For any two norms on $\mathbb R^N$ there is $C\ge1$ with $C^{-1}\|x\|_1\le\|x\|_2\le C\|x\|_1$. Proof idea: take $\|\cdot\|_1=\|\cdot\|_\infty$; the unit sphere $S=\{\|x\|_\infty=1\}$ is closed and bounded, hence compact, and the continuous nonzero function $x\mapsto\|x\|_2$ attains a positive minimum $m$ and maximum $M$ on $S$; applying this to $x/\|x\|_\infty$ gives the result.}
+
+\FORMULA{$\ell^2$ 与 $\ell^\infty$ 范数的比较}{comparison of the $\ell^2$ and $\ell^\infty$ norms}
 \[
-\|x\|_\infty\le \|x\|_2\le \sqrt n\,\|x\|_\infty.
+\|x\|_\infty\le\|x\|_2\le\sqrt N\,\|x\|_\infty .
 \]
-\READ{“The infinity norm of x is at most the two norm of x, which is at most the square root of n times the infinity norm of x.”}
-\EX{对 $x=(3,4)\in\mathbb R^2$，有 $\|x\|_2=5$、$\|x\|_\infty=4$，符合 $4\le5\le4\sqrt2$。因此在 $\mathbb R^2$ 中用圆形误差界或方形误差界描述收敛，得到同一套收敛列。}{For $x=(3,4)\in\mathbb R^2$, we have $\|x\|_2=5$ and $\|x\|_\infty=4$, so $4\le5\le4\sqrt2$. Consequently, circular and square error bounds describe the same convergence in $\mathbb R^2$.}
+\READ{``The infinity norm of x is at most the two norm of x, which is at most the square root of N times the infinity norm of x.''}
+\EN{The left inequality holds because each coordinate is bounded by the Euclidean norm; squaring the right one gives $\sum_i|x_i|^2\le N\max_i|x_i|^2$. Hence round and square error bounds define the same topology.}
 
-\subsection{拓扑与基 | Topologies and bases}
-\noindent 拓扑空间 $(X,\mathcal T)$ 直接指定开集族：$\varnothing,X\in\mathcal T$，任意多个开集的并仍开，有限个开集的交仍开。度量空间的开集由开球生成，但拓扑只保留开集结构，不保留具体距离。拓扑基 $\mathcal B$ 覆盖全空间，并满足局部细化条件：若 $x\in B_1\cap B_2$，存在 $B_3\in\mathcal B$ 使 $x\in B_3\subseteq B_1\cap B_2$；所有基元素的任意并构成生成的拓扑。开区间生成实数轴的通常拓扑。
-\EN{A topology $\mathcal T$ on $X$ contains $\varnothing$ and $X$, is closed under arbitrary unions, and is closed under finite intersections. The metric topology is generated by open balls, but a topology retains only open-set structure, not distances. A basis $\mathcal B$ covers $X$ and locally refines intersections: if $x\in B_1\cap B_2$, some $B_3\in\mathcal B$ satisfies $x\in B_3\subseteq B_1\cap B_2$. Arbitrary unions of basis elements form the generated topology; open intervals generate the usual topology on $\mathbb R$.}
-\noindent 闭集是补集开集的集合；内部 $A^\circ$ 是 $A$ 中最大的开集，闭包 $\overline A$ 是包含 $A$ 的最小闭集。边界有以下等价表达：
-\FORMULA{边界的两种等价表示}{two equivalent formulas for the boundary}
+\EX{对 $x=(3,4)\in\mathbb R^2$，$\|x\|_2=5$、$\|x\|_\infty=4$，确实 $4\le5\le4\sqrt2\approx5.657$，所以圆形与方形误差界描述同一套收敛列。}{For $x=(3,4)\in\mathbb R^2$, $\|x\|_2=5$ and $\|x\|_\infty=4$, and indeed $4\le5\le4\sqrt2\approx5.657$; circular and square error bounds describe the same convergent sequences.}
+
+\noindent 推论：(1) $\mathbb R^N$ 中 $x_n\to x$ 当且仅当每个坐标收敛；(2) 任意线性映射 $\mathbb R^N\to\mathbb R^M$ 连续；(3) 有限维线性子空间在任意范数下闭。无限维时都不再成立：Riesz 引理给出一列两两距离至少 $1/2$ 的单位向量，所以无限维赋范空间的闭单位球不紧；$\ell^2$ 的闭单位球就是一例。因此“闭且有界 $\Rightarrow$ 紧”是有限维或 $\mathbb R^N$ 的性质，不是紧性的定义。
+\EN{Consequences: (1) $x_n\to x$ in $\mathbb R^N$ exactly when every coordinate converges; (2) every linear map $\mathbb R^N\to\mathbb R^M$ is continuous; (3) every finite-dimensional linear subspace is closed under any norm. None survives in infinite dimension: Riesz's lemma produces unit vectors whose mutual distances are at least $1/2$, so the closed unit ball of an infinite-dimensional normed space is not compact, as for $\ell^2$. Thus ``closed and bounded implies compact'' is a finite-dimensional or Euclidean fact, not the definition of compactness.}
+
+\subsection{拓扑与基；连续性与同胚 | Topologies and bases; continuity and homeomorphisms}
+\noindent\textbf{定义（拓扑）.} 集合 $X$ 上的拓扑是子集族 $\mathcal T\subset\mathcal P(X)$，满足 $\varnothing,X\in\mathcal T$；任意并属于 $\mathcal T$；两个开集的交属于 $\mathcal T$。称 $(X,\mathcal T)$ 为拓扑空间，$\mathcal T$ 中集合为开集。
+\EN{\textbf{Definition (topology).} A topology on $X$ is a family $\mathcal T\subset\mathcal P(X)$ containing $\varnothing$ and $X$, closed under arbitrary unions and under intersections of two members. The pair $(X,\mathcal T)$ is a topological space and the members of $\mathcal T$ are its open sets.}
+
+\noindent 公理来自 1.1 的两条观察：“开集由局部开片任意拼成”要求任意并封闭；“两个邻域的交仍是邻域”只对有限个正半径成立，所以只要求有限交。下表列出最常用的拓扑。
+\EN{The axioms come from Section 1.1: gluing locally open pieces requires closure under arbitrary unions, while the intersection of neighborhoods is a neighborhood only for finitely many positive radii, so only finite intersections are required. The table lists the most frequently used topologies.}
+
+{\small
+\begin{center}
+\begin{tabular}{llp{7.2cm}}
+\toprule
+拓扑（中文） & English & 开集与典型性质\\
+\midrule
+平凡（密着） & trivial (indiscrete) & 只有 $\varnothing,X$；任何序列收敛到任何点，极限不唯一\\
+离散 & discrete & 所有子集；序列最终为常数；紧 $\iff$ 有限\\
+有限补（余有限） & cofinite & 非空开集是有限集的补；$T_1$ 非 Hausdorff；任意子集紧\\
+Sierpi\'nski & Sierpi\'nski & $X=\{a,b\}$，开集 $\varnothing,\{b\},\{a,b\}$；$T_0$ 非 $T_1$\\
+度量 & metric & 开球之并；$\mathbb R^N$ 的通常拓扑由任意范数给出\\
+序 / Sorgenfrey & order / Sorgenfrey & 开区间；半开区间 $[a,b)$ 给出严格细于通常拓扑的 Sorgenfrey 直线\\
+\bottomrule
+\end{tabular}
+\end{center}
+}
+
+\noindent 这些例子说明开集可以携带与距离无关的信息：有限补拓扑中开集来自“补集小”，序拓扑中来自“介于两点之间”。Zariski 拓扑（零点集作闭集）把有限补思想推广到高维，本课程只把有限补拓扑当反例。
+\EN{These examples show that open sets can encode information unrelated to distance: in the cofinite topology from ``small complements'', in the order topology from betweenness. The Zariski topology, whose closed sets are zero sets of polynomials, extends the cofinite idea to higher dimensions; this course uses only the cofinite topology as a counterexample.}
+
+\noindent\textbf{基本概念与序列的病态.} 与度量空间一样，闭集、邻域、闭包、内部、边界、稠密都用开集定义。两种病态必须记住：平凡拓扑中极限不唯一；可数补拓扑中收敛序列恰好是最终为常数的序列，所以每个集合都“序列闭”，但并非每个集合都闭。因此在一般拓扑空间中，序列不能代替开集语言。
+\EN{\textbf{Basic notions and pathological sequences.} As in metric spaces, closed sets, neighborhoods, closure, interior, boundary and density are defined using open sets only. Two pathologies matter: in the trivial topology limits are not unique, and in the countable complement topology the only convergent sequences are eventually constant, so every set is sequentially closed although not every set is closed. Hence sequences cannot replace open sets in a general topological space.}
+
+\noindent\textbf{基与子基.} 子集族 $\mathcal B$ 是拓扑基，若 (B1) 覆盖 $X$；(B2) 对 $B_1,B_2\in\mathcal B$ 与 $x\in B_1\cap B_2$，存在 $B_3\in\mathcal B$ 使 $x\in B_3\subset B_1\cap B_2$。由 $\mathcal B$ 生成的拓扑是基元素的任意并。子基是覆盖 $X$ 的任意族，其有限交构成基。
+\EN{\textbf{Bases and subbases.} A family $\mathcal B$ is a basis if (B1) it covers $X$ and (B2) for $B_1,B_2\in\mathcal B$ and $x\in B_1\cap B_2$ there is $B_3\in\mathcal B$ with $x\in B_3\subset B_1\cap B_2$. The generated topology consists of all unions of basis elements. A subbasis is any family covering $X$; its finite intersections form a basis.}
+
+\FORMULA{基生成的拓扑}{the topology generated by a basis}
 \[
-\partial A=\overline A\setminus A^\circ
-=\overline A\cap\overline{X\setminus A}.
+U\in\mathcal T_{\mathcal B}\iff \forall x\in U\ \exists B\in\mathcal B:x\in B\subset U .
 \]
-\READ{“The boundary of A is its closure minus its interior; equivalently, it is the intersection of the closures of A and its complement.”}
-\EN{The interior $A^\circ$ is the largest open subset of $A$, and the closure $\overline A$ is the smallest closed set containing $A$. A point is on the boundary when every neighborhood meets both $A$ and its complement.}
-\EX{在 $\mathbb R$ 中，$A=(0,1]$ 的内部是 $(0,1)$，闭包是 $[0,1]$，边界是 $\{0,1\}$。有理数 $\mathbb Q$ 的内部为空、闭包为 $\mathbb R$，所以边界是整个实数轴；有理数列也可以收敛到 $\sqrt2$，说明 $\mathbb Q$ 不闭。}{In $\mathbb R$, $(0,1]$ has interior $(0,1)$, closure $[0,1]$, and boundary $\{0,1\}$. The rationals have empty interior and closure $\mathbb R$, so their boundary is the whole real line. A sequence of rationals can converge to $\sqrt2$, so $\mathbb Q$ is not closed.}
-\noindent 度量空间中 $x_n\to x$ 表示 $d(x_n,x)\to0$；集合闭当且仅当它包含自身内所有收敛序列的极限。若 $\overline A=X$，则 $A$ 稠密。对无限族，闭包一般不与并集交换，只保证 $\bigcup_i\overline{A_i}\subseteq\overline{\bigcup_iA_i}$；对有限并才有等号。
-\EN{In a metric space, $x_n\to x$ means $d(x_n,x)\to0$. A set is closed exactly when it contains the limits of its convergent sequences. A set is dense if its closure is the whole space. For an infinite family, closure need not commute with unions; only $\bigcup_i\overline{A_i}\subseteq\overline{\bigcup_iA_i}$ is guaranteed. Equality holds for finite unions.}
-\subsection{分离性、可数性与可度量化 | Separation, countability, and metrizability}
-\noindent $T_1$ 要求单点集闭；Hausdorff（$T_2$）要求不同点有不相交邻域；正则性分离一点与不含它的闭集；正规性分离两个不交闭集。常见约定要求正则、正规空间同时满足 $T_1$。度量空间是 Hausdorff，故收敛序列极限唯一。第一可数表示每点有可数邻域基；第二可数表示全空间有可数基；可分表示存在可数稠密子集。第二可数蕴含第一可数和可分。
-\EN{$T_1$ means singleton sets are closed. Hausdorffness separates distinct points by disjoint neighborhoods. Regularity separates a point from a closed set not containing it, and normality separates disjoint closed sets. The usual convention includes $T_1$ in regularity and normality. Metric spaces are Hausdorff, so sequence limits are unique. First countability gives each point a countable neighborhood basis; second countability gives a countable basis for the whole space; separability means having a countable dense subset. Second countability implies both first countability and separability.}
-\noindent Urysohn 可度量化定理给出从拓扑性质恢复距离的充分条件：正则且第二可数的 $T_1$ 空间可度量化。它说明可数性与分离性不是形式上的附加条件，而能保证空间由某个度量描述；该结论是充分条件，不是“所有可度量空间都只能这样刻画”的说法。
-\EN{The Urysohn metrization theorem gives a sufficient condition for recovering a metric: every regular, second-countable $T_1$ space is metrizable. Countability and separation are therefore structural conditions that can ensure a topology comes from a metric. This is a sufficient criterion, not a claim that every metrizable space is characterized only this way.}
-\ASK{$T_1$ 与 Hausdorff 有什么区别？}{What is the difference between $T_1$ and Hausdorff?}{$T_1$ 只要求单点集闭；Hausdorff 要求不同点有不相交邻域，因此 Hausdorff 蕴含 $T_1$，反向不成立。无限集合上的有限补拓扑是反例。}{$T_1$ only requires singleton sets to be closed. Hausdorffness requires disjoint neighborhoods around distinct points, so Hausdorff implies $T_1$, but not conversely. The cofinite topology on an infinite set is a counterexample.}
+\READ{``A set is open in the topology generated by a basis exactly when every point of it lies in a basis element contained in the set.''}
+\EN{Two bases generate the same topology exactly when each basis element is locally refined by the other. A neighborhood basis is the local version: a family of neighborhoods of $x$ such that every neighborhood of $x$ contains one of them. In a metric space the balls of radius $1/n$ form a countable neighborhood basis at each point, which is first countability.}
 
+\EX{$\mathbb R$ 的通常拓扑由开区间生成，甚至只用有理端点的开区间也生成同一拓扑，从而给出可数基。$\mathbb R^2$ 中开圆盘、开方块、开矩形都生成通常拓扑：圆盘可塞进方块，方块也可塞进圆盘，两个基互相细化。积空间 $X\times Y$ 的基是 $\{U\times V\}$；无限乘积的基要求除有限多个坐标外其余坐标取全空间，这正是乘积拓扑与箱拓扑的区别（1.5）。}{The usual topology of $\mathbb R$ is generated by open intervals, and even by intervals with rational endpoints, which gives a countable basis. In $\mathbb R^2$ open disks, squares and rectangles all generate the usual topology: a disk fits in a square and a square in a disk, so the bases refine each other. The product $X\times Y$ has the basis $\{U\times V\}$; for infinite products a basis element allows only finitely many coordinates to be proper open sets, which is exactly the difference between the product and box topologies (Section 1.5).}
 
-\EX{在无限集合上，离散拓扑中每个子集都开；有限补拓扑中每个非空开集的补集有限。有限补拓扑是 $T_1$ 却非 Hausdorff，因为任意两个非空开集相交。}{On any set, every subset is open in the discrete topology. In the cofinite topology on an infinite set, every nonempty open set has finite complement. This topology is $T_1$ but not Hausdorff because any two nonempty open sets intersect.}
+\noindent\textbf{连续性.} 映射 $f:X\to Y$ 连续，若每个开集 $V\subset Y$ 的原像 $f^{-1}(V)$ 在 $X$ 中开；等价地，每个闭集的原像闭。只需对目标空间的一个基（甚至子基）检验；在度量空间中这等价于 $\varepsilon$-$\delta$ 定义。连续映射的复合连续，常值映射与包含映射连续。
+\EN{\textbf{Continuity.} A map $f:X\to Y$ is continuous if $f^{-1}(V)$ is open in $X$ for every open $V\subset Y$; equivalently, preimages of closed sets are closed. It suffices to check a basis, or even a subbasis, of the target; in metric spaces this is equivalent to the epsilon-delta definition. Compositions of continuous maps, constant maps and inclusions are continuous.}
 
-\subsection{连续性与同胚 | Continuity and homeomorphisms}
-\APS{映射 $f:X\to Y$ 连续，定义为每个 $Y$ 中开集 $U$ 的原像 $f^{-1}(U)$ 都在 $X$ 中开。核对目标的一个拓扑基即可，因为原像与并集相容。复合连续映射仍连续。同胚是双射且它和逆映射均连续；它表达开集结构完全相同。连续映射不必把开集映成开集，例如常值映射到实数轴；所以定义中使用原像。}{A map $f:X\to Y$ is continuous if the inverse image of every open subset of $Y$ is open in $X$. Checking a basis suffices since inverse images preserve unions. Compositions remain continuous. A homeomorphism is a bijection continuous in both directions and identifies the full open-set structure. Continuous maps need not send open sets to open sets, as a constant map into the real line shows; the definition uses inverse images.}
+\FORMULA{连续性的等价刻画}{equivalent formulations of continuity}
+\[
+f\text{ 连续}\iff
+\forall V\subset Y\text{ 开}:f^{-1}(V)\subset X\text{ 开}
+\iff
+\forall F\subset Y\text{ 闭}:f^{-1}(F)\subset X\text{ 闭}.
+\]
+\READ{``A map is continuous exactly when the preimage of every open set is open, equivalently when the preimage of every closed set is closed.''}
+\EN{The equivalence follows from $f^{-1}(Y\setminus F)=X\setminus f^{-1}(F)$: preimages commute with complements.}
+
+\noindent 为什么用原像而不用像？连续映射不必把开集映成开集：常值映射把开集映成单点，$x\mapsto x^2$ 把 $(-1,1)$ 映成 $[0,1)$。原像语言把目标中的开性拉回定义域，因而对复合、子空间、积、商都自然。把开集映成开集的映射称开映射，把闭集映成闭集的称闭映射；对一般映射互不蕴含，对双射等价。
+\EN{Why inverse images rather than images? A continuous map need not send open sets to open sets: a constant map sends an open set to a point, and $x\mapsto x^2$ sends $(-1,1)$ to $[0,1)$. The preimage language pulls openness in the target back to the source and behaves well under composition, subspaces, products and quotients. A map sending open sets to open sets is open, and one sending closed sets to closed sets is closed; for general maps neither property implies the other, while for bijections the two are equivalent.}
+
+\EX{常值映射 $f(x)=0$ 连续且闭（闭集的像是 $\varnothing$ 或 $\{0\}$），但不开：$(-1,1)$ 的像是 $\{0\}$。投影 $\pi_1:\mathbb R^2\to\mathbb R$ 连续且开，但非闭：闭集 $\{xy=1\}$ 的像是 $\mathbb R\setminus\{0\}$。$x\mapsto x^2:\mathbb R\to[0,\infty)$ 连续且闭，但非开。}{The constant map $f(x)=0$ is continuous and closed, since images of closed sets are empty or $\{0\}$, but not open: the image of $(-1,1)$ is $\{0\}$. The projection $\pi_1:\mathbb R^2\to\mathbb R$ is continuous and open but not closed: the image of the closed set $\{xy=1\}$ is $\mathbb R\setminus\{0\}$. The map $x\mapsto x^2:\mathbb R\to[0,\infty)$ is continuous and closed but not open.}
+
+\noindent\textbf{同胚与嵌入.} 双射 $f:X\to Y$ 若 $f$ 与 $f^{-1}$ 都连续，称为同胚，记 $X\cong Y$。同胚保持开闭集、闭包、内部、边界、紧性、连通性、分离性和可数性。连续单射 $f:X\to Y$ 若 $f:X\to f(X)$ 是同胚，称为嵌入，例如 $\mathbb R\to\mathbb R^2$、$S^1\to\mathbb R^2$。
+\EN{\textbf{Homeomorphisms and embeddings.} A bijection $f:X\to Y$ is a homeomorphism, written $X\cong Y$, when $f$ and $f^{-1}$ are continuous. Homeomorphisms preserve open and closed sets, closure, interior, boundary, compactness, connectedness, separation and countability. A continuous injection $f:X\to Y$ is an embedding when $f:X\to f(X)$ is a homeomorphism, for example $\mathbb R\to\mathbb R^2$ or $S^1\to\mathbb R^2$.}
+
+\noindent 双射连续且开（或连续且闭）即同胚，但连续双射本身未必同胚；反例 $f:[0,2\pi)\to S^1$，$f(t)=e^{it}$ 在 1.7 中给出完整分析（紧与 Hausdorff 两个条件各不可删）。商映射先用原像定义：满射 $q:X\to Y$ 是商映射，若 $V$ 开于 $Y$ 当且仅当 $q^{-1}(V)$ 开于 $X$；连续开满射与连续闭满射都是商映射。商空间的系统讨论在 2.1。
+\EN{A bijection that is continuous and open, or continuous and closed, is a homeomorphism, but a continuous bijection alone need not be one; the example $f:[0,2\pi)\to S^1$, $f(t)=e^{it}$, is analyzed in Section 1.7, where both compactness and Hausdorffness are shown to be indispensable. Quotient maps are defined by inverse images: a surjection $q:X\to Y$ is a quotient map when $V$ is open in $Y$ if and only if $q^{-1}(V)$ is open in $X$; continuous open surjections and continuous closed surjections are quotient maps. Quotient spaces are developed systematically in Section 2.1.}
 
 \subsection{拓扑的比较 | Comparison between topologies}
-\noindent 若同一集合上的拓扑满足 $\mathcal T_1\subseteq\mathcal T_2$，则 $\mathcal T_1$ 比 $\mathcal T_2$ 弱，因为它的开集较少；恒等映射 $(X,\mathcal T_2)\to(X,\mathcal T_1)$ 连续。若两个度量满足 $d_1(x,y)\le C d_2(x,y)$，则 $d_1$ 生成的拓扑不强于 $d_2$ 生成的拓扑。
-\EN{If two topologies on the same set satisfy $\mathcal T_1\subseteq\mathcal T_2$, then $\mathcal T_1$ is weaker because it has fewer open sets. The identity map $(X,\mathcal T_2)\to(X,\mathcal T_1)$ is continuous. If metrics satisfy $d_1(x,y)\le C d_2(x,y)$, the topology generated by $d_1$ is no stronger than the one generated by $d_2$.}
-\FORMULA{度量不等式推出拓扑比较}{a metric inequality implies a topology comparison}
-\[
-d_1(x,y)\le C d_2(x,y)\text{ for all }x,y\in X
-\quad\Longrightarrow\quad \mathcal T_{d_1}\subseteq\mathcal T_{d_2}.
-\]
-\READ{“If d one is at most C times d two for every pair of points, then the topology of d one is contained in the topology of d two.”}
-\EN{A Lipschitz bound for the identity map gives continuity from the $d_2$ topology to the $d_1$ topology, hence the stated inclusion of open sets.}
-\EX{在 $\mathbb R^n$ 中，$\|x\|_\infty\le\|x\|_2\le\sqrt n\|x\|_\infty$，故 $\ell^2$ 与 $\ell^\infty$ 度量生成同一拓扑；离散拓扑则严格强于通常拓扑。比较拓扑可直接判断恒等映射是否连续，也可判断两种距离是否给出相同的收敛概念。}{On $\mathbb R^n$, $\|x\|_\infty\le\|x\|_2\le\sqrt n\|x\|_\infty$, so the $\ell^2$ and $\ell^\infty$ metrics generate the same topology. The discrete topology is strictly stronger than the usual topology. Comparing topologies determines continuity of identity maps and whether two metrics define the same convergence.}
+\noindent 若同一集合上 $\mathcal T_1\subset\mathcal T_2$，称 $\mathcal T_1$ 比 $\mathcal T_2$ 弱，因为开集更少；离散拓扑最强，平凡拓扑最弱。比较拓扑可以把连续性统一表述：$f:X\to Y$ 连续当且仅当定义域拓扑强于拉回拓扑 $f^{-1}(\mathcal T_Y)=\{f^{-1}(V)\}$。特别地，恒等映射 $(X,\mathcal T_2)\to(X,\mathcal T_1)$ 连续当且仅当 $\mathcal T_1\subset\mathcal T_2$。
+\EN{If $\mathcal T_1\subset\mathcal T_2$ on the same set, then $\mathcal T_1$ is weaker, since it has fewer open sets; the discrete topology is strongest and the trivial one weakest. Comparison unifies continuity: $f:X\to Y$ is continuous if and only if the domain topology is stronger than the pullback topology $f^{-1}(\mathcal T_Y)=\{f^{-1}(V)\}$. In particular the identity $(X,\mathcal T_2)\to(X,\mathcal T_1)$ is continuous exactly when $\mathcal T_1\subset\mathcal T_2$.}
 
-\subsection{子空间、不交并与积空间 | Subspaces, disjoint unions, and products}
-\noindent 子空间 $Y\subseteq X$ 的开集形如 $Y\cap U$，其中 $U$ 在 $X$ 中开；不交并 $\coprod_i X_i$ 的集合由各 $X_i$ 分块组成，子集开当且仅当它与每个 $X_i$ 的交在 $X_i$ 中开；积空间的基由 $U\times V$ 组成。映射 $f:X\to Y$ 连续当且仅当目标开集的原像开，在度量空间中等价于 $\varepsilon$-$\delta$ 定义。
-\EN{A subset $Y\subseteq X$ has the subspace topology when its open sets are $Y\cap U$ for open $U\subseteq X$. In the disjoint union $\coprod_iX_i$, a set is open exactly when its intersection with each component is open there. The product topology has basis $U\times V$. A map is continuous exactly when inverse images of open sets are open; in metric spaces this is equivalent to the epsilon-delta definition.}
-\FORMULA{映入积空间的连续性判别}{the componentwise criterion for continuity into a product}
+\noindent 由此，积拓扑是使所有投影连续的最弱拓扑，子空间拓扑是包含映射的拉回拓扑，商拓扑是使商映射连续的最强拓扑（2.1）。两个拓扑的交仍是拓扑；它们的并（上确界）由并作为子基生成。
+\EN{Thus the product topology is the weakest topology making all projections continuous, the subspace topology is the pullback along the inclusion, and the quotient topology is the strongest topology making the quotient map continuous (Section 2.1). The intersection of two topologies is a topology, and their join is generated by the union as a subbasis.}
+
+\FORMULA{度量不等式推出拓扑包含}{a metric inequality implies a topology inclusion}
 \[
-f:Z\to X\times Y\text{ is continuous}\quad\Longleftrightarrow\quad
-\pi_X\circ f\text{ and }\pi_Y\circ f\text{ are continuous}.
+d_1(x,y)\le C\,d_2(x,y)\ \ \forall x,y
+\quad\Longrightarrow\quad
+\mathcal T_{d_1}\subset\mathcal T_{d_2}.
 \]
-\READ{“A map into a product is continuous if and only if each coordinate map is continuous.”}
-\EN{To check continuity into a product, it is enough and necessary to check each coordinate map.}
-\EX{$[0,1)$ 在子空间 $[0,1]$ 中开，因为 $[0,1)=[0,1]\cap(-1,1)$，但它在 $\mathbb R$ 中不开。曲线 $t\mapsto(\cos t,\sin t)$ 连续，可逐坐标验证。}{The set $[0,1)$ is open in the subspace $[0,1]$ because it equals $[0,1]\cap(-1,1)$, but it is not open in $\mathbb R$. The curve $t\mapsto(\cos t,\sin t)$ is continuous by checking its two coordinates.}
-\subsection{连通性 | Connectedness}
-\noindent 空间 $X$ 连通，若不能写成两个不交、非空、相对开集的并；等价地，既开又闭的子集只有 $\varnothing$ 与 $X$。连续像保持连通性，因此实数轴上的连通子集恰好是区间或单点，这给出介值定理的拓扑解释。路径连通要求任意两点可由连续路径 $\gamma:[0,1]\to X$ 连接；路径连通蕴含连通，反之一般不成立。
-\EN{A space is connected if it cannot be split into two disjoint nonempty relatively open sets; equivalently, its only clopen subsets are $\varnothing$ and $X$. Continuous images preserve connectedness. The connected subsets of the real line are intervals and singletons, which gives the topological form of the intermediate value theorem. A space is path-connected if each pair of points can be joined by a continuous path $[0,1]\to X$. Path-connectedness implies connectedness, but the converse can fail.}
-\EX{$[0,1]$ 路径连通；$(-1,0)\cup(0,1)$ 不连通。拓扑学家的正弦曲线闭包是连通但非路径连通的经典反例，说明连通性不等于“任意两点可沿路径相连”。}{The interval $[0,1]$ is path-connected, whereas $(-1,0)\cup(0,1)$ is disconnected. The closure of the topologist's sine curve is connected but not path-connected, showing that connectedness does not mean every pair of points can be joined by a path.}
-\ASK{为什么连续函数把区间映为区间？}{Why does a continuous function map an interval to an interval?}{区间连通，连续像仍连通，而实数轴上的连通子集是区间或单点。}{An interval is connected, continuous images preserve connectedness, and connected subsets of the real line are intervals or singletons.}
+\READ{``If d one is at most C times d two for every pair of points, then the topology of d one is contained in the topology of d two.''}
+\EN{If the inequality holds, every $d_1$-ball contains a smaller $d_2$-ball, so every $d_1$-open set is $d_2$-open; the inequality is Lipschitz continuity of the identity $(X,d_2)\to(X,d_1)$. With the reverse inequality the topologies coincide.}
+
+\EX{$\mathbb R^n$ 中 $\|x\|_\infty\le\|x\|_2\le\sqrt n\|x\|_\infty$，故 $\ell^2$ 与 $\ell^\infty$ 度量生成同一拓扑。离散拓扑严格强于通常拓扑：恒等映射从离散直线到通常直线连续，反向不连续，因为单点在通常拓扑中不开。在不可数集合上，有限补拓扑 $\subset$ 可数补拓扑 $\subset$ 离散拓扑，前两个包含严格。}{On $\mathbb R^n$ the inequalities $\|x\|_\infty\le\|x\|_2\le\sqrt n\|x\|_\infty$ show that the $\ell^2$ and $\ell^\infty$ metrics give the same topology. The discrete topology is strictly stronger than the usual one: the identity from the discrete line to the usual line is continuous, but not conversely, since singletons are not open in the usual topology. On an uncountable set the cofinite topology is strictly contained in the countable complement topology, which is strictly contained in the discrete topology.}
+
+\noindent 比较拓扑时要注意方向：加强定义域拓扑、减弱目标拓扑会使连续映射变多。紧性与 Hausdorff 性对拓扑的敏感方向相反：无限集合离散化会失去紧性，过度粗化会失去 Hausdorff 性。因此“最优拓扑”总是相对于目的：积拓扑为了坐标连续，商拓扑为了从商空间出发的映射连续，而同一集合上的紧 Hausdorff 拓扑几乎唯一（1.7 推论）。
+\EN{Direction matters when comparing topologies: strengthening the domain and weakening the target create more continuous maps. Compactness and Hausdorffness are sensitive in opposite directions: making an infinite set discrete destroys compactness, while making a topology too coarse destroys Hausdorffness. An optimal topology is therefore always relative to a purpose: the product topology for coordinate continuity, the quotient topology for maps out of a quotient, and compact Hausdorff topologies, which are almost unique (corollary in Section 1.7).}
+
+\subsection{子空间、不交并与积空间 | Subspaces, disjoint unions and products}
+\noindent\textbf{子空间.} 设 $Y\subset X$。子空间拓扑为 $\mathcal T_Y=\{U\cap Y:U\in\mathcal T_X\}$，它是使包含映射连续的最弱拓扑；闭集恰为 $C\cap Y$（$C$ 闭于 $X$）；若 $\mathcal B$ 是 $X$ 的基，则 $\{B\cap Y\}$ 是 $Y$ 的基；且 $(\mathcal T_Y)_Z=\mathcal T_Z$。度量的限制 $d|_Y$ 给出的拓扑恰是子空间拓扑。泛性质：$f:Z\to Y$ 连续当且仅当 $i\circ f:Z\to X$ 连续。
+\EN{\textbf{Subspaces.} For $Y\subset X$ the subspace topology is $\mathcal T_Y=\{U\cap Y:U\in\mathcal T_X\}$, the weakest topology making the inclusion continuous. Its closed sets are exactly the sets $C\cap Y$ with $C$ closed in $X$; if $\mathcal B$ is a basis of $X$, then $\{B\cap Y\}$ is a basis of $Y$; and $(\mathcal T_Y)_Z=\mathcal T_Z$ for $Z\subset Y$. The metric topology of $d|_Y$ is exactly the subspace topology. Universal property: $f:Z\to Y$ is continuous if and only if $i\circ f:Z\to X$ is continuous.}
+
+\EX{$[0,1)$ 在 $[0,1]$ 中开，因为 $[0,1)=[0,1]\cap(-1,1)$，但在 $\mathbb R$ 中不开，说明“开”必须相对于某个空间。$\mathbb Q$ 作为 $\mathbb R$ 的子空间，单点集闭但不 open。}{The set $[0,1)$ is open in the subspace $[0,1]$ because it equals $[0,1]\cap(-1,1)$, but not in $\mathbb R$; openness is always relative to a space. The rationals as a subspace of $\mathbb R$ have closed singletons that are not open.}
+
+\noindent\textbf{不交并.} 在 $\coprod_iX_i$ 上，$U$ 开当且仅当每个 $U\cap X_i$ 在 $X_i$ 中开。每个 $X_i$ 既开又闭，其子空间拓扑就是原来的拓扑。泛性质：$f:\coprod_iX_i\to Z$ 连续当且仅当每个限制连续。不交并紧当且仅当只有有限多个非空分支且每个分支紧；不交并连通当且仅当恰有一个非空分支。
+\EN{\textbf{Disjoint unions.} On $\coprod_iX_i$, a set $U$ is open exactly when every intersection $U\cap X_i$ is open in $X_i$. Each summand is both open and closed, and its subspace topology is the original one. Universal property: $f:\coprod_iX_i\to Z$ is continuous if and only if every restriction is continuous. A disjoint union is compact exactly when only finitely many summands are nonempty and each is compact, and connected exactly when exactly one summand is nonempty.}
+
+\noindent\textbf{有限积.} 乘积拓扑由基 $\{U_1\times\cdots\times U_n:U_i\text{ 开}\}$ 生成，等价地以 $\pi_i^{-1}(U_i)$ 为子基。投影连续且开；固定其余坐标的切片是同胚到其像。乘积拓扑是使所有投影连续的最弱拓扑。$\mathbb R^N$ 的乘积拓扑就是通常拓扑，所以开矩形与开圆盘生成同一拓扑。
+\EN{\textbf{Finite products.} The product topology is generated by the basis $\{U_1\times\cdots\times U_n:U_i\text{ open}\}$, equivalently by the subbasis $\pi_i^{-1}(U_i)$. Projections are continuous and open; a slice with all but one coordinate fixed is a homeomorphism onto its image. The product topology is the weakest topology making all projections continuous. The product topology on $\mathbb R^N$ is the usual one, which is why open rectangles and disks generate the same topology.}
+
+\FORMULA{映入积空间的连续判别}{the componentwise criterion for continuity into a product}
+\[
+f:Z\to X_1\times\cdots\times X_n\text{ 连续}
+\iff
+\pi_i\circ f:Z\to X_i\text{ 连续，}\ i=1,\dots,n .
+\]
+\READ{``A map into a finite product is continuous if and only if each coordinate map is continuous.''}
+\EN{The forward direction uses continuity of projections and compositions. Conversely, the preimage of a basic open set $U_1\times\cdots\times U_n$ is $\bigcap_i(\pi_i\circ f)^{-1}(U_i)$, a finite intersection of open sets. The universal property says that a map into a product is exactly a tuple of maps into the factors.}
+
+\noindent 有限积保持闭包与内部：$\overline{A\times B}=\overline A\times\overline B$、$(A\times B)^\circ=A^\circ\times B^\circ$；有限个 Hausdorff、连通、紧空间的积仍分别 Hausdorff、连通、紧。这些结论都要求“有限”，无限积要单独讨论。
+\EN{Finite products preserve closure and interior: $\overline{A\times B}=\overline A\times\overline B$ and $(A\times B)^\circ=A^\circ\times B^\circ$. Finite products of Hausdorff, connected or compact spaces are again Hausdorff, connected or compact. All of these use finiteness; infinite products require separate discussion.}
+
+\noindent\textbf{为什么是乘积拓扑而不是箱拓扑.} 对无限多个空间，箱拓扑以所有 $\prod_iU_i$（每个 $U_i$ 开）为基；乘积拓扑只允许除有限多个坐标外 $U_i=X_i$。有限乘积时二者相同，无限乘积时乘积拓扑严格更弱。选择乘积拓扑的理由有三条：
+\EN{\textbf{Why the product topology and not the box topology.} For infinitely many spaces, the box topology has as a basis all products $\prod_iU_i$ with every $U_i$ open, whereas the product topology requires $U_i=X_i$ for all but finitely many coordinates. They coincide for finite products, and the product topology is strictly weaker for infinite ones. The product topology is chosen for three reasons:}
+\begin{enumerate}[leftmargin=2em,label=(\arabic*)]
+\item 它是使所有投影连续的最弱拓扑，箱拓扑比它细，因而不再“最优”。
+\item 泛性质对箱拓扑失效：对角线映射 $f(t)=(t,t,\dots)$ 的分量都连续，但基本开集 $\prod_n(-1/n,1/n)$ 的原像是 $\{0\}$，在 $\mathbb R$ 中不 open。
+\item 紧性对箱拓扑失效：$[0,1]^{\mathbb N}$ 的箱拓扑含无限离散闭子集 $\{0,1\}^{\mathbb N}$，故不紧；乘积拓扑下由 Tychonoff 定理它紧。
+\end{enumerate}
+\EN{\begin{enumerate}[leftmargin=2em,label=(\arabic*)]
+\item It is the weakest topology making all projections continuous; the box topology is finer and therefore not optimal for this purpose.
+\item The universal property fails for the box topology: the diagonal map $f(t)=(t,t,\dots)$ from $\mathbb R$ to $\mathbb R^{\mathbb N}$ has continuous components, but $f^{-1}(\prod_n(-1/n,1/n))=\{0\}$ is not open in $\mathbb R$.
+\item Compactness fails for the box topology: $[0,1]^{\mathbb N}$ contains the infinite closed discrete subset $\{0,1\}^{\mathbb N}$ and is not compact; with the product topology Tychonoff's theorem makes it compact.
+\end{enumerate}}
+\noindent 因此 $\mathbb R^{\mathbb N}$ 的乘积拓扑正是“逐点收敛”的拓扑：一列函数收敛当且仅当每个坐标收敛；箱拓扑要求同时控制所有坐标，连对角线映射都不连续，几何与分析几乎总用乘积拓扑。
+\EN{Hence the product topology on $\mathbb R^{\mathbb N}$ is the topology of pointwise convergence: a sequence converges exactly when every coordinate converges. The box topology demands simultaneous control of all coordinates, and even the diagonal map fails to be continuous; geometry and analysis therefore use the product topology.}
+
+\subsection{连通性与路径连通 | Connectedness and path connectedness}
+\noindent\textbf{连通.} $X$ 不连通，若存在不交非空开集 $U,V$ 使 $X=U\cup V$（分离）；否则连通。等价地，$X$ 的 clopen 子集只有 $\varnothing$ 与 $X$。基本性质：连续像连通；有公共点的连通集之并连通；若 $E$ 连通且 $E\subset F\subset\overline E$，则 $F$ 连通。
+\EN{\textbf{Connectedness.} A space $X$ is disconnected if it is the union of disjoint nonempty open sets $U,V$ (a separation); otherwise it is connected. Equivalently, the only clopen subsets are $\varnothing$ and $X$. Basic properties: continuous images are connected; the union of connected sets with a common point is connected; if $E$ is connected and $E\subset F\subset\overline E$, then $F$ is connected.}
+
+\FORMULA{连续像与闭包保持连通}{continuous images and closures preserve connectedness}
+\[
+E\text{ 连通},\ f\text{ 连续}\ \Longrightarrow\ f(E)\text{ 连通};\qquad
+E\text{ 连通}\ \Longrightarrow\ \overline E\text{ 连通}.
+\]
+\READ{``The continuous image of a connected set is connected, and the closure of a connected set is connected.''}
+\EN{A separation of $f(E)$ pulls back to a separation of $E$. A separation of $\overline E$ restricts to one of $E$, because $E$ meets both pieces whenever $\overline E$ does.}
+
+\EX{$[0,1]$ 连通，$(-1,0)\cup(0,1)$ 不连通；$\mathbb Q$ 不连通，因为小于 $\sqrt2$ 与大于 $\sqrt2$ 的有理数给出两个不交非空开集。}{The interval $[0,1]$ is connected and $(-1,0)\cup(0,1)$ is not; the rationals are disconnected, because rationals below $\sqrt2$ and above $\sqrt2$ give two disjoint nonempty open pieces.}
+
+\noindent\textbf{实数轴上的连通集.} $\mathbb R$ 连通，其子集连通当且仅当是区间。若 $E$ 不是区间，取 $a<b$ 在 $E$ 中、$c\in(a,b)$ 不在 $E$，则 $E\cap(-\infty,c)$ 与 $E\cap(c,+\infty)$ 分离 $E$；反之区间的任何分离都会与上确界性质矛盾。于是连续函数把连通集映成区间，这就是介值定理的拓扑形式。
+\EN{\textbf{Connected subsets of the line.} The line is connected and its connected subsets are exactly the intervals. If $E$ is not an interval, choose $a<b$ in $E$ and $c\in(a,b)$ outside $E$; then $E\cap(-\infty,c)$ and $E\cap(c,+\infty)$ separate $E$. Conversely a separation of an interval contradicts the least-upper-bound property. Hence a continuous function maps a connected set to an interval, the topological form of the intermediate value theorem.}
+
+\noindent\textbf{路径连通.} 若任意 $x,y$ 可由连续路径 $\gamma:[0,1]\to X$ 连接，称 $X$ 路径连通。路径连通蕴含连通：路径从分离的一边走到另一边会把 $[0,1]$ 分离。反向不成立。
+\EN{\textbf{Path connectedness.} A space is path connected if any two points can be joined by a continuous path $\gamma:[0,1]\to X$. Path connectedness implies connectedness: a path from one side of a separation to the other would separate $[0,1]$. The converse fails.}
+
+\EX{拓扑学家的正弦曲线：$S=\{(t,\sin(1/t)):0<t\le1/\pi\}$，$I=\{0\}\times[-1,1]$，$T=S\cup I=\overline S$。$S$ 是区间的连续像，故连通；闭包 $T$ 连通。但 $T$ 不路径连通：若路径从 $I$ 出发进入 $S$，令 $a=\max\gamma^{-1}(I)<1$，则 $t>a$ 时 $\gamma(t)=(x(t),\sin(1/x(t)))$ 且 $x(t)\to x(a)=0$，于是 $\sin(1/x(t))$ 无极限，与 $\gamma$ 在 $a$ 连续矛盾。}{The topologist's sine curve: let $S=\{(t,\sin(1/t)):0<t\le1/\pi\}$, $I=\{0\}\times[-1,1]$ and $T=S\cup I=\overline S$. The set $S$ is a continuous image of an interval and is connected, hence so is its closure $T$. But $T$ is not path connected: if a path starts in $I$ and enters $S$, let $a=\max\gamma^{-1}(I)<1$; for $t>a$ we have $\gamma(t)=(x(t),\sin(1/x(t)))$ with $x(t)\to x(a)=0$, so $\sin(1/x(t))$ has no limit, contradicting continuity at $a$.}
+
+\EX{梳子空间 $C=([0,1]\times\{0\})\cup(\{0\}\times[0,1])\cup\bigcup_{n\ge1}(\{1/n\}\times[0,1])$ 路径连通：任一点沿竖齿走到横轴，沿横轴到原点，再沿左齿上行。但 $C$ 在 $(0,1)$ 处不局部路径连通：半径 $1/2$ 的球内各竖齿上端是分离碎片，球内没有路径把它们连通。}{The comb space $C=([0,1]\times\{0\})\cup(\{0\}\times[0,1])\cup\bigcup_{n\ge1}(\{1/n\}\times[0,1])$ is path connected: any point moves down its tooth to the horizontal axis, along the axis to the origin, then up the left tooth. But $C$ is not locally path connected at $(0,1)$: inside the ball of radius $1/2$ the upper ends of the teeth are separate pieces and no path inside the ball joins them.}
+
+\noindent\textbf{分支与局部连通.} 定义 $x\sim y$ 当且仅当存在连通集同时含 $x,y$；等价类称连通分支，是极大的连通子集，且总是闭集。若 $X$ 局部连通（每点的每个邻域含连通邻域），则分支也是开集，从而是 clopen。$\mathbb Q$ 与 Cantor 集的分支都是单点（完全断开），但 Cantor 集不离散。
+\EN{\textbf{Components and local connectedness.} Define $x\sim y$ when some connected set contains both; the classes are the connected components, the maximal connected subsets, and they are always closed. If $X$ is locally connected (every neighborhood of every point contains a connected neighborhood), components are also open and hence clopen. The components of $\mathbb Q$ and of the Cantor set are singletons (both are totally disconnected), although the Cantor set is not discrete.}
+
+\noindent 类似地定义局部路径连通。若 $X$ 连通且局部路径连通，则 $X$ 路径连通：路径连通分支既开又闭，连通性迫使只有一个。圆、区间、圆盘、环面都局部路径连通，所以连通时必路径连通；正弦曲线失败正是因为在 $I$ 附近不局部连通。
+\EN{Local path connectedness is defined analogously. If $X$ is connected and locally path connected, then $X$ is path connected: the path components are clopen and connectedness forces a single one. Circles, intervals, disks and tori are locally path connected, so connected ones are path connected; the sine curve fails precisely because it is not locally connected near $I$.}
+
+\noindent 非空 $X,Y$ 的积连通当且仅当 $X,Y$ 都连通（证明用有公共点的“十字”连通集族）；于是 $S^1\times S^1$ 连通。连通空间的连续像连通，故连通空间的商空间连通，连通曲面的连通和也连通（2.3）。
+\EN{For nonempty $X,Y$, the product $X\times Y$ is connected if and only if both factors are connected; the proof uses a family of connected crosses with a common point. Hence $S^1\times S^1$ is connected. Continuous images of connected spaces are connected, so quotients of connected spaces and connected sums of connected surfaces are connected (Section 2.3).}
 
 \subsection{紧性 | Compactness}
-\noindent 紧性定义为每个开覆盖都存在有限子覆盖。度量空间中，紧性等价于序列紧性；在 $\mathbb R^n$ 中，Heine--Borel 定理说明紧集恰好是闭且有界的集合。“闭且有界”不是一般拓扑空间中的紧性定义。
-\EN{A space is compact if every open cover has a finite subcover. In metric spaces, compactness is equivalent to sequential compactness. The Heine--Borel theorem says that a subset of $\mathbb R^n$ is compact exactly when it is closed and bounded. Closed and bounded is not the general topological definition of compactness.}
-\EX{开区间 $(0,1)$ 的开覆盖 $\{(1/n,1):n\ge2\}$ 没有有限子覆盖，所以它不紧；$[0,1]$ 则紧。连续函数 $f(x)=1/(1+x^2)$ 在 $\mathbb R$ 上没有最小值，但在紧区间 $[0,1]$ 上取得最小值 $1/2$ 和最大值 $1$。}{The cover $\{(1/n,1):n\ge2\}$ of $(0,1)$ has no finite subcover, so $(0,1)$ is not compact, whereas $[0,1]$ is. The function $1/(1+x^2)$ has no minimum on $\mathbb R$, but it attains its minimum $1/2$ and maximum $1$ on the compact interval $[0,1]$.}
-\noindent 紧集的闭子集紧，连续像紧；Hausdorff 空间中的紧集闭。连续实值函数在非空紧空间上有界并取得最大、最小值；紧度量空间上的连续函数一致连续。有限个紧空间的积仍紧；任意个紧空间的积紧是 Tychonoff 定理，通常涉及选择公理。
-\EN{Closed subsets of compact spaces are compact, and continuous images of compact spaces are compact. Compact subsets of Hausdorff spaces are closed. A continuous real-valued function on a nonempty compact space is bounded and attains its extrema; continuous maps on compact metric spaces are uniformly continuous. Finite products of compact spaces are compact. The arbitrary-product result is Tychonoff's theorem and generally uses the axiom of choice.}
+\noindent\textbf{紧性.} $X$ 紧，若每个开覆盖都有有限子覆盖。子集 $E\subset X$ 紧指它作为子空间紧。等价地（有限交性质，FIP）：每个任意有限交非空的闭集族，其全体之交非空。
+\EN{\textbf{Compactness.} $X$ is compact if every open cover has a finite subcover; a subset $E\subset X$ is compact when it is compact as a subspace. Equivalently (the finite intersection property, FIP): every family of closed sets whose finite subfamilies have nonempty intersection has nonempty total intersection.}
 
-\subsection{紧空间到 Hausdorff 空间的连续双射 | Compact-to-Hausdorff bijections}
-\noindent 同胚是连续双射且逆映射连续的映射；它保留紧性、连通性等拓扑性质。连续双射未必是同胚；若定义域紧、陪域 Hausdorff，则连续双射自动为同胚，因为紧集的连续像紧，而 Hausdorff 空间中的紧集闭。
-\EN{A homeomorphism is a continuous bijection whose inverse is continuous; it preserves topological properties such as compactness and connectedness. A continuous bijection need not be a homeomorphism. If its domain is compact and its codomain is Hausdorff, it is a homeomorphism because compact sets map to compact sets and compact subsets of Hausdorff spaces are closed.}
-\EX{恒等映射从两点以上的离散空间到同一集合的平凡拓扑是连续双射，但逆映射不连续：离散空间中的单点是开集，其逆像在平凡拓扑中不是开集。}{The identity from a discrete space with at least two points to the same set with the indiscrete topology is a continuous bijection, but its inverse is not continuous: a singleton is open in the discrete space and not open in the indiscrete topology.}
+\FORMULA{有限交性质刻画紧性}{compactness via the finite intersection property}
+\[
+X\text{ 紧}\iff
+\forall\ \text{闭集族 }\{F_i\}:\ \Bigl(\forall J\text{ 有限},\ \bigcap_{j\in J}F_j\ne\varnothing\Bigr)
+\Longrightarrow\bigcap_iF_i\ne\varnothing .
+\]
+\READ{``A space is compact exactly when every family of closed sets with the finite intersection property has a nonempty intersection.''}
+\EN{The equivalence follows by taking complements: an open cover without a finite subcover corresponds to a family of closed sets with the finite intersection property and empty total intersection.}
 
+\EX{$[0,1]$ 紧：设 $\mathcal U$ 是开覆盖，令 $S=\{s:[0,s]\text{ 被 } \mathcal U\text{ 的有限多个成员覆盖}\}$，$t=\sup S$。取 $U_0\supset t$ 使 $[t-\varepsilon,t+\varepsilon]\subset U_0$；由上确界取 $s\in S$、$s>t-\varepsilon$，则 $[0,t+\varepsilon]$ 被有限覆盖，故 $t=1$。开区间 $(0,1)$ 不紧：覆盖 $\{(1/n,1)\}$ 无有限子覆盖。}{The interval $[0,1]$ is compact: let $S$ be the set of $s$ such that $[0,s]$ is covered by finitely many members of an open cover, and let $t=\sup S$. Choose a cover element $U_0$ containing $t$ with $[t-\varepsilon,t+\varepsilon]\subset U_0$; by the definition of supremum pick $s\in S$ with $s>t-\varepsilon$, so $[0,t+\varepsilon]$ is finitely covered and $t=1$. The open interval $(0,1)$ is not compact: the cover $\{(1/n,1)\}$ has no finite subcover.}
 
-\section{商空间与粘合 | Quotient spaces and gluing}
+\noindent 其他例子：有限集紧；有限补拓扑与平凡拓扑下任意集合紧；离散空间紧当且仅当有限。基本性质：紧空间的闭子集紧；有限多个紧集之并紧；紧集的连续像紧；有限多个紧空间之积紧。
+\EN{Other examples: finite sets are compact; every set is compact in the cofinite and trivial topologies; a discrete space is compact exactly when finite. Basic properties: closed subsets of compact spaces are compact; finite unions of compact sets are compact; continuous images of compact sets are compact; finite products of compact spaces are compact.}
+
+\noindent 性质 (4) 的证明用管引理：若 $Y$ 紧、$N\subset X\times Y$ 开且含竖片 $\{x_0\}\times Y$，则存在 $x_0$ 的邻域 $U$ 使 $U\times Y\subset N$。对每个 $y$ 取基本开集 $U_y\times V_y\subset N$，有限个 $V_y$ 覆盖 $Y$，令 $U=\bigcap U_y$ 即可。然后对 $X\times Y$ 的开覆盖，先用 $Y$ 的紧性覆盖每条竖片，再用管引理加粗，最后用 $X$ 的紧性取有限多个。
+\EN{Property (4) is proved with the tube lemma: if $Y$ is compact and an open $N\subset X\times Y$ contains the slice $\{x_0\}\times Y$, then some neighborhood $U$ of $x_0$ satisfies $U\times Y\subset N$. For each $y$ choose a basic $U_y\times V_y\subset N$; finitely many $V_y$ cover $Y$, and $U=\bigcap U_y$ works. Then cover each slice of an open cover of $X\times Y$ using compactness of $Y$, thicken by the tube lemma, and use compactness of $X$ to take finitely many such neighborhoods.}
+
+\noindent\textbf{Hausdorff 空间中的紧集.} 若 $X$ Hausdorff，则每个紧子集闭：给定紧 $K$ 与 $x\notin K$，对每个 $y\in K$ 取 $x,y$ 的不相交邻域 $U_y,V_y$，有限个 $V_y$ 覆盖 $K$，则 $\bigcap U_y$ 与 $K$ 不交。于是紧 Hausdorff 空间中紧与闭等价，且紧 Hausdorff 空间正规。
+\EN{\textbf{Compact sets in Hausdorff spaces.} If $X$ is Hausdorff, every compact subset is closed: given compact $K$ and $x\notin K$, choose disjoint neighborhoods $U_y$ of $x$ and $V_y$ of $y$ for each $y\in K$; finitely many $V_y$ cover $K$, and $\bigcap U_y$ is disjoint from $K$. Hence in a compact Hausdorff space compactness and closedness are equivalent, and every compact Hausdorff space is normal.}
+
+\FORMULA{紧集上的连续函数与一致连续}{extrema and uniform continuity on compact sets}
+\[
+E\text{ 紧},\ f:E\to\mathbb R\text{ 连续}
+\ \Longrightarrow\
+f\text{ 有界且取得最大值、最小值}.
+\]
+\READ{``A continuous real-valued function on a compact set is bounded and attains its maximum and minimum.''}
+\EN{The image $f(E)$ is compact in $\mathbb R$, hence closed and bounded, so it contains its supremum and infimum. In metric spaces a continuous map on a compact metric space is uniformly continuous: one $\delta$ works at all points.}
+
+\EX{$f(x)=1/(1+x^2)$ 在 $\mathbb R$ 上没有最小值，但在紧区间 $[0,1]$ 上取得最大值 $f(0)=1$ 与最小值 $f(1)=1/2$；在开区间 $(0,1)$ 上连续有界却取不到最小值 $1/2$，说明紧性不能换成有界性。}{The function $f(x)=1/(1+x^2)$ has no minimum on $\mathbb R$, but on the compact interval $[0,1]$ it attains its maximum $f(0)=1$ and minimum $f(1)=1/2$. On the open interval $(0,1)$ it is continuous and bounded but does not attain $1/2$, so compactness cannot be replaced by boundedness.}
+
+\noindent\textbf{度量空间中的等价刻画.} 对度量空间 $X$：$X$ 紧 $\iff$ 序列紧（每个序列有收敛子列）$\iff$ 完备且完全有界。$\mathbb R^N$ 中由 Heine--Borel 定理，$E$ 紧当且仅当 $E$ 闭且有界。紧性是拓扑性质，而完备性与完全有界依赖度量，这些等价只在度量空间中成立。
+\EN{\textbf{Characterizations in metric spaces.} For a metric space $X$: compactness is equivalent to sequential compactness (every sequence has a convergent subsequence) and to completeness plus total boundedness. In $\mathbb R^N$ the Heine--Borel theorem says that $E$ is compact exactly when it is closed and bounded. Compactness is topological, while completeness and total boundedness depend on the metric; these equivalences hold only in metric spaces.}
+
+\noindent\textbf{“闭且有界”不能当紧性用.} 反例：(1) 无限集合配离散度量，闭且有界但不紧；(2) $\mathbb Q\cap[0,1]$ 在 $\mathbb Q$ 中闭且有界，但一列有理数逼近 $\sqrt2/2$ 没有在 $\mathbb Q$ 中收敛的子列；(3) 无限维 $\ell^2$ 的闭单位球有界且闭但不紧（Riesz 引理）。
+\EN{\textbf{``Closed and bounded'' is not compactness.} Counterexamples: (1) an infinite set with the discrete metric is closed and bounded but not compact; (2) $\mathbb Q\cap[0,1]$ is closed and bounded in $\mathbb Q$, but a sequence of rationals approaching $\sqrt2/2$ has no subsequence converging in $\mathbb Q$; (3) the closed unit ball of infinite-dimensional $\ell^2$ is bounded and closed but not compact, by Riesz's lemma.}
+
+\noindent\textbf{一点紧化（简述）.} 若 $X$ 局部紧 Hausdorff，添一点 $\infty$ 并令开集为 $X$ 的开集以及 $\{\infty\}\cup(X\setminus K)$（$K$ 紧），得到紧 Hausdorff 的 $X^+=X\cup\{\infty\}$，$X$ 是其开稠密子空间。$\mathbb R^N$ 的一点紧化同胚于 $S^N$（球极投影）；2.1 将用它证明 $D^2/\partial D^2\cong S^2$。
+\EN{\textbf{One-point compactification (briefly).} If $X$ is locally compact Hausdorff, add a point $\infty$ and declare open the open sets of $X$ together with the sets $\{\infty\}\cup(X\setminus K)$ for compact $K$. The result $X^+=X\cup\{\infty\}$ is compact Hausdorff and contains $X$ as an open dense subspace. The one-point compactification of $\mathbb R^N$ is homeomorphic to $S^N$ via stereographic projection; Section 2.1 uses this to prove $D^2/\partial D^2\cong S^2$.}
+
+\noindent\textbf{紧 $+$ Hausdorff：连续双射必为同胚.} 设 $f:X\to Y$ 连续双射，$X$ 紧，$Y$ Hausdorff。取闭集 $F\subset X$，则 $F$ 紧，$f(F)$ 紧，而 Hausdorff 空间中紧集闭，所以 $f(F)$ 闭；故 $f$ 是闭双射，逆映射连续。两条件都不可删：去掉紧性，$[0,2\pi)\to S^1$，$t\mapsto e^{it}$ 是连续双射但非同胚；去掉 Hausdorff，$X=\{a,b\}$ 上恒等映射从离散拓扑到平凡拓扑连续双射（定义域有限故紧）但逆不连续。
+\EN{\textbf{Compact plus Hausdorff: a continuous bijection is a homeomorphism.} Let $f:X\to Y$ be a continuous bijection with $X$ compact and $Y$ Hausdorff. A closed $F\subset X$ is compact, so $f(F)$ is compact and hence closed in the Hausdorff space $Y$; thus $f$ is a closed bijection and its inverse is continuous. Neither hypothesis can be dropped: without compactness, $[0,2\pi)\to S^1$, $t\mapsto e^{it}$, is a continuous bijection but not a homeomorphism; without Hausdorffness, the identity from the discrete to the trivial topology on $X=\{a,b\}$ is a continuous bijection with compact (finite) domain whose inverse is discontinuous.}
+
+\noindent\textbf{推论.} 同一集合上两个可比较的紧 Hausdorff 拓扑必相等；更一般地，它们要么相等，要么不可比较。证明：若 $\mathcal T_1\subset\mathcal T_2$，则恒等映射 $(X,\mathcal T_2)\to(X,\mathcal T_1)$ 是紧到 Hausdorff 的连续双射，故为同胚，于是 $\mathcal T_1=\mathcal T_2$。
+\EN{\textbf{Corollary.} Two comparable compact Hausdorff topologies on the same set are equal; more generally, they are either equal or incomparable. Proof: if $\mathcal T_1\subset\mathcal T_2$, the identity $(X,\mathcal T_2)\to(X,\mathcal T_1)$ is a continuous bijection from a compact space to a Hausdorff space, hence a homeomorphism, so $\mathcal T_1=\mathcal T_2$.}
+
+\noindent\textbf{无限积：Tychonoff 定理.} 任意一族紧空间的乘积在乘积拓扑下紧，这就是 Tychonoff 定理；它对无限族成立，但证明需要选择公理（事实上与选择公理等价）。本课程只用有限积；无限积必须说明用乘积拓扑，箱拓扑下不成立（1.5）。
+\EN{\textbf{Infinite products: Tychonoff's theorem.} The product of any family of compact spaces is compact in the product topology. This is Tychonoff's theorem; it holds for infinite families but its proof uses the axiom of choice (indeed it is equivalent to it). This course uses only finite products; for infinite products one must specify the product topology, since the statement fails for the box topology (Section 1.5).}
+
+\subsection{分离性、可数性与可度量化 | Separation, countability and metrizability}
+\noindent 分离公理按强度排列如下。本讲义遵循 SEU 与 Munkres 第 4 章的约定：正则、正规空间同时要求 $T_1$（即 $T_3,T_4$ 含 $T_1$）。有些教材把 $T_1$ 单列，读到“正则但不含 $T_1$”时要先确认约定，否则命题真假会变。
+\EN{The separation axioms are listed below in increasing strength. This handout follows the convention of the SEU notes and Munkres Chapter 4: regular and normal spaces are required to be $T_1$ (so $T_3$ and $T_4$ include $T_1$). Some texts keep $T_1$ separate; when reading of a ``regular space without $T_1$'', check the convention first, since the truth of a statement can change.}
+
+{\footnotesize
+\begin{center}
+\begin{tabular}{p{0.8cm}p{2.3cm}p{7.7cm}p{3.6cm}}
+\toprule
+公理 & 名称 & 定义 & 典型反例（不满足该公理）\\
+\midrule
+$T_0$ & Kolmogorov & 任意两个不同点中，至少有一个开集只含其中一点 & 含两点以上的平凡拓扑\\
+$T_1$ & Fr\'echet & 任意单点集闭（等价地：任一点有邻域不含另一点） & Sierpi\'nski 空间\\
+$T_2$ & Hausdorff & 任意两个不同点有不相交邻域 & 无限集上的有限补拓扑\\
+$T_3$ & 正则 regular & $T_1$；点 $x$ 与不含 $x$ 的闭集可被不相交开集分离 & $\mathbb R_K$（实数轴 K-拓扑）\\
+$T_4$ & 正规 normal & $T_1$；两个不交闭集可被不相交开集分离 & Sorgenfrey 平面\\
+\bottomrule
+\end{tabular}
+\end{center}
+}
+\noindent 包含关系为 $T_4\Rightarrow T_3\Rightarrow T_2\Rightarrow T_1\Rightarrow T_0$，反向均不成立。度量空间满足全部五条（因而正规）；紧 Hausdorff 空间也正规。Sierpi\'nski 空间把开集与闭集单点的差别显示到最小；$\mathbb R_K$ 取 $(a,b)$ 与 $(a,b)\setminus K$（$K=\{1/n\}$）为基，Hausdorff 非正则；Sorgenfrey 直线的平方正则非正规。这些反例记住名字与结论即可，构造不必在面试中展开。
+\EN{The implications are $T_4\Rightarrow T_3\Rightarrow T_2\Rightarrow T_1\Rightarrow T_0$, and none of the reverse implications holds. Metric spaces satisfy all five axioms and are normal; compact Hausdorff spaces are normal too. The Sierpi\'nski space isolates the gap between open and closed singletons; $\mathbb R_K$ has the basis of intervals $(a,b)$ and $(a,b)\setminus K$ with $K=\{1/n\}$ and is Hausdorff but not regular; the square of the Sorgenfrey line is regular but not normal. For an oral exam it suffices to know the names and the conclusions; the full constructions need not be reproduced.}
+
+\noindent\textbf{Urysohn 引理与可度量化.} 可度量化问题是：一个拓扑何时来自某个度量？第一个基本答案是：若 $X$ 正规，$A,B$ 是不交闭集，则存在连续 $f:X\to[0,1]$ 使 $f|_A\equiv0$、$f|_B\equiv1$。证明思路：取 $[0,1]$ 中的二进制有理数 $p$ 作可数稠密集，用正规性归纳构造开集 $U_p$，使 $A\subset U_0$、$U_1=X\setminus B$ 且 $p<q$ 时 $\overline{U_p}\subset U_q$；令 $f(x)=\inf\{p:x\in U_p\}$。这是“沿可数层把两个闭集逐步分开”的典型构造。
+\EN{\textbf{Urysohn's lemma and metrizability.} The metrization problem asks when a topology comes from a metric. The first basic answer is: if $X$ is normal and $A,B$ are disjoint closed sets, there is a continuous $f:X\to[0,1]$ with $f\equiv0$ on $A$ and $f\equiv1$ on $B$. Proof idea: take the dyadic rationals $p$ in $[0,1]$ as a countable dense set and construct open sets $U_p$ inductively so that $A\subset U_0$, $U_1=X\setminus B$ and $\overline{U_p}\subset U_q$ whenever $p<q$; then set $f(x)=\inf\{p:x\in U_p\}$. This is the standard construction that separates two closed sets layer by layer along a countable set.}
+
+\noindent\textbf{定理（Urysohn 可度量化定理）.} 对拓扑空间 $X$，以下两条等价：(a) $X$ 可度量化且可分；(b) $X$ 第二可数且正则。因此正则第二可数空间（按含 $T_1$ 的约定）可度量化；反之可度量化且可分蕴含第二可数且正则。证明思路：由 (b) 推出正规，用 Urysohn 引理造出可数多个函数，把 $X$ 嵌入 Hilbert 立方体 $[0,1]^{\mathbb N}$（一致度量），再沿嵌入拉回度量。细节通常只要求记住结论以及“正则、第二可数、可度量化”三者的关系。
+\EN{\textbf{Theorem (Urysohn metrization theorem).} For a topological space $X$ the following are equivalent: (a) $X$ is metrizable and separable; (b) $X$ is second countable and regular. Hence a regular second-countable space (with the $T_1$ convention) is metrizable, and a metrizable separable space is second countable and regular. Proof idea: derive normality from (b), use Urysohn's lemma to produce countably many functions, embed $X$ into the Hilbert cube $[0,1]^{\mathbb N}$ with the uniform metric, and pull the metric back. In an oral exam it is enough to remember the statement and the relation between regular, second countable and metrizable.}
+
+\noindent\textbf{可数性条件.} 第一可数：每点有可数邻域基。第二可数：拓扑有可数基。可分：存在可数稠密子集。Lindel\"of：每个开覆盖有可数子覆盖。关系是：第二可数 $\Rightarrow$ 第一可数、可分、Lindel\"of；度量空间中第二可数 $\Leftrightarrow$ 可分 $\Leftrightarrow$ Lindel\"of。
+\EN{\textbf{Countability conditions.} First countable: every point has a countable neighborhood basis. Second countable: the topology has a countable basis. Separable: there is a countable dense subset. Lindel\"of: every open cover has a countable subcover. The relations are: second countable implies first countable, separable and Lindel\"of; in metric spaces second countable, separable and Lindel\"of are equivalent.}
+
+\noindent 可数性让序列重新可靠：Hausdorff 空间中极限唯一；第一可数空间中闭集、闭包、连续性都可用序列刻画；第二可数（加 $T_1$）空间中紧性与序列紧性等价。证明思路：第一可数时取递减邻域基 $U_1\supset U_2\supset\cdots$，从 $E\cap U_n$ 取点得收敛序列；第二可数空间的开覆盖有可数子覆盖，再用序列紧性排除“无有限子覆盖”。
+\EN{Countability makes sequences reliable again: limits are unique in Hausdorff spaces; in first-countable spaces closed sets, closures and continuity are characterized by sequences; in second-countable $T_1$ spaces compactness and sequential compactness are equivalent. Proof idea: in a first-countable space take a decreasing neighborhood basis $U_1\supset U_2\supset\cdots$ and pick points in $E\cap U_n$ to get a convergent sequence; in a second-countable space every open cover has a countable subcover, and sequential compactness rules out the absence of a finite subcover.}
+
+\noindent\textbf{典型反例.} 不可数离散空间第一可数但不可分、非 Lindel\"of、非第二可数；不可数集上的有限补与可数补拓扑都非第一可数，序列完全不能反映其闭包。Sorgenfrey 直线第一可数、可分、Lindel\"of、正规但非第二可数，故由 Urysohn 定理不可度量化；其平方正则非正规。这些例子说明各可数性条件与可度量化不能互相替代。
+\EN{\textbf{Standard counterexamples.} An uncountable discrete space is first countable but not separable, Lindel\"of or second countable; the cofinite and countable complement topologies on an uncountable set are not first countable, so sequences cannot detect their closures. The Sorgenfrey line is first countable, separable, Lindel\"of and normal but not second countable, hence not metrizable by Urysohn's theorem; its square is regular but not normal. These examples show that the countability conditions and metrizability cannot replace one another.}
+
+\section*{第 1 章口试问答 | Chapter 1: oral questions}
+\ASK{$T_1$ 与 Hausdorff 有什么区别？}{What is the difference between $T_1$ and Hausdorff?}{$T_1$ 只要求单点集闭，等价于任一点有邻域不含另一点；Hausdorff 要求两个不同点有不相交邻域，因此 Hausdorff 蕴含 $T_1$，反之不成立。无限集合上的有限补拓扑是 $T_1$ 非 Hausdorff 的标准反例：任意两个非空开集的补集都有限，所以它们必相交。}{$T_1$ only requires singleton sets to be closed, equivalently that each point has a neighborhood missing any other given point; Hausdorffness requires disjoint neighborhoods for two distinct points. Thus Hausdorff implies $T_1$ but not conversely. The cofinite topology on an infinite set is the standard counterexample: any two nonempty open sets have finite complements and therefore intersect.}
+
+\ASK{为什么紧性不能定义为“闭且有界”？}{Why is compactness not defined as being closed and bounded?}{闭且有界依赖所选度量，紧性是拓扑性质。无限集合的离散度量中每个集合闭且有界，但只有有限集紧；$\mathbb Q\cap[0,1]$ 在 $\mathbb Q$ 中闭且有界却不紧；无限维 $\ell^2$ 的闭单位球也不紧。“闭且有界 $\Leftrightarrow$ 紧”只是 $\mathbb R^N$ 的 Heine--Borel 定理。}{Closed and bounded depends on the chosen metric, whereas compactness is topological. In the discrete metric on an infinite set every subset is closed and bounded, but only finite sets are compact; $\mathbb Q\cap[0,1]$ is closed and bounded in $\mathbb Q$ but not compact; the closed unit ball of infinite-dimensional $\ell^2$ is not compact either. ``Closed and bounded if and only if compact'' is only the Heine--Borel theorem in $\mathbb R^N$.}
+
+\ASK{连通和路径连通有什么区别？}{What is the difference between connectedness and path connectedness?}{路径连通总蕴含连通，反之不成立。拓扑学家的正弦曲线连通但不路径连通：从竖线段走到图像上的路径会迫使 $\sin(1/x)$ 在 $0$ 处有极限，矛盾。空间连通且局部路径连通时两者等价。}{Path connectedness always implies connectedness, but not conversely. The topologist's sine curve is connected but not path connected: a path from the vertical segment into the graph would force $\sin(1/x)$ to have a limit at $0$, a contradiction. Connected plus locally path connected implies path connected.}
+
+\section{商空间、曲面与同伦 | Quotient spaces, surfaces and homotopy}
+
 \subsection{商拓扑 | Quotient topology}
-\noindent 给定满射 $q:X\to Y$，在 $Y$ 上定义商拓扑：$U\subseteq Y$ 开，当且仅当 $q^{-1}(U)$ 在 $X$ 中开。它把等价关系 $x\sim x'$ 的每个等价类压成一个点。用原像定义开集，使 $q$ 连续，并得到以下泛性质：连续映射 $f:X\to Z$ 若在每个等价类上取同值，就唯一下降为 $\bar f:Y\to Z$，满足 $f=\bar f\circ q$；若 $q$ 是商映射，则 $\bar f$ 连续。
-\EN{Given a surjection $q:X\to Y$, the quotient topology declares $U\subseteq Y$ open exactly when $q^{-1}(U)$ is open in $X$. It collapses each equivalence class to one point. A continuous map $f:X\to Z$ that is constant on each class descends uniquely to $\bar f:Y\to Z$ with $f=\bar f\circ q$; if $q$ is a quotient map, the descended map is continuous.}
-\EX{令 $q:[0,1]\to S^1$、$q(t)=e^{2\pi it}$，它只识别端点 $0\sim1$，所得商空间同胚于圆周。若 $f:[0,1]\to Z$ 连续且 $f(0)=f(1)$，则 $\bar f(q(t))=f(t)$ 定义良好并连续。检查“是否在等价类上取同值”是定义商映射的关键一步。}{Let $q:[0,1]\to S^1$ be $q(t)=e^{2\pi it}$, identifying only $0$ and $1$. The quotient is homeomorphic to the circle. If $f:[0,1]\to Z$ is continuous and $f(0)=f(1)$, then $\bar f(q(t))=f(t)$ is well-defined and continuous. Checking that the map is constant on equivalence classes is the key step.}
-\ASK{为什么商拓扑用原像定义开集？}{Why is the quotient topology defined using inverse images?}{原像保留并、有限交和补的运算关系，使商映射连续；同时，商拓扑是使 $q$ 连续的最细拓扑。若构造映射从商空间下降，还必须检查它在每个等价类上取同一值。}{Inverse images preserve unions, finite intersections, and complements, making the quotient map continuous. The quotient topology is the finest topology that makes $q$ continuous. A map descends only if it is constant on each equivalence class.}
+\noindent 集合 $X$ 上的等价关系把 $X$ 分成等价类，商集 $X/{\sim}$ 的元素是等价类，投影 $q:X\to X/{\sim}$ 把每类压成一点。等价关系与满射一一对应：满射 $f:X\to Y$ 诱导 $x\sim_f y\iff f(x)=f(y)$，且 $Y$ 与 $X/{\sim_f}$ 作为集合等同。
+\EN{An equivalence relation on a set $X$ partitions it into classes; the quotient set $X/{\sim}$ has these classes as elements, and the projection $q$ collapses each class to a point. Equivalence relations correspond to surjections: a surjection $f:X\to Y$ induces $x\sim_f y$ if and only if $f(x)=f(y)$, and $Y$ is identified with $X/{\sim_f}$ as a set.}
 
-\section{多边形粘合与曲面 | Polygon gluing and surfaces}
-\noindent 将多边形的边成对识别时，先沿边界选定一个行进方向。若经过一条边时方向与该边的箭头一致，记标签 $a$；反向经过记 $a^{-1}$。边界词完整记录粘合方式，避免“同向”或“反向”这类含糊描述。闭曲面单多边形表示中，边标签各出现两次；一正一负的配对对应可定向粘合，同号配对对应不可定向粘合。
-\EN{When pairing polygon edges, choose an orientation for traversing the boundary. Record an edge as $a$ when traversal follows its chosen arrow and as $a^{-1}$ when it goes against it. The boundary word records the gluing precisely. In a one-polygon presentation of a closed surface, each label occurs twice; opposite signs give an orientable pairing, while equal signs give a nonorientable pairing.}
-\EX{正方形边界词 $aba^{-1}b^{-1}$ 给出环面；$aba^{-1}b$ 给出 Klein 瓶；$aa$ 给出射影平面。对环面，四个角在粘合后成为一个顶点，两对边成为两条边，正方形内部是一个面。射影平面也可由圆盘边界上的对径点识别得到。}{The square words $aba^{-1}b^{-1}$, $aba^{-1}b$, and $aa$ give the torus, Klein bottle, and projective plane, respectively. For the torus, all four corners become one vertex, the paired edges give two edges, and the square interior is one face. The projective plane can also be obtained by identifying antipodal points on a disk boundary.}
+\noindent\textbf{定义（商拓扑与商映射）.} 给定满射 $q:X\to Y$，$Y$ 上的商拓扑定义为
+\[
+V\subset Y\text{ 开}\iff q^{-1}(V)\subset X\text{ 开}.
+\]
+这个拓扑存在且唯一，是使 $q$ 连续的最强拓扑。拓扑空间之间的满射 $q$ 若满足上式，称为商映射。等价关系 $\sim$ 的商空间 $X/{\sim}$ 就是商集配以投影给出的商拓扑。
+\EN{\textbf{Definition (quotient topology and quotient maps).} Given a surjection $q:X\to Y$, the quotient topology on $Y$ is defined by $V\subset Y$ is open if and only if $q^{-1}(V)\subset X$ is open. It exists, is unique, and is the strongest topology making $q$ continuous. A surjection $q$ between topological spaces satisfying this condition is a quotient map. The quotient space $X/{\sim}$ is the quotient set with the quotient topology induced by the projection.}
 
-\subsection{胞腔分解的含义 | What a cell decomposition counts}
-\APS{一个 $n$-胞腔是开球形的片，其闭球边界通过附着映射粘到已构造的低维骨架；CW 复形逐维这样构造。有限胞腔分解的 Euler 特征为 $\chi=\sum_n(-1)^n c_n$，其中 $c_n$ 是 $n$-胞腔数。曲面上的顶点、边、面分别是 $0,1,2$ 维胞腔，给 $V-E+F$。计算前必须在粘合后重新数不同顶点和边，不能直接使用未粘正方形的四顶点四边。}{An $n$-cell is an open ball whose closed-ball boundary is attached to the lower-dimensional skeleton by an attaching map. A CW complex is built dimension by dimension. For a finite cell structure, $\chi=\sum_n(-1)^n c_n$. Vertices, edges and faces give $V-E+F$ for surfaces. Count cells after identification, rather than retaining the four separate corners and edges of an unglued square.}
+\noindent 商映射连续；开集条件等价于“闭集的原像是闭集”。连续开满射与连续闭满射都是商映射，但商映射可以既不开也不闭。商映射的纤维是等价类，反过来，若 $q$ 是商映射，则 $Y$ 中的开集恰好是那些原像开的集合。
+\EN{A quotient map is continuous, and the open-set condition is equivalent to preimages of closed sets being closed. Every continuous open surjection and every continuous closed surjection is a quotient map, but a quotient map may be neither open nor closed. The fibers of a quotient map are the equivalence classes; conversely, if $q$ is a quotient map, the open sets of $Y$ are exactly those whose preimages are open.}
 
-\subsection{Euler 特征与曲面分类 | Euler characteristic and classification of surfaces}
-\noindent 对有限胞腔分解，$c_k$ 是 $k$ 维胞腔数，Euler 特征定义为胞腔数的交错和；对三角剖分曲面，它就是顶点数减边数加面数：
-\FORMULA{Euler 特征公式}{the Euler characteristic formula}
+\FORMULA{商映射的泛性质}{the universal property of a quotient map}
 \[
-\chi=\sum_{k\ge0}(-1)^kc_k,
-\qquad\text{and for a surface }\chi=V-E+F.
+f:X\to Z\ \text{连续且在每个纤维上取常值}
+\iff
+\exists!\,\bar f:Y\to Z\ \text{连续},\ f=\bar f\circ q .
 \]
-\READ{“Chi is the alternating sum of the numbers of cells; for a surface triangulation it is vertices minus edges plus faces.”}
-\EN{For a finite cell decomposition, the Euler characteristic is the alternating sum of the numbers of cells. For a surface triangulation it is vertices minus edges plus faces.}
-\noindent 连通紧致曲面若可定向、有 $g$ 个把手和 $b$ 个边界分支；若不可定向、有 $k$ 个交叉帽和 $b$ 个边界分支，则相应公式为：
-\FORMULA{紧致曲面的 Euler 特征公式}{Euler characteristic formulas for compact surfaces}
-\[
-\chi=2-2g-b\quad\text{(orientable)},\qquad
-\chi=2-k-b\quad\text{(nonorientable)}.
-\]
-\READ{“For an orientable surface, chi equals two minus twice the genus minus the number of boundary components. For a nonorientable surface, replace twice the genus by the number of crosscaps.”}
-\EN{A connected compact orientable surface with genus $g$ and $b$ boundary components has characteristic $2-2g-b$. A connected compact nonorientable surface with $k$ crosscaps and $b$ boundary components has characteristic $2-k-b$. The classification theorem says every compact, connected, boundaryless surface is a sphere with handles or a connected sum of projective planes. Determine orientability before using these formulas.}
-\noindent 紧致、连通、无边界的曲面分类定理说，每个曲面同胚于球面加若干把手，或若干交叉帽的连通和。识别曲面时必须先判断可定向性，再用 Euler 特征求参数。
-\EX{环面的计数为 $V=1,E=2,F=1$，所以 $\chi=0$；可定向公式给出 $g=1$。Klein 瓶也有 $\chi=0$，但它不可定向，故用 $0=2-k$ 得 $k=2$。Euler 特征相同并不代表曲面同胚。球面的四面体剖分有 $V=4,E=6,F=4$，所以 $\chi=2$。}{For the torus, $V=1,E=2,F=1$, so $\chi=0$ and the orientable formula gives genus one. The Klein bottle also has $\chi=0$, but it is nonorientable, so $0=2-k$ gives two crosscaps. Equal Euler characteristics do not imply homeomorphism. A tetrahedral sphere has $V=4,E=6,F=4$, hence $\chi=2$.}
-\ASK{多边形粘合后怎样检查曲面计算？}{How do you check a surface calculation after polygon gluing?}{先按等价关系数顶点、边和面，得 $\chi=V-E+F$；再独立判断可定向性和边界分支，最后代入对应的曲面公式。亏格必须是非负整数，否则计数或前提有误。}{Count the vertex, edge, and face equivalence classes to compute $\chi=V-E+F$. Then determine orientability and boundary components independently and apply the matching surface formula. The genus must be a nonnegative integer; otherwise a count or assumption is wrong.}
+\READ{``A continuous map on X that is constant on every fiber descends uniquely to a continuous map on the quotient.''}
+\EN{The map $\bar f$ is well defined exactly because $f$ is constant on fibers, and it is continuous because $q$ is a quotient map and $f=\bar f\circ q$ is continuous. This is the most useful way to construct maps out of a quotient: define them on $X$ and check constancy on classes.}
 
-\section{同伦与 CW 复形 | Homotopy and CW complexes}
-\subsection{同伦等价与变形收缩 | Homotopy equivalence and deformation retraction}
-\noindent 映射 $f,g:X\to Y$ 同伦，若有联合连续映射 $H:X\times[0,1]\to Y$，满足 $H(x,0)=f(x)$、$H(x,1)=g(x)$。变形收缩 $H:X\times[0,1]\to X$ 把 $X$ 连续压到子空间 $A$，并要求 $H(a,t)=a$ 对所有 $a\in A$ 成立。若空间之间存在互为同伦逆的映射，则它们同伦等价；同伦等价比同胚弱，因为允许压缩可缩部分。
-\EN{Maps $f,g:X\to Y$ are homotopic if there is a jointly continuous $H:X\times[0,1]\to Y$ with $H(x,0)=f(x)$ and $H(x,1)=g(x)$. A deformation retraction continuously compresses $X$ onto a subspace $A$ while fixing every point of $A$ throughout. Spaces with homotopy-inverse maps are homotopy equivalent. This is weaker than homeomorphism because contractible parts may be compressed.}
-\noindent 对柱面 $S^1\times[0,1]$，下面的同伦把柱面收缩到底圆周 $S^1\times\{0\}$：
-\FORMULA{柱面到圆周的变形收缩}{a deformation retraction of the cylinder onto a circle}
+\noindent\textbf{饱和集判别.} 称 $A\subset X$ 饱和，若 $A=q^{-1}(q(A))$，即 $A$ 是若干等价类之并。满射 $q$ 是商映射当且仅当每个饱和开集的像开（等价地，每个饱和闭集的像闭）。这给出不画商空间、只在 $X$ 上检验商拓扑的方法。
+\EN{\textbf{The saturated-set criterion.} A set $A\subset X$ is saturated when $A=q^{-1}(q(A))$, that is, when it is a union of equivalence classes. A surjection $q$ is a quotient map if and only if the image of every saturated open set is open (equivalently, the image of every saturated closed set is closed). This tests the quotient topology on $X$ without drawing the quotient.}
+
+\EX{$\mathbb R/\mathbb Z\cong S^1$。等价关系为 $t\sim t+n$（$n\in\mathbb Z$），$q(t)=e^{2\pi it}$ 连续满射。$q$ 的纤维恰为陪集 $t+\mathbb Z$，故由泛性质得连续双射 $\bar q:\mathbb R/\mathbb Z\to S^1$。也可先看 $[0,1]$：把端点 $0\sim1$ 识别，$q|_{[0,1]}$ 是紧空间到 Hausdorff 空间的连续满射，由 1.7 是商映射且为闭映射，所以 $[0,1]/\{0,1\}\cong S^1$；而 $\mathbb R/\mathbb Z$ 与它同胚。}{We have $\mathbb R/\mathbb Z\cong S^1$. The relation is $t\sim t+n$ for integers $n$, and $q(t)=e^{2\pi it}$ is a continuous surjection whose fibers are exactly the cosets $t+\mathbb Z$; the universal property gives a continuous bijection $\bar q:\mathbb R/\mathbb Z\to S^1$. Alternatively, identify the endpoints of $[0,1]$: the restriction of $q$ is a continuous surjection from a compact space onto a Hausdorff space, hence a quotient and closed map by Section 1.7, so $[0,1]/\{0,1\}\cong S^1$, and $\mathbb R/\mathbb Z$ is homeomorphic to it.}
+
+\EX{$\mathbb R^2/\mathbb Z^2\cong T^2=S^1\times S^1$。把正方形 $[0,1]^2$ 的对边按 $(0,t)\sim(1,t)$、$(s,0)\sim(s,1)$ 粘合，商空间记 $[0,1]^2/{\sim}$。$F(s,t)=(e^{2\pi is},e^{2\pi it}):[0,1]^2\to T^2$ 连续满射，纤维正是上述等价类。由泛性质得连续双射 $[0,1]^2/{\sim}\to T^2$；定义域紧、陪域 Hausdorff，故为同胚。同理 $[0,1]^2$ 换成 $\mathbb R^2$、$\mathbb Z^2$ 平移作用，得到 $\mathbb R^2/\mathbb Z^2\cong T^2$。}{We have $\mathbb R^2/\mathbb Z^2\cong T^2=S^1\times S^1$. Glue opposite sides of the square by $(0,t)\sim(1,t)$ and $(s,0)\sim(s,1)$, and call the quotient $[0,1]^2/{\sim}$. The map $F(s,t)=(e^{2\pi is},e^{2\pi it})$ from the square to $T^2$ is a continuous surjection whose fibers are exactly these classes. The universal property gives a continuous bijection $[0,1]^2/{\sim}\to T^2$; the domain is compact and the target Hausdorff, so it is a homeomorphism. Replacing the square by $\mathbb R^2$ and the relation by the $\mathbb Z^2$-translation action gives $\mathbb R^2/\mathbb Z^2\cong T^2$.}
+
+\EX{锥与双锥。锥 $CX=(X\times[0,1])/(X\times\{0\})$ 把所有 $(x,0)$ 压成顶点；对 $X=S^1$，映射 $(z,t)\mapsto(1-t)z\in D^2$ 连续且在等价类上取常值，得到连续双射 $CS^1\to D^2$，紧到 Hausdorff 故同胚，于是锥 $CS^1\cong D^2$，它可缩。双锥（悬挂）$SX=(X\times[0,1])/(X\times\{0\})\sim$ 与 $(X\times\{1\})\sim$ 分别压成两个顶点；$SS^1\cong S^2$ 由映射 $(z,t)\mapsto(\sin(\pi t)\operatorname{Re}z,\ \sin(\pi t)\operatorname{Im}z,\ -\cos(\pi t))$ 给出，纤维正是两个压扁的端层。}{Cones and suspensions. The cone $CX=(X\times[0,1])/(X\times\{0\})$ collapses the slice $X\times\{0\}$ to the vertex. For $X=S^1$, the map $(z,t)\mapsto(1-t)z$ into $D^2$ is continuous and constant on classes, giving a continuous bijection $CS^1\to D^2$, which is a homeomorphism because the domain is compact and the target Hausdorff; hence $CS^1\cong D^2$, and it is contractible. The suspension $SX$ collapses both end slices to two vertices; $SS^1\cong S^2$ is given by $(z,t)\mapsto(\sin(\pi t)\operatorname{Re}z,\ \sin(\pi t)\operatorname{Im}z,\ -\cos(\pi t))$, whose fibers are exactly the two collapsed end slices.}
+
+\EX{$D^2/\partial D^2\cong S^2$：把圆盘的整个边界压成一点，得到球面。证明：$\mathbb R^2$ 的一点紧化是 $S^2$（1.7），而 $\mathbb R^2\cong D^2\setminus\partial D^2$ 的内部；一点紧化添加的“无穷远点”正对应被压扁的边界圆，所以 $D^2/\partial D^2\cong(\mathbb R^2)^+\cong S^2$。这也是 $S^2$ 的一个 CW 结构：一个 $0$-胞腔（边界压成的点）加一个 $2$-胞腔。}{$D^2/\partial D^2\cong S^2$: collapsing the whole boundary circle of the disk to one point gives the sphere. Proof: the one-point compactification of $\mathbb R^2$ is $S^2$ (Section 1.7), and $\mathbb R^2$ is homeomorphic to the interior $D^2\setminus\partial D^2$; the point at infinity added by compactification corresponds exactly to the collapsed boundary, so $D^2/\partial D^2\cong(\mathbb R^2)^+\cong S^2$. This is also a CW structure on $S^2$: one $0$-cell (the collapsed boundary) plus one $2$-cell.}
+
+\EX{M\"obius 带与 Klein 瓶。把矩形 $[0,1]^2$ 的一对竖边反向粘合，$(0,t)\sim(1,1-t)$，得到 M\"obius 带：它不可定向、只有一个边界分支，并变形收缩到中心圆周 $t=1/2$。若再把两条水平边同向粘合，$(s,0)\sim(s,1)$，得到 Klein 瓶：它不可定向、无边界，同样 $\chi=0$ 但不同胚于环面。}
+\EN{M\"obius band and Klein bottle. Glue the vertical sides of the rectangle $[0,1]^2$ with reversed orientation, $(0,t)\sim(1,1-t)$; the result is the M\"obius band, which is nonorientable, has one boundary component, and deformation retracts to the central circle $t=1/2$. If in addition the horizontal sides are glued in the same direction, $(s,0)\sim(s,1)$, the result is the Klein bottle, which is nonorientable, has no boundary, and also has $\chi=0$ but is not homeomorphic to the torus.}
+
+\noindent 商空间不必保持分离性：把 $\mathbb R\times\{0,1\}$ 中 $(x,0)\sim(x,1)$（$x\ne0$）识别、但保留两个原点，得到 $T_1$ 非 Hausdorff 的“双原点直线”。所以流形定义中的 Hausdorff 与第二可数条件不能省。
+\EN{Quotients need not preserve separation: identifying $(x,0)$ with $(x,1)$ for $x\ne0$ in $\mathbb R\times\{0,1\}$ while keeping the two origins gives the $T_1$ but non-Hausdorff line with two origins. This is why the Hausdorff and second-countable conditions belong to the definition of a manifold.}
+
+\noindent 若 $X$ 紧 Hausdorff、$q:X\to Y$ 是商映射，则 $Y$ Hausdorff 当且仅当等价关系 $R_q=\{(x,x'):q(x)=q(x')\}\subset X\times X$ 闭。证明：$R_q=(q\times q)^{-1}(\Delta_Y)$，而 $Y$ Hausdorff 等价于对角线 $\Delta_Y$ 闭；反向用紧性把闭关系分离成开集。这个判据在判断“商空间是否 Hausdorff”时很实用。
+\EN{If $X$ is compact Hausdorff and $q:X\to Y$ is a quotient map, then $Y$ is Hausdorff if and only if the relation $R_q=\{(x,x'):q(x)=q(x')\}\subset X\times X$ is closed. Indeed $R_q=(q\times q)^{-1}(\Delta_Y)$ and $Y$ is Hausdorff exactly when the diagonal $\Delta_Y$ is closed; conversely compactness separates a closed relation by open sets. This criterion is useful when deciding whether a quotient is Hausdorff.}
+
+\noindent\textbf{论证模板：商空间何时同胚于熟悉空间.} 回答这类问题按四步：
+(1) 写清原空间 $X$ 与等价关系（哪些点被识别）；
+(2) 构造连续映射 $f:X\to Z$，验证 $f$ 在等价类上取常值，且不同类取不同值；
+(3) 由泛性质得到连续双射 $\bar f:X/{\sim}\to Z$；
+(4) 证明 $\bar f$ 是同胚：优先用“$X$ 紧、$Z$ Hausdorff，则连续双射自动同胚”；否则显式构造连续逆映射，或用饱和开集判别证明 $\bar f$ 是开映射。
+\EN{\textbf{A template: when is a quotient homeomorphic to a familiar space?} Answer in four steps: (1) state the space $X$ and the equivalence relation, that is, which points are identified; (2) construct a continuous map $f:X\to Z$, verify that it is constant on classes and separates distinct classes; (3) use the universal property to get a continuous bijection $\bar f:X/{\sim}\to Z$; (4) prove that $\bar f$ is a homeomorphism, preferably by the compact-to-Hausdorff criterion, otherwise by exhibiting a continuous inverse or by the saturated-set criterion showing that $\bar f$ is open.}
+
+\subsection{多边形粘合与曲面 | Polygon gluing schemes and surfaces}
+\noindent\textbf{多边形粘合.} 拓扑 $n$ 边形是闭圆盘 $D^2$ 带 $n$ 个边界标记点；标记点称顶点，相邻顶点之间的边界弧称边。粘合方案给若干多边形的边定向并成对配对；粘合时按箭头方向把每对边等同。选定边界行进方向后，经过一条边时若与箭头同向记 $a$，反向记 $a^{-1}$，得到的字符串称边界词。闭曲面单多边形表示中每个字母恰出现两次：出现 $a$ 与 $a^{-1}$ 的配对是 type I（反向配对），出现两个 $a$ 的配对是 type II（同向配对）。未配对的边留下边界。
+\EN{\textbf{Polygon gluing.} A topological $n$-gon is a closed disk $D^2$ with $n$ marked boundary points, called vertices; the boundary arcs between consecutive vertices are edges. A gluing scheme directs the edges of finitely many polygons and pairs them; each pair is identified along the direction of the arrows. After choosing a traversal of the boundary, an edge traversed with its arrow is recorded as $a$ and one traversed against it as $a^{-1}$; the resulting word is the boundary word. In a one-polygon presentation of a closed surface each label occurs exactly twice: a pair appearing as $a$ and $a^{-1}$ is type I (opposite orientations), and a pair appearing as two copies of $a$ is type II (same orientation). Unpaired edges remain boundary.}
+
+\noindent\textbf{曲面.} $n$ 维拓扑流形是第二可数、Hausdorff 的空间，每点有邻域同胚于 $\mathbb R^n$ 或半空间 $\mathbb R^n_{\ge0}$ 的开集；映到边界超平面的点称边界点，边界点之集为边界 $\partial X$。$2$-流形称曲面；紧且无边界的曲面称闭曲面（这里的“闭”不是“闭集”的意思）。Brouwer 区域不变性定理保证维数与边界点定义良好：$\mathbb R^n$ 的开集不能同胚于 $\mathbb R^m$ 的开集（$n\ne m$）。
+\EN{\textbf{Surfaces.} An $n$-dimensional topological manifold is a second-countable Hausdorff space in which every point has a neighborhood homeomorphic to an open subset of $\mathbb R^n$ or of the half-space $\mathbb R^n_{\ge0}$; points mapped to the boundary hyperplane are boundary points, and their set is the boundary $\partial X$. A $2$-manifold is a surface; a compact surface without boundary is closed (here ``closed'' has nothing to do with closed sets). Brouwer's invariance of domain guarantees that dimension and boundary points are well defined: an open subset of $\mathbb R^n$ cannot be homeomorphic to an open subset of $\mathbb R^m$ for $n\ne m$.}
+
+\noindent\textbf{定理（多边形粘合给出曲面）.} 任何多边形粘合方案粘出的空间是曲面。反之，每个曲面都可以由某个多边形粘合方案得到（等价地，每个曲面可三角剖分，Rad\'o）；曲面紧当且仅当其任何粘合方案只有有限多个多边形；紧连通曲面可由单多边形方案表示。
+\EN{\textbf{Theorem (polygon schemes give surfaces).} The space obtained from any polygon gluing scheme is a surface. Conversely, every surface arises from some polygon gluing scheme (equivalently, every surface is triangulable, Rad\'o); a surface is compact exactly when any of its gluing schemes has finitely many polygons; and every compact connected surface has a one-polygon presentation.}
+
+\noindent\textbf{计数模板.} 给定边界词与配对：
+(1) 顶点数 $V$：把每条边的两个端点按配对关系传递地等同，数等价类；
+(2) 边数 $E$：配对的边两两成一条，未配对的边各自一条，即 $E=\frac{\#\text{配对边}}2+\#\text{未配对边}$；
+(3) 面数 $F$：多边形个数（若有内孔，按挖去圆盘处理）；
+(4) $\chi=V-E+F$；
+(5) 可定向性：若所有配对都是 type I 则可定向；若连通且存在 type II 配对则不可定向（含 M\"obius 带）；
+(6) 边界分支数 $b$：未配对边在顶点等同后形成的闭链个数；
+(7) 用 $\chi=2-2g-b$（可定向）或 $\chi=2-k-b$（不可定向）解出 $g$ 或 $k$，并检查非负整数条件。
+\EN{\textbf{Counting template.} Given a boundary word and pairings: (1) vertices $V$: identify the endpoints of each edge according to the pairings and count the equivalence classes; (2) edges $E$: paired edges give one edge per pair and unpaired edges give one each, so $E=\frac{\#\text{paired edges}}2+\#\text{unpaired edges}$; (3) faces $F$: the number of polygons, with interior holes treated as removed disks; (4) $\chi=V-E+F$; (5) orientability: all pairs type I gives an orientable surface, while a connected scheme with a type II pair is nonorientable (it contains a M\"obius band); (6) number of boundary components $b$: the number of closed chains formed by unpaired edges after vertex identifications; (7) solve $\chi=2-2g-b$ in the orientable case or $\chi=2-k-b$ in the nonorientable case, and check that the genus is a nonnegative integer.}
+
+\EX{环面：边界词 $aba^{-1}b^{-1}$。两对边都是 type I，故可定向；四个角全成为一个顶点，$V=1$；两对边给出 $E=2$；$F=1$，所以 $\chi=1-2+1=0$，由 $0=2-2g$ 得 $g=1$。}{Torus: the boundary word is $aba^{-1}b^{-1}$. Both pairs are type I, so the surface is orientable; the four corners become one vertex, so $V=1$; the two pairs give $E=2$; $F=1$, hence $\chi=1-2+1=0$ and $0=2-2g$ gives $g=1$.}
+
+\EX{Klein 瓶：边界词 $aba^{-1}b$。$b$ 是 type II 配对，故不可定向；顶点同样全等同一个，$V=1$，$E=2$，$F=1$，$\chi=0$，由 $0=2-k$ 得 $k=2$。它与环面 $\chi$ 相同但可定向性不同，因此不同胚。}{Klein bottle: the boundary word is $aba^{-1}b$. The $b$-pair is type II, so the surface is nonorientable; again all vertices are identified, $V=1$, $E=2$, $F=1$, $\chi=0$, and $0=2-k$ gives $k=2$. It has the same Euler characteristic as the torus but different orientability, so the two are not homeomorphic.}
+
+\EX{射影平面：用二边形，边界词 $aa$。两个顶点被 $a$ 的同向配对等同，$V=1$；一条边 $E=1$；$F=1$，$\chi=1$，不可定向，$1=2-k$ 得 $k=1$。等价构造：把圆盘边界上的对径点识别，或把球面 $S^2$ 的对径点识别，即 $S^2/(x\sim-x)$。}{Projective plane: use a digon with boundary word $aa$. The two vertices are identified by the same-direction $a$-pair, so $V=1$; there is one edge $E=1$ and $F=1$, hence $\chi=1$; the surface is nonorientable and $1=2-k$ gives $k=1$. Equivalent constructions identify antipodal points on the boundary of a disk, or antipodal points of the sphere, $S^2/(x\sim-x)$.}
+
+\EX{$4g$ 边形表示亏格 $g$ 的可定向闭曲面：边界词
 \[
-H((z,s),t)=(z,(1-t)s),\qquad z\in S^1,\quad s,t\in[0,1].
+a_1b_1a_1^{-1}b_1^{-1}\,a_2b_2a_2^{-1}b_2^{-1}\cdots a_gb_ga_g^{-1}b_g^{-1}.
 \]
-\READ{“H of z and s at time t is z together with one minus t times s.”}
-\noindent $t=0$ 时是恒等映射，$t=1$ 时像落在底圆，而且底圆上的点始终不动。Möbius 带也变形收缩到中心圆周；它与圆周同伦等价，但全局粘合结构不同。
-\EN{At $t=0$ this is the identity, at $t=1$ its image lies in the bottom circle, and every point of that circle stays fixed. The Mobius band also deformation retracts to its central circle, so it is homotopy equivalent to a circle despite its different global gluing.}
-\noindent CW 复形从 $0$-胞腔开始，逐维粘合闭球作为胞腔。有限 CW 复形的 Euler 特征是胞腔数的交错和，并且是同伦不变量。有限连通图作为一维 CW 复形有 $\chi=V-E$；生成树有 $V-1$ 条边，所以独立环数为 $E-V+1$。圆周可用一个 $0$-胞腔和一个 $1$-胞腔表示，球面可用一个 $0$-胞腔和一个 $2$-胞腔表示。
-\FORMULA{连通图的独立环数}{the cycle rank of a connected graph}
+所有配对都是 type I，故可定向；所有顶点等同为一个，$V=1$；边数 $E=2g$；$F=1$，所以 $\chi=1-2g+1=2-2g$，正好是亏格 $g$ 的公式。$g=1$ 时即环面，$g=2$ 时是双环面。}{A $4g$-gon presenting the orientable closed surface of genus $g$ has the boundary word $a_1b_1a_1^{-1}b_1^{-1}\cdots a_gb_ga_g^{-1}b_g^{-1}$. All pairs are type I, so the surface is orientable; all vertices are identified to one, so $V=1$; there are $E=2g$ edges and $F=1$, hence $\chi=2-2g$, exactly the genus-$g$ formula. The case $g=1$ is the torus and $g=2$ is the double torus.}
+
+\noindent\textbf{可定向性与割补.} 连通曲面不可定向当且仅当它含一个 M\"obius 带；交叉帽（crosscap）就是挖去一个开圆盘的射影平面，同胚于 M\"obius 带；两个交叉帽沿边界粘合得到 Klein 瓶。这些同胚用割补（cut-and-paste）证明：沿一条曲线剪开再按另一种方式粘回，不改变商空间。割补也是把任意边界词化成标准形的工具，下面分类定理用到它。
+\EN{\textbf{Orientability and cut-and-paste.} A connected surface is nonorientable exactly when it contains a M\"obius band. A crosscap, the projective plane with an open disk removed, is homeomorphic to the M\"obius band; gluing two crosscaps along their boundary gives the Klein bottle. These homeomorphisms are proved by cut-and-paste: cutting along a curve and gluing back differently does not change the quotient, and cut-and-paste is also the tool that reduces an arbitrary boundary word to normal form, as used in the classification theorem below.}
+
+\subsection{曲面的分类 | Classification of surfaces}
+\noindent\textbf{连通和.} 设 $X,Y$ 是紧连通曲面。各挖去一个开圆盘，再沿两个边界圆粘合，得到连通和 $X\#Y$。连通和与所挖圆盘及粘合方式无关，满足交换律与结合律（均作为定理陈述，证明用割补）；$X\#S^2\cong X$。Euler 特征满足
 \[
-\beta_1=E-V+1.
+\chi(X\#Y)=\chi(X)+\chi(Y)-2,\qquad \chi(X\setminus D^2)=\chi(X)-1.
 \]
-\READ{“For a connected finite graph, the number of independent cycles is the number of edges minus the number of vertices plus one.”}
-\EN{A CW complex is built from zero-cells by attaching disks of increasing dimensions. Its finite Euler characteristic is a homotopy invariant. A connected finite graph has $\chi=V-E$; a spanning tree has $V-1$ edges, so the number of independent cycles is $E-V+1$. The circle has one zero-cell and one one-cell, while the sphere has one zero-cell and one two-cell.}
-\EX{一个连通图有 $V=6$ 个顶点、$E=7$ 条边。生成树先用 $5$ 条边连接所有顶点，剩下两条边各增加一个独立环，因此 $\beta_1=7-6+1=2$，且 $\chi=6-7=-1$。}{A connected graph with six vertices and seven edges has a spanning tree with five edges. The two remaining edges each add an independent cycle, so $\beta_1=7-6+1=2$ and $\chi=6-7=-1$.}
-\ASK{Euler 特征为什么不能单独分类空间？}{Why can Euler characteristic not classify spaces by itself?}{Euler 特征只是一个整数，不是完全不变量；环面和 Klein 瓶都为 $0$，但可定向性不同。它适合快速检查或排除某些情况，进一步区分空间需要其他不变量。}{Euler characteristic is one integer, not a complete invariant. The torus and Klein bottle both have characteristic zero but different orientability. It is useful for quick checks, but other invariants are needed to distinguish all spaces.}
+\EN{\textbf{Connected sums.} For compact connected surfaces $X,Y$, remove an open disk from each and glue along the two boundary circles; the result is the connected sum $X\#Y$. It is independent of the chosen disks and gluing and is commutative and associative (stated as theorems, proved by cut-and-paste); moreover $X\#S^2\cong X$. The Euler characteristic satisfies $\chi(X\#Y)=\chi(X)+\chi(Y)-2$ and $\chi(X\setminus D^2)=\chi(X)-1$.}
+
+\noindent 记 $S_{g,b}$ 为球面挖去 $b$ 个开圆盘后再接 $g$ 个把手（等价于 $b$ 个边界分支、亏格 $g$ 的可定向曲面），$N_{k,b}$ 为球面挖去 $b$ 个开圆盘后粘 $k$ 个交叉帽（不可定向曲面）。于是 $S_{0,0}=S^2$、$S_{0,1}=D^2$，$S_g=S_{g,0}$、$N_k=N_{k,0}$。
+\EN{Let $S_{g,b}$ be the orientable surface of genus $g$ with $b$ boundary components: a sphere with $b$ open disks removed and $g$ handles attached. Let $N_{k,b}$ be the nonorientable surface with $k$ crosscaps and $b$ boundary components, obtained from a sphere with $b$ disks removed by attaching $k$ crosscaps. Thus $S_{0,0}=S^2$, $S_{0,1}=D^2$, $S_g=S_{g,0}$ and $N_k=N_{k,0}$.}
+
+\noindent\textbf{定理（紧连通曲面分类）.} 设 $g,b\ge0$、$k\ge1$。
+(1) 每个紧连通曲面同胚于某个 $S_{g,b}$ 或 $N_{k,b}$；
+(2) 这些曲面两两不同胚，即表法唯一。
+特别地，紧连通无边界曲面（闭曲面）恰好是 $S_g$（$g\ge0$）与 $N_k$（$k\ge1$）：球面、$g$ 个环面的连通和、$k$ 个射影平面的连通和。
+\EN{\textbf{Theorem (classification of compact connected surfaces).} Let $g,b\ge0$ and $k\ge1$. (1) Every compact connected surface is homeomorphic to some $S_{g,b}$ or $N_{k,b}$. (2) These surfaces are pairwise non-homeomorphic, so the presentation is unique. In particular the compact connected boundaryless surfaces (closed surfaces) are exactly the $S_g$ for $g\ge0$ and the $N_k$ for $k\ge1$: the sphere, connected sums of $g$ tori, and connected sums of $k$ projective planes.}
+
+\FORMULA{紧连通曲面的 Euler 特征}{Euler characteristic of compact connected surfaces}
+\[
+\chi(S_{g,b})=2-2g-b,\qquad \chi(N_{k,b})=2-k-b .
+\]
+\READ{``For an orientable surface, chi equals two minus twice the genus minus the number of boundary components; for a nonorientable surface, replace twice the genus by the number of crosscaps.''}
+\EN{The formulas follow from $\chi(S^2)=2$, $\chi(T^2)=0$, $\chi(\mathbb RP^2)=1$ and the additivity of $\chi$ under connected sum and disk removal: a handle lowers $\chi$ by $2$, a crosscap by $1$, and each boundary component by $1$.}
+
+\noindent\textbf{证明思路.} (1) 先用 Rad\'o 定理与“单多边形表示”：紧连通曲面由一个多边形按边界词粘成。然后做割补：先把 type II 配对变成相邻，若出现 type I 相邻或非相邻交错的情形就割补化简；反复后或者得到球面的标准 2-边形，或者得到 type II 对相邻、type I 对排成四元组的标准形。标准形中 $g$ 个四元组给出 $g$ 个把手，$k$ 组相邻 type II 给出 $k$ 个交叉帽，未配对边给出边界分支，于是曲面形如 $S_{g,b}$ 或 $N_{k,b}$。(2) 同胚保持可定向性与 $b$；在给定可定向性与 $b$ 后，$\chi$ 唯一确定 $g$ 或 $k$：可定向时 $g=(2-b-\chi)/2$，不可定向时 $k=2-b-\chi$。不同的 $g$ 或 $k$ 给出不同的 $\chi$，所以由 2.4 的“$\chi$ 是同伦不变量”可知它们不同胚（甚至不同伦等价）。
+\EN{\textbf{Proof idea.} (1) By Rad\'o's theorem and the one-polygon presentation, a compact connected surface is obtained from one polygon by a boundary word. Then apply cut-and-paste: first make type II pairs adjacent; if an adjacent type I pair appears or a non-adjacent type I pair is interleaved, simplify by cut-and-paste. Repeating leads either to the standard 2-gon for the sphere or to a standard scheme with adjacent type II pairs and type I pairs arranged in quadruples. In the standard form, $g$ quadruples give $g$ handles, $k$ adjacent type II pairs give $k$ crosscaps, and the unpaired edges give the boundary components, so the surface is $S_{g,b}$ or $N_{k,b}$. (2) Homeomorphisms preserve orientability and $b$; once orientability and $b$ are fixed, $\chi$ determines $g$ or $k$ uniquely, since $g=(2-b-\chi)/2$ in the orientable case and $k=2-b-\chi$ in the nonorientable case. Different $g$ or $k$ give different $\chi$, so by the homotopy invariance of $\chi$ in Section 2.4 the surfaces are not even homotopy equivalent.}
+
+\noindent\textbf{分类条件不能删.} 定理要求曲面紧、连通、无边界；“无边界”只对闭曲面的表述成立，带边界时要用 $S_{g,b}$、$N_{k,b}$ 与公式中的 $b$。“紧”不能弱化：非紧曲面可以有无限亏格。“连通”不能删：一般曲面是若干连通分支的不交并，分类逐个分支进行。另外，对紧连通曲面，$(\text{可定向性},\chi,b)$ 是完备不变量；单独的 $\chi$ 不是：环面、Klein 瓶、圆柱、M\"obius 带都有 $\chi=0$，但可定向性与边界分支数不同。
+\EN{\textbf{The hypotheses of the classification cannot be dropped.} The theorem requires the surface to be compact, connected and boundaryless; the boundaryless wording applies to closed surfaces, while with boundary one uses $S_{g,b}$, $N_{k,b}$ and the number $b$ in the formulas. Compactness cannot be replaced by a weaker condition in general, since noncompact surfaces may have infinite genus. Connectedness cannot be dropped: a general surface is the disjoint union of its connected components, classified one by one. For compact connected surfaces, (orientability, $\chi$, $b$) is a complete invariant; $\chi$ alone is not, since the torus, the Klein bottle, the cylinder and the M\"obius band all have $\chi=0$ but differ in orientability or in the number of boundary components.}
+
+{\small
+\begin{center}
+\begin{tabular}{llcccc}
+\toprule
+曲面 surface & English & $\chi$ & 可定向 & $g$ 或 $k$ & $b$\\
+\midrule
+球面 & sphere $S^2$ & $2$ & 是 yes & $g=0$ & $0$\\
+环面 & torus $T^2$ & $0$ & 是 yes & $g=1$ & $0$\\
+双环面 & genus-$2$ surface & $-2$ & 是 yes & $g=2$ & $0$\\
+射影平面 & projective plane $\mathbb RP^2$ & $1$ & 否 no & $k=1$ & $0$\\
+Klein 瓶 & Klein bottle & $0$ & 否 no & $k=2$ & $0$\\
+M\"obius 带 & M\"obius band & $0$ & 否 no & $k=1$ & $1$\\
+圆柱（环带） & cylinder (annulus) & $0$ & 是 yes & $g=0$ & $2$\\
+圆盘 & disk $D^2$ & $1$ & 是 yes & $g=0$ & $1$\\
+\bottomrule
+\end{tabular}
+\end{center}
+}
+\noindent 这张表也提示计算方法：先用边界词判断可定向性，再数 $V,E,F$ 得 $\chi$，最后由 $b$ 与公式反解 $g$ 或 $k$；若解不是非负整数，说明计数或前提有误。
+\EN{The table also suggests the computational method: determine orientability from the boundary word, count $V,E,F$ to get $\chi$, then use $b$ and the formulas to solve for $g$ or $k$; if the answer is not a nonnegative integer, a count or an assumption is wrong.}
+
+\subsection{同伦、CW 复形与 Euler 特征 | Homotopy, CW complexes and Euler characteristic}
+\noindent\textbf{同伦与同伦等价.} 映射 $f,g:X\to Y$ 同伦，若存在连续 $H:X\times[0,1]\to Y$ 使 $H(x,0)=f(x)$、$H(x,1)=g(x)$；记 $f\simeq g$。若存在 $f:X\to Y$、$g:Y\to X$ 使 $g\circ f\simeq\mathrm{id}_X$、$f\circ g\simeq\mathrm{id}_Y$，称 $X,Y$ 同伦等价，记 $X\simeq Y$。同胚必同伦等价，反之不然。
+\EN{\textbf{Homotopy and homotopy equivalence.} Maps $f,g:X\to Y$ are homotopic if there is a continuous $H:X\times[0,1]\to Y$ with $H(x,0)=f(x)$ and $H(x,1)=g(x)$, written $f\simeq g$. Spaces $X,Y$ are homotopy equivalent, written $X\simeq Y$, if there are maps $f:X\to Y$ and $g:Y\to X$ with $g\circ f\simeq\mathrm{id}_X$ and $f\circ g\simeq\mathrm{id}_Y$. Homeomorphic spaces are homotopy equivalent, but not conversely.}
+
+\noindent\textbf{变形收缩与可缩.} 若 $A\subset X$ 且存在连续 $H:X\times[0,1]\to X$ 使 $H(x,0)=x$、$H(x,1)\in A$、且对所有 $a\in A$、$t$ 有 $H(a,t)=a$，称 $X$ 变形收缩到 $A$。此时包含映射 $i:A\to X$ 与收缩映射 $r:X\to A$ 给出同伦等价，$r\circ i=\mathrm{id}_A$、$i\circ r\simeq\mathrm{id}_X$。若 $X$ 同伦等价于一点，称 $X$ 可缩；等价地 $X$ 变形收缩到某点。
+\EN{\textbf{Deformation retractions and contractibility.} If $A\subset X$ and there is a continuous $H:X\times[0,1]\to X$ with $H(x,0)=x$, $H(x,1)\in A$, and $H(a,t)=a$ for all $a\in A$ and all $t$, then $X$ deformation retracts to $A$. The inclusion $i:A\to X$ and the retraction $r:X\to A$ are homotopy inverses: $r\circ i=\mathrm{id}_A$ and $i\circ r\simeq\mathrm{id}_X$. A space homotopy equivalent to a point is contractible, equivalently it deformation retracts to a point.}
+
+\EX{$\mathbb R^n$ 通过 $H(x,t)=(1-t)x$ 变形收缩到原点，故可缩；任何凸集都同伦等价于一点。圆柱 $S^1\times[0,1]$ 通过 $H((z,s),t)=(z,(1-t)s)$ 变形收缩到底圆周；M\"obius 带变形收缩到中心圆周；挖去一点的平面 $\mathbb R^2\setminus\{0\}$ 通过 $H(x,t)=(1-t)x+t\,x/|x|$ 收缩到 $S^1$。因此圆柱、M\"obius 带、$\mathbb R^2\setminus\{0\}$ 都与 $S^1$ 同伦等价，但前两者与圆周并不同胚。}{The space $\mathbb R^n$ deformation retracts to the origin via $H(x,t)=(1-t)x$ and is contractible; every convex set is homotopy equivalent to a point. The cylinder $S^1\times[0,1]$ deformation retracts to its bottom circle via $H((z,s),t)=(z,(1-t)s)$; the M\"obius band deformation retracts to its central circle; the punctured plane $\mathbb R^2\setminus\{0\}$ retracts to $S^1$ via $H(x,t)=(1-t)x+t\,x/|x|$. Thus the cylinder, the M\"obius band and the punctured plane are all homotopy equivalent to $S^1$, although none of the first two is homeomorphic to the circle.}
+
+\noindent\textbf{CW 复形.} CW 复形由骨架逐维构造：$X^{(0)}$ 是离散空间（$0$-胞腔），第 $k$ 步用附着映射 $\varphi_\alpha:\partial D^k\to X^{(k-1)}$ 把 $k$ 维闭球粘到 $X^{(k-1)}$ 上，$k$-胞腔是其内部开的 $D^k$；$X=\bigcup_kX^{(k)}$ 取弱拓扑（$A\subset X$ 闭当且仅当每个 $A\cap\overline{e_\alpha}$ 闭）。此外要求闭包有限性：每个胞腔的闭包只与有限多个胞腔相交；$X$ 为 Hausdorff 空间。只有有限多个胞腔时称有限 CW 复形；CW 复形紧当且仅当有限。
+\EN{\textbf{CW complexes.} A CW complex is built by skeletons: $X^{(0)}$ is a discrete space of $0$-cells; at step $k$, $k$-dimensional closed balls are attached to $X^{(k-1)}$ by attaching maps $\varphi_\alpha:\partial D^k\to X^{(k-1)}$, and a $k$-cell is the open interior of $D^k$. Set $X=\bigcup_kX^{(k)}$ with the weak topology: a set is closed if and only if each intersection with a closed cell is closed. One also requires closure finiteness (the closure of each cell meets only finitely many cells) and that $X$ be Hausdorff. A CW complex with finitely many cells is finite, and it is compact if and only if it is finite.}
+
+\FORMULA{CW 复形的 Euler 特征}{the Euler characteristic of a CW complex}
+\[
+\chi(X)=\sum_{k\ge0}(-1)^k c_k,
+\]
+\READ{``Chi is the alternating sum of the numbers of cells in each dimension.''}
+\EN{Here $c_k$ is the number of $k$-cells. For a finite CW complex this is a finite sum. For a surface with a polygon or triangulation structure, $c_0=V$, $c_1=E$, $c_2=F$, so $\chi=V-E+F$.}
+
+\noindent\textbf{定理（Euler 特征的同伦不变性）.} 对紧 CW 复形，$\chi$ 只依赖同伦型：$X\simeq Y\Rightarrow\chi(X)=\chi(Y)$，特别地同胚的空间有相同 $\chi$。证明通常用同调：$\chi(X)=\sum_k(-1)^k\operatorname{rank}H_k(X)$，而同调群在同伦等价下不变；本课程只陈述该定理，并把重点放在图上直接验证和曲面上的计数。因此 $\chi$ 可以用来否定同胚或同伦等价，但不能单独证明两个空间同胚。
+\EN{\textbf{Theorem (homotopy invariance of Euler characteristic).} For compact CW complexes, $\chi$ depends only on the homotopy type: $X\simeq Y$ implies $\chi(X)=\chi(Y)$, and in particular homeomorphic spaces have equal $\chi$. The usual proof uses homology: $\chi(X)=\sum_k(-1)^k\operatorname{rank}H_k(X)$, and homology groups are homotopy invariant. This course states the theorem and focuses on direct checks for graphs and on the surface counts. Hence $\chi$ can rule out homeomorphism or homotopy equivalence, but equality of $\chi$ does not by itself prove that two spaces are homeomorphic.}
+
+\noindent 同一空间可以有不同 CW 结构，但交错和不变：$S^2$ 可用“一个 $0$-胞腔 $+$ 一个 $2$-胞腔”得 $\chi=1+1=2$；用两个半球得 $2-2+2=2$；用四面体边界得 $4-6+4=2$。$S^1$ 用一个 $0$-胞腔加一个 $1$-胞腔得 $1-1=0$，用两个 $0$-胞腔加两个 $1$-胞腔也得 $2-2=0$。环面的正方形胞腔分解 $V=1,E=2,F=1$ 给出 $0$，它的 $7$ 顶点三角剖分 $V=7,E=21,F=14$ 也给出 $0$。
+\EN{The same space may carry different CW structures while the alternating sum stays fixed: $S^2$ can be one $0$-cell plus one $2$-cell, giving $1+1=2$; two hemispheres give $2-2+2=2$; the boundary of a tetrahedron gives $4-6+4=2$. The circle can be one $0$-cell plus one $1$-cell, giving $1-1=0$, or two $0$-cells plus two $1$-cells, giving $2-2=0$. The square cell structure on the torus has $V=1,E=2,F=1$ and gives $0$, and a seven-vertex triangulation with $V=7,E=21,F=14$ also gives $0$.}
+
+\noindent\textbf{图与环数.} 连通有限图是一维 CW 复形，$\chi=V-E$。取生成树（$V-1$ 条边）后，每增加一条不在树中的边就增加一个独立环，因此独立环数（环秩）
+\[
+\beta_1=E-V+1=1-\chi .
+\]
+树可缩，故 $\chi=1$、$\beta_1=0$；有环的连通图不同伦于一点。这个数与 2.2 中曲面的 $V-E+F$ 计算是同一套交错和，只是维数不同。
+\EN{\textbf{Graphs and cycle rank.} A connected finite graph is a one-dimensional CW complex with $\chi=V-E$. A spanning tree has $V-1$ edges; each remaining edge adds one independent cycle, so the cycle rank is $\beta_1=E-V+1=1-\chi$. A tree is contractible, hence has $\chi=1$ and $\beta_1=0$; a connected graph with a cycle is not homotopy equivalent to a point. This number is the same alternating sum as the surface count $V-E+F$ in Section 2.2, in a different dimension.}
+
+\EX{一个连通图有 $V=6$、$E=7$：$\chi=6-7=-1$，$\beta_1=7-6+1=2$。生成树用 $5$ 条边连接所有顶点，剩下两条边各增加一个独立环。}{A connected graph with $V=6$ and $E=7$ has $\chi=6-7=-1$ and $\beta_1=7-6+1=2$. A spanning tree uses five edges to connect all vertices, and the two remaining edges each add one independent cycle.}
+
+\section*{第 2 章口试问答 | Chapter 2: oral questions}
+\ASK{为什么商拓扑用原像定义开集？}{Why is the quotient topology defined using inverse images?}{因为原像保持并、交与补的运算，所以 $V\mapsto q^{-1}(V)$ 自动把开集条件变成一个拓扑；这样定义的拓扑是使 $q$ 连续的最强拓扑，目标空间的开集恰好是“原像开”的那些集合。若用像来定义，会丢掉等价类边界附近的开集，而且泛性质（下降映射连续）不成立。}{Inverse images preserve unions, intersections and complements, so $V\mapsto q^{-1}(V)$ automatically turns the open-set condition into a topology. This topology is the strongest one making $q$ continuous, and its open sets are exactly those whose preimages are open. Defining openness through images would lose neighborhoods near class boundaries and would break the universal property that descended maps are continuous.}
+
+\ASK{怎样由多边形粘合词识别曲面？}{How do you identify the surface from a polygon gluing word?}{先看配对类型：全为 type I（字母与其逆配对）则可定向，出现同向配对且曲面连通则不可定向。再按配对等同顶点、数边和面，得 $V,E,F$ 与 $\chi=V-E+F$，并数出边界分支 $b$。最后代入 $\chi=2-2g-b$ 或 $\chi=2-k-b$ 求 $g$ 或 $k$；若解不是非负整数，说明计数有误。用环面 $aba^{-1}b^{-1}$、Klein 瓶 $aba^{-1}b$、射影平面 $aa$ 作模板。}{First read the pairing types: if every pair is type I (a letter paired with its inverse) the surface is orientable, while a same-direction pair in a connected scheme makes it nonorientable. Then identify vertices according to the pairings, count edges and faces to get $V,E,F$ and $\chi=V-E+F$, and count boundary components $b$. Finally substitute into $\chi=2-2g-b$ or $\chi=2-k-b$ to find $g$ or $k$; a non-integer answer signals a counting error. Use the torus $aba^{-1}b^{-1}$, the Klein bottle $aba^{-1}b$ and the projective plane $aa$ as templates.}
+
+\ASK{Euler 特征为什么不能单独分类空间？}{Why can Euler characteristic not classify spaces by itself?}{它只是一个整数，不同的空间可以同值：环面、Klein 瓶、圆柱、M\"obius 带都有 $\chi=0$，但可定向性、边界分支数、亏格不同。对紧连通曲面，$(\text{可定向性},\chi,b)$ 才是完备不变量；对一般空间还需要基本群、同调等更强的不变量。$\chi$ 适合快速排除：例如 $\chi(S^2)=2$ 与一点或环面的值不同，故球面不可缩且不同伦于环面。}{It is only one integer, and different spaces can share it: the torus, the Klein bottle, the cylinder and the M\"obius band all have $\chi=0$ but differ in orientability, boundary components or genus. For compact connected surfaces, (orientability, $\chi$, $b$) is a complete invariant; for general spaces stronger invariants such as the fundamental group or homology are needed. The Euler characteristic is good for quick exclusions: for example $\chi(S^2)=2$ differs from that of a point or a torus, so the sphere is not contractible and not homotopy equivalent to a torus.}
+
+\section*{全书主线 | The whole course in one chain}
+\APS{整门课可以串成一条链：开集定义拓扑；开集的原像定义连续；连续映射保持连通与紧性；子空间、积、商是三种基本构造，其中商拓扑用来把点识别起来；把多边形的边配对粘合得到曲面；用顶点、边、面的交错和得到 Euler 特征；用可定向性、$\chi$ 与边界分支数分类紧连通曲面；同伦允许压缩可缩部分，CW 复形给出逐维计数模型，Euler 特征在同伦等价下不变。回答每个概念时都准备两个例子：一个正例、一个说明条件不能省的反例。}{The whole course forms one chain: open sets define a topology; inverse images of open sets define continuity; continuous maps preserve connectedness and compactness; subspaces, products and quotients are the three basic constructions, and the quotient topology identifies points; pairing polygon edges produces surfaces; the alternating count of vertices, edges and faces gives the Euler characteristic; orientability, $\chi$ and the number of boundary components classify compact connected surfaces; homotopy allows contractible parts to be compressed, CW complexes provide a dimension-by-dimension counting model, and the Euler characteristic is invariant under homotopy equivalence. For each concept prepare two examples: one correct example and one counterexample showing that a hypothesis cannot be dropped.}
+
+\section*{中英术语对照表 | Chinese--English glossary}
+\noindent 口试时可先用下表核对中英文术语；术语按课程顺序排列。
+\EN{Use the table below to match Chinese and English terms; it follows the order of the course.}
+{\footnotesize
+\begin{center}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{p{1.75cm}p{3.3cm}p{1.75cm}p{3.3cm}p{1.75cm}p{3.3cm}}
+\toprule
+\textbf{中文} & \textbf{English} & \textbf{中文} & \textbf{English} & \textbf{中文} & \textbf{English}\\
+\midrule
+拓扑 & topology & 开集 & open set & 闭包 & closure\\
+基 & basis & 子空间 & subspace & 积空间 & product space\\
+连续映射 & continuous map & 同胚 & homeomorphism & 商映射 & quotient map\\
+饱和集 & saturated set & 商空间 & quotient space & 连通 & connected\\
+路径连通 & path connected & 紧 & compact & 开覆盖 & open cover\\
+Hausdorff & Hausdorff & 正规 & normal & 第二可数 & second countable\\
+可分 & separable & 可度量化 & metrizable & 连通和 & connected sum\\
+可定向 & orientable & 亏格 & genus & 交叉帽 & crosscap\\
+胞腔 & cell & 附着映射 & attaching map & 弱拓扑 & weak topology\\
+Euler 特征 & Euler characteristic & 同伦 & homotopy & 同伦等价 & homotopy equivalence\\
+变形收缩 & deformation retraction & 可缩 & contractible & 环秩 & cycle rank\\
+\bottomrule
+\end{tabular}
+\end{center}
+}
+
+\section*{参考文献与来源范围 | References and scope}
+\APS{本讲义只覆盖 SEU《Topology》讲义的两章：第 1 章一般拓扑（§1.1--§1.8）与第 2 章几何与代数拓扑基础（§2.1--§2.4）。不展开基本群、同调与覆盖空间（同调只在 Euler 特征的同伦不变性处提及，完整证明见代数拓扑资料）。公式按章节引用，不声称逐页对应；教材只用于核对定义、条件与符号。}{This handout covers only the two chapters of the SEU Topology notes: Chapter 1 on general topology (Sections 1.1--1.8) and Chapter 2 on geometric and algebraic topology (Sections 2.1--2.4). It does not develop the fundamental group, homology or covering spaces; homology appears only in the homotopy invariance of the Euler characteristic, whose proof belongs to the algebraic topology material. Formulas are cited by chapter without page-level correspondence; the textbook was used only to check definitions and notation.}
+\begin{enumerate}[label={[\arabic*]},leftmargin=2.2em,itemsep=1pt,topsep=1pt]
+\item Munkres, J. R. \textit{Topology}, 2nd edition. 第 2 章（拓扑空间与连续映射）、第 3 章（连通性与紧性）、第 4 章（可数性与分离公理）.[Chapters 2--4.]
+\item SEU《Topology》课程讲义：第 1 章 §1.1--§1.8、第 2 章 §2.1--§2.4（度量空间、拓扑与基、连通性、紧性、分离性与可度量化、商拓扑、多边形粘合、曲面分类、同伦与 CW 复形）.
+\item Hatcher, A. \textit{Algebraic Topology}. 第 0 章与第 2 章；Massey, W. S. \textit{A Basic Course in Algebraic Topology}.（仅作延伸参考，正文未展开。）
+\end{enumerate}
 
 \end{document}
+
+
+
+
+
+
+
+
