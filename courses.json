@@ -62,12 +62,12 @@
     "group": "analysis",
     "groupLabel": "分析",
     "scope": "第 1–7 章",
-    "pages": 12,
-    "summary": "围绕解析性、Cauchy 积分公式、Taylor 与 Laurent 展开、孤立奇点和留数定理，并联系二维势场。",
+    "pages": 24,
+    "summary": "围绕解析性、Cauchy 积分定理与公式、Taylor/Laurent 展开、孤立奇点与留数、共形映射与调和函数；配复积分/实积分/留数算例、平面势流等应用与术语表。",
     "pdf": "materials/complex-analysis/complex-analysis-aps.pdf",
     "tex": "materials/complex-analysis/source.tex",
     "cover": "materials/complex-analysis/cover.png",
-    "keywords": "复导数 解析函数 Cauchy 积分公式 Laurent 级数 留数 Laplace 方程"
+    "keywords": "复数 复球面 解析函数 Cauchy-Riemann 方程 复积分 Cauchy 定理 Cauchy 积分公式 幂级数 Taylor 展开 Laurent 展开 孤立奇点 留数定理 辐角原理 共形映射 Möbius 变换 调和函数 最大模原理"
   },
   {
     "id": "mathematical-analysis-1",
@@ -118,12 +118,12 @@
     "group": "analysis",
     "groupLabel": "分析",
     "scope": "新讲义第 1–4 章",
-    "pages": 17,
-    "summary": "从集合、度量空间与 Riemann 积分逐步进入测度、可测函数和 Lebesgue 积分，解释几乎处处及主要收敛定理。",
+    "pages": 26,
+    "summary": "从集合与点集出发建立 Lebesgue 测度、可测函数与 Lebesgue 积分；重点讲单调收敛、Fatou、控制收敛、Egorov/Lusin、Riemann 与 Lebesgue 的关系及 Fubini；含反例、应用与术语表。",
     "pdf": "materials/real-analysis/real-analysis-aps.pdf",
     "tex": "materials/real-analysis/source.tex",
     "cover": "materials/real-analysis/cover.png",
-    "keywords": "集合 度量空间 Riemann 积分 测度 sigma 代数 可测函数 Lebesgue 积分 Fatou 控制收敛 Fubini"
+    "keywords": "集合 基数 Cantor 集 外测度 可测集 σ-代数 可测函数 Egorov 定理 Lusin 定理 Lebesgue 积分 单调收敛定理 Fatou 引理 控制收敛定理 一致可积 Fubini 定理 Lp 空间"
   },
   {
     "id": "topology",
@@ -146,12 +146,12 @@
     "group": "applied",
     "groupLabel": "计算与应用",
     "scope": "课程讲义与 APS 口试重点",
-    "pages": 16,
-    "summary": "用 Newton 法求 √2 展示迭代和收敛，再整理线性方程组、插值、数值积分、微分方程及误差与稳定性。",
+    "pages": 25,
+    "summary": "误差与浮点、非线性方程迭代（二分/Newton/割线/收敛阶）、线性方程组（LU/迭代/条件数）、插值与样条、数值积分与 Romberg、ODE 数值解与稳定性、幂法；配数值表、误差分析与术语表。",
     "pdf": "materials/numerical-analysis/numerical-analysis-aps.pdf",
     "tex": "materials/numerical-analysis/source.tex",
     "cover": "materials/numerical-analysis/cover.png",
-    "keywords": "误差 Newton 迭代 线性方程组 插值 数值积分 Runge Kutta 收敛 稳定"
+    "keywords": "误差 有效数字 Newton 法 二分法 收敛阶 LU 分解 条件数 Jacobi 迭代 Gauss-Seidel 插值 差商 Runge 现象 样条 数值积分 Simpson 法 Romberg ODE 数值解 Runge-Kutta 稳定性 幂法"
   },
   {
     "id": "mathematical-modeling",
@@ -160,12 +160,12 @@
     "group": "applied",
     "groupLabel": "计算与应用",
     "scope": "数学建模与数学实验课件",
-    "pages": 11,
-    "summary": "以药物浓度衰减说明假设、微分方程与参数估计，再整理人口、传染病、生态、优化、网络和更换策略模型。",
-    "pdf": "materials/mathematical-modeling/modeling-aps.pdf",
+    "pages": 22,
+    "summary": "建模流程与初等模型、量纲分析与 AHP、拟合/插值/求根、人口与药动学、传染病 SIR/SEIR、生态与 Leslie 矩阵、差分与 Markov 链、优化/变分/图论、随机与更换策略；配完整算例与术语表。",
+    "pdf": "materials/mathematical-modeling/mathematical-modeling-aps.pdf",
     "tex": "materials/mathematical-modeling/source.tex",
     "cover": "materials/mathematical-modeling/cover.png",
-    "keywords": "药物浓度 人口模型 传染病 生态 Leslie 模型 层次分析 优化 图论 随机模型"
+    "keywords": "建模流程 量纲分析 AHP 最小二乘 人口模型 药物动力学 SIR 模型 基本再生数 Lotka-Volterra Leslie 矩阵 差分方程 Markov 链 线性规划 变分 图论 预防性更换 Monte Carlo"
   },
   {
     "id": "pde",
@@ -174,12 +174,12 @@
     "group": "applied",
     "groupLabel": "计算与应用",
     "scope": "第 3 版讲义第 1–4 章",
-    "pages": 12,
-    "summary": "从热方程的初边值问题示范分离变量，再系统整理波动、热、位势方程，以及 Fourier 展开、积分变换和 Green 函数。",
+    "pages": 22,
+    "summary": "方程导出与分类、一阶方程特征线、分离变量与 Sturm-Liouville、波动/热/位势方程、d'Alembert 公式、热核与最大值原理、Green 函数与积分变换、方法选择；配完整算例、应用与术语表。",
     "pdf": "materials/pde/pde-aps.pdf",
     "tex": "materials/pde/source.tex",
     "cover": "materials/pde/cover.png",
-    "keywords": "偏微分方程 波动方程 热方程 Laplace 方程 分离变量 Fourier 积分变换 Green 函数"
+    "keywords": "波动方程 热方程 Laplace 方程 定解条件 适定性 特征线 分离变量 Sturm-Liouville d'Alembert 公式 热核 最大值原理 Green 函数 镜像法 Fourier 变换 Laplace 变换"
   },
   {
     "id": "mathematical-statistics",
@@ -244,12 +244,12 @@
     "group": "analysis",
     "groupLabel": "分析",
     "scope": "第 1–2 章",
-    "pages": 14,
-    "summary": "用连续函数空间的最大范数说明函数空间中的距离和完备性，进而讲 Banach 与 Hilbert 空间、有界算子和线性泛函。",
+    "pages": 26,
+    "summary": "度量空间与完备性、压缩映射、赋范/Banach 空间、Hilbert 空间与投影、Riesz 表示、有界算子与四大定理、Hahn-Banach、弱收敛与谱初步；配函数空间例子、应用与术语表。",
     "pdf": "materials/functional-analysis/functional-analysis-aps.pdf",
     "tex": "materials/functional-analysis/source.tex",
     "cover": "materials/functional-analysis/cover.png",
-    "keywords": "度量空间 范数 Banach 空间 Hilbert 空间 有界线性算子 线性泛函 Riesz 投影 定理"
+    "keywords": "度量空间 完备性 压缩映射 赋范空间 Banach 空间 Hilbert 空间 正交投影 Riesz 表示定理 有界线性算子 一致有界原理 开映射定理 闭图像定理 Hahn-Banach 定理 弱收敛 谱"
   },
   {
     "id": "stability",
@@ -258,11 +258,11 @@
     "group": "applied",
     "groupLabel": "计算与应用",
     "scope": "常微分方程平衡点与课程课件",
-    "pages": 15,
-    "summary": "以 ẋ = −x 和 Lyapunov 函数 V = x²/2 说明渐近稳定的判断，再整理 LaSalle 原理、线性系统、扰动与 Hopfield 网络。",
+    "pages": 26,
+    "summary": "解的存在唯一性与不变集、稳定性定义（Lyapunov/渐近/指数/一致）、Lyapunov 直接法与 LaSalle 原理、线性系统与 Lyapunov 方程、线性化与 Hartman-Grobman、非自治与扰动、Hopfield 网络应用；配完整例题与术语表。",
     "pdf": "materials/stability/stability-aps.pdf",
     "tex": "materials/stability/source.tex",
     "cover": "materials/stability/cover.png",
-    "keywords": "平衡点 稳定 渐近稳定 Lyapunov 函数 LaSalle 不变性原理 Lyapunov 方程 吸引域 扰动 Hopfield"
+    "keywords": "平衡点 解的存在唯一性 不变集 Lyapunov 稳定 渐近稳定 指数稳定 吸引域 Lyapunov 函数 LaSalle 不变性原理 Lyapunov 方程 线性化 Hartman-Grobman 非自治 Barbalat 引理 Hopfield 网络"
   }
 ]

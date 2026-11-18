@@ -1,204 +1,447 @@
 \documentclass[UTF8,11pt,a4paper]{ctexart}
-\usepackage{amsmath,amssymb,geometry,enumitem,hyperref}
+\usepackage{amsmath,amssymb,geometry,enumitem,hyperref,longtable}
 \geometry{margin=2.1cm}\setlist{itemsep=2pt,topsep=3pt}
+\setlength{\abovedisplayskip}{7pt plus 2pt minus 3pt}
+\setlength{\belowdisplayskip}{7pt plus 2pt minus 3pt}
+\setlength{\abovedisplayshortskip}{4pt plus 1pt}
+\setlength{\belowdisplayshortskip}{4pt plus 1pt}
 \hypersetup{colorlinks=true,linkcolor=blue}
+\raggedbottom
 \newcommand{\EN}[1]{\par\noindent \textbf{English.} #1\par}
 \newcommand{\BOTH}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par}
 \newcommand{\READ}[1]{\par\noindent \textbf{公式英文读法 / How to read it.} #1\par}
 \newcommand{\FORMULA}[2]{\par\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
 \newcommand{\EX}[2]{\par\noindent \textbf{例子 / Example.} #1\par\EN{#2}}
 \newcommand{\ASK}[4]{\par\noindent \textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent \textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
-\title{复变函数 APS 面试准备\\[4pt]\large 第 1--7 章：初等复函数、解析性、积分、级数与留数}
+\newcommand{\APS}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par\smallskip}
+\title{复变函数 APS 面试准备\\[4pt]\large 第 1--7 章：复数、解析性、复积分、级数、留数与共形映射}
 \author{Complex Analysis: Bilingual Review}
 \date{}
-\newcommand{\APS}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par\smallskip}
 \begin{document}
 \maketitle
 
 \section*{课程概述 | Course overview}
-\APS{复变函数的主线是解析性带来的强约束。我先学习复指数、对数分支、复导数和 Cauchy--Riemann 方程，再学曲线积分、Cauchy 定理与积分公式；随后用 Taylor、Laurent 展开区分零点、可去奇点、极点和本性奇点，通过留数计算围道积分与实积分。后面包括辐角原理、Rouché 定理、最大模原理、解析延拓、共形映射及二维调和势。每个积分结论都要说明区域、奇点位置和围道方向。}{The central theme is the strong structure imposed by holomorphicity. I begin with the complex exponential, logarithm branches, complex derivatives and the Cauchy--Riemann equations, then study contour integration and Cauchy\textquotesingle s theorem and integral formula. Taylor and Laurent expansions classify zeros and isolated singularities; residues evaluate contour and real integrals. Further topics include the argument principle, Rouché\textquotesingle s theorem, maximum modulus, analytic continuation, conformal maps and planar harmonic potentials. For an integral formula I specify the domain, singularities and contour orientation.}
-\subsection*{例一：解析与仅有偏导数不同 | Complex differentiability is restrictive}
-\APS{对 $f(z)=z^2=(x^2-y^2)+i(2xy)$，实部和虚部满足 $u_x=2x=v_y$、$u_y=-2y=-v_x$，并且偏导连续，所以处处解析，$f^{\prime}(z)=2z$。而 $g(z)=\overline z=x-iy$ 有 $u_x=1$、$v_y=-1$，不满足 Cauchy--Riemann 方程，处处不可复微。它作为二维实映射却可微：复微分还要求导数是复线性的，对所有趋近方向给出同一个差商极限。}{For $f(z)=z^2=(x^2-y^2)+i(2xy)$, the continuous partial derivatives satisfy $u_x=2x=v_y$ and $u_y=-2y=-v_x$, so $f$ is holomorphic everywhere with derivative $2z$. For $g(z)=\overline z=x-iy$, we have $u_x=1$ and $v_y=-1$, so the Cauchy--Riemann equations fail everywhere. This map is differentiable as a real two-dimensional map, but complex differentiability additionally requires a complex-linear derivative and one difference-quotient limit from all directions.}
-\subsection*{例二：由极点算实积分 | From a pole to a real integral}
-\APS{计算 $\int_{-\infty}^{\infty}(1+x^2)^{-1}\,dx$。函数 $1/(1+z^2)$ 在 $\pm i$ 有简单极点，取实轴与上半圆组成的逆时针围道，只包住 $i$，其留数为 $1/(2i)$，闭路积分为 $\pi$。半径 $R>1$ 的圆弧上，模估计给出积分绝对值至多 $\pi R/(R^2-1)\to0$，所以实积分等于 $\pi$。这里不仅要算留数，还必须证明圆弧项消失。}{To evaluate $\int_{-\infty}^{\infty}(1+x^2)^{-1}\,dx$, use $1/(1+z^2)$ and a counterclockwise upper semicircle. Only the simple pole at $i$ is enclosed; its residue is $1/(2i)$, so the contour integral is $\pi$. On the arc of radius $R>1$, the integral has modulus at most $\pi R/(R^2-1)$, tending to zero. Thus the real integral is $\pi$. Computing residues alone is insufficient: the arc contribution must also be controlled.}
+\APS{本讲义覆盖史济怀、刘太顺《复变函数》前七章：复数与复平面；复函数、极限连续与多值分支；解析性与 Cauchy--Riemann 方程；初等复函数；复积分与 Cauchy 理论；级数、孤立奇点与留数；共形映射与调和函数。面试时每个结果按四步复述：定义动机、定理条件、证明思路、数值例子，再补一句实际意义和一个易错点。}{These notes cover Chapters 1--7 of Shi Jihuai and Liu Taishun, \emph{Complex Analysis}: complex numbers; complex functions, limits, continuity, and branches; analyticity and the Cauchy--Riemann equations; elementary functions; contour integration and Cauchy theory; series, isolated singularities, and residues; conformal mapping and harmonic functions. In an interview I present each result in four steps: motivation, precise hypotheses, proof idea, and a numerical example, followed by one application and one common mistake.}
 
+\section[第 1 章 复数与复平面]{第 1 章：复数、复平面与扩充复平面 | Chapter 1: Complex numbers, the complex plane, and the extended plane}
 
-\section[第 1 章 复函数]{第 1 章：复数、初等复函数与解析性 | Chapter 1: Complex numbers and analyticity}
-\subsection{极形式、Euler 公式与 De Moivre 公式 | Polar form and power formulas}
-\noindent 复数 $z=x+iy$ 的模为 $|z|=\sqrt{x^2+y^2}$，辐角 $\arg z$ 是从正实轴到向量 $(x,y)$ 的角。若 $z\ne0$，可写成 $z=re^{i\theta}$，其中 $r=|z|$。\textbf{Euler 公式}
-\FORMULA{Euler 公式}{Euler's formula}
+\subsection{代数运算、共轭与模 | Algebra, conjugation, and modulus}
+\APS{复数 $z=x+iy$（$x,y\in\mathbb R$，$i^2=-1$）按实数规则做四则运算，构成域；但 $\mathbb C$ 上不存在与运算相容的全序。共轭 $\bar z=x-iy$ 保持运算，模 $|z|=\sqrt{z\bar z}$ 满足乘法性与三角不等式。}{Complex numbers $z=x+iy$ with $x,y\in\mathbb R$ and $i^2=-1$ form a field under the usual arithmetic, but $\mathbb C$ admits no total order compatible with the operations. Conjugation $\bar z=x-iy$ preserves the operations, and the modulus $|z|=\sqrt{z\bar z}$ is multiplicative and obeys the triangle inequality.}
+\FORMULA{共轭、模与基本恒等式}{conjugation, modulus, and basic identities}
 \[
-e^{i\theta}=\cos\theta+i\sin\theta
+\bar z=x-iy,\quad |z|^2=z\bar z=x^2+y^2,\quad
+\operatorname{Re}z=\frac{z+\bar z}{2},\quad \operatorname{Im}z=\frac{z-\bar z}{2i}.
 \]
-把复指数与单位圆上的三角参数联系起来，并说明复数相乘时模相乘、辐角相加。\textbf{De Moivre 公式}是它对整数次幂的直接推论：
-\FORMULA{De Moivre 公式}{De Moivre's formula}
-\[
-(r(\cos\theta+i\sin\theta))^n=r^n(\cos n\theta+i\sin n\theta),\qquad n\in\mathbb Z.
-\]
-它常用于计算幂和开方。
-\EN{The modulus of $z=x+iy$ is $|z|=\sqrt{x^2+y^2}$, and its argument is the angle from the positive real axis. A nonzero complex number can be written as $z=re^{i\theta}$. Euler's formula relates the exponential to the unit circle and explains multiplication in polar form. De Moivre's formula is its consequence for integer powers and is useful for powers and roots.}
-\READ{“E to the i theta equals cosine theta plus i sine theta; the n-th power multiplies the argument by n.”}
-\EX{若 $z=1+i$，则 $r=\sqrt2,\theta=\pi/4$，因此 $z^2=2e^{i\pi/2}=2i$。求 $w^n=z=re^{i\theta}$ 时，辐角可相差 $2k\pi$，所以全部 $n$ 个根为 $w_k=r^{1/n}e^{i(\theta+2k\pi)/n}$，$k=0,\ldots,n-1$。例如 $w^2=-1$ 的两个根是 $i,-i$。}{For $z=1+i$, we have $r=\sqrt2$ and $\theta=\pi/4$, so $z^2=2e^{i\pi/2}=2i$. To solve $w^n=z=re^{i\theta}$, include arguments differing by $2k\pi$; this gives the $n$ roots displayed in the text. In particular, the two roots of $w^2=-1$ are $i$ and $-i$.}
+\EX{计算 $\dfrac{3+4i}{1-2i}$：分子分母同乘 $1+2i$，得 $\dfrac{(3+4i)(1+2i)}{5}=\dfrac{-5+10i}{5}=-1+2i$。验算 $(-1+2i)(1-2i)=3+4i$。}{Compute the quotient by multiplying by $1+2i$: the result is $-1+2i$, and multiplying back gives $3+4i$.}
 
-\subsection{复指数、三角函数与双曲函数 | Exponential, trigonometric, and hyperbolic functions}
-\noindent 复指数由幂级数 $e^z=\sum_{n=0}^{\infty}z^n/n!$ 定义，整个复平面上收敛，因此 $e^z$ 是整函数且 $(e^z)'=e^z$。Euler 公式给出 $e^{x+iy}=e^x(\cos y+i\sin y)$，所以 $|e^z|=e^{\operatorname{Re}z}$，周期为 $2\pi i$。复正弦和余弦定义为
-\FORMULA{复正弦与复余弦的指数表示}{exponential definitions of the complex sine and cosine}
-\[
-\sin z=\frac{e^{iz}-e^{-iz}}{2i},\qquad
-\cos z=\frac{e^{iz}+e^{-iz}}2.
-\]
-它们都是整函数，且导数分别为 $\cos z$ 和 $-\sin z$；$\tan z=\sin z/\cos z$ 在 $\cos z=0$ 处有极点。双曲函数为 $\sinh z=(e^z-e^{-z})/2$、$\cosh z=(e^z+e^{-z})/2$。这些定义使实变量的三角恒等式可通过指数运算延伸到复变量。
-\EN{The complex exponential is defined by its power series, which converges on the whole plane; hence it is entire and has derivative $e^z$. Euler's formula gives its modulus and period. The displayed exponential formulas define sine and cosine as entire functions, with derivatives cosine and minus sine. Tangent has poles where cosine vanishes. Hyperbolic sine and cosine are defined from the exponential as shown. These definitions extend familiar trigonometric identities to complex arguments.}
-\EX{令 $z=iy$，Euler 公式给出 $e^{iy}=\cos y+i\sin y$，从而 $\cos y$、$\sin y$ 分别是实部、虚部。若 $z=x+iy$，则 $e^z=e^x e^{iy}$，所以实部 $x$ 控制模长 $e^x$，虚部 $y$ 控制旋转角。}{For $z=iy$, Euler's formula gives $e^{iy}=\cos y+i\sin y$, so cosine and sine are its real and imaginary parts. For $z=x+iy$, the factor $e^x$ controls the modulus and $y$ controls the angle.}
+\subsection{几何表示与复数乘法 | Geometric representation and multiplication}
+\APS{把 $z$ 看成向量 $(x,y)$，加法即平行四边形法则，$|z_1-z_2|$ 是距离；乘法是旋转加伸缩，$z_1z_2=r_1r_2e^{i(\theta_1+\theta_2)}$，乘以 $i$ 是逆时针转 $90^\circ$。常见点集：$|z-a|=r$ 是圆，$\operatorname{Re}z=c$ 是竖直线，$|z-a|=|z-b|$ 是垂直平分线，$|z-a|=k|z-b|$ 是 Apollonius 圆。}{View $z$ as the vector $(x,y)$: addition is the parallelogram law and $|z_1-z_2|$ is distance; multiplication rotates and dilates, and multiplying by $i$ is a quarter turn. Common sets: $|z-a|=r$ is a circle, $\operatorname{Re}z=c$ a vertical line, $|z-a|=|z-b|$ a perpendicular bisector, and $|z-a|=k|z-b|$ an Apollonius circle.}
+\EX{(a) $|z-1|=|z+i|$：平方得 $-2x+1=2y+1$，即直线 $y=-x$。(b) $|z-1|=2|z+1|$：平方并配方得 $(x+\frac53)^2+y^2=\frac{16}{9}$，是以 $-\frac53$ 为心、$\frac43$ 为半径的圆。}{(a) Squaring $|z-1|=|z+i|$ gives the line $y=-x$. (b) Squaring $|z-1|=2|z+1|$ and completing the square gives a circle with center $-5/3$ and radius $4/3$.}
 
-\subsection{复对数、复幂与分支 | Logarithms, complex powers, and branches}
-\noindent 求解 $e^w=z$ 定义复对数。若 $z\ne0$ 且 $\theta$ 是它的一个辐角，则
-\FORMULA{复对数的多值表示}{multivalued formula for the complex logarithm}
+\subsection{极形式、辐角与开方 | Polar form, argument, and roots}
+\APS{非零复数写成 $z=re^{i\theta}$，$r=|z|$，$\theta\in\arg z=\theta_0+2k\pi$。主辐角 $\operatorname{Arg}z\in(-\pi,\pi]$，例如 $\operatorname{Arg}(-1)=\pi$、$\operatorname{Arg}(-i)=-\pi/2$；$0$ 没有辐角。乘除时模相乘除、辐角相加减，开方时辐角要加上全部 $2k\pi$。}{A nonzero complex number is $z=re^{i\theta}$ with $r=|z|$ and $\theta\in\arg z=\theta_0+2k\pi$. The principal argument lies in $(-\pi,\pi]$; for instance $\operatorname{Arg}(-1)=\pi$ and $\operatorname{Arg}(-i)=-\pi/2$, while $0$ has no argument. Multiplication multiplies moduli and adds arguments, and taking roots requires all $2k\pi$.}
+\FORMULA{极形式、De Moivre 公式与开方}{polar form, De Moivre's formula, and roots}
 \[
-\log z=\{\ln|z|+i(\theta+2k\pi):k\in\mathbb Z\}.
+z=re^{i\theta},\qquad (re^{i\theta})^n=r^ne^{in\theta},\qquad
+\sqrt[n]{re^{i\theta}}=\{r^{1/n}e^{i(\theta+2k\pi)/n}:k=0,\dots,n-1\}.
 \]
-这里 $\ln|z|$ 是正实数 $|z|$ 的自然对数，$2k\pi$ 来自辐角的周期性，所以复对数通常是多值的。例如 $\log(-1)=\{(2k+1)\pi i:k\in\mathbb Z\}$。取主辐角 $-\pi<\operatorname{Arg}z<\pi$，可在裂缝平面 $\mathbb C\setminus(-\infty,0]$ 上定义主值
-\FORMULA{主值复对数及其导数}{principal complex logarithm and its derivative}
+\APS{$n$ 次方根恰有 $n$ 个值，均匀分布在半径 $r^{1/n}$ 的圆上，是正 $n$ 边形顶点，其和为零（韦达定理）。开方因此是多值的，必须谈分支。}{The $n$-th root has exactly $n$ values, equally spaced on the circle of radius $r^{1/n}$: the vertices of a regular $n$-gon, whose sum is zero. Taking roots is therefore multivalued and requires a branch.}
+\EX{(a) $1+i=\sqrt2e^{i\pi/4}$，故 $(1+i)^2=2i$，$(1+i)^8=16$。(b) $w^2=-1$ 给出 $w=\pm i$。(c) $8i=8e^{i\pi/2}$ 的三个立方根为 $\sqrt3+i$、$-\sqrt3+i$、$-2i$，和为 $0$。}{(a) $1+i=\sqrt2e^{i\pi/4}$, so its square is $2i$ and its eighth power is $16$. (b) The square roots of $-1$ are $\pm i$. (c) The three cube roots of $8i=8e^{i\pi/2}$ are $\sqrt3+i$, $-\sqrt3+i$, and $-2i$, with sum zero.}
+
+\subsection{复球面与扩充复平面 | The Riemann sphere and the extended plane}
+\APS{把复平面放在 $\mathbb R^3$ 的 $\zeta=0$ 平面上，从单位球北极 $N$ 向 $z$ 连线，与球面的另一交点就是球极投影；$N$ 本身对应 $\infty$。于是 $\mathbb C\cup\{\infty\}$ 与球面同胚。$\infty$ 的邻域是 $\{|z|>R\}\cup\{\infty\}$，对应北极的邻域；$z_n\to\infty$ 等价于 $|z_n|\to\infty$。可以约定 $z/\infty=0$、$z\cdot\infty=\infty$（$z\ne0$），但 $\infty-\infty$、$0\cdot\infty$、$\infty/\infty$ 无定义。}{Place the complex plane as $\zeta=0$ in $\mathbb R^3$ and project from the north pole $N$ of the unit sphere onto the plane; $N$ itself corresponds to $\infty$, so $\mathbb C\cup\{\infty\}$ is homeomorphic to the sphere. A neighborhood of $\infty$ is $\{|z|>R\}\cup\{\infty\}$, corresponding to a neighborhood of $N$, and $z_n\to\infty$ means $|z_n|\to\infty$. We set $z/\infty=0$ and $z\cdot\infty=\infty$ for $z\ne0$, while $\infty-\infty$, $0\cdot\infty$, and $\infty/\infty$ remain undefined.}
+\FORMULA{球极投影与弦距离}{stereographic projection and chordal distance}
 \[
-\operatorname{Log}z=\ln|z|+i\operatorname{Arg}z,\qquad
-(\operatorname{Log}z)'=\frac1z.
+(\xi,\eta,\zeta)=\Big(\frac{2x}{1+x^2+y^2},\frac{2y}{1+x^2+y^2},\frac{x^2+y^2-1}{1+x^2+y^2}\Big),\qquad
+d(z,w)=\frac{2|z-w|}{\sqrt{(1+|z|^2)(1+|w|^2)}}.
 \]
-复幂定义为 $z^\alpha=\exp(\alpha\log z)$；非整数次幂一般多值，固定一个解析对数分支后才成为单值函数。主值对数不总满足实对数的乘法公式：若 $z=w=e^{3\pi i/4}$，则 $\operatorname{Log}z+\operatorname{Log}w=3\pi i/2$，而 $\operatorname{Log}(zw)=-\pi i/2$，两者差 $2\pi i$。
-\EN{The complex logarithm solves $e^w=z$. For a nonzero $z$, its values are given by the displayed set; the term $2k\pi$ reflects the periodicity of the argument, so the logarithm is generally multivalued. The real natural logarithm is applied to $|z|$. Choosing the principal argument between $-\pi$ and $\pi$ defines $\operatorname{Log}$ on the slit plane, where its derivative is $1/z$. A complex power is defined using a logarithm and is usually multivalued for noninteger exponents; fixing an analytic branch makes it single-valued. The principal logarithm's product rule can differ by $2\pi i$, as the example shows.}
-\EX{对 $1+i$，模为 $\sqrt2$、主辐角为 $\pi/4$，因此 $\operatorname{Log}(1+i)=\tfrac12\ln2+i\pi/4$。若计算平方根，则方程 $(\sqrt z)^2=z$ 有两个根；单值主值平方根只是选定分支后的一个取值。}{For $1+i$, the modulus is $\sqrt2$ and the principal argument is $\pi/4$, so its principal logarithm is $\tfrac12\ln2+i\pi/4$. A square-root equation has two roots; a single-valued principal square root selects one value after a branch is fixed.}
-\ASK{为什么复对数和非整数次幂需要选分支？}{Why do logarithms and noninteger powers require a branch choice?}{绕原点一周时连续辐角增加 $2\pi$，同一个非零复数因而对应多个对数值；$z^\alpha=\exp(\alpha\log z)$ 继承这种多值性。限制定义域并固定连续辐角，才能得到单值解析分支。}{After one circuit around zero, a continuous argument increases by $2\pi$, so one nonzero number has several logarithms. The power $z^\alpha=\exp(\alpha\log z)$ inherits this ambiguity. Restricting the domain and fixing a continuous argument gives a single-valued analytic branch.}
+\EX{$0$ 映到南极，$1$ 映到 $(1,0,0)$，$i$ 映到 $(0,1,0)$，$|z|=1$ 映到赤道，$\infty$ 映到北极。球极投影保圆：平面上的圆对应球面上不过 $N$ 的圆，直线对应过 $N$ 的圆（去掉 $N$）；因此圆、直线在球面上统一成圆。}{The origin maps to the south pole, $1$ to $(1,0,0)$, $i$ to $(0,1,0)$, the unit circle to the equator, and infinity to the north pole. Projection sends planar circles to sphere circles not through $N$, and lines to circles through $N$ with $N$ removed; circles and lines are thus unified on the sphere.}
+\ASK{为什么要把复数域扩充一个无穷远点？}{Why add a point at infinity?}{球极投影使 $\mathbb C_\infty$ 成为紧空间（同胚于球面），从而可以统一处理 $z\to\infty$、留数、有理函数的次数；物理上远处的边界条件也可写成无穷远邻域条件。}{Stereographic projection makes $\mathbb C_\infty$ compact (homeomorphic to the sphere), so limits at infinity, residues, and the degree of rational functions can be treated uniformly; physically, boundary conditions far away become conditions in a neighborhood of infinity.}
+\section[第 2 章 复函数与极限]{第 2 章：复变函数、极限、连续与多值分支 | Chapter 2: Complex functions, limits, continuity, and branches}
 
-\subsection{复导数与 Cauchy--Riemann 方程 | Complex differentiability}
-\noindent $f$ 在 $z_0$ 复可微是指
-\FORMULA{复导数的差商定义}{difference-quotient definition of the complex derivative}
+\subsection{复变函数与映射观点 | Complex functions as mappings}
+\APS{复变函数 $f:D\to\mathbb C$ 可写成 $f(z)=u(x,y)+iv(x,y)$，图像需四维空间，所以通常画映射图：$z$ 平面中的区域在 $w=f(z)$ 平面中的像。}{A complex function $f:D\to\mathbb C$ can be written $f(z)=u(x,y)+iv(x,y)$; its graph needs four dimensions, so one draws the mapping instead: the image in the $w$-plane of domains in the $z$-plane.}
+\EX{$f(z)=z^2$ 在极坐标下是 $(r,\theta)\mapsto(r^2,2\theta)$：第一象限映到上半平面，右半平面映到 $\mathbb C\setminus(-\infty,0]$，每个非零像点有两个原像 $\pm z$。因此 $z^2$ 在 $0$ 处把角放大两倍，不共形。}{In polar coordinates $z^2$ acts as $(r,\theta)\mapsto(r^2,2\theta)$: the first quadrant maps to the upper half-plane, the right half-plane to the plane slit along the negative real axis, and every nonzero image point has two preimages $\pm z$. Thus $z^2$ doubles angles at the origin and is not conformal there.}
+
+\subsection{极限与连续 | Limits and continuity}
+\APS{复极限：对任意 $\varepsilon>0$ 存在 $\delta>0$，当 $0<|z-z_0|<\delta$ 时 $|f(z)-L|<\varepsilon$。由于 $z$ 可从任意方向、任意路径逼近，复极限要求所有路径给出同一值。}{Complex limit: for every $\varepsilon>0$ there is $\delta>0$ such that $0<|z-z_0|<\delta$ implies $|f(z)-L|<\varepsilon$. Since $z$ may approach from any direction and along any path, all paths must give the same value.}
+\FORMULA{复极限化归为实部与虚部}{reduction of a complex limit to real and imaginary parts}
 \[
-f'(z_0)=\lim_{h\to0,\ h\in\mathbb C}\frac{f(z_0+h)-f(z_0)}h
+\lim_{z\to z_0}f(z)=L
+\iff
+\lim_{(x,y)\to(x_0,y_0)}u=\operatorname{Re}L,\qquad
+\lim_{(x,y)\to(x_0,y_0)}v=\operatorname{Im}L.
 \]
-沿复平面所有方向都得到同一极限；在开集内处处复可微称解析。若 $f=u+iv$ 且 $u,v$ 的一阶偏导连续，\textbf{Cauchy--Riemann 方程} $u_x=v_y,\ u_y=-v_x$ 是复可微的充要条件。解析函数还满足 $u_{xx}+u_{yy}=v_{xx}+v_{yy}=0$，所以实部、虚部均调和；这里要求相应二阶偏导连续。
-\EN{Complex differentiability requires the difference quotient to have the same limit from every direction in the plane. A function complex differentiable throughout an open set is analytic. If $f=u+iv$ has continuous first partial derivatives, the Cauchy--Riemann equations are necessary and sufficient for complex differentiability. With continuous second partial derivatives, they imply that both $u$ and $v$ satisfy Laplace's equation and are harmonic.}
-\READ{“U sub x equals v sub y, and u sub y equals negative v sub x.”}
-\EX{对 $f(z)=z^2$，有 $u=x^2-y^2,v=2xy$，故 $u_x=v_y=2x$、$u_y=-v_x=-2y$，并且 $f'(z)=2z$、$\Delta u=2-2=0$。相反，$f(z)=\bar z$ 沿实方向的差商为 $1$，沿纯虚方向为 $-1$，所以处处不可复微。}{For $f(z)=z^2$, the Cauchy--Riemann equations hold, $f'(z)=2z$, and the real part is harmonic. In contrast, the difference quotient for $f(z)=\bar z$ is one along real increments and minus one along purely imaginary increments, so it is nowhere complex differentiable.}
-\ASK{为什么复可微比实可微严格？}{Why is complex differentiability more restrictive than real differentiability?}{把 $f:\mathbb C\to\mathbb C$ 看成 $\mathbb R^2\to\mathbb R^2$ 时，实可微要求存在线性近似 $f(z_0+h)=f(z_0)+A(h)+o(|h|)$，其中 $A$ 只需实线性；复可微进一步要求 $A(h)=ch$，即复线性。两者都涉及平面内任意方向的增量。共轭函数 $f(z)=\bar z$ 作为实映射处处可微，导数矩阵为 $\operatorname{diag}(1,-1)$，但它的复差商沿实轴为 $1$、沿虚轴为 $-1$，所以处处不复可微。}{Viewed as a map from $\mathbb R^2$ to $\mathbb R^2$, real differentiability means $f(z_0+h)=f(z_0)+A(h)+o(|h|)$ for a real-linear map $A$. Complex differentiability additionally requires $A(h)=ch$, so that the derivative is complex-linear. Both involve increments in every direction of the plane. Conjugation is real differentiable everywhere with derivative matrix $\operatorname{diag}(1,-1)$, but its complex difference quotient is one along the real axis and minus one along the imaginary axis. It is nowhere complex differentiable.}
+\EX{$\lim_{z\to0}\dfrac{\bar z}{z}$ 不存在：令 $z=re^{i\theta}$ 得 $e^{-2i\theta}$，沿实轴为 $1$、沿虚轴为 $-1$。而 $\lim_{z\to0}\dfrac{|z|^2}{z}=\lim\bar z=0$ 存在。极限存在与解析是两件独立的事。}{The limit of $\bar z/z$ at zero does not exist: with $z=re^{i\theta}$ it is $e^{-2i\theta}$, equal to $1$ along the real axis and $-1$ along the imaginary axis. In contrast $|z|^2/z=\bar z\to0$. Existence of a limit and analyticity are independent questions.}
+\APS{$f$ 在 $z_0$ 连续指 $\lim_{z\to z_0}f(z)=f(z_0)$，等价于 $u,v$ 连续。多项式、有理函数（分母非零处）、$|z|$、$\bar z$、$e^z$、$\sin z$ 都连续。主辐角 $\operatorname{Arg}z$ 在负实轴上不连续：上方极限 $\pi$、下方极限 $-\pi$，跳跃 $2\pi$，这正是对数分支问题的根源。}{$f$ is continuous at $z_0$ if $f(z)\to f(z_0)$, equivalently $u$ and $v$ are continuous. Polynomials, rational functions away from poles, $|z|$, $\bar z$, $e^z$, and $\sin z$ are continuous. The principal argument is discontinuous on the negative real axis: the limit is $\pi$ from above and $-\pi$ from below, a jump of $2\pi$, the source of the branch problem for the logarithm.}
 
-\section[第 2 章 Cauchy 公式]{第 2 章：复积分与 Cauchy 公式 | Chapter 2: Contour integrals and Cauchy's formula}
-\subsection{曲线、方向和积分定义 | Paths and contour integrals}
-\APS{分段 $C^1$ 路径是连续映射 $\gamma:[a,b]\to\mathbb C$，在有限分段上连续可微。对曲线上连续的 $f$，定义 $\int_\gamma f(z)dz=\int_a^b f(\gamma(t))\gamma^{\prime}(t)dt$；方向由参数递增给出，反向变号。长度为 $\ell(\gamma)=\int_a^b|\gamma^{\prime}(t)|dt$，所以 $|\int_\gamma fdz|\le\max_\gamma|f|\ell(\gamma)$。正向 Jordan 围道把内部置于行进方向左侧。}{A piecewise $C^1$ path is a continuous map $\gamma:[a,b]\to\mathbb C$, continuously differentiable on finitely many pieces. For continuous $f$ on its image, define $\int_\gamma f(z)dz=\int_a^b f(\gamma(t))\gamma^{\prime}(t)dt$. Increasing parameter determines orientation; reversal changes the sign. Its length gives $|\int_\gamma fdz|\le\max_\gamma|f|\ell(\gamma)$. A positive Jordan contour keeps its interior to the left.}
-\APS{简单例子 $\gamma(t)=e^{it}$、$0\le t\le2\pi$ 给 $\int_\gamma dz/z=\int_0^{2\pi}i\,dt=2\pi i$。函数 $1/z$ 在圆周附近解析，但在圆盘原点不解析，因此不能套“圆内解析则闭路积分为零”。积分定理所要求的区域条件比仅检查围道上的函数值更强。}{For $\gamma(t)=e^{it}$, $0\le t\le2\pi$, direct parametrization gives $\int_\gamma dz/z=2\pi i$. The function $1/z$ is holomorphic near the circle but not at the origin inside it. Thus the zero-integral theorem does not apply: holomorphicity only along the contour does not satisfy the interior-domain hypothesis.}
+\subsection{多值函数与分支 | Multivalued functions and branches}
+\APS{“多值函数”严格说不是函数，而是每点对应一个集合的映射。三个概念要分清：分支点（绕它一周值改变的点）、割线（为消除多值性而从区域删去的曲线）、单值解析分支（在割开区域上连续且解析的单值选取）。}{Strictly speaking, a ``multivalued function'' is a set-valued correspondence, not a function. Three notions must be distinguished: a branch point, around which the value changes after one circuit; a branch cut, a curve removed to eliminate the multivaluedness; and a single-valued analytic branch, a continuous analytic selection on the slit domain.}
+\APS{对数：$e^w=z\ne0$ 给出 $w=\ln|z|+i(\arg z+2k\pi)$，绕 $0$ 一周 $w$ 增加 $2\pi i$，所以 $0$ 与 $\infty$ 是分支点。主值 $\operatorname{Log}z=\ln|z|+i\operatorname{Arg}z$ 在割开负实轴的平面 $\mathbb C\setminus(-\infty,0]$ 上解析，$(\operatorname{Log}z)'=1/z$。开方：$w^n=z$ 有 $n$ 个值，绕 $0$ 一周乘 $e^{2\pi i/n}$，所以 $0$ 是分支点（$n\ge2$）；主值 $\sqrt z=r^{1/2}e^{i\theta/2}$ 在同一个割开平面上解析。}{Logarithm: $e^w=z\ne0$ gives $w=\ln|z|+i(\arg z+2k\pi)$; one loop around $0$ increases $w$ by $2\pi i$, so $0$ and $\infty$ are branch points. The principal value $\operatorname{Log}z$ is analytic on the plane slit along the negative real axis, with derivative $1/z$. Roots: $w^n=z$ has $n$ values, one loop multiplies the value by $e^{2\pi i/n}$, so $0$ is a branch point for $n\ge2$; the principal root $r^{1/2}e^{i\theta/2}$ is analytic on the same slit plane.}
+\FORMULA{主值对数与主值方根}{principal logarithm and principal root}
+\[
+\operatorname{Log}z=\ln|z|+i\operatorname{Arg}z,\qquad (\operatorname{Log}z)'=\frac1z,\qquad
+\sqrt z=r^{1/2}e^{i\theta/2}\ (\theta=\operatorname{Arg}z).
+\]
+\APS{割线上函数不连续：$\operatorname{Log}z$ 的虚部从上方趋于 $\pi$、从下方趋于 $-\pi$，跳跃 $2\pi i$。$\sqrt z$ 在 $0$ 连续（$r^{1/2}\to0$）但不可微（导函数无界）。另一个易错点：$\sqrt{z^2}$ 一般不是 $z$ 而是 $\pm z$，符号由分支决定。}{On the cut the logarithm is discontinuous: its imaginary part tends to $\pi$ from above and $-\pi$ from below, a jump of $2\pi i$. The principal root is continuous at $0$ but not differentiable there. Another easy mistake: $\sqrt{z^2}$ is generally $\pm z$, not $z$, with the sign fixed by the branch.}
+\ASK{为什么复对数、开方必须讨论分支？}{Why must the logarithm and roots be discussed through branches?}{绕分支点一周，连续延拓的辐角增加 $2\pi$，对数值增加 $2\pi i$，$n$ 次方根乘 $e^{2\pi i/n}$，回不到原值。删去连接分支点的割线、使剩余区域单连通后，才能选到连续单值的解析分支；不同分支的函数值（如 $\sqrt z$ 的 $\pm$）不同。}{After one loop around a branch point a continuously continued argument gains $2\pi$, so the logarithm gains $2\pi i$ and the $n$-th root is multiplied by $e^{2\pi i/n}$; the value does not return. Only after removing a cut joining the branch points, making the remaining domain simply connected, can a continuous single-valued analytic branch be selected; different branches take different values (the two signs of $\sqrt z$).}
+\section[第 3 章 解析性]{第 3 章：复导数、Cauchy--Riemann 方程与调和函数 | Chapter 3: Complex derivatives, the Cauchy--Riemann equations, and harmonic functions}
 
-\subsection{复积分、Cauchy 定理与积分公式 | Contour integration and Cauchy's formula}
-\noindent 若分段光滑曲线参数化为 $z=\gamma(t)$，则 $\int_\gamma f(z)\,dz=\int f(\gamma(t))\gamma'(t)\,dt$。\textbf{Cauchy 积分定理}说：若 $f$ 在单连通区域解析，则该区域内任一分段光滑闭曲线上的积分为零。\textbf{Cauchy 积分公式}进一步说：若 $C$ 是逆时针简单闭曲线，$f$ 在 $C$ 及其内部某开邻域解析，且 $a$ 在内部，则
-\FORMULA{Cauchy 积分公式及其高阶导数形式}{Cauchy's integral formula and its derivative formula}
+\subsection{复导数与求导法则 | The complex derivative and differentiation rules}
+\APS{若复差商 $\dfrac{f(z_0+h)-f(z_0)}{h}$ 当 $h\in\mathbb C$、$h\to0$ 时存在同一极限（与方向、路径无关），称 $f$ 在 $z_0$ 复可微，极限记为 $f'(z_0)$；在开区域 $D$ 内处处复可微称解析（holomorphic），在 $\mathbb C$ 上解析称整函数。可微必连续；和、积、商、复合的求导法则与实变量相同。}{If the difference quotient displayed above has one limit as $h\in\mathbb C\to0$, independent of direction and path, then $f$ is complex differentiable at $z_0$ and the limit is $f'(z_0)$; if this holds throughout an open domain $D$, $f$ is analytic (holomorphic), and if $D=\mathbb C$ it is entire. Differentiability implies continuity, and the rules for sums, products, quotients, and compositions are as in the real case.}
+\FORMULA{复导数与求导法则}{complex derivative and differentiation rules}
+\[
+f'(z_0)=\lim_{h\to0}\frac{f(z_0+h)-f(z_0)}{h},\qquad
+(fg)'=f'g+fg',\qquad (f\circ g)'=f'(g)\,g'.
+\]
+\EX{$\dfrac{d}{dz}\dfrac1z=\lim_{h\to0}\dfrac{1}{h}\Big(\dfrac1{z+h}-\dfrac1z\Big)=\lim_{h\to0}\dfrac{-1}{z(z+h)}=-\dfrac1{z^2}$（$z\ne0$）。由链式法则，$g(z)=(z^2+1)^5$ 的导数为 $10z(z^2+1)^4$。}{For $1/z$ the difference quotient tends to $-1/z^2$; by the chain rule $g(z)=(z^2+1)^5$ has derivative $10z(z^2+1)^4$.}
+
+\subsection{Cauchy--Riemann 方程：必要条件}{The Cauchy--Riemann equations: necessary conditions}
+\APS{设 $f=u+iv$ 在 $z_0$ 复可微。沿实方向 $h\to0$ 得 $f'(z_0)=u_x+iv_x$；沿虚方向取 $h=ik$ 得
+\[
+\frac{f(z_0+ik)-f(z_0)}{ik}=\frac{u_yk+iv_yk}{ik}=v_y-iu_y,
+\]
+故 $f'(z_0)=v_y-iu_y$。比较实虚部得 $u_x=v_y$、$u_y=-v_x$。这一步只需偏导存在，不需要偏导连续。}{Suppose $f=u+iv$ is complex differentiable at $z_0$. Taking $h$ real gives $f'(z_0)=u_x+iv_x$; taking $h=ik$ gives the displayed quotient $v_y-iu_y$, so $f'(z_0)=v_y-iu_y$. Comparing real and imaginary parts yields $u_x=v_y$ and $u_y=-v_x$. Only existence of the partials is used, not continuity.}
+\FORMULA{Cauchy--Riemann 方程}{the Cauchy--Riemann equations}
+\[
+u_x=v_y,\qquad u_y=-v_x,\qquad f'=u_x+iv_x=v_y-iu_y.
+\]
+\APS{用 Wirtinger 导数写：记 $\partial_{\bar z}=\frac12(\partial_x+i\partial_y)$，则 $f$ 解析等价于 $\partial_{\bar z}f=0$；因为 $\bar z$ 的 $\bar z$ 导数为 $1$，$z$ 的为 $0$。这说明解析性是关于 $\bar z$ 的一阶偏微分方程。}{In Wirtinger notation, $\partial_{\bar z}=\frac12(\partial_x+i\partial_y)$ and analyticity is equivalent to $\partial_{\bar z}f=0$, because $\bar z$ has $\bar z$-derivative $1$ and $z$ has $0$. Analyticity is thus a first-order partial differential equation in $\bar z$.}
+
+\subsection{Cauchy--Riemann 方程：充分条件与精确表述}{Sufficient conditions: the precise statement}
+\APS{精确说法：若 $u,v$ 在 $z_0$ 处实可微且满足 C-R 方程，则 $f$ 在 $z_0$ 复可微，$f'(z_0)=u_x+iv_x$；若一阶偏导在区域 $D$ 内连续且 C-R 处处成立，则 $f$ 在 $D$ 内解析。教材写的“$C^1$ + C-R”正是为了保证 $u,v$ 可微。}{Precisely: if $u,v$ are real differentiable at $z_0$ and satisfy the C-R equations there, then $f$ is complex differentiable at $z_0$ with $f'(z_0)=u_x+iv_x$; if the first partials are continuous in $D$ and the C-R equations hold throughout $D$, then $f$ is analytic in $D$. The textbook phrase ``$C^1$ plus C-R'' is exactly what makes $u,v$ differentiable.}
+\APS{为什么不能省掉可微性？C-R 只是两个偏导之间的等式，不控制其他方向的增量。反例 $f(z)=\sqrt{|xy|}$：在原点 $u_x=u_y=v=0$，C-R 成立且 $f$ 连续，但沿 $h=(1+i)t$ 的差商在 $t>0$ 与 $t<0$ 时分别为 $\frac{1}{1+i}$ 与 $-\frac{1}{1+i}$，极限不存在。所以 C-R 在某点成立既非充分，也不保证该点可导。}{Why can differentiability not be dropped? The C-R equations only relate two partial derivatives and do not control increments in other directions. Counterexample: $f(z)=\sqrt{|xy|}$ has $u_x=u_y=v=0$ at the origin, so the C-R equations hold and $f$ is continuous there; but along $h=(1+i)t$ the difference quotient is $\frac{1}{1+i}$ for $t>0$ and $-\frac{1}{1+i}$ for $t<0$, so the limit fails. Thus the C-R equations at a point are neither sufficient nor even enough for differentiability there.}
+
+\subsection{判别流程与典型反例 | Decision procedure and standard counterexamples}
+\APS{流程：(1) 定义域是否开；(2) 写出 $u,v$ 与偏导；(3) 解 C-R 得点集 $S$；(4) 若 $S$ 无内点则不解析；(5) 若 C-R 在整个区域成立且偏导连续，则解析且 $f'=u_x+iv_x$。}{Procedure: (1) check the domain is open; (2) write $u,v$ and their partials; (3) solve the C-R equations to get $S$; (4) if $S$ has no interior point, $f$ is not analytic; (5) if the equations hold throughout a domain with continuous partials, $f$ is analytic with $f'=u_x+iv_x$.}
+\EX{(a) $f(z)=\bar z$：$u=x$，$v=-y$，$u_x=1$，$v_y=-1$，C-R 处处不成立，故处处不可导；但作为实映射 $(x,y)\mapsto(x,-y)$ 它处处实可微，说明复可微严格强于实可微。(b) $f(z)=|z|^2=z\bar z$：$u=x^2+y^2$，$v=0$，C-R 给出 $x=y=0$，故只在原点可导（$f'(0)=0$），不解析。(c) $f(z)=z\operatorname{Re}z=x^2+ixy$：C-R 给 $2x=x$、$0=-y$，也只在原点可导。}{(a) For $\bar z$, $u=x$, $v=-y$, so $u_x=1\ne v_y=-1$: it is nowhere complex differentiable, although as a real map it is differentiable everywhere. (b) For $|z|^2$, $u=x^2+y^2$, $v=0$, and the C-R equations force $x=y=0$: differentiable only at the origin (derivative zero) and analytic nowhere. (c) For $z\operatorname{Re}z=x^2+ixy$, the C-R equations force $x=y=0$ as well.}
+\EX{$f(z)=x^2+iy^2$：$u=x^2$，$v=y^2$；C-R 方程 $2x=2y$、$0=0$ 等价于直线 $x=y$。在该直线上偏导连续，故每点可导（$f'=2x$）；但直线无内点，故 $f$ 不解析。这个例子专门区分“可导点集”与“解析区域”。}{For $f(z)=x^2+iy^2$, the C-R equations reduce to $x=y$: on that line $f$ is differentiable at every point (with $f'=2x$), but the line has no interior, so $f$ is not analytic. This example separates the set of differentiability points from a domain of analyticity.}
+
+
+\subsection{调和函数与共轭调和函数 | Harmonic functions and harmonic conjugates}
+\APS{若 $u\in C^2(D)$ 且 $\Delta u=u_{xx}+u_{yy}=0$，称 $u$ 调和。解析函数的实部、虚部自动调和：对 C-R 方程再求导，利用混合偏导相等，得 $u_{xx}+u_{yy}=v_{yx}-v_{xy}=0$，对 $v$ 同理。}{$u\in C^2(D)$ is harmonic if $\Delta u=u_{xx}+u_{yy}=0$. The real and imaginary parts of an analytic function are automatically harmonic: differentiating the C-R equations and using equality of mixed partials gives $u_{xx}+u_{yy}=v_{yx}-v_{xy}=0$, and similarly for $v$.}
+\FORMULA{Laplace 方程与共轭调和函数}{Laplace's equation and harmonic conjugates}
+\[
+\Delta u=u_{xx}+u_{yy}=0,\qquad
+v_x=-u_y,\quad v_y=u_x,\qquad
+v(x,y)=\int_{(x_0,y_0)}^{(x,y)}\big(-u_y\,dx+u_x\,dy\big)+C.
+\]
+\APS{若存在调和函数 $v$ 使 $u+iv$ 解析，称 $v$ 是 $u$ 的共轭调和函数。求法是把 $v_x=-u_y$、$v_y=u_x$ 看成全微分并做线积分。在单连通区域上该积分与路径无关，共轭函数整体存在；在多连通区域上可能只能局部存在。典型例子：$u=\ln|z|$ 在 $\mathbb C\setminus\{0\}$ 上调和，但共轭 $\arg z$ 在挖去原点的平面上没有单值连续分支。}{If a harmonic $v$ makes $u+iv$ analytic, it is a harmonic conjugate of $u$. One finds it by integrating the exact differential $-u_y dx+u_x dy$. On a simply connected domain the integral is path-independent and the conjugate exists globally; on a multiply connected domain it may exist only locally. The standard example is $u=\ln|z|$ on $\mathbb C\setminus\{0\}$, which is harmonic but whose conjugate $\arg z$ has no single-valued continuous branch there.}
+\EX{求 $u=x^2-y^2$ 的共轭：$\Delta u=2-2=0$。由 $v_y=u_x=2x$ 得 $v=2xy+\phi(x)$；再由 $v_x=-u_y=2y$ 得 $\phi'=0$，故 $v=2xy+C$，对应解析函数 $z^2+iC$。反例：$u=x^2+y^2$ 的 $\Delta u=4\ne0$，不存在共轭。}{For $u=x^2-y^2$ we have $\Delta u=0$. From $v_y=u_x=2x$ we get $v=2xy+\phi(x)$, and $v_x=-u_y=2y$ forces $\phi'=0$; hence $v=2xy+C$ and the analytic function is $z^2+iC$. In contrast $u=x^2+y^2$ has $\Delta u=4\ne0$ and no conjugate.}
+\APS{实际意义：二维无源稳态问题的势函数（温度、电势、速度势）都是调和函数，其共轭给出流函数或通量函数；解析函数把势函数与流函数打包在一起，奇点和分支分别对应源、汇、涡和割线（见最后一章）。}{Why it matters: potentials of two-dimensional source-free steady problems (temperature, electric potential, velocity potential) are harmonic, and their conjugates give stream or flux functions. Analytic functions package the potential with the stream function, and singularities and branches correspond to sources, sinks, vortices, and cuts (final chapter).}
+\ASK{Cauchy--Riemann 方程与 Laplace 方程是什么关系？}{What is the relation between the C-R equations and Laplace's equation?}{C-R 是复可微的一阶条件，耦合 $u,v$ 的一阶偏导；对 C-R 再求导并用混合偏导相等，得 $u,v$ 各自满足二阶 Laplace 方程。反过来，给定调和函数，解 C-R 可局部得到共轭，从而得到解析函数。}{The C-R equations are the first-order conditions for complex differentiability and couple the first partials of $u$ and $v$; differentiating them again gives Laplace's equation for each. Conversely, solving the C-R equations for a harmonic function gives a local conjugate, hence an analytic function.}
+\section[第 4 章 初等函数]{第 4 章：初等复函数 | Chapter 4: Elementary complex functions}
+
+\subsection{复指数函数 | The complex exponential}
+\APS{$e^z=\sum_{n=0}^{\infty}z^n/n!$ 对一切 $z$ 收敛，所以是整函数且 $(e^z)'=e^z$。代入 $z=x+iy$ 并分离实虚部，得到 Euler 公式、模、辐角与周期。}{The series $e^z=\sum z^n/n!$ converges for every $z$, so $e^z$ is entire with derivative $e^z$. Substituting $z=x+iy$ and separating real and imaginary parts gives Euler's formula, the modulus, the argument, and the period.}
+\FORMULA{复指数与 Euler 公式}{complex exponential and Euler's formula}
+\[
+e^z=e^x(\cos y+i\sin y),\qquad |e^z|=e^x,\qquad
+\arg e^z=y\ (\!\!\!\bmod 2\pi),\qquad e^{z+2\pi i}=e^z.
+\]
+\APS{由 $|e^z|=e^{\operatorname{Re}z}>0$ 知 $e^z$ 永不为零。周期 $2\pi i$ 使它不是单射；在任何宽度小于 $2\pi$ 的水平带内它是单射，并把水平带 $a<\operatorname{Im}z<a+2\pi$ 一一映到 $\mathbb C\setminus\{0\}$。实部控制模长、虚部控制旋转角，这是后面共形映射的关键。}{Since $|e^z|=e^{\operatorname{Re}z}>0$, the exponential never vanishes. Its period $2\pi i$ makes it non-injective; it is injective on any horizontal strip of width less than $2\pi$, and maps $a<\operatorname{Im}z<a+2\pi$ one-to-one onto $\mathbb C\setminus\{0\}$. The real part controls the modulus and the imaginary part controls rotation, the key to later conformal maps.}
+\EX{$e^{2+\pi i/2}=e^2i$；$|e^{1+3i}|=e$；$e^{\pi i}=-1$；$e^{1+i}=e(\cos1+i\sin1)\approx1.469+2.287i$。}{For example $e^{2+\pi i/2}=e^2i$, $|e^{1+3i}|=e$, $e^{\pi i}=-1$, and $e^{1+i}\approx1.469+2.287i$.}
+
+\subsection{复对数函数 | The complex logarithm}
+\APS{解 $e^w=z\ne0$：$w=\ln|z|+i(\arg z+2k\pi)$，所以对数有无穷多个值；取主辐角得主值 $\operatorname{Log}z$。}{Solving $e^w=z\ne0$ gives $w=\ln|z|+i(\arg z+2k\pi)$, so the logarithm has infinitely many values; the principal argument gives the principal value $\operatorname{Log}z$.}
+\FORMULA{复对数与主值}{complex logarithm and principal value}
+\[
+\log z=\ln|z|+i(\arg z+2k\pi)\ (k\in\mathbb Z),\qquad
+\operatorname{Log}z=\ln|z|+i\operatorname{Arg}z.
+\]
+\APS{$\operatorname{Log}z$ 在割开负实轴的平面 $\mathbb C\setminus(-\infty,0]$ 上解析，$(\operatorname{Log}z)'=1/z$；在负实轴上不连续（虚部从上、下方分别趋于 $\pi,-\pi$，跳跃 $2\pi i$）。$z=0$ 不是奇点而是分支点：对数在 $0$ 根本没有定义。}{$\operatorname{Log}z$ is analytic on the plane slit along the negative real axis, with derivative $1/z$; it is discontinuous on the slit, where the imaginary part tends to $\pi$ from above and $-\pi$ from below, a jump of $2\pi i$. The origin is not a singularity but a branch point: the logarithm is simply undefined there.}
+\APS{主值对数不满足实对数的乘法公式，只能差 $2k\pi i$：一般 $\operatorname{Log}(zw)=\operatorname{Log}z+\operatorname{Log}w+2k\pi i$，$k\in\{-1,0,1\}$，因为辐角相加后可能跑出主值范围 $(-\pi,\pi]$。}{The principal logarithm satisfies the product formula only up to $2k\pi i$: in general $\operatorname{Log}(zw)=\operatorname{Log}z+\operatorname{Log}w+2k\pi i$ with $k\in\{-1,0,1\}$, because the sum of arguments may leave the principal range $(-\pi,\pi]$.}
+\EX{$z=w=e^{3\pi i/4}$：$\operatorname{Log}z+\operatorname{Log}w=3\pi i/2$；而 $zw=-i$，$\operatorname{Log}(zw)=-\pi i/2$，相差 $2\pi i$。更简单：$\operatorname{Log}(-1)+\operatorname{Log}(-1)=2\pi i$，而 $\operatorname{Log}1=0$。}{For $z=w=e^{3\pi i/4}$ the sum of logarithms is $3\pi i/2$, while $\operatorname{Log}(zw)=-\pi i/2$; they differ by $2\pi i$. Even simpler, $\operatorname{Log}(-1)+\operatorname{Log}(-1)=2\pi i$ while $\operatorname{Log}1=0$.}
+
+\subsection{复幂函数 | Complex powers}
+\APS{$z^\alpha=\exp(\alpha\log z)$。$\alpha$ 为整数时单值；$\alpha=p/q$ 为最简有理数（$q>1$）时恰有 $q$ 个值；$\alpha$ 为无理数或非实数时有无穷多个值。固定 $\operatorname{Log}z$ 后，$z^\alpha$ 在割开平面上解析，且 $(z^\alpha)'=\alpha z^{\alpha-1}$。}{$z^\alpha=\exp(\alpha\log z)$. For integer $\alpha$ it is single-valued; for $\alpha=p/q$ in lowest terms with $q>1$ it has exactly $q$ values; for irrational or non-real $\alpha$ it has infinitely many. After fixing $\operatorname{Log}z$ it is analytic on the slit plane with derivative $\alpha z^{\alpha-1}$.}
+\FORMULA{复幂与主值幂}{complex powers and principal powers}
+\[
+z^\alpha=\exp(\alpha\log z),\qquad
+z^\alpha_{\text{principal}}=\exp(\alpha\operatorname{Log}z),\qquad
+(z^\alpha)'=\alpha z^{\alpha-1}.
+\]
+\EX{(a) $i^i=\exp(i\log i)$，而 $\log i=i(\pi/2+2k\pi)$，所以 $i^i=e^{-\pi/2-2k\pi}$（全是实数），主值 $e^{-\pi/2}\approx0.2079$。(b) $-8=8e^{i\pi}$ 的三个立方根为 $1+i\sqrt3$、$-2$、$1-i\sqrt3$。(c) $(-1)^{\sqrt2}$ 有无穷多个值，不是 $1$。}{(a) $i^i=\exp(i\log i)$ with $\log i=i(\pi/2+2k\pi)$, so $i^i=e^{-\pi/2-2k\pi}$, all real, principal value $e^{-\pi/2}\approx0.2079$. (b) The cube roots of $-8=8e^{i\pi}$ are $1+i\sqrt3$, $-2$, $1-i\sqrt3$. (c) $(-1)^{\sqrt2}$ has infinitely many values, not just $1$.}
+
+\subsection{复三角与双曲函数 | Trigonometric and hyperbolic functions}
+\APS{用指数函数定义复正弦、余弦与双曲函数，使它们在实轴上与实函数一致，同时自动成为整函数。}{Sine, cosine, and the hyperbolic functions are defined through the exponential so that they agree with the real functions on the real axis and are automatically entire.}
+\FORMULA{复三角与双曲函数}{complex trigonometric and hyperbolic functions}
+\[
+\sin z=\frac{e^{iz}-e^{-iz}}{2i},\quad
+\cos z=\frac{e^{iz}+e^{-iz}}2,\quad
+\sinh z=\frac{e^z-e^{-z}}2,\quad
+\cosh z=\frac{e^z+e^{-z}}2.
+\]
+\APS{四者都是整函数，导数为 $\cos z$、$-\sin z$、$\cosh z$、$\sinh z$；恒等式 $\sin^2z+\cos^2z=1$、$\cosh^2z-\sinh^2z=1$、$\sin(iz)=i\sinh z$ 仍成立。零点为 $\sin z=0\iff z=k\pi$、$\cos z=0\iff z=\pi/2+k\pi$。与实数不同，$|\sin z|$、$|\cos z|$ 无界：$\sin(iy)=i\sinh y$，因为非常数整函数必无界（Liouville 定理）。}{All four are entire with the displayed derivatives; the identities $\sin^2z+\cos^2z=1$, $\cosh^2z-\sinh^2z=1$, and $\sin(iz)=i\sinh z$ still hold. Zeros are $\sin z=0$ iff $z=k\pi$ and $\cos z=0$ iff $z=\pi/2+k\pi$. Unlike the real case, $|\sin z|$ and $|\cos z|$ are unbounded, since $\sin(iy)=i\sinh y$ and a nonconstant entire function must be unbounded (Liouville).}
+\ASK{为什么 $e^z$ 是周期函数，而实指数函数单调？}{Why is $e^z$ periodic while the real exponential is monotone?}{$e^{z+2\pi i}=e^z e^{2\pi i}=e^z$，虚方向平移是旋转，不改变值；实指数只看实轴，没有这种周期。周期导致 $e^z$ 非单射，也导致对数多值。}{Because $e^{z+2\pi i}=e^z e^{2\pi i}=e^z$: a translation in the imaginary direction is a rotation and does not change the value, while the real exponential only sees the real axis. The period makes $e^z$ non-injective and causes the logarithm to be multivalued.}
+\section[第 5 章 复积分]{第 5 章：复积分与 Cauchy 理论 | Chapter 5: Contour integration and Cauchy theory}
+
+\subsection{路径与复积分的定义 | Paths and the definition of the contour integral}
+\APS{路径是连续映射 $\gamma:[a,b]\to\mathbb C$；分段 $C^1$ 指可分成有限段、每段连续可微。长度 $L(\gamma)=\int_a^b|\gamma'(t)|dt$。无自交点的闭曲线称为简单闭曲线（Jordan 曲线），它把平面分成内部与外部；逆时针使内部在左侧，称为正向。保持方向的重参数化不改变积分，反向使积分变号。}{A path is a continuous map $\gamma:[a,b]\to\mathbb C$; it is piecewise $C^1$ if it splits into finitely many continuously differentiable pieces, and its length is $L(\gamma)=\int_a^b|\gamma'(t)|dt$. A closed curve without self-intersections is a simple closed (Jordan) curve, dividing the plane into an inside and an outside; counterclockwise orientation keeps the inside on the left and is called positive. Reparametrization preserving direction leaves integrals unchanged, while reversing direction changes the sign.}
+\FORMULA{复路径积分与 ML 不等式}{complex path integral and the ML inequality}
+\[
+\int_\gamma f(z)\,dz=\int_a^b f(\gamma(t))\,\gamma'(t)\,dt,
+\qquad
+\left|\int_\gamma f\,dz\right|\le\max_{z\in\gamma}|f(z)|\cdot L(\gamma).
+\]
+\APS{把 $f=u+iv$、$dz=dx+i\,dy$ 展开得两个实线积分 $\int_\gamma(u\,dx-v\,dy)+i\int_\gamma(v\,dx+u\,dy)$，这是与 Green 公式联系的入口。ML 不等式是证明弧积分消失和误差估计的主要工具。若 $f$ 有原函数 $F$（$F'=f$），则积分为 $F(\gamma(b))-F(\gamma(a))$，只依赖端点。}{Expanding $f=u+iv$ and $dz=dx+i\,dy$ gives two real line integrals, the entry point to Green's theorem. The ML inequality is the main tool for proving that arc integrals vanish and for error estimates. If $f$ has an antiderivative $F$, the integral equals $F(\gamma(b))-F(\gamma(a))$ and depends only on the endpoints.}
+\EX{沿单位圆逆时针直接计算：(a) $\oint_{|z|=1}z^2dz=i\int_0^{2\pi}e^{3it}dt=0$；(b) $\oint_{|z|=1}\bar zdz=\int_0^{2\pi}e^{-it}ie^{it}dt=2\pi i\ne0$；(c) 一般地 $\oint_{|z-a|=r}\frac{dz}{(z-a)^n}=2\pi i$（$n=1$）、$=0$（$n\ne1$）。前两个结果形成对比：解析函数与不解析函数的闭路积分行为完全不同。}{Direct computation over the counterclockwise unit circle gives (a) zero for $z^2$, (b) $2\pi i$ for $\bar z$, and (c) $2\pi i$ for $1/(z-a)$ but zero for other integer powers. The contrast between the analytic and non-analytic integrands is the theme of the chapter.}
+
+\subsection{Cauchy 积分定理 | Cauchy's integral theorem}
+\APS{若 $f$ 在单连通区域 $D$ 内解析，$\gamma$ 是 $D$ 内任一分段光滑闭曲线，则 $\oint_\gamma f\,dz=0$。}{If $f$ is analytic in a simply connected domain $D$, then the integral over every piecewise smooth closed curve in $D$ is zero.}
+\FORMULA{Cauchy 积分定理}{Cauchy's integral theorem}
+\[
+f\in\mathcal O(D),\quad D\ \text{单连通},\quad \gamma\subset D\ \text{闭}\qquad\Longrightarrow\qquad\oint_\gamma f(z)\,dz=0.
+\]
+\APS{证明思路（Green 公式版，设 $u,v$ 连续可微）：对 $\gamma$ 围成的区域 $G$，
+\[
+\oint_\gamma f\,dz=\iint_G\big[(-v_x-u_y)+i(u_x-v_y)\big]\,dx\,dy,
+\]
+C-R 方程使被积函数为零，故积分为零。这个证明直观，但用了 $f\in C^1$ 的额外假设；严格路线是先证不需 $C^1$ 的 Goursat 版本（三角形四等分、几何级数估计），再推出一般结论。}{Proof idea (Green's theorem version, assuming $C^1$): over the region $G$ bounded by $\gamma$ the contour integral equals the displayed double integral, and the C-R equations make the integrand vanish. This proof is intuitive but uses $f\in C^1$; the rigorous route is Goursat's version, which subdivides triangles and uses a geometric-series estimate, needing no $C^1$ hypothesis.}
+\APS{条件要逐条核对：区域单连通、$f$ 在内部及边界邻域解析、曲线不经过奇点。$1/z$ 在 $\mathbb C\setminus\{0\}$ 解析，但该区域不单连通且单位圆内部含奇点 $0$，所以 $\oint_{|z|=1}dz/z=2\pi i\ne0$ 不矛盾。}{Each hypothesis must be checked: simple connectedness, analyticity on the interior and near the boundary, and no singularity on the curve. The function $1/z$ is analytic on $\mathbb C\setminus\{0\}$, but that domain is not simply connected and the unit circle encloses the singularity $0$; hence $2\pi i\ne0$ does not contradict the theorem.}
+\EX{$\oint_{|z|=2}\frac{dz}{z-3}=0$（$1/(z-3)$ 在 $|z|\le2$ 解析）；$\oint_{|z|=2}\frac{dz}{z-1}=2\pi i$（$1$ 在内部）；整函数 $e^{z^2}$ 沿任何闭路积分为零。}{The integral of $1/(z-3)$ over $|z|=2$ is zero, while that of $1/(z-1)$ is $2\pi i$ since $1$ is inside; an entire function such as $e^{z^2}$ integrates to zero over every closed contour.}
+
+\subsection{多连通区域与路径变形 | Multiply connected domains and deformation}
+\APS{若 $D$ 是有界多连通区域，外边界 $C_0$、洞的边界 $C_1,\dots,C_m$，$f$ 在 $D$ 及其边界邻域解析，则
+\[
+\oint_{C_0}f\,dz=\sum_{j=1}^{m}\oint_{C_j}f\,dz
+\]
+（所有曲线逆时针）。等价地，若内外边界都相对于区域取正向（外圈逆时针、内圈顺时针），总积分为零。证明用割线把区域剪开成单连通。实用推论：在解析区域内连续变形围道，不越过奇点则积分不变，于是可把复杂围道换成绕奇点的小圆——这是留数定理的几何基础。}{For a bounded multiply connected domain $D$ with outer boundary $C_0$ and holes bounded by $C_1,\dots,C_m$, if $f$ is analytic on $D$ and near its boundary, the integral over $C_0$ equals the sum of the integrals over the $C_j$, all counterclockwise. Equivalently, with every boundary positively oriented relative to the region, the total integral is zero; the proof cuts the domain into a simply connected one. Consequence: a contour can be deformed continuously without crossing singularities, so a complicated contour may be replaced by small circles around the singularities, the geometric basis of the residue theorem.}
+\EX{$\oint_{|z|=1}\frac{e^z}{z^3}dz=\pi i$。方法一（高阶导数公式）：$\frac{2\pi i}{2!}f''(0)=\pi i$，$f=e^z$。方法二（Laurent）：$e^z/z^3=1/z^3+1/z^2+1/(2z)+\cdots$，只有 $1/(2z)$ 项贡献 $2\pi i\cdot\frac12=\pi i$。}{$\oint_{|z|=1}e^z/z^3dz=\pi i$. First method: the derivative formula with $f=e^z$ gives $\frac{2\pi i}{2!}f''(0)=\pi i$. Second method: $e^z/z^3=1/z^3+1/z^2+1/(2z)+\cdots$, and only the $1/(2z)$ term contributes, giving $\pi i$.}
+
+\subsection{Cauchy 积分公式与高阶导数 | Cauchy's integral formula and derivatives}
+\APS{设 $C$ 是正向简单闭曲线，$f$ 在 $C$ 及其内部的开邻域内解析，$a$ 在内部，则 $f(a)=\frac1{2\pi i}\oint_C\frac{f(z)}{z-a}dz$。解析函数在内部一点的值完全由边界值决定，这是解析函数“刚性”的来源。}{Let $C$ be a positively oriented simple closed contour, $f$ analytic on an open neighborhood of $C$ and its interior, and $a$ inside. Then the displayed formula holds: the value at an interior point is completely determined by the boundary values, the source of the rigidity of analytic functions.}
+\FORMULA{Cauchy 积分公式与高阶导数公式}{Cauchy's integral formula and its derivative formula}
 \[
 f(a)=\frac1{2\pi i}\oint_C\frac{f(z)}{z-a}\,dz,\qquad
 f^{(n)}(a)=\frac{n!}{2\pi i}\oint_C\frac{f(z)}{(z-a)^{n+1}}\,dz.
 \]
-函数在曲线内部的值和导数因此由边界上的函数值确定。
-\EN{For a piecewise smooth parametrization $z=\gamma(t)$, the contour integral is the corresponding parameter integral. Cauchy's integral theorem says that an analytic function on a simply connected domain has zero integral around every piecewise smooth closed curve in it. Cauchy's integral formula requires a positively oriented simple contour and analyticity on a neighborhood of the contour and its interior; it recovers the value and derivatives at an interior point from boundary values.}
-\READ{“F of a equals one over two pi i times the contour integral of f of z over z minus a.”}
-\EX{取 $f(z)=e^z$，$C$ 为以原点为中心且半径大于 $1$ 的正向圆。点 $a=1$ 在圆内，故 $\oint_C e^z/(z-1)\,dz=2\pi i e$。半径改变但仍包围 $1$，积分值不变。}{For $f(z)=e^z$ and a positively oriented circle centered at zero with radius greater than one, the point $1$ lies inside. Cauchy's formula gives $\oint_C e^z/(z-1)\,dz=2\pi i e$, independent of the radius as long as the point remains inside.}
+\APS{证明思路：以 $a$ 为心作小圆 $C_\rho$，由多连通区域 Cauchy 定理，大圆积分等于小圆积分；在小圆上拆出 $f(a)/(z-a)$ 与 $[f(z)-f(a)]/(z-a)$，前者给 $f(a)\cdot2\pi i$，后者由连续性与 ML 估计趋于零。对 $a$ 在积分号下求导即得高阶公式，推论是解析函数无穷次可导。}{Proof idea: draw a small circle $C_\rho$ around $a$; by Cauchy's theorem for multiply connected domains the integral over $C$ equals that over $C_\rho$, where splitting off $f(a)/(z-a)$ gives $f(a)\cdot2\pi i$ while the remainder tends to zero by continuity and the ML estimate. Differentiating with respect to $a$ under the integral gives the derivative formula, so analytic functions are infinitely differentiable.}
+\EX{$\oint_{|z|=1}\frac{e^z}{z^3}dz=\frac{2\pi i}{2!}(e^z)''(0)=\pi i$；$\oint_{|z|=2}\frac{e^z}{(z-1)^2}dz=2\pi i(e^z)'(1)=2\pi ie$。}{The derivative formula gives $\pi i$ for $e^z/z^3$ over $|z|=1$ and $2\pi ie$ for $e^z/(z-1)^2$ over $|z|=2$.}
 
-\subsection{Cauchy 导数估计与 Liouville 定理 | Cauchy's estimate and Liouville's theorem}
-\noindent 若 $f$ 在以 $a$ 为中心、半径 $R$ 的闭圆盘的某个开邻域内解析，且圆周上 $|f(z)|\le M$，由 Cauchy 积分公式得到\textbf{Cauchy 导数估计}
-\FORMULA{Cauchy 导数估计}{Cauchy's derivative estimate}
+\subsection{Cauchy 估计、Liouville 定理与代数基本定理 | Cauchy estimates, Liouville, and the fundamental theorem of algebra}
+\APS{若 $f$ 在以 $a$ 为心、$R$ 为半径的闭圆盘邻域内解析，且圆周上 $|f|\le M$，则 $|f^{(n)}(a)|\le\frac{n!M}{R^n}$：边界上的模控制内部导数。}{If $f$ is analytic on a neighborhood of the closed disk with center $a$ and radius $R$, and $|f|\le M$ on the circle, then the displayed estimate holds: a boundary modulus bound controls derivatives inside.}
+\FORMULA{Cauchy 导数估计与 Liouville 定理}{Cauchy's derivative estimate and Liouville's theorem}
 \[
-|f^{(n)}(a)|\le\frac{n!M}{R^n}.
+|f^{(n)}(a)|\le\frac{n!M}{R^n};\qquad
+f\ \text{整且}\ |f|\le M\ \text{处处成立}\ \Longrightarrow\ f\ \text{为常数}.
 \]
-它把边界函数值的上界转成中心处各阶导数的上界。\textbf{Liouville 定理}说整个复平面上的有界解析函数必为常数：令上式 $n=1$ 并让 $R\to\infty$，得到任意 $a$ 处 $f'(a)=0$，所以 $f$ 为常数。
-\EN{If $f$ is analytic on a neighborhood of a closed disk centered at $a$ with radius $R$, and $|f|\le M$ on its boundary, Cauchy's formula gives the derivative estimate above. It converts a boundary bound into bounds for all derivatives at the center. Liouville's theorem says that every bounded entire function is constant; apply the estimate with $n=1$ and let $R$ tend to infinity to obtain $f'(a)=0$ for every $a$.}
-\EX{若非常数多项式 $P$ 没有复根，则 $1/P$ 是整个函数；它在紧圆盘上有界，并因 $|P(z)|\to\infty$ 而在无穷远趋于零，所以在整个平面有界。Liouville 定理迫使 $1/P$ 为常数，矛盾。这证明了\textbf{代数基本定理}：每个非常数复系数多项式至少有一个复根。}{If a nonconstant polynomial $P$ had no complex root, then $1/P$ would be entire. It is bounded on compact disks and tends to zero at infinity, hence is bounded on the whole plane. Liouville's theorem would make it constant, a contradiction. This proves the fundamental theorem of algebra.}
+\APS{Liouville 证明：$|f'(a)|\le M/R$ 对任意 $R$ 成立，令 $R\to\infty$ 得 $f'(a)=0$，$a$ 任意故 $f$ 为常数。由此证代数基本定理：若非常数多项式 $P$ 无根，则 $1/P$ 整，且 $|P(z)|\to\infty$（$|z|\to\infty$）使 $1/P$ 在无穷远趋于零，从而全平面有界，Liouville 迫使它为常数，矛盾。}{Proof of Liouville: $|f'(a)|\le M/R$ for every $R$, so letting $R\to\infty$ gives $f'(a)=0$ for every $a$, hence $f$ is constant. This proves the fundamental theorem of algebra: if a nonconstant polynomial $P$ had no root, then $1/P$ would be entire and, since $|P(z)|\to\infty$ at infinity, bounded on the whole plane; Liouville would make it constant, a contradiction.}
 
-\section[第 3 章 级数与奇点]{第 3 章：Taylor 与 Laurent 级数、奇点 | Chapter 3: Series and singularities}
-\subsection{Taylor 公式与收敛半径 | Taylor's formula and radius of convergence}
-\noindent 若 $f$ 在 $z_0$ 附近解析，则其 Taylor 级数为
-\FORMULA{复 Taylor 展开}{Taylor expansion of an analytic function}
+\subsection{Morera 定理 | Morera's theorem}
+\APS{Morera 定理是 Cauchy 定理的逆：若 $f$ 在区域 $D$ 内连续，且对 $D$ 内每个三角形的边界 $\oint_{\partial T}f\,dz=0$，则 $f$ 在 $D$ 内解析。证明：固定 $z_0$，定义 $F(z)=\int_{z_0}^{z}f(w)dw$，三角形条件保证路径无关，于是 $F$ 解析、$F'=f$，$F$ 无穷次可导故 $f$ 也解析。}{Morera's theorem is the converse of Cauchy's theorem: if $f$ is continuous in a domain $D$ and the integral over the boundary of every triangle in $D$ is zero, then $f$ is analytic. Proof: fix $z_0$ and define $F(z)=\int_{z_0}^{z}f(w)dw$; the triangle condition makes it path-independent, so $F$ is analytic with $F'=f$, and since $F$ is infinitely differentiable, so is $f$.}
+\ASK{为什么 $\oint_{|z|=1}\frac{dz}{z}=2\pi i$ 与 Cauchy 定理不矛盾？}{Why does $\oint_{|z|=1}dz/z=2\pi i$ not contradict Cauchy's theorem?}{定理要求 $f$ 在围道及其内部解析，但 $1/z$ 在内部的 $0$ 处没有定义；若把定义域改为挖去原点的平面，则它不是单连通的。两条假设都失效，结论当然可以不成立。}{The theorem requires analyticity on the contour and inside, but $1/z$ is undefined at the interior point $0$; on the punctured plane the domain is not simply connected. Both hypotheses fail, so the conclusion need not hold.}
+\section[第 6 章 级数与留数]{第 6 章：幂级数、Taylor 与 Laurent 展开、孤立奇点与留数 | Chapter 6: Power series, Taylor and Laurent expansions, isolated singularities, and residues}
+
+\subsection{幂级数与收敛半径 | Power series and radius of convergence}
+\APS{幂级数 $\sum_{n=0}^{\infty}a_n(z-z_0)^n$ 的收敛域总是一个圆盘：存在 $R\in[0,\infty]$，使 $|z-z_0|<R$ 时绝对收敛、$|z-z_0|>R$ 时发散；$|z-z_0|=R$ 上需具体判断。$R$ 称为收敛半径。在收敛圆内每个紧子集上一致收敛，故可逐项求导、逐项积分，且半径不变。}{The domain of convergence of a power series is always a disk: there is $R\in[0,\infty]$ such that the series converges absolutely for $|z-z_0|<R$ and diverges for $|z-z_0|>R$, while the boundary needs a separate discussion. The number $R$ is the radius of convergence. On compact subsets of the disk the series converges uniformly, so it can be differentiated and integrated term by term without changing the radius.}
+\FORMULA{收敛半径与 Cauchy--Hadamard 公式}{radius of convergence and the Cauchy--Hadamard formula}
 \[
-f(z)=\sum_{n=0}^{\infty}\frac{f^{(n)}(z_0)}{n!}(z-z_0)^n.
+\frac1R=\limsup_{n\to\infty}|a_n|^{1/n};\qquad
+\text{若 }\lim_{n\to\infty}\left|\frac{a_n}{a_{n+1}}\right|\text{ 存在，则 }R=\lim_{n\to\infty}\left|\frac{a_n}{a_{n+1}}\right|.
 \]
-收敛半径是该级数收敛的最大圆盘半径；对可解析延拓且有孤立奇点的函数，它由离 $z_0$ 最近的奇点决定。级数在收敛圆内部可逐项求导和积分；这用于近似函数、计算极限和积分。
-\EN{If $f$ is analytic near $z_0$, its Taylor series is the derivative expansion shown above. The radius of convergence is the largest disk on which the series converges; for a function with isolated singularities, it is determined by the nearest singularity to $z_0$. Inside the disk, termwise differentiation and integration are valid and useful for approximation, limits, and integrals.}
-\READ{“F of z equals the sum of the n-th derivative at z zero divided by n factorial, multiplied by the quantity z minus z zero raised to the n-th power.”}
-\EX{在 $z=0$ 展开 $1/(1-z)$ 得到 $1+z+z^2+\cdots$，收敛条件 $|z|<1$ 来自最近奇点 $z=1$。逐项积分并选取在 $0$ 处为零的解析对数分支，得到 $-\operatorname{Log}(1-z)=\sum_{n=1}^{\infty}z^n/n$。}{Expanding $1/(1-z)$ at zero gives the geometric series, which converges for $|z|<1$ because the nearest singularity is at one. Termwise integration, with the logarithm branch chosen to vanish at zero, gives the displayed logarithmic series.}
+\EX{半径：$\sum nz^n$ 有 $R=1$；$\sum z^n/n!$ 有 $R=\infty$；$\sum n!z^n$ 有 $R=0$；$\sum(z-1)^n/3^n$ 中心为 $1$、半径 $3$。几何级数 $\sum z^n=1/(1-z)$（$|z|<1$），逐项求导得 $\sum_{n\ge1}nz^n=z/(1-z)^2$。}{Radii: $R=1$ for $\sum nz^n$, $R=\infty$ for $\sum z^n/n!$, $R=0$ for $\sum n!z^n$, radius $3$ for $\sum(z-1)^n/3^n$. The geometric series is $1/(1-z)$ for $|z|<1$, and termwise differentiation gives $\sum nz^n=z/(1-z)^2$.}
 
-\subsection{展开区域为何重要 | Why the expansion domain matters}
-\APS{幂级数在收敛圆内部的每个紧子集上一致收敛，可以逐项微分与积分；中心到最近不可解析障碍的距离决定 Taylor 展开可延伸的最大圆盘。例如 $1/(1-z)=\sum_{n\ge0}z^n$ 只在 $|z|<1$ 成立；在 $|z|>1$ 必须改写为 $-\sum_{n\ge1}z^{-n}$。同一个函数在不同环域有不同 Laurent 展开，所以写系数时应同时写环域。}{A power series converges uniformly on every compact subset inside its convergence disk and permits termwise differentiation and integration there. The nearest obstruction to holomorphicity determines the maximal Taylor disk. For example, $1/(1-z)=\sum_{n\ge0}z^n$ for $|z|<1$, whereas for $|z|>1$ it equals $-\sum_{n\ge1}z^{-n}$. Different annuli can produce different Laurent expansions of the same function; state the annulus with the coefficients.}
-
-\subsection{Laurent 级数与孤立奇点 | Laurent series and isolated singularities}
-\noindent 在圆环 $r<|z-z_0|<R$ 上，解析函数可展开成允许负次幂的\textbf{Laurent 级数}
-\FORMULA{Laurent 级数展开}{Laurent series expansion}
+\subsection{Taylor 展开 | Taylor expansion}
+\APS{若 $f$ 在圆盘 $|z-z_0|<R$ 内解析，则它有唯一的 Taylor 展开，系数由导数或围道积分给出；反之幂级数的和在收敛圆内解析，所以“解析”与“局部可展成幂级数”等价。}{If $f$ is analytic in the disk $|z-z_0|<R$, it has a unique Taylor expansion there, with coefficients given by derivatives or by a contour integral; conversely the sum of a power series is analytic in its disk, so analyticity is equivalent to local expandability in powers.}
+\FORMULA{解析函数的 Taylor 展开}{Taylor expansion of an analytic function}
 \[
-f(z)=\sum_{n=-\infty}^{\infty}a_n(z-z_0)^n.
+f(z)=\sum_{n=0}^{\infty}a_n(z-z_0)^n,\qquad
+a_n=\frac{f^{(n)}(z_0)}{n!}=\frac1{2\pi i}\oint_{|w-z_0|=\rho}\frac{f(w)}{(w-z_0)^{n+1}}\,dw.
 \]
-负次幂部分称主部。\textbf{只有当 $f$ 在去心圆盘 $0<|z-z_0|<R$ 解析，即 $z_0$ 是孤立奇点时，才能用主部分类该奇点：}主部为零时可去；只有有限项且非零时为极点；有无限多项时为本性奇点。若展开仅在内半径 $r>0$ 的圆环成立，不能据此判断中心的奇点类型。展开区域必须写明，因为同一函数在不同圆环可能有不同 Laurent 展开。
-\EN{In an annulus, an analytic function has a Laurent series whose negative-power terms form the principal part. Classification at the center requires analyticity on a punctured disk $0<|z-z_0|<R$, so that $z_0$ is an isolated singularity. It is removable if this principal part vanishes, a pole if it has finitely many nonzero terms, and essential if it has infinitely many. An expansion valid only on an annulus with positive inner radius does not classify the center. The annulus of validity must be stated.}
-\EX{$1/z$ 在 $0$ 有一阶极点；$e^{1/z}$ 的展开有无限多个负次幂项，故 $0$ 是本性奇点；$\sin z/z$ 虽在 $0$ 表面无定义，但其 Taylor 展开 $1-z^2/3!+\cdots$ 可补上取值 $1$，故为可去奇点。}{The function $1/z$ has a simple pole at zero. The Laurent series of $e^{1/z}$ has infinitely many negative powers, so zero is essential. Although $\sin z/z$ appears undefined at zero, its Taylor series extends it with value one, making the singularity removable.}
-\ASK{Taylor 级数与 Laurent 级数有什么区别？}{How do Taylor and Laurent series differ?}{Taylor 级数只含非负次幂，适用于包含展开中心的圆盘；Laurent 级数允许负次幂，适用于不含中心的圆环，因此能表达中心处的孤立奇点。}{A Taylor series has only nonnegative powers and represents an analytic function on a disk containing its center. A Laurent series also allows negative powers and represents functions on annuli, including punctured neighborhoods of isolated singularities.}
+\APS{Taylor 展开的收敛半径等于 $z_0$ 到 $f$ 最近奇点的距离；这条规则是复级数理论最实用的结论。}{The Taylor radius equals the distance from $z_0$ to the nearest singularity of $f$; this rule is the most useful practical conclusion about complex series.}
+\EX{基本展开：$e^z=\sum z^n/n!$，$\sin z=\sum(-1)^kz^{2k+1}/(2k+1)!$，$\cos z=\sum(-1)^kz^{2k}/(2k)!$，$\frac1{1-z}=\sum z^n$（$|z|<1$）。而 $\frac1{1+z^2}=\sum(-1)^nz^{2n}$（$|z|<1$），因为奇点 $\pm i$ 到原点的距离为 $1$。}{Standard expansions are $e^z$, $\sin z$, $\cos z$, and the geometric series. Also $1/(1+z^2)=\sum(-1)^nz^{2n}$ for $|z|<1$, since the poles $\pm i$ are at distance $1$.}
+\APS{对照：实函数 $\frac1{1+x^2}$ 在整条实轴上光滑，看起来应有很大收敛半径，但复版本在 $\pm i$ 有极点，所以半径只能是 $1$。实轴上看不到这两个奇点，说明复可导性是全局性质。}{For comparison, the real function $1/(1+x^2)$ is smooth on the whole real line and seems to allow a large radius, but its complex version has poles at $\pm i$, so the radius is only $1$. The singularities are invisible on the real axis, showing that complex differentiability is a global property.}
+\EX{由 $\frac1{1+z}=\sum(-1)^nz^n$ 逐项积分得 $\operatorname{Log}(1+z)=\sum_{n\ge0}\frac{(-1)^n}{n+1}z^{n+1}$（$|z|<1$），取在 $0$ 为零的主值分支。另如 $1/(z-1)$ 在 $z_0=2$ 的展开为 $\sum(-1)^n(z-2)^n$（$|z-2|<1$），因为最近奇点是 $1$。}{Integrating $1/(1+z)=\sum(-1)^nz^n$ term by term gives the displayed series for $\operatorname{Log}(1+z)$ for $|z|<1$, the branch vanishing at $0$. Also $1/(z-1)=\sum(-1)^n(z-2)^n$ for $|z-2|<1$, since the nearest singularity is $1$.}
 
-\section[第 4 章 留数]{第 4 章：留数定理与反常实积分 | Chapter 4: Residues and improper real integrals}
+\subsection{Laurent 展开 | Laurent expansion}
+\APS{在圆环 $r<|z-z_0|<R$ 内解析的函数可以展成含负次幂的 Laurent 级数；负次幂部分称为主部，决定奇点类型。对固定圆环展开唯一，但同一函数在不同圆环有不同展开，所以必须写明环域。}{A function analytic in the annulus $r<|z-z_0|<R$ has a Laurent expansion with negative powers; the negative-power part is the principal part and determines the type of the singularity. The expansion is unique on a fixed annulus, but the same function has different expansions on different annuli, so the annulus must always be stated.}
+\FORMULA{Laurent 展开}{Laurent expansion}
+\[
+f(z)=\sum_{n=-\infty}^{\infty}a_n(z-z_0)^n,\qquad
+a_n=\frac1{2\pi i}\oint_{|w-z_0|=\rho}\frac{f(w)}{(w-z_0)^{n+1}}\,dw,\qquad r<\rho<R.
+\]
+\EX{$\frac1{z(z-1)}$ 在 $0<|z|<1$ 中 $\frac1{z(z-1)}=-\frac1z-\sum_{n\ge0}z^n$，故 $z=0$ 处留数为 $-1$；在 $1<|z|<\infty$ 中改为 $\sum_{n\ge0}z^{-n-2}$，没有 $z^{-1}$ 项。外环系数与去心圆盘展开不同，这正是 Laurent 展开必须写明环域的原因。}{For $1/(z(z-1))$ on $0<|z|<1$ the expansion is $-1/z-\sum z^n$, giving residue $-1$ at $0$; on $1<|z|<\infty$ it is $\sum z^{-n-2}$, with no $z^{-1}$ term. The outer coefficients differ from the punctured-disk expansion, which is why the annulus must be stated.}
+\EX{$e^{1/z}=\sum_{n\ge0}1/(n!z^n)$（$0<|z|<\infty$）主部有无穷多项，故 $0$ 是本性奇点；$\frac{\sin z}{z^2}=\frac1z-\frac z{3!}+\cdots$ 主部只有 $1/z$，故 $0$ 是一阶极点，留数为 $1$。}{On $0<|z|<\infty$, $e^{1/z}=\sum 1/(n!z^n)$ has infinitely many principal-part terms, so $0$ is essential; $\sin z/z^2=1/z-z/3!+\cdots$ has only $1/z$, so $0$ is a simple pole with residue $1$.}
+
+\subsection{孤立奇点的分类 | Classification of isolated singularities}
+\APS{设 $z_0$ 是孤立奇点，即 $f$ 在某个去心圆盘 $0<|z-z_0|<R$ 内解析。按 Laurent 主部分类如下：}{Let $z_0$ be an isolated singularity, meaning $f$ is analytic on some punctured disk $0<|z-z_0|<R$. The Laurent principal part gives the classification:}
+\begin{center}
+\small
+\begin{tabular}{p{4.3cm}p{3.9cm}p{7.0cm}}
+\hline
+类型 / Type & 主部 / Principal part & 判别 / Criterion \\
+\hline
+可去奇点 / removable & 主部为零 & $f$ 有界；$\lim(z-z_0)f(z)=0$；可补充定义使解析 \\
+极点 / pole（$m$ 阶） & 有限项，末尾 $a_{-m}\ne0$ & $\lim(z-z_0)^mf(z)$ 为非零有限数；$f=g/(z-z_0)^m$ \\
+本性奇点 / essential & 无穷多项 & 极限不存在且不为 $\infty$；像在 $\mathbb C$ 中稠密 \\
+\hline
+\end{tabular}
+\end{center}
+\APS{典型例子：$1/z$ 一阶极点；$e^{1/z}$ 本性奇点；$\sin z/z$ 可去（补 $f(0)=1$）。判断极点阶数最稳的方法：若 $f=g/h$，$h$ 在 $z_0$ 有 $m$ 阶零点而 $g(z_0)\ne0$，则 $f$ 有 $m$ 阶极点（$g$ 也零点时先约去公因子）。可去奇点的 Riemann 定理：去心邻域内解析且有界则可去。}{Typical examples: $1/z$ has a simple pole, $e^{1/z}$ an essential singularity, and $\sin z/z$ a removable one (set $f(0)=1$). The safest way to find the pole order: if $f=g/h$, $h$ has a zero of order $m$ at $z_0$, and $g(z_0)\ne0$, then $f$ has a pole of order $m$ (cancel common factors first if $g$ also vanishes). Riemann's theorem: a bounded analytic function on a punctured neighborhood has a removable singularity.}
+\ASK{Taylor 级数与 Laurent 级数的区别？}{How do Taylor and Laurent series differ?}{Taylor 级数只含非负次幂，适用于包含中心的圆盘，系数为 $f^{(n)}(z_0)/n!$；Laurent 级数含负次幂，适用于不含中心的圆环，系数由圆环内的围道积分给出，能描述孤立奇点。同一函数在不同圆环的 Laurent 展开不同，而 Taylor 展开在给定圆盘内唯一。}{A Taylor series has only nonnegative powers and represents an analytic function on a disk containing its center, with coefficients $f^{(n)}(z_0)/n!$. A Laurent series also has negative powers, represents a function on an annulus not containing the center, and describes an isolated singularity; its coefficients are contour integrals in the annulus. Laurent expansions depend on the annulus, whereas a Taylor expansion is unique on a given disk.}
 \subsection{留数与留数定理 | Residues and the residue theorem}
-\noindent 孤立奇点 $a$ 处 Laurent 级数中 $(z-a)^{-1}$ 的系数称为\textbf{留数}，记作 $\operatorname{Res}(f,a)$。若 $C$ 是正向分段光滑简单闭曲线，$f$ 在曲线及内部邻域除有限个内部孤立奇点外解析，且曲线上没有奇点，则\textbf{留数定理}为
+\APS{孤立奇点 $z_0$ 处 Laurent 展开的系数 $a_{-1}$ 称为留数，记 $\operatorname{Res}(f,z_0)$；沿绕 $z_0$ 的小圆积分时只有这一项留下，所以它是局部数据。}{The coefficient $a_{-1}$ in the Laurent expansion at an isolated singularity $z_0$ is the residue $\operatorname{Res}(f,z_0)$; a small circle around $z_0$ picks out only this term, so the residue is local data.}
 \FORMULA{留数定理}{the residue theorem}
 \[
-\oint_C f(z)\,dz=2\pi i\sum_{a\text{ inside }C}\operatorname{Res}(f,a).
+\oint_C f(z)\,dz=2\pi i\sum_{k=1}^{m}\operatorname{Res}(f,a_k).
 \]
-它把整条围道积分化成内部奇点处有限个系数之和。对一阶极点，$\operatorname{Res}(f,a)=\lim_{z\to a}(z-a)f(z)$；若 $f(z)=g(z)/(z-a)^m$ 且 $g$ 在 $a$ 解析，则 $m$ 阶极点的留数为 $g^{(m-1)}(a)/(m-1)!$。
-\EN{The residue is the coefficient of $(z-a)^{-1}$ in the Laurent expansion at an isolated singularity. The residue theorem states that the integral around a positively oriented piecewise smooth simple contour equals $2\pi i$ times the sum of the residues at the finitely many enclosed singularities, assuming analyticity near the contour and no singularity on it. The limit formula applies to a simple pole; the derivative formula applies to a pole of order $m$ when its numerator factor is analytic at the pole.}
-\READ{“The contour integral equals two pi i times the sum of the residues inside the contour.”}
-\EX{对 $f(z)=1/[z(z-1)]$，在 $0$ 和 $1$ 的留数分别是 $-1$ 和 $1$。半径 $2$ 的正向圆包围两点，积分为 $2\pi i(-1+1)=0$；半径 $1/2$ 的圆只包围 $0$，积分为 $-2\pi i$。这说明积分取决于包围的奇点和留数之和，而非只看极点个数。}{For $f(z)=1/[z(z-1)]$, the residues at zero and one are minus one and one. A positively oriented circle of radius two encloses both and gives integral zero; a circle of radius one-half encloses only zero and gives $-2\pi i$. The integral depends on the enclosed residues, not merely on the number of poles.}
-\EX{对 $e^z/(z-1)^2$，令 $g(z)=e^z,m=2$，高阶极点公式给出 $\operatorname{Res}(f,1)=g'(1)=e$。任何正向包围 $1$ 且边界无奇点的简单闭曲线，其积分为 $2\pi i e$。}{For $e^z/(z-1)^2$, take $g(z)=e^z$ and $m=2$. The higher-order formula gives residue $g'(1)=e$, so any positively oriented simple contour enclosing one and containing no singularity on its boundary has integral $2\pi i e$.}
-
-\subsection{Laurent 系数计算与围道选择 | Laurent coefficients and contour choice}
-\noindent Laurent 展开也可直接读出留数。以 $1/[z(z-1)]$ 为例，在 $0<|z|<1$ 中
-\FORMULA{有理函数在圆环内的 Laurent 几何级数展开}{Laurent geometric-series expansion of a rational function on an annulus}
+\APS{条件：$C$ 正向简单闭曲线；$f$ 在 $C$ 及其内部的开邻域内，除内部有限个孤立奇点 $a_1,\dots,a_m$ 外解析；$C$ 上无奇点。证明用绕每个奇点的小圆和多连通区域的 Cauchy 定理。}{Hypotheses: $C$ is a positively oriented simple closed contour; $f$ is analytic on a neighborhood of $C$ and its interior except for finitely many isolated singularities $a_1,\dots,a_m$ inside; and $C$ carries no singularity. The proof uses small circles around each singularity and Cauchy's theorem for multiply connected domains.}
+\FORMULA{留数的计算公式}{formulas for residues}
 \[
-\frac1{z(z-1)}=-\frac1z\frac1{1-z}=-\sum_{n=0}^{\infty}z^{n-1},
+\operatorname{Res}(f,a)=\lim_{z\to a}(z-a)f(z)\quad\text{(一阶极点)},
 \]
-所以 $0$ 处的留数是 $-1$。在 $|z|>1$ 中改用 $1/z$ 的几何级数展开，则没有 $z^{-1}$ 项；这与两个有限极点留数之和为零一致。计算实轴反常积分时，常把实轴段补成半圆，再用留数定理；必须估计弧积分的极限，不能只列极点。
-\EN{A residue can be read directly from a Laurent series. The function in the example has residue minus one at zero in the annulus $0<|z|<1$. In the exterior region, expansion in powers of $1/z$ has no $z^{-1}$ term, consistent with the sum of its two finite residues being zero. To evaluate a real improper integral, close the real interval with a semicircle and prove that the arc contribution vanishes; listing the poles alone is not enough.}
-\EX{计算 $I=\int_0^\infty x^2/(x^4+1)\,dx$。被积函数为偶函数，先算全实轴积分的一半。上半平面半圆内的极点为 $a_1=e^{i\pi/4}$、$a_2=e^{3i\pi/4}$，且
-\FORMULA{四次分母积分的留数计算}{residue calculation for an integral with a quartic denominator}
 \[
-\operatorname{Res}\left(\frac{z^2}{z^4+1},a_j\right)=\frac{a_j^2}{4a_j^3}=\frac1{4a_j},\qquad \sum_j\operatorname{Res}=-\frac{i\sqrt2}{4}.
+\operatorname{Res}(f,a)=\frac1{(m-1)!}\lim_{z\to a}\frac{d^{m-1}}{dz^{m-1}}\big[(z-a)^mf(z)\big]\quad\text{($m$ 阶极点)}.
 \]
-半径为 $R$ 的弧上，被积函数模不超过 $R^2/(R^4-1)$，弧长为 $\pi R$，故弧积分模不超过 $\pi R^3/(R^4-1)\to0$。留数定理给出全实轴积分 $\pi/\sqrt2$，所以 $I=\pi/(2\sqrt2)$。}{For the integral $I$ in the text, use evenness and a large upper semicircle. The two enclosed poles and their residues are shown above. On the arc, the integrand is bounded by $R^2/(R^4-1)$ and the arc length is $\pi R$, so the arc integral tends to zero. The residue theorem gives the integral over the real line as $\pi/\sqrt2$, and hence $I=\pi/(2\sqrt2)$.}
-\ASK{实反常积分使用留数定理时，最容易漏掉什么条件？}{What condition is easiest to overlook when using residues for a real improper integral?}{除核对奇点和围道方向，还要验证留数定理的适用条件，并计算或估计补入弧段的贡献，不能默认所有弧积分都趋于零。例：沿上半平面小半圆 $z=\varepsilon e^{i\theta}$ 从 $\theta=\pi$ 到 $0$ 顺时针绕过原点时，$\int dz/z=\int_\pi^0 i\,d\theta=-i\pi$，与 $\varepsilon$ 无关。实轴上有极点时，必须区分普通反常积分与 Cauchy 主值，并明确绕行方向。}{Check the singularities, orientation, and hypotheses of the residue theorem, then calculate or bound every added arc contribution. Such contributions need not vanish. On the clockwise upper semicircle $z=\varepsilon e^{i\theta}$, with $\theta$ decreasing from $\pi$ to zero, $\int dz/z=-i\pi$, independently of $\varepsilon$. If a pole lies on the real axis, distinguish an ordinary improper integral from a Cauchy principal value and specify the indentation direction.}
+\APS{若 $f=g/h$，$h(a)=0$、$h'(a)\ne0$、$g(a)\ne0$，则 $\operatorname{Res}(f,a)=g(a)/h'(a)$；阶数不清楚时展开分子分母比较最低次幂最稳。}{If $f=g/h$ with $h(a)=0$, $h'(a)\ne0$, and $g(a)\ne0$, then $\operatorname{Res}(f,a)=g(a)/h'(a)$; when the order is unclear, expand numerator and denominator and compare lowest powers.}
+\EX{$\oint_{|z|=2}\frac{dz}{z(z-1)}$：$0$、$1$ 处留数 $-1$、$1$，积分为 $0$；换成 $|z|=1/2$ 只包围 $0$，积分为 $-2\pi i$。}{For $1/[z(z-1)]$ over $|z|=2$ the residues cancel and the integral is zero; over $|z|=1/2$ only the origin is enclosed and the integral is $-2\pi i$.}
+\EX{$\oint_{|z|=2}\frac{e^z}{(z-1)^2}dz=2\pi i\,g'(1)=2\pi ie$，其中 $g=e^z$：二阶极点的留数是导数，不是函数值。}{$\oint_{|z|=2}e^z/(z-1)^2dz=2\pi i\,g'(1)=2\pi ie$ with $g=e^z$: for a double pole the residue is a derivative, not a value.}
 
-\section[第 5 章 零点与辐角原理]{第 5 章：零点、辐角原理与最大模 | Chapter 5: Zeros and the maximum modulus principle}
-\subsection{零点阶数与辐角原理 | Orders of zeros and the argument principle}
-\noindent 非零解析函数的零点是孤立的。若 $f(z)=(z-a)^m g(z)$ 且 $g(a)\ne0$，则 $a$ 是 $m$ 阶零点。若亚纯函数 $f$ 在正向简单闭曲线 $C$ 上无零点、无极点，则\textbf{辐角原理}为
-\FORMULA{辐角原理}{the argument principle}
+\subsection{用留数计算实积分 | Real integrals by residues}
+\APS{类型一（三角积分）：$\int_0^{2\pi}R(\cos\theta,\sin\theta)d\theta$，用 $z=e^{i\theta}$，$\cos\theta=\frac{z+z^{-1}}2$、$\sin\theta=\frac{z-z^{-1}}{2i}$、$d\theta=\frac{dz}{iz}$，化为单位圆上的留数积分。}{Type I (trigonometric): for $\int_0^{2\pi}R(\cos\theta,\sin\theta)d\theta$ use $z=e^{i\theta}$ with the displayed substitutions, reducing it to a residue integral over the unit circle.}
+\EX{计算 $I=\int_0^{2\pi}\frac{d\theta}{5+4\cos\theta}$。代入得
 \[
-\frac1{2\pi i}\oint_C\frac{f'(z)}{f(z)}\,dz=N-P,
+I=\oint_{|z|=1}\frac{dz}{i(2z^2+5z+2)}.
 \]
-其中 $N,P$ 是内部零点和极点的个数，按阶数计重数。左侧等于曲线 $f(C)$ 绕原点的绕数；该原理将代数计数与平面绕转联系起来。
-\EN{The zeros of a nonzero analytic function are isolated. If $f(z)=(z-a)^m g(z)$ with $g(a)\ne0$, then $a$ is a zero of order $m$. The argument principle says that the contour integral shown above equals the number of enclosed zeros minus poles, counted with multiplicity, provided the meromorphic function has neither zeros nor poles on the positively oriented contour. The integral is also the winding number of $f(C)$ around zero.}
-\READ{“One over two pi i times the integral of f prime over f equals the number of zeros minus poles, counted with multiplicity.”}
-\noindent\textbf{Rouché 定理}是辐角原理的常用推论：若 $f,g$ 在简单闭曲线及其内部解析，且边界上 $|g(z)|<|f(z)|$，则 $f$ 与 $f+g$ 在内部零点数相同，按重数计。它允许通过一个易数零点的主项判断复杂函数的零点数。
-\EN{Rouche's theorem is a useful consequence of the argument principle. If $f$ and $g$ are analytic on and inside a simple contour and $|g|<|f|$ on the contour, then $f$ and $f+g$ have the same number of zeros inside, counted with multiplicity.}
-\EX{在 $|z|=2$ 上，$|z^3|=8$，而 $|z+1|\le3$。取 $f=z^3,g=z+1$，Rouché 定理说明 $z^3+z+1$ 在 $|z|<2$ 内恰有三个零点，按重数计；无需显式解出这三个根。}{On $|z|=2$, $|z^3|=8$ while $|z+1|\le3$. Taking $f=z^3$ and $g=z+1$, Rouche's theorem shows that $z^3+z+1$ has exactly three zeros in the disk, counted with multiplicity, without solving for them explicitly.}
+分母 $2z^2+5z+2=(2z+1)(z+2)$，只有 $-1/2$ 在圆内，留数为 $\frac1i\cdot\frac1{4z+5}\big|_{-1/2}=\frac1{3i}$，故 $I=2\pi i\cdot\frac1{3i}=\frac{2\pi}{3}\approx2.094$。}{For the trigonometric integral, substitution gives a unit-circle integral with denominator $(2z+1)(z+2)$; only $-1/2$ lies inside, with residue $1/(3i)$, so $I=2\pi/3\approx2.094$.}
+\APS{类型二（有理型）：$\int_{-\infty}^{\infty}\frac{P(x)}{Q(x)}dx$，若 $Q$ 无实根且 $\deg Q\ge\deg P+2$，取上半平面大圆弧，弧积分由 ML 估计趋于零。}{Type II (rational): for $\int P(x)/Q(x)dx$ with $Q$ free of real zeros and $\deg Q\ge\deg P+2$, close with a large upper semicircle whose arc integral tends to zero by the ML estimate.}
+\EX{$\int_{-\infty}^{\infty}\frac{dx}{1+x^2}=2\pi i\operatorname{Res}\big(\frac1{1+z^2},i\big)=2\pi i\cdot\frac1{2i}=\pi$。}{The integral of $1/(1+x^2)$ equals $2\pi i$ times the residue $1/(2i)$ at $i$, giving $\pi$.}
+\APS{类型三（含 $e^{iax}$）：$\int_{-\infty}^{\infty}R(x)e^{iax}dx$（$a>0$）在上半平面闭合；$|e^{iaz}|=e^{-a\operatorname{Im}z}\le1$，指数因子在弧上提供额外衰减。}{Type III (exponential factor): for $\int R(x)e^{iax}dx$ with $a>0$, close in the upper half-plane; then $|e^{iaz}|=e^{-a\operatorname{Im}z}\le1$, and the exponential provides extra decay on the arc.}
+\FORMULA{Jordan 引理}{Jordan's lemma}
+\[
+\left|\int_{\Gamma_R}R(z)e^{iaz}dz\right|\le\frac{\pi}{a}\max_{z\in\Gamma_R}|R(z)|\qquad(a>0).
+\]
+\APS{它说明即使 $\deg Q=\deg P+1$（普通 ML 估计不够），弧积分仍趋于零；$a<0$ 时要改在下半平面闭合。}{It shows that even when $\deg Q=\deg P+1$, where the plain ML estimate is insufficient, the arc integral still vanishes; for $a<0$ one closes in the lower half-plane instead.}
+\EX{$\int_{-\infty}^{\infty}\frac{e^{ix}}{1+x^2}dx=2\pi i\cdot\frac{e^{i\cdot i}}{2i}=\frac{\pi}{e}$。取实部得 $\int_{-\infty}^{\infty}\frac{\cos x}{1+x^2}dx=\frac{\pi}{e}$，虚部为 $0$（奇函数）。}{The integral of $e^{ix}/(1+x^2)$ equals $2\pi i$ times the residue $e^{-1}/(2i)$, giving $\pi/e$; its real part is the cosine integral and its imaginary part vanishes.}
+\ASK{用留数计算实积分时最容易漏掉什么？}{What is easiest to overlook when using residues for real integrals?}{要核对奇点是否列全、方向、围道上是否有奇点；必须证明补入的弧积分趋于零；实轴有极点时得到的是主值而非普通积分；非偶函数的半线积分不能直接取一半。}{Check that all singularities are listed, the orientation, and that no singularity lies on the contour; prove that added arc integrals vanish; with a pole on the real axis the result is a principal value, not an ordinary integral; and for a non-even integrand a half-line integral is not half of the full one.}
 
-\subsection{最大模原理与代数基本定理 | Maximum modulus and the fundamental theorem of algebra}
-\noindent\textbf{最大模原理}说非常数解析函数不能在区域内部取得模的局部最大值。若函数在有界区域解析且在闭包连续，它的最大模在边界取得。因此可用边界值控制内部值。\textbf{代数基本定理}可由 Liouville 定理证明：假设非常数多项式 $P$ 无根，则 $1/P$ 整个；它在紧集上有界且趋于零于无穷远，因而全平面有界。Liouville 定理迫使 $1/P$ 为常数，矛盾，所以 $P$ 至少有一个复根。
-\EN{The maximum modulus principle says that a nonconstant analytic function cannot attain a local maximum of its modulus inside a domain. If it is analytic on a bounded domain and continuous on the closure, its maximum is attained on the boundary, so boundary values control interior values. The fundamental theorem of algebra follows from Liouville's theorem: if a nonconstant polynomial had no root, its reciprocal would be entire, bounded on compact sets, and tend to zero at infinity. It would be a bounded entire function and therefore constant, a contradiction.}
+\subsection{用留数求和 | Summation by residues}
+\APS{取核函数 $\pi\cot(\pi z)$，它在每个整数点有简单极点、留数为 $1$。若 $g$ 在无穷远满足 $|g(z)|=O(|z|^{-2})$，则沿大正方形边界 $|\cot(\pi z)|$ 有界，$\pi\cot(\pi z)g(z)=O(N^{-2})$，周长为 $O(N)$，故边界积分趋于零。由“所有留数之和为零”得到级数和。}{Take the kernel $\pi\cot(\pi z)$, which has a simple pole with residue $1$ at every integer. If $g$ decays like $O(|z|^{-2})$ at infinity, then on the boundary of a large square $|\cot(\pi z)|$ is bounded, the integrand is $O(N^{-2})$, the perimeter is $O(N)$, and the boundary integral tends to zero; the sum of all residues being zero yields the series sum.}
+\FORMULA{用 $\cot$ 核求和}{summation with the cotangent kernel}
+\[
+\sum_{n=-\infty}^{\infty}g(n)=-\sum_{\text{poles of }g}\operatorname{Res}\big(\pi\cot(\pi z)g(z)\big).
+\]
+\EX{$\sum_{n=1}^{\infty}\frac1{n^2}=\frac{\pi^2}{6}$。取 $g=1/z^2$，$F(z)=\frac{\pi\cot(\pi z)}{z^2}$ 在非零整数 $n$ 的留数为 $1/n^2$；在 $0$ 处用 $\pi\cot(\pi z)=\frac1z-\frac{\pi^2z}{3}-\cdots$ 得 $F=\frac1{z^3}-\frac{\pi^2}{3z}+\cdots$，留数为 $-\frac{\pi^2}{3}$。由大正方形上积分趋于零，所有留数之和为零：$2\sum_{n\ge1}\frac1{n^2}-\frac{\pi^2}{3}=0$，得 $\frac{\pi^2}{6}$。}{Take $g=1/z^2$. The function $F=\pi\cot(\pi z)/z^2$ has residue $1/n^2$ at each nonzero integer and residue $-\pi^2/3$ at $0$; the sum of all residues is zero, giving $2\sum_{n\ge1}1/n^2=\pi^2/3$ and hence $\pi^2/6$.}
 
-\section[第 6 章 延拓与共形映射]{第 6 章：解析延拓与共形映射 | Chapter 6: Analytic continuation and conformal maps}
-\subsection{恒等定理与解析延拓 | Identity theorem and analytic continuation}
-\noindent\textbf{恒等定理}说：若两个解析函数定义在同一个连通区域，且在有区域内聚点的集合上相等，则它们在整个区域相等。因此解析延拓若存在便唯一。若 $f$ 在 $D_1$ 解析，$F$ 在更大的连通区域 $D_2$ 解析且在 $D_1$ 上等于 $f$，则 $F$ 是 $f$ 的解析延拓；延拓是扩展同一解析函数，不代表原来的级数在更大范围仍收敛。
-\EN{The identity theorem says that two analytic functions on a connected domain are identical if they agree on a set with a limit point inside the domain. Thus analytic continuation, when it exists, is unique. A function on $D_1$ is continued to a larger connected domain $D_2$ by an analytic function agreeing with it on $D_1$; the original power series need not converge throughout the larger domain.}
-\EX{几何级数 $1+z+z^2+\cdots$ 只在 $|z|<1$ 收敛，但在那里等于 $1/(1-z)$。有理函数 $1/(1-z)$ 在 $\mathbb C\setminus\{1\}$ 解析，因此是该函数的解析延拓；在 $z=2$ 处延拓值为 $-1$，尽管原级数在 $2$ 发散。}{The geometric series converges only for $|z|<1$, where it equals $1/(1-z)$. The rational function is analytic on $\mathbb C\setminus\{1\}$ and continues the function; its value at two is minus one even though the original series diverges there.}
+\subsection{辐角原理与 Rouché 定理 | The argument principle and Rouché's theorem}
+\APS{设 $f$ 在正向简单闭曲线 $C$ 上及其内部亚纯，$C$ 上无零点与极点，则 $\frac1{2\pi i}\oint_C\frac{f'}{f}dz=N-P$，$N,P$ 为内部零点数与极点（按重数计）。左边也是像曲线 $f(C)$ 绕原点的绕数。}{Let $f$ be meromorphic on and inside a positively oriented simple contour $C$ with no zeros or poles on $C$. Then the displayed integral equals $N-P$, the numbers of interior zeros and poles counted with multiplicity; it is also the winding number of $f(C)$ around the origin.}
+\FORMULA{辐角原理与 Rouché 定理}{the argument principle and Rouché's theorem}
+\[
+\frac1{2\pi i}\oint_C\frac{f'(z)}{f(z)}\,dz=N-P;\qquad
+|g|<|f|\ \text{on }C\ \Longrightarrow\ Z(f+g,C)=Z(f,C).
+\]
+\APS{Rouché 定理的证明思路：考虑连续族 $f_t=f+tg$（$0\le t\le1$）。在 $C$ 上 $|tg|\le|g|<|f|$，故 $f_t$ 在 $C$ 上无零点；零点数随 $t$ 连续且取整数值，因此恒定；$t=0$ 与 $t=1$ 的零点数相同。}{Proof idea for Rouché: consider the continuous family $f_t=f+tg$ with $0\le t\le1$. On $C$ we have $|tg|\le|g|<|f|$, so $f_t$ has no zero on $C$; the zero count depends continuously on $t$ and is integer-valued, hence constant, so the counts at $t=0$ and $t=1$ agree.}
+\EX{$z^3+z+1$ 在 $|z|<2$ 内恰有 $3$ 个零点：在 $|z|=2$ 上 $|z^3|=8>|z+1|\le3$，与 $z^3$ 比较。$e^z-3z$ 在 $|z|<1$ 内恰有 $1$ 个零点：在 $|z|=1$ 上 $|e^z|\le e<3=|3z|$，与 $-3z$ 比较。}{$z^3+z+1$ has exactly three zeros in $|z|<2$, since $|z^3|=8>|z+1|\le3$ on the boundary. $e^z-3z$ has exactly one zero in $|z|<1$, since $|e^z|\le e<3=|3z|$ there.}
+\EX{代数基本定理的 Rouché 证明：$P(z)=z^n+a_{n-1}z^{n-1}+\cdots+a_0$，当 $R$ 足够大时在 $|z|=R$ 上低次项之和的模小于 $R^n=|z^n|$，故 $P$ 在 $|z|<R$ 内与 $z^n$ 一样有 $n$ 个零点。}{Rouché proof of the fundamental theorem of algebra: for large $R$ the lower-order terms are dominated by $|z^n|$ on $|z|=R$, so $P$ has $n$ zeros in $|z|<R$, like $z^n$.}
+\section[第 7 章 共形映射]{第 7 章：共形映射与调和函数 | Chapter 7: Conformal mapping and harmonic functions}
 
-\subsection{共形映射与 Riemann 映射定理 | Conformal maps and the Riemann mapping theorem}
-\noindent 解析映射在 $f'(z_0)\ne0$ 的点局部保角，称为共形。若要建立两个区域的共形等价，还要求映射双射且逆映射解析。\textbf{Riemann 映射定理}说：复平面中任意非空、单连通且不等于整个平面的开区域，都与单位圆盘共形等价；定理保证存在性，但不一定给出显式公式。Möbius 变换 $w=(az+b)/(cz+d)$（$ad-bc\ne0$）是常用的显式工具。
-\EN{An analytic map is conformal at points where its derivative is nonzero because it locally preserves oriented angles. A conformal equivalence also requires a bijection with analytic inverse. The Riemann mapping theorem states that every nonempty simply connected proper domain in the complex plane is conformally equivalent to the unit disk. It guarantees existence but not necessarily an explicit formula. Mobius transformations are useful explicit maps.}
-\EX{Möbius 变换 $w=(z-i)/(z+i)$ 把上半平面映到单位圆盘。若 $z=x+iy,y>0$，则 $|z-i|^2=x^2+(y-1)^2< x^2+(y+1)^2=|z+i|^2$，故 $|w|<1$；其逆映射为 $z=i(1+w)/(1-w)$。这可把上半平面的边值问题转到圆盘，但边界数据也必须按映射改变。}{The Mobius map $w=(z-i)/(z+i)$ sends the upper half-plane to the unit disk. For $z=x+iy$ with $y>0$, $|z-i|<|z+i|$, so $|w|<1$; its inverse is $z=i(1+w)/(1-w)$. It transfers a boundary-value problem to the disk, provided the boundary data are transformed as well.}
-\ASK{幂级数发散的点上，函数还可能有定义吗？}{Can a function be defined at a point where its power series diverges?}{可以。幂级数只在自己的收敛圆内表示函数，但函数可能有更大的解析延拓区域；几何级数与 $1/(1-z)$ 是例子。}{Yes. A power series represents a function only within its disk of convergence, but the function may have a larger analytic continuation. The geometric series and $1/(1-z)$ provide an example.}
+\subsection{解析映射的保角性 | Conformality of analytic maps}
+\APS{若 $f$ 在 $z_0$ 解析且 $f'(z_0)\ne0$，则 $f(z_0+h)=f(z_0)+f'(z_0)h+o(|h|)$，局部近似为乘以非零复数 $f'(z_0)$：长度放大 $|f'(z_0)|$ 倍、方向旋转 $\arg f'(z_0)$，于是过 $z_0$ 的任意两条曲线夹角大小与方向都不变，称 $f$ 在 $z_0$ 共形。}{If $f$ is analytic at $z_0$ with $f'(z_0)\ne0$, then $f(z_0+h)=f(z_0)+f'(z_0)h+o(|h|)$, so locally $f$ is multiplication by the nonzero complex number $f'(z_0)$: lengths scale by $|f'(z_0)|$ and directions rotate by $\arg f'(z_0)$. Hence any two curves through $z_0$ keep their angle and orientation, and $f$ is conformal at $z_0$.}
+\APS{若 $f'(z_0)=0$，一般不再保角：$f(z)=z^2$ 在 $0$ 把第一象限（角 $\pi/2$）映到上半平面（角 $\pi$），角度放大 $2$ 倍。所以“解析”是共形的前提，“导数非零”才是保证。共形等价还要求双射且逆映射解析。}{If $f'(z_0)=0$ conformality generally fails: $z^2$ maps the first quadrant (angle $\pi/2$) to the upper half-plane (angle $\pi$), doubling angles. Thus analyticity is a prerequisite and a nonzero derivative is the guarantee. A conformal equivalence also requires a bijection with analytic inverse.}
 
-\section[第 7 章 二维势场]{第 7 章：复分析与二维势场 | Chapter 7: Complex analysis and two-dimensional potentials}
-\noindent 在二维无源稳态热传导或无电荷静电区域中，势函数 $u(x,y)$ 满足 Laplace 方程 $\Delta u=u_{xx}+u_{yy}=0$。若 $f(z)=u(x,y)+iv(x,y)$ 解析，则 Cauchy--Riemann 方程推出 $u,v$ 都调和；$v$ 可视作 $u$ 的共轭调和函数。解析函数因此能生成势函数和流函数，并利用共形映射改变求解区域。实际应用必须先检查维度、源项、边界条件及材料假设。
-\EN{In two-dimensional source-free steady heat conduction or a charge-free electrostatic region, the potential $u(x,y)$ satisfies Laplace's equation. If $f=u+iv$ is analytic, the Cauchy--Riemann equations imply that both components are harmonic; $v$ is a harmonic conjugate of $u$. Analytic functions therefore generate potential and stream functions, while conformal maps change the domain. An application must still check dimension, sources, boundary data, and material assumptions.}
-\EX{取 $f(z)=z^2$，则 $u=x^2-y^2$、$v=2xy$，且 $u_{xx}+u_{yy}=2-2=0$。在给定矩形区域和边界温度后，$u$ 可作为一个满足 Laplace 方程的候选温度场；边界值是否符合具体设备，仍需单独核对。}{For $f(z)=z^2$, the real part is $u=x^2-y^2$ and the imaginary part is $v=2xy$. Since $u_{xx}+u_{yy}=2-2=0$, $u$ is a candidate steady temperature field in a rectangle. Its boundary values must still match the physical problem.}
-\ASK{解析函数为什么能帮助求二维稳态势场？}{Why can analytic functions help solve two-dimensional steady potential problems?}{解析函数实部满足 Laplace 方程，因而是调和势函数；共形映射可以把复杂区域转成圆盘或半平面等简单区域。最后还必须把边界条件一同映射并验证物理假设。}{The real part of an analytic function is harmonic and therefore solves Laplace's equation. A conformal map can transform a complicated domain into a disk or half-plane, but the boundary conditions and physical assumptions must also be checked.}
+\subsection{分式线性变换与交比 | Möbius transformations and the cross ratio}
+\APS{分式线性变换（Möbius 变换）$w=\frac{az+b}{cz+d}$（$ad-bc\ne0$）是扩充复平面上的双射：$z=-d/c\mapsto\infty$，$z=\infty\mapsto a/c$。全体构成群，复合对应矩阵乘法，由三个点的像唯一确定。}{A Möbius (fractional linear) transformation $w=(az+b)/(cz+d)$ with $ad-bc\ne0$ is a bijection of the extended plane: $z=-d/c$ maps to $\infty$ and $z=\infty$ to $a/c$. They form a group under composition, composition corresponds to matrix multiplication, and a map is determined by the images of three points.}
+\APS{三条核心性质：(1) 把圆或直线映成圆或直线；(2) 保持交比；(3) 在非极点处共形。因此常用它把上半平面、圆盘、右半平面互相转换。}{Three core properties: (1) it maps circles or lines to circles or lines; (2) it preserves the cross ratio; (3) it is conformal away from its pole. Hence it is used to interchange the upper half-plane, disk, and right half-plane.}
+\FORMULA{交比}{the cross ratio}
+\[
+(z_1,z_2;z_3,z_4)=\frac{(z_1-z_3)(z_2-z_4)}{(z_1-z_4)(z_2-z_3)}.
+\]
+\EX{$w=\frac{z-i}{z+i}$ 把上半平面映到单位圆盘：$z=x+iy$、$y>0$ 时 $|z-i|^2=x^2+(y-1)^2<x^2+(y+1)^2=|z+i|^2$，故 $|w|<1$；实轴映到单位圆，$i\mapsto0$、$\infty\mapsto1$、$-i\mapsto\infty$。逆变换为 $z=i\frac{1+w}{1-w}$。}{The map $w=(z-i)/(z+i)$ sends the upper half-plane to the unit disk: for $z=x+iy$ with $y>0$ we have $|z-i|<|z+i|$, so $|w|<1$. The real axis maps to the unit circle, $i\mapsto0$, $\infty\mapsto1$, $-i\mapsto\infty$, and the inverse is $z=i(1+w)/(1-w)$.}
+\EX{$w=\frac{1+z}{1-z}$ 把单位圆盘映到右半平面：$\operatorname{Re}w=\frac{1-|z|^2}{|1-z|^2}>0$（$|z|<1$），且 $0\mapsto1$、$1\mapsto\infty$、$-1\mapsto0$。}{The map $w=(1+z)/(1-z)$ sends the unit disk to the right half-plane, since the displayed real part is positive for $|z|<1$, with $0\mapsto1$, $1\mapsto\infty$, $-1\mapsto0$.}
+
+\subsection{常见映射与边界对应 | Standard maps and boundary correspondence}
+\APS{常用积木：$z^n$ 把角域角度乘 $n$；$e^z$ 把水平带变成角域或半平面；$\log z$ 把角域变成水平带；Möbius 变换把圆与直线互换。边界对应原理：若 $f$ 共形映 $D$ 到 $G$、连续到边界并把 $\partial D$ 一一映到 $\partial G$ 且保持方向，则内部对应也正确。}{Building blocks: $z^n$ multiplies sector angles by $n$; $e^z$ sends strips to sectors or half-planes; $\log z$ sends sectors to strips; Möbius maps interchange circles and lines. Boundary correspondence: if $f$ maps $D$ conformally onto $G$, extends continuously to the boundary, and maps $\partial D$ bijectively onto $\partial G$ preserving orientation, the interior correspondence is correct.}
+\FORMULA{Joukowski 映射}{the Joukowski map}
+\[
+w=\frac12\left(z+\frac1z\right).
+\]
+\APS{$|z|=r>1$ 映成半轴为 $\frac12(r+1/r)$、$\frac12(r-1/r)$ 的椭圆；$|z|=1$ 映成线段 $[-1,1]$（来回各一遍）；$|z|>1$ 一一映到 $\mathbb C\setminus[-1,1]$。临界点 $z=\pm1$（$w'=\frac12(1-1/z^2)=0$）是保角性失效处。机翼理论用它把圆映成翼型截面。}{The circle $|z|=r>1$ maps to an ellipse with semiaxes $(r+1/r)/2$ and $(r-1/r)/2$; the unit circle maps onto $[-1,1]$ traversed twice; and $|z|>1$ maps one-to-one onto $\mathbb C\setminus[-1,1]$. The critical points $z=\pm1$, where $w'=(1-1/z^2)/2$ vanishes, are where conformality fails. Airfoil theory uses this map to send a circle to an airfoil profile.}
+\EX{把第一象限映到单位圆盘：先用 $w_1=z^2$ 把第一象限（角 $\pi/2$）映到上半平面（角 $\pi$），再用 Möbius 变换 $\frac{w_1-i}{w_1+i}$ 映到圆盘，复合得 $F(z)=\frac{z^2-i}{z^2+i}$。把上半平面映到角域 $0<\arg w<\pi/2$：取 $w=z^{1/2}$ 的主值分支，因为 $\arg z\in(0,\pi)$，故 $\arg w\in(0,\pi/2)$。}{Map the first quadrant to the disk: $w_1=z^2$ sends it (angle $\pi/2$) to the upper half-plane (angle $\pi$), and the Möbius map $(w_1-i)/(w_1+i)$ sends that to the disk, giving $F(z)=(z^2-i)/(z^2+i)$. Map the upper half-plane to the sector $0<\arg w<\pi/2$ by the principal branch of $w=z^{1/2}$.}
+
+\subsection{Riemann 映射定理 | The Riemann mapping theorem}
+\APS{若 $D\subsetneq\mathbb C$ 是非空单连通开集，则存在共形双射 $f:D\to\mathbb D$。若指定 $z_0\in D$ 并要求 $f(z_0)=0$、$f'(z_0)>0$，则 $f$ 唯一。}{Every nonempty simply connected proper open subset $D$ of $\mathbb C$ admits a conformal bijection $f:D\to\mathbb D$; if $z_0\in D$ is prescribed together with $f(z_0)=0$ and $f'(z_0)>0$, the map is unique.}
+\APS{定理只保证存在，不给公式；显式公式只对特殊区域容易写（半平面、圆盘、角域、带域，多边形用 Schwarz--Christoffel 公式）。若 $D$ 是 Jordan 区域，$f$ 可连续延拓到边界并给出边界同胚（Carathéodory 定理）。应用：单连通区域上的 Laplace 边值问题可先映到圆盘，用 Poisson 公式求解，再映回。}{The theorem guarantees existence only, not a formula; explicit formulas are easy only for special domains (half-plane, disk, sector, strip, and polygons via the Schwarz--Christoffel formula). For a Jordan domain $f$ extends continuously to the boundary and induces a homeomorphism (Carathéodory). Application: a Laplace boundary-value problem on a simply connected domain can be mapped to the disk, solved by the Poisson formula, and mapped back.}
+\APS{解析延拓的唯一性由恒等定理保证：在连通区域上，两个解析函数若在一个有聚点的集合上相等，则恒等，因此延拓若存在必唯一。}{Uniqueness of analytic continuation follows from the identity theorem: two analytic functions on a connected domain that agree on a set with a limit point are identical, so a continuation is unique when it exists.}
+
+\subsection{调和函数、Poisson 公式与最大值原理 | Harmonic functions, the Poisson formula, and the maximum principle}
+\APS{单位圆盘 Dirichlet 问题：边界 $u(e^{i\theta})=f(\theta)$，$f$ 连续，求圆内调和函数。解由 Poisson 积分给出。}{Dirichlet problem on the unit disk: given continuous boundary data $u(e^{i\theta})=f(\theta)$, find the harmonic function in the disk; the solution is the Poisson integral.}
+\FORMULA{Poisson 积分公式}{the Poisson integral formula}
+\[
+u(re^{i\varphi})=\frac1{2\pi}\int_0^{2\pi}P_r(\varphi-\theta)f(\theta)\,d\theta,\qquad
+P_r(\varphi)=\frac{1-r^2}{1-2r\cos\varphi+r^2}.
+\]
+\APS{Poisson 核 $P_r$ 是调和函数 $\operatorname{Re}\frac{1+re^{i\varphi}}{1-re^{i\varphi}}$ 的实部，满足 $P_r>0$、平均值为 $1$、$r\to1^-$ 时集中于 $\varphi=0$，故恢复连续边界值并给出解的唯一性。}{The Poisson kernel $P_r$ is the real part of the harmonic function $(1+re^{i\varphi})/(1-re^{i\varphi})$; it is positive, has average one, and concentrates near $\varphi=0$ as $r\to1^-$, so it recovers continuous boundary values and gives uniqueness.}
+\FORMULA{最大模原理（解析函数与调和函数）}{maximum modulus principle (analytic and harmonic)}
+\[
+|f(z)|\le\max_{\partial D}|f|\quad(z\in D),\qquad
+\max_{\overline D}u=\max_{\partial D}u\quad(u\ \text{调和}).
+\]
+\APS{非常数解析函数不能在内部取得模的局部最大值；有界区域上连续到闭包的解析函数，最大模在边界达到。调和函数版本：非常数调和函数不能在内部取得最大或最小值。实用价值是“用边界控制内部”，也给出 Dirichlet 问题解的唯一性。}{A nonconstant analytic function cannot attain a local maximum of its modulus inside; if it is analytic on a bounded domain and continuous on the closure, the maximum modulus is attained on the boundary. The harmonic version: a nonconstant harmonic function cannot attain an interior maximum or minimum. The practical value is ``control the interior by the boundary'', which also gives uniqueness for the Dirichlet problem.}
+
+\ASK{共形映射为什么能解 Laplace 边值问题？}{Why can conformal maps solve Laplace boundary-value problems?}{解析映射把调和函数拉回成调和函数：若 $f:D\to G$ 解析、$u$ 在 $G$ 调和，则 $u\circ f$ 在 $D$ 调和（由链式法则和 C-R 方程，或把 $u$ 写成解析函数的实部）。所以把区域共形映到圆盘或半平面后，用 Poisson 公式求解，再映回原区域；边界数据也要一起变换。}{An analytic map pulls harmonic functions back to harmonic functions: if $f:D\to G$ is analytic and $u$ is harmonic in $G$, then $u\circ f$ is harmonic in $D$ (by the chain rule and the C-R equations, or by writing $u$ as the real part of an analytic function). Hence one maps the domain conformally to a disk or half-plane, solves by the Poisson formula, and maps back, transforming the boundary data too.}
+\section*{实际应用与面试总结 | Applications and interview summary}
+
+\subsection*{平面势流：复势与流函数 | Planar potential flow}
+\APS{二维不可压无旋流动中，无旋给出速度势 $\phi$（$\mathbf v=\nabla\phi$），不可压给出流函数 $\psi$（$u=\psi_y$，$v=-\psi_x$），二者满足 C-R 方程，故复势 $F=\phi+i\psi$ 解析、复速度 $F'(z)=u-iv$；流线与等势线正交。}{In a two-dimensional incompressible irrotational flow, irrotationality gives a velocity potential $\phi$ with $\mathbf v=\nabla\phi$, and incompressibility a stream function $\psi$ with $u=\psi_y$, $v=-\psi_x$; they satisfy the C-R equations, so the complex potential $F=\phi+i\psi$ is analytic and the complex velocity is $F'(z)=u-iv$, with streamlines orthogonal to equipotentials.}
+\EX{绕半径 $a$ 的圆柱的无环量流 $F(z)=U(z+a^2/z)$ 满足：在 $|z|=a$ 上 $F$ 为实故 $\psi=0$；$F'=U(1-a^2/z^2)$ 在 $z=\pm a$ 为零（驻点）。}{For flow past a cylinder of radius $a$, $F(z)=U(z+a^2/z)$ is real on $|z|=a$ so $\psi=0$ there, and $F'=U(1-a^2/z^2)$ vanishes at $z=\pm a$ (stagnation points).}
+
+\subsection*{静电场与热传导 | Electrostatics and heat conduction}
+\APS{无电荷区域电势满足 $\Delta\phi=0$，$\mathbf E=-\nabla\phi$。二维线电荷的势 $\phi=-\frac{\lambda}{2\pi\varepsilon_0}\ln r$ 是 $\operatorname{Log}z$ 实部的常数倍；等势线是同心圆，电场线是 $\arg z$ 的等值线。绕电荷一周 $\arg z$ 增加 $2\pi$，对应通量 $\lambda/\varepsilon_0$——多值性正是“包围电荷”的几何表达。}{In a charge-free region the potential satisfies $\Delta\phi=0$ with $\mathbf E=-\nabla\phi$. The potential of a line charge is a constant multiple of the real part of $\operatorname{Log}z$; equipotentials are concentric circles and field lines are level curves of $\arg z$. One loop increases $\arg z$ by $2\pi$, matching the flux $\lambda/\varepsilon_0$: the multivaluedness expresses the enclosure of charge.}
+\APS{二维稳态无内热源温度满足 $\Delta T=0$，边界条件可以是给定温度或热流；解析函数实部给出调和温度场，共形映射把区域转到圆盘或半平面后用 Poisson 公式求解。}{Steady two-dimensional temperature without internal sources satisfies $\Delta T=0$ with prescribed temperature or heat flux; the real part of an analytic function gives a harmonic temperature, and a conformal map reduces the problem to the disk or half-plane for the Poisson formula.}
+\EX{上半平面边界 $T=0$（$x>0$）、$T=1$（$x<0$），则 $T(x,y)=\frac1\pi\arg z$（$0<\arg z<\pi$）是调和函数，边界极限给出阶跃温度，且 $0<T<1$；等温线是从原点出发的射线，热流线是以原点为圆心的半圆。}{For the upper half-plane with boundary temperature $T=0$ for $x>0$ and $T=1$ for $x<0$, the function $T=\arg z/\pi$ is harmonic and has the required step boundary values with $0<T<1$; isotherms are rays from the origin and heat-flow lines are semicircles.}
+
+\subsection*{实积分、级数求和与 z 变换 | Real integrals, series, and the z-transform}
+\APS{留数把围道积分化为局部系数，用于三角积分、有理积分、含 $e^{iaz}$ 的积分、Cauchy 主值，以及用 $\pi\cot(\pi z)$、$\pi/\sin(\pi z)$ 等核函数求和。信号处理中的 $z$ 变换 $F(z)=\sum f_nz^{-n}$ 在收敛圆环内解析，反变换就是 Laurent 系数公式，稳定性取决于极点是否都在单位圆内。}{Residues reduce contour integrals to local coefficients and handle trigonometric and rational integrals, integrals with $e^{iaz}$, principal values, and series sums via kernels such as $\pi\cot(\pi z)$ and $\pi/\sin(\pi z)$. In signal processing the $z$-transform $F(z)=\sum f_nz^{-n}$ is analytic on its annulus of convergence; its inverse is the Laurent coefficient formula, and stability depends on all poles lying inside the unit circle.}
+
+
+\section*{中英术语表 | Glossary}
+{\small
+\begin{longtable}{p{3.2cm}p{5.1cm}p{6.2cm}}
+\hline
+中文 & English & 简要说明 / Remark \\
+\hline
+\endhead
+解析函数 & analytic (holomorphic) function & 开集内处处复可微 / complex differentiable \\
+Cauchy--Riemann 方程 & Cauchy--Riemann equations & $u_x=v_y$，$u_y=-v_x$ \\
+调和函数 & harmonic function & $\Delta u=0$ \\
+多值函数 & multivalued function & 每点对应一个集合的映射 \\
+分支 & branch & 多值表达式的单值解析选取 \\
+分支点 & branch point & 绕一周值改变的点 \\
+割线 & branch cut & 为单值化而删去的曲线 \\
+单连通 & simply connected & 无洞，闭曲线可缩为一点 \\
+多连通 & multiply connected & 有洞，绕洞曲线不可缩 \\
+围道积分 & contour integral & 沿路径的复积分 \\
+收敛半径 & radius of convergence & 幂级数收敛圆盘半径 \\
+Taylor 展开 & Taylor expansion & 非负次幂级数 \\
+Laurent 展开 & Laurent expansion & 含负次幂的圆环展开 \\
+孤立奇点 & isolated singularity & 去心圆盘内解析的奇点 \\
+可去奇点 & removable singularity & 主部为零，可补充定义 \\
+极点 & pole & 主部有限项 \\
+本性奇点 & essential singularity & 主部无穷多项 \\
+留数 & residue & Laurent 系数 $a_{-1}$ \\
+留数定理 & residue theorem & 闭路积分等于 $2\pi i$ 乘留数和 \\
+辐角原理 & argument principle & 零点数减极点数等于绕数 \\
+Rouché 定理 & Rouché's theorem & 边界上 $|g|<|f|$ 时零点数相同 \\
+最大模原理 & maximum modulus principle & 最大模在边界取得 \\
+共形映射 & conformal mapping & 保持角度的解析映射 \\
+分式线性变换 & Möbius transformation & $(az+b)/(cz+d)$，$ad-bc\ne0$ \\
+交比 & cross ratio & Möbius 变换的不变量 \\
+Riemann 映射定理 & Riemann mapping theorem & 单连通区域到圆盘的共形双射 \\
+Poisson 公式 & Poisson formula & 圆盘 Dirichlet 问题的积分表示 \\
+z 变换 & z-transform & 离散信号的 Laurent 型变换 \\
+\hline
+\end{longtable}
+}
+
+\section*{参考文献 | References}
+\begin{itemize}
+\item[{[1]}] 史济怀，刘太顺．《复变函数》．中国科学技术大学出版社．本稿对应其第 1--7 章．
+\item[{[2]}] L. V. Ahlfors, \emph{Complex Analysis}, 3rd ed., McGraw-Hill, 1979. Chapters 1--6.
+\item[{[3]}] J. B. Conway, \emph{Functions of One Complex Variable I}, 2nd ed., GTM 11, Springer, 1978. Chapters I--VII.
+\item[{[4]}] W. Rudin, \emph{Real and Complex Analysis}, 3rd ed., McGraw-Hill, 1987. Chapter 10.
+\end{itemize}
 
 \section*{来源与范围 | Source and scope}
-本稿依据史济怀、刘太顺《复变函数》第 1--7 章，范围为解析性、复积分、级数与奇点、留数、零点、解析延拓、共形映射及二维势场；不扩展到其余章节。
-\EN{This review follows Chapters 1--7 of Shi Jihuai and Liu Taishun: analyticity, contour integration, series and singularities, residues, zeros, analytic continuation, conformal maps and two-dimensional potentials. Later chapters are excluded.}
+\APS{本稿依据史济怀、刘太顺《复变函数》第 1--7 章，涵盖复数、解析函数、复积分、级数、留数、共形映射、调和函数及应用；APS 无官方素材，范围按教材常规确定。}{These notes follow Chapters 1--7 of Shi Jihuai and Liu Taishun, from complex numbers through series, residues, conformal mapping, harmonic functions, and applications; APS provides no official material, so the scope follows the textbook.}
 \end{document}

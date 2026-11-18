@@ -1,6 +1,8 @@
 \documentclass[UTF8,11pt,a4paper]{ctexart}
 \usepackage{amsmath,amssymb,geometry,enumitem,hyperref}
 \geometry{margin=2.1cm}\setlist{itemsep=2pt,topsep=3pt}
+\setlength{\abovedisplayskip}{2pt}\setlength{\belowdisplayskip}{2pt}
+\setlength{\abovedisplayshortskip}{1pt}\setlength{\belowdisplayshortskip}{1pt}
 \hypersetup{colorlinks=true,linkcolor=blue}
 \newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
 \newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
@@ -13,214 +15,398 @@
 \newcommand{\APS}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par\smallskip}
 \begin{document}\maketitle
 \section*{课程概述 | Course overview}
-\APS{数学建模的课程内容包括建模流程与初等模型、量纲分析与层次分析法、拟合插值与求根、人口/传染病/药物/生态的微分方程与差分模型、线性与非线性优化、变分和图论网络、随机库存与更换策略。我按“现实问题—假设—变量参数—方程或目标—求解—验证”的顺序介绍模型。模型名只是入口，还必须讲清变量单位、参数如何估计、结论依赖哪些简化，以及怎样用未参与拟合的数据验证。}{The course includes elementary modeling, dimensional analysis and AHP; fitting, interpolation and root finding; differential and difference models for population, epidemics, drugs and ecology; linear and nonlinear optimization, variational problems and networks; and stochastic inventory and replacement policies. I explain a model through the problem, assumptions, variables and parameters, equations or objectives, solution and validation. Naming a model is only the start: units, parameter estimation, simplifications and validation on unused data complete the explanation.}
-\subsection*{例一：从观测估计药物消除率 | Estimating a drug-elimination parameter}
-\APS{假设药物充分混合、无后续输入，且排除速率正比于浓度，则 $C^{\prime}=-kC$，$k>0$，解为 $C(t)=C_0e^{-kt}$。若 $C_0=10$、两小时后 $C(2)=5$，则 $k=\log2/2$ 每小时，半衰期为两小时，预测 $C(4)=2.5$。该预测还需用其他时刻的观测检查；若残差系统偏离，可能是单房室或一级排除假设失效，而不只是数值求解误差。}{Assume uniform mixing, no further input and elimination proportional to concentration. Then $C^{\prime}=-kC$ with $k>0$, giving $C(t)=C_0e^{-kt}$. If $C_0=10$ and $C(2)=5$, then $k=\log2/2$ per hour, the half-life is two hours, and $C(4)=2.5$. Other observations must check this prediction. Systematic residuals may indicate failure of the one-compartment or first-order assumption, rather than an error in solving the equation.}
-\subsection*{例二：SIR 阈值来自哪一项 | Deriving an epidemic threshold}
-\APS{用 $s,i,r$ 表示易感、感染和康复比例，均匀混合、封闭人群和永久免疫假设给出 $i^{\prime}=(\beta s-\gamma)i$。参数 $\beta$ 是传播率，$\gamma$ 是康复率，单位均为每日。若 $\beta=0.3,\gamma=0.1,s_0=0.99$，则初始增长率为 $0.197$ 每日，有效再生数为 $\beta s_0/\gamma=2.97>1$。干预使 $\beta=0.08$ 后，该数降到 $0.792$，初期感染转为下降。由于 $s$ 随时间变化，不能用初始指数增长一直外推。}{Let $s,i,r$ be susceptible, infectious and recovered fractions. Homogeneous mixing, a closed population and lasting immunity give $i^{\prime}=(\beta s-\gamma)i$. Transmission and recovery rates $\beta,\gamma$ are per day. With $\beta=0.3$, $\gamma=0.1$ and $s_0=0.99$, the initial growth rate is $0.197$ per day and the effective reproduction number is $2.97>1$. Reducing $\beta$ to $0.08$ lowers it to $0.792$, producing initial decline. Since $s$ changes, the initial exponential approximation cannot be extrapolated indefinitely.}
+\APS{课程内容包括建模流程与初等模型、量纲分析与层次分析法（AHP）、拟合插值与求根、人口/传染病/药物/生态的微分方程与差分模型、线性与非线性优化、变分和图论网络、随机库存与更换策略。介绍模型时按“现实问题—假设—变量参数—方程或目标—求解—验证”展开，并说明变量单位、参数估计方法和结论的适用范围。}{The course covers elementary modeling, dimensional analysis and AHP; fitting, interpolation and root finding; differential and difference models for population, epidemics, drugs and ecology; optimization, variational methods and networks; and stochastic inventory and replacement. Each model is presented through problem, assumptions, variables and parameters, equations or objective, solution and validation, with units, estimation methods and scope.}
+\subsection*{例一：由观测估计药物消除率 | Estimating a drug-elimination rate}
+\APS{假设药物充分混合、无后续输入，排除速率正比于浓度：$C'=-kC$，解得 $C(t)=C_0e^{-kt}$。若 $C_0=10$、$C(2)=5$，则 $k=\ln2/2\approx0.347$/小时，半衰期 $2$ 小时，预测 $C(4)=2.5$。若其他时刻残差有系统偏离，说明单房室或一级排除假设可能不成立。}{Assume uniform mixing, no further input and elimination proportional to concentration: $C'=-kC$, so $C(t)=C_0e^{-kt}$. With $C_0=10$ and $C(2)=5$, $k=\ln2/2\approx0.347$ per hour, the half-life is $2$ h, and $C(4)=2.5$. Systematic residuals at other times suggest the one-compartment or first-order assumption may fail.}
+\subsection*{例二：SIR 阈值 | An SIR threshold}
+\APS{均匀混合、封闭人群、永久免疫下，感染比例满足 $i'=(\beta s-\gamma)i$。若 $\beta=0.3,\gamma=0.1,s_0=0.99$（每日），初始增长率 $0.197$/日，有效再生数 $\beta s_0/\gamma=2.97>1$；干预使 $\beta=0.08$ 后降为 $0.792$，感染转为下降。由于 $s$ 随时间下降，初始指数增长不能长期外推。}{With homogeneous mixing, a closed population and permanent immunity, $i'=(\beta s-\gamma)i$. For $\beta=0.3$, $\gamma=0.1$, $s_0=0.99$ per day, the initial growth rate is $0.197$ per day and the effective reproduction number is $2.97>1$; reducing $\beta$ to $0.08$ lowers it to $0.792$ and infections decline initially. Since $s$ falls over time, the initial exponential growth cannot be extrapolated.}
+
+\section{建模流程与初等模型 | Modeling process and elementary models}
+\noindent\textbf{建模流程。} 明确问题和目标；作出并说明假设；定义变量、参数、单位与数据；建立关系式或约束；选择解析、数值或优化方法求解；检验量纲、边界情况和数据拟合；进行敏感性分析；解释结论及适用范围。课件细化为七步：模型准备、模型假设、模型建立、模型求解、模型分析、模型检验、模型应用。模型是对现实问题的数学表达，求解只是其中一个环节；每一步简化都要说明为什么可以接受。模型还可按应用领域、数学方法、特性（确定/随机、静态/动态、离散/连续）、目的与了解程度（白箱/灰箱/黑箱）分类，分类决定工具与验证方式；数学实验是用软件实现求解、模拟与检验，与建模交替进行。
+\EN{Define the problem; state and justify assumptions; define variables, parameters, units and data; formulate relations or constraints; solve analytically, numerically or by optimization; check dimensions, limiting cases and data fit; perform sensitivity analysis; interpret the result and its scope. The course refines this into seven steps: preparation, assumptions, formulation, solution, analysis, validation and application. A model is a mathematical representation of a real problem, and solving it is only one stage; every simplification must be justified. Models are also classified by application area, method, features, purpose and prior knowledge, and this classification guides tools and validation; mathematical experiments are the software-based solution, simulation and testing that alternate with modeling.}
 
 
-\section{建模步骤与初等模型 | Modeling process and elementary models}
-\noindent\textbf{建模流程。} 明确问题和目标；作出并说明假设；定义变量、参数、单位与数据；建立关系式或约束；选择解析、数值或优化方法求解；检验量纲、边界情况和数据拟合；进行敏感性分析；解释结论及适用范围。模型是对现实问题的数学表达，模型求解只是流程中的一个环节。
-
-\EN{A typical workflow is to define the question and objective; state assumptions; identify variables, parameters, units, and data; formulate relations or constraints; solve analytically, numerically, or by optimization; check dimensions, limiting cases, and data fit; perform sensitivity analysis; and explain the result and its scope. A model is the mathematical representation of a real problem; solving it is only one stage.}
-
-\ASK{数学建模通常有哪些步骤？}{What are the usual steps in mathematical modeling?}{先明确问题，再作假设、定义变量参数、建立模型、求解、检验和解释结果；若检验不合适，应调整假设或模型。}{Define the problem, make assumptions, define variables and parameters, formulate and solve the model, then validate and interpret it. If validation fails, revise the assumptions or the model.}
-
-\subsection{实物交换与抢渡长江 | Exchange and river-crossing models}
-实物交换模型把不同参与者拥有的物品数量记为状态变量，以效用或满意度函数表示偏好。无差别曲线是效用相同的组合；在可微的内部帕累托有效交换点，两方的边际替代率相等：
-\FORMULA{帕累托有效交换的边际替代率条件}{marginal-rate-of-substitution condition for Pareto efficiency}
+\subsection{实物交换与劳资关系 | Exchange and wage bargaining}
+实物交换把各方物品数量记为状态变量，用效用函数表示偏好；无差别曲线是效用相同的组合，通常向右下倾斜并凸向原点。可微的内部帕累托有效点满足两方边际替代率相等：
+\FORMULA{帕累托有效的边际替代率条件}{marginal-rate-of-substitution condition for Pareto efficiency}
 \[
-\frac{MU_{Ax}}{MU_{Ay}}=\frac{MU_{Bx}}{MU_{By}}.
+\frac{MU_{Ax}}{MU_{Ay}}=\frac{MU_{Bx}}{MU_{By}},
+\qquad\text{即}\qquad \mathrm{MRS}_A=\mathrm{MRS}_B .
 \]
-实际可行的交换方案还需满足资源总量守恒。
+满足该条件与资源守恒的点构成协议曲线；实际交换点还取决于谈判地位。劳资谈判同属这一框架：雇员在工资与闲暇、雇主在利润与工时之间各有无差别曲线，相切给出协议。
+\EN{Exchange represents each participant's holdings as state variables and preferences by utility functions; an indifference curve collects equal-utility bundles and usually slopes downward, convex to the origin, and Pareto efficiency equates the two marginal rates of substitution. Feasible efficient points form the contract curve, whose realized point depends on bargaining power. Wage bargaining fits the same framework: indifference curves over wage and leisure on the employee side and over profit and hours on the employer side.}
+\EX{甲、乙共有 $10$ 单位 $x$ 与 $10$ 单位 $y$，初始禀赋甲 $(8,2)$、乙 $(2,8)$，效用 $U=\sqrt{xy}$。初始 $\mathrm{MRS}_A=0.25$、$\mathrm{MRS}_B=4$，不相等，故有互利交换。由 $\mathrm{MRS}_A=\mathrm{MRS}_B$ 与总量守恒得协议曲线 $y_A=x_A$；交换到 $(5,5)$ 时双方效用由 $4$ 升到 $5$，且边际替代率同为 $1$。}{A and B own $10$ units of $x$ and $10$ of $y$ in total, with initial endowments $(8,2)$ and $(2,8)$ and utility $U=\sqrt{xy}$. Initially $\mathrm{MRS}_A=0.25$ and $\mathrm{MRS}_B=4$, so mutually beneficial trade exists. Equating the rates with resource conservation gives the contract curve $y_A=x_A$; at $(5,5)$ both utilities rise from $4$ to $5$ and both rates equal $1$.}
 
-\EN{The exchange model represents each participant's holdings as state variables and uses utility or satisfaction functions to describe preferences. An indifference curve contains bundles with the same utility. At a differentiable interior Pareto-efficient exchange, the two participants' marginal rates of substitution are equal. Feasible exchanges must also respect the total resource constraints.}
-
-\noindent\textbf{抢渡长江模型。} 用位置 $r(t)=(x(t),y(t))$ 表示游泳者轨迹，规定沿岸下游为 $x$ 轴正方向、横河方向为 $y$ 轴正方向。地面速度等于游泳者相对水的速度与水流速度之和。设河宽 $L$ 不变、游速相对水为常数 $u$；航向角 $\theta$ 从垂直岸边的正方向起算，朝下游偏转为正。记水流的沿岸和横河分量为 $v_{\rm current,x}$、$v_{\rm current,y}$，则
-\FORMULA{游泳者的地面速度分解}{ground-velocity components in the river-crossing model}
+\subsection{抢渡长江模型 | The Yangtze river-crossing model}
+若只关心垂直过河，河宽 $W$、游速 $u$、沿岸水速 $v_c$、偏角 $\varphi$ 给出 $T=W/(u\cos\varphi)$ 与漂移 $D=(u\sin\varphi+v_c)T$；$W=300$ 米、$u=1.5$ 米/秒、$\varphi=30^\circ$、$v_c=0.4$ 米/秒得 $T\approx231$ 秒、$D\approx266$ 米（约 $92$ 米来自水流），“游得直”不等于“到得准”。
+\EN{For a perpendicular crossing with width $W$, swimming speed $u$, along-bank current $v_c$ and angle $\varphi$ from the perpendicular, $T=W/(u\cos\varphi)$ and drift $D=(u\sin\varphi+v_c)T$; with $W=300$ m, $u=1.5$ m/s, $\varphi=30^\circ$ and $v_c=0.4$ m/s, $T\approx231$ s and $D\approx266$ m, about $92$ m from the current. Swimming straight is not arriving correctly.}
+\noindent\textbf{课程模型（CUMCM 2003 D 题）。} 取起点为原点，$x$ 轴沿水流、$y$ 轴指向对岸，顺流距离 $L=1000$ 米、河宽 $H=1160$ 米、水速 $v=1.89$ 米/秒；游速大小 $u$ 恒定，$\theta$ 为游泳方向与水流方向夹角。地面速度与边值问题为
+\FORMULA{抢渡长江的轨迹方程与到达条件}{trajectory equations and arrival condition}
 \[
-\dot x=u\sin\theta+v_{\rm current,x},\qquad
-\dot y=u\cos\theta+v_{\rm current,y}.
+\dot x=u\cos\theta+v,\quad \dot y=u\sin\theta,\quad
+(x(0),y(0))=(0,0),\ (x(T),y(T))=(L,H),
 \]
-若水流平行岸边，则 $v_{\rm current,y}=0$，横渡时间为
-\FORMULA{横渡时间公式}{river-crossing time formula}
 \[
-T=\frac{L}{u\cos\theta},\qquad u\cos\theta>0.
+T=\frac{L}{u\cos\theta+v}=\frac{H}{u\sin\theta}
+\quad\Longrightarrow\quad
+Lu\sin\theta=H(u\cos\theta+v).
 \]
-若水流有恒定横河分量，则分母改为 $u\cos\theta+v_{\rm current,y}$；若速度或航向随时间变化，应使用相应的微分方程。比如 $L=300$ 米、$u=1.5$ 米/秒、$\theta=30^\circ$ 且水流平行岸边时，横渡时间 $T=300/(1.5\cos30^\circ)\approx231$ 秒，即约 $3.85$ 分钟。此时若航向朝下游偏，游泳者沿岸分速度为 $u\sin30^\circ=0.75$ 米/秒；若水流沿岸速度为 $0.4$ 米/秒，总下游速度为 $1.15$ 米/秒，渡河期间总下游位移约为 $1.15\times231\approx266$ 米，其中约 $92$ 米来自水流。
-\READ{“Ground velocity equals swimming velocity relative to the water plus current velocity.” “Downstream speed is u sine theta plus the along-bank current.” “The crossing time equals river width divided by cross-river speed.”}
-\EN{Let $r(t)=(x(t),y(t))$ be the swimmer's position. Take downstream as the positive $x$ direction and across the river as the positive $y$ direction. Ground velocity is the sum of swimming velocity relative to the water and current velocity. Assume constant river width $L$, constant swimming speed $u$, and a fixed heading angle $\theta$ measured from the positive cross-river direction, with downstream deviation positive. If the current components are $v_{\rm current,x}$ and $v_{\rm current,y}$, then $\dot x=u\sin\theta+v_{\rm current,x}$ and $\dot y=u\cos\theta+v_{\rm current,y}$. For a current parallel to the bank, $v_{\rm current,y}=0$, so the crossing time is $T=L/(u\cos\theta)$ when $u\cos\theta>0$. A constant cross-river current changes the denominator to $u\cos\theta+v_{\rm current,y}$. If speed or heading varies, use the corresponding differential equations. For $L=300$ m, $u=1.5$ m/s, and $\theta=30^\circ$, crossing takes about $231$ s, or $3.85$ minutes. If the swimmer heads downstream, the swimmer's along-bank component is $u\sin30^\circ=0.75$ m/s. With a $0.4$ m/s downstream current, total downstream speed is $1.15$ m/s, giving about $266$ m of total drift; the current itself contributes about $92$ m.}
-
-\ASK{抢渡长江问题为什么要考虑水流？}{Why must the river-crossing model account for the current?}{游泳者相对水的速度不等于对岸观察到的实际速度。地面速度是游泳速度向量与水流速度向量之和，因此水流会改变轨迹和到达时间。}{The swimmer's velocity relative to the water differs from the ground velocity. The ground velocity is the vector sum of swimming velocity and current, so the current changes both the path and arrival time.}
-
-\section{量纲分析与层次分析法 | Dimensional analysis and AHP}
-\noindent\textbf{量纲分析。} 量纲齐次原则要求物理等式两边量纲一致。Buckingham $\Pi$ 定理：若物理问题涉及 $n$ 个有量纲变量，且其基本量纲矩阵秩为 $k$，则关系可改写为 $n-k$ 个无量纲组合 $\Pi_1,\ldots,\Pi_{n-k}$ 之间的关系。它可减少变量数量、揭示相似性，但不能单独确定所有模型常数或函数形式。
-\READ{“A problem with n dimensional variables and k independent base dimensions can be expressed using n minus k dimensionless pi groups.”}
-\EN{Dimensional homogeneity requires both sides of a physical equation to have the same dimensions. Buckingham's Pi theorem says that a relation involving $n$ dimensional variables and $k$ independent base dimensions can be rewritten using $n-k$ dimensionless groups. This reduces the number of variables and reveals similarity, but it does not determine every model constant or functional form.}
-
-\noindent\textbf{AHP 步骤与公式。} 建立目标层、准则层和方案层；用两两比较构造判断矩阵 $A=(a_{ij})$，其中 $a_{ii}=1$、$a_{ij}>0$ 且 $a_{ji}=1/a_{ij}$；求最大特征值对应的正特征向量并归一化为权重 $w$；逐层合成排序；最后进行一致性检验：
-\FORMULA{AHP 判断矩阵的一致性指标与一致性比率}{AHP consistency index and consistency ratio}
+\noindent\textbf{偏角引理与可行性。} 当 $u,v$ 为常数时，最优偏角 $\theta$ 不变、最优路径是起点到终点的直线段（后文用变分法证明）。能到达终点的最低游速为 $u_{\min}=vH/\sqrt{L^2+H^2}\approx1.43$ 米/秒；低于此值无论怎样调整方向都到不了终点，这解释了相同水流下成绩的“及格线”。
+\EN{\textbf{Deflection-angle lemma and feasibility.} When $u$ and $v$ are constant, the optimal heading $\theta$ is constant and the optimal path is the straight segment from start to finish (proved below by the calculus of variations). The minimum speed needed to reach the finish is $u_{\min}=vH/\sqrt{L^2+H^2}\approx1.43$ m/s; slower swimmers cannot arrive by any heading, which explains the sharp pass/fail line under the same current.}
+\EX{三种问法（$L=1000$ 米、$H=1160$ 米、$v=1.89$ 米/秒）。(1) 已知冠军 $T=848$ 秒：由 $L-vT=-602.7$ 得 $\theta=\arccos[(L-vT)/\sqrt{H^2+(L-vT)^2}]\approx117.5^\circ$，$u=H/(T\sin\theta)\approx1.54$ 米/秒，即偏向上游、靠水流带到终点。(2) 已知 $u=1.5$ 米/秒：解 $Lu\sin\theta=H(u\cos\theta+v)$，取时间较小的根 $\theta\approx121.9^\circ$，$T\approx910$ 秒；另一根 $\theta\approx156.6^\circ$ 给出 $T\approx1949$ 秒。(3) 已知 $\theta=90^\circ$：$u=Hv/L\approx2.19$ 米/秒，$T=H/(u\sin\theta)\approx529$ 秒。}{(Three questions, $L=1000$ m, $H=1160$ m, $v=1.89$ m/s.) (1) Given the winning $T=848$ s, $L-vT=-602.7$ gives $\theta=\arccos[(L-vT)/\sqrt{H^2+(L-vT)^2}]\approx117.5^\circ$ and $u=H/(T\sin\theta)\approx1.54$ m/s: the swimmer heads upstream and is carried to the finish. (2) Given $u=1.5$ m/s, solving $Lu\sin\theta=H(u\cos\theta+v)$ gives the faster root $\theta\approx121.9^\circ$ with $T\approx910$ s; the other root $\theta\approx156.6^\circ$ gives $T\approx1949$ s. (3) For $\theta=90^\circ$, $u=Hv/L\approx2.19$ m/s and $T\approx529$ s.}
+\noindent\textbf{最优性的完整讨论。} 对情形 (2)，令 $c=\cos\theta$，$T=L/(uc+v)$ 满足 $\mathrm dT/\mathrm dc=-Lu/(uc+v)^2<0$，故应取可行集中最大的 $c$。约束 $Lu\sqrt{1-c^2}=H(uc+v)$ 给出两个候选值，较大者最优，对应
+\FORMULA{最短渡河时间}{minimum crossing time}
 \[
-CI=\frac{\lambda_{\max}-n}{n-1},\qquad CR=\frac{CI}{RI}.
+T_{\min}=\frac{L^2+H^2}{\sqrt{(L^2+H^2)u^2-H^2v^2}+Lv}.
 \]
-通常 $CR<0.1$ 视为一致性可接受（具体按课件使用的 $RI$ 表）。
+$u=1.5$ 时 $T_{\min}\approx910$ 秒；$u\to u_{\min}$ 时发散，说明临界游速下无法到达。最优策略是在保证到达的前提下尽量减小偏角。
+\EN{\textbf{Complete optimality argument.} For case (2), with $c=\cos\theta$ and $T=L/(uc+v)$, $\mathrm dT/\mathrm dc=-Lu/(uc+v)^2<0$, so the largest feasible $c$ is optimal. The constraint $Lu\sqrt{1-c^2}=H(uc+v)$ gives two candidates; the larger one is optimal and yields the displayed minimum time. For $u=1.5$ it is about $910$ s; as $u\to u_{\min}$ it diverges, so no strategy works at the critical speed, and the optimal strategy is to minimize the deflection angle subject to arrival.}
+\noindent\textbf{水流随位置变化：变分模型。} 若 $v=v(y)$，偏角应随 $y$ 变化。以 $y$ 为自变量，
+\[
+\min_{\theta(\cdot)}T=\int_0^H\frac{\mathrm dy}{u\sin\theta(y)}
+\quad\text{s.t.}\quad
+\int_0^H\frac{u\cos\theta(y)+v(y)}{u\sin\theta(y)}\,\mathrm dy=L .
+\]
+作 Hamilton 函数 $H_{\rm H}=\frac{1}{u\sin\theta}+\lambda\frac{u\cos\theta+v}{u\sin\theta}$，Euler 方程 $\partial H_{\rm H}/\partial\theta=0$ 给出
+\[
+u\big(\sec\theta(y)-\sec\theta_0\big)+v(y)-v_0=0
+\quad\Longrightarrow\quad
+\cos\theta(y)=\frac{u\cos\theta_0}{u+(v_0-v(y))\cos\theta_0}.
+\]
+当 $v(y)\equiv v_0$ 时回到偏角引理；课件对分段常数 $v(y)$（$1.47$、$2.11$、$1.47$ 米/秒）用分段约束优化求数值最优方案。
+\EN{\textbf{Variational model when the current varies.} If $v=v(y)$, the heading varies with $y$. The Hamilton function and the Euler equation give the displayed relation; for constant $v$ it reduces to the deflection-angle lemma. The course uses a piecewise-constant $v(y)$ ($1.47$, $2.11$, $1.47$ m/s) and solves a piecewise constrained optimization numerically.}
+\ASK{如果水流速度沿河宽变化，恒定偏角的结论还成立吗？}{Does the constant-deflection-angle conclusion still hold when the current changes across the river?}{不成立。恒定偏角只在水速沿程恒定时最优；水速变化时由 Euler 方程 $\cos\theta(y)=\frac{u\cos\theta_0}{u+(v_0-v(y))\cos\theta_0}$ 随 $y$ 调整偏角。}{No. A constant heading is optimal only for constant current; when $v$ varies, the Euler equation makes $\cos\theta(y)$ depend on $y$.}
+
+\subsection{量纲分析 | Dimensional analysis}
+量纲齐次原则要求物理等式两边、以及相加各项的量纲一致。Buckingham $\Pi$ 定理：若问题涉及 $n$ 个有量纲变量、量纲矩阵秩为 $k$，则关系可改写为 $n-k$ 个无量纲组合之间的关系
+\FORMULA{Buckingham $\Pi$ 定理}{Buckingham Pi theorem}
+\[
+f(x_1,\ldots,x_n)=0\ \Longleftrightarrow\
+\Phi(\Pi_1,\ldots,\Pi_{n-k})=0,\qquad
+\Pi_j=\prod_{i=1}^n x_i^{a_{ij}} .
+\]
+求法是写出量纲矩阵、求零空间、把每个零空间向量对应成一个 $\Pi$。定理能减少变量、揭示相似性、指导缩尺实验，但不能确定函数形式或全部常数。无量纲化把变量除以特征尺度：Logistic 方程令 $u=x/K$、$\tau=rt$ 得 $\mathrm du/\mathrm d\tau=u(1-u)$，$r$ 与 $K$ 分别只改变时间与数量尺度。
+\EN{Dimensional homogeneity requires both sides of an equation and every summand to have the same dimension. Buckingham's Pi theorem says that $n$ dimensional variables whose dimension matrix has rank $k$ can be related through $n-k$ dimensionless groups. The recipe is to form the dimension matrix, take its null space and turn each null vector into a $\Pi$ group. The theorem reduces variables, reveals similarity and guides scale experiments, but cannot determine the functional form or all constants. Nondimensionalization divides by characteristic scales: for Logistic growth, $u=x/K$ and $\tau=rt$ give $\mathrm du/\mathrm d\tau=u(1-u)$, so $r$ and $K$ only rescale time and population.}
+\EX{单摆周期 $t$ 可能依赖 $l,m,g$。四个变量、量纲矩阵秩 $3$，故只有 $1$ 个无量纲组合。令 $\Pi=t\,l^am^bg^c$，比较量纲得 $c=1/2$、$a=-1/2$、$b=0$，故 $t\sqrt{g/l}$ 为常数，即 $t=C\sqrt{l/g}$；小角度时 $C=2\pi$，$l=1$ 米、$g=9.8$ 米/秒$^2$ 给出 $t\approx2.01$ 秒。质量指数为零，说明周期与摆球质量无关；常数 $C=2\pi$ 仍需力学方程确定。}{The pendulum period $t$ may depend on $l,m,g$. There are four variables and the dimension matrix has rank $3$, so only one dimensionless group exists. Setting $\Pi=t\,l^am^bg^c$ and matching dimensions gives $c=1/2$, $a=-1/2$, $b=0$, so $t\sqrt{g/l}$ is constant and $t=C\sqrt{l/g}$; for small angles $C=2\pi$, and $l=1$ m with $g=9.8$ m/s$^2$ gives $t\approx2.01$ s. The zero exponent of $m$ shows independence from the bob mass, while $C=2\pi$ still requires mechanics.}
+
+\subsection{层次分析法（AHP）| Analytic hierarchy process}
+建立目标层、准则层与方案层；用两两比较构造正互反判断矩阵 $A=(a_{ij})$（$a_{ii}=1$、$a_{ij}>0$、$a_{ji}=1/a_{ij}$）；求最大特征值对应的正特征向量并归一化为权重；逐层合成排序；进行一致性检验：
+\FORMULA{AHP 一致性指标与一致性比率}{AHP consistency index and consistency ratio}
+\[
+CI=\frac{\lambda_{\max}-n}{n-1},\qquad CR=\frac{CI}{RI},
+\]
+$n=3,4,5,6,7,8,9$ 时 $RI=0.58$、$0.90$、$1.12$、$1.24$、$1.32$、$1.41$、$1.45$，通常 $CR<0.1$ 可接受。总排序的组合一致性为 $CI_{\rm tot}=\sum_kw_kCI_k$、$RI_{\rm tot}=\sum_kw_kRI_k$，要求 $CR_{\rm tot}<0.1$。$1$--$9$ 尺度把“同等重要”到“极端重要”量化为奇数，偶数取折中。AHP 兼顾定量与定性，但判断主观、方案增减可能逆序，必须报告 $CR$。一致矩阵满足 $a_{ij}a_{jk}=a_{ik}$，此时 $\lambda_{\max}=n$、$CI=0$；一般矩阵的 Perron 根 $\lambda_{\max}\ge n$，$CI$ 衡量偏离程度。
+\EN{Build the goal, criteria and alternative layers; form a positive reciprocal pairwise comparison matrix; take the normalized positive eigenvector of the largest eigenvalue as weights; aggregate layer by layer and check consistency with the formulas above. For $n=3,\ldots,9$, $RI=0.58$, $0.90$, $1.12$, $1.24$, $1.32$, $1.41$ and $1.45$, and $CR<0.1$ is acceptable. The overall consistency ratio weights the local $CI$ and $RI$ and again requires $CR_{\rm tot}<0.1$. The $1$--$9$ scale encodes judgments from equal to extreme importance; a consistent matrix has $\lambda_{\max}=n$ and any normalized column as weights, while generally $\lambda_{\max}\ge n$. AHP handles quantitative and qualitative criteria, but judgments are subjective and rank reversal is possible, so $CR$ must be reported.}
 \READ{“The consistency index is lambda max minus n, divided by n minus one. The consistency ratio is the consistency index divided by the random index.”}
-\EN{AHP builds a hierarchy of goal, criteria, and alternatives; forms a positive reciprocal pairwise-comparison matrix; finds and normalizes its principal eigenvector as the priority weights; aggregates priorities; and checks consistency using the formulas above. A consistency ratio below 0.1 is commonly considered acceptable, subject to the random-index table used in the course.}
+\EX{模拟试卷算例：$5$ 个准则的判断矩阵 $\lambda_{\max}=5.0976$，权重依次为 $0.2863$、$0.4809$、$0.0485$、$0.0685$、$0.1157$，故 $CI=0.0244$、$CR=0.0244/1.12=0.0218<0.1$，通过。$3$ 个方案对 $5$ 个准则的 $\lambda_{\max}$ 为 $3.0092$、$3.0092$、$3.1078$、$3.0092$、$3.0092$，局部权重按列组成 $W^{(3)}$；总权重 $W^{(3)}W^{(2)}\approx(0.4362,0.2892,0.2745)^{\mathsf T}$，$P_1$ 最优。组合一致性 $CI_{\rm tot}\approx0.00699$、$CR_{\rm tot}=0.00699/0.58=0.0121<0.1$，总排序通过。}{A mock-exam example: the $5\times5$ criteria matrix has $\lambda_{\max}=5.0976$ and weights $0.2863$, $0.4809$, $0.0485$, $0.0685$, $0.1157$, so $CI=0.0244$ and $CR=0.0218<0.1$. The five $3\times3$ alternative matrices have $\lambda_{\max}=3.0092$, $3.0092$, $3.1078$, $3.0092$, $3.0092$, with local weights as columns of $W^{(3)}$; the overall weights are $W^{(3)}W^{(2)}\approx(0.4362,0.2892,0.2745)^{\mathsf T}$, so $P_1$ ranks first. Overall consistency gives $CI_{\rm tot}\approx0.00699$ and $CR_{\rm tot}=0.0121<0.1$, which passes.}
+\ASK{AHP 为什么要做一致性检验？}{Why does AHP require a consistency check?}{成对比较来自人的判断，可能互相矛盾；一致性比率衡量判断矩阵偏离传递一致性的程度，过大时应复查比较值。}{Pairwise comparisons are human judgments and may contradict one another; the consistency ratio measures departure from transitive consistency, and a large value calls for reviewing the comparisons.}
 
-\EX{两方案仅按成本比较时，若方案 A 相对方案 B 的判断值为 $3$，则互反矩阵为 $\begin{pmatrix}1&3\\1/3&1\end{pmatrix}$。对更复杂的多准则选择，应先分别计算局部权重和一致性，再做总排序。}{If two alternatives are compared only by cost and A is judged three times as preferable to B, the reciprocal matrix is $\begin{pmatrix}1&3\\1/3&1\end{pmatrix}$. For a larger multi-criteria problem, calculate local priorities and consistency before aggregating the overall ranking.}
-
-\ASK{AHP 为什么要做一致性检验？}{Why does AHP require a consistency check?}{成对比较来自人的判断，可能互相矛盾。一致性比率衡量判断矩阵偏离传递一致性的程度；若过大，应复查比较值。}{Pairwise comparisons are human judgments and may contradict one another. The consistency ratio measures deviation from transitive consistency; if it is too large, the comparisons should be reviewed.}
-
-\section{拟合、插值与数值求根 | Fitting, interpolation and root finding}
-\subsection{参数估计和验证要分开 | Separate fitting from validation}
-\APS{参数是给定模型中待估的常数，状态变量随时间或位置改变。若观测 $y_j=m(t_j;\theta)+\varepsilon_j$，最小二乘选择 $\widehat\theta$ 使 $\sum_j[y_j-m(t_j;\theta)]^2$ 最小；这假定平方损失适合误差尺度。插值要求逐点通过，拟合允许残差。残差 $r_j=y_j-\widehat y_j$ 若随时间呈现趋势，可能表明遗漏机制；训练误差小并不能证明预测可靠，应留出数据或使用交叉验证，并对关键参数作敏感性分析。}{Parameters are unknown constants of a model; state variables change with time or position. With observations $y_j=m(t_j;\theta)+\varepsilon_j$, least squares minimizes $\sum_j[y_j-m(t_j;\theta)]^2$. The squared loss must suit the error scale. Interpolation passes through observations, while fitting permits residuals. Residual trends can indicate omitted mechanisms. Small training error does not establish predictive reliability: use held-out data or cross-validation and examine parameter sensitivity.}
-\APS{例如线性模型 $y=a+bt$ 的设计矩阵每行为 $(1,t_j)$，正规方程为 $X^{\mathsf T}X\widehat\theta=X^{\mathsf T}y$。至少两个不同观测时刻使两列独立，参数才可唯一辨识。若全部 $t_j$ 相同，只能估出 $a+bt_j$，不能分别确定 $a,b$；这属于模型可辨识性，不能靠换一个求解器补救。}{For $y=a+bt$, each design-matrix row is $(1,t_j)$ and the normal equations are $X^{\mathsf T}X\widehat\theta=X^{\mathsf T}y$. At least two distinct times make the columns independent and identify both parameters. If all times coincide, only their combination $a+bt_j$ is identifiable. Changing numerical solvers cannot repair missing information.}
-
-\noindent\textbf{最小二乘拟合。} 给定数据 $(x_i,y_i)$ 和模型 $y\approx\sum_{j=1}^p\beta_j\phi_j(x)$，最小二乘法选择参数使残差平方和最小。矩阵形式为
-\FORMULA{线性最小二乘目标与正规方程}{linear least-squares objective and normal equations}
+\section{数据类模型：拟合、插值与求根 | Fitting, interpolation and root finding}
+\noindent\textbf{三类任务与误差。} 数据类模型处理三类问题：由含噪观测估计参数（拟合）、由离散节点构造连续函数（插值）、把方程求解化为近似计算（求根）。误差来自模型、观测、离散化与舍入；参数估计之后必须用未参与估计的数据检验。
+\EN{\textbf{Three tasks and error sources.} Data-based models estimate parameters from noisy observations (fitting), build continuous functions from discrete nodes (interpolation), and reduce equation solving to computation (root finding). Errors come from the model, observations, discretization and round-off; after estimation the model must be tested on unused data.}
+\subsection{最小二乘拟合与模型验证 | Least squares and validation}
+给定数据 $(x_i,y_i)$ 与模型 $y\approx\sum_{j=1}^p\beta_j\phi_j(x)$，最小二乘选择参数使残差平方和最小：
+\FORMULA{线性最小二乘与正规方程}{linear least squares and normal equations}
 \[
-\hat\beta=\arg\min_\beta\|X\beta-y\|_2^2,\qquad X^{\mathsf T}X\hat\beta=X^{\mathsf T}y.
+\hat\beta=\arg\min_\beta\|X\beta-y\|_2^2,\qquad X^{\mathsf T}X\hat\beta=X^{\mathsf T}y ,
 \]
-正规方程有唯一解需 $X$ 满列秩。拟合用于处理含误差观测并概括趋势；插值要求函数通过给定节点数据。
-\READ{“Beta hat minimizes the squared two-norm of X beta minus y.” “X transpose X beta hat equals X transpose y.”}
-\EN{Given data $(x_i,y_i)$ and a model $y\approx\sum_j\beta_j\phi_j(x)$, least squares chooses coefficients minimizing the sum of squared residuals. In matrix form it gives the normal equations above; a unique solution requires full column rank. Fitting summarizes noisy observations, while interpolation passes through the given data nodes.}
+其中 $X_{ij}=\phi_j(x_i)$。正规方程等价于残差与 $X$ 的每一列正交（正交投影）。唯一解要求 $X$ 满列秩；秩不足时参数不可唯一辨识：$y=a+bt$ 至少需要两个不同时刻，所有 $t_j$ 相同时只能估出 $a+bt_j$。拟合允许残差、概括趋势；插值通过每个节点。
+\EN{Given data and a model $y\approx\sum_j\beta_j\phi_j(x)$, least squares minimizes the squared residual norm, giving the normal equations with design matrix $X_{ij}=\phi_j(x_i)$. These say the residual is orthogonal to every column of $X$ (orthogonal projection). A unique solution needs full column rank; otherwise parameters are not identifiable: $y=a+bt$ needs two distinct times, and identical times identify only $a+bt_j$. Fitting allows residuals and summarizes trends, whereas interpolation passes through every node.}
+\noindent\textbf{非线性模型与曲线改直。} 若模型对参数非线性但可变换为线性，如 $y=ae^{bx}$ 取 $\ln y=\ln a+bx$、$y=ax^b$ 取 $\ln y=\ln a+b\ln x$、$y=1/(a+bx)$ 取 $1/y=a+bx$，就可用正规方程；代价是误差结构与参数含义改变，不能改直的模型用非线性最小二乘迭代。
+\EN{Models that become linear after a transformation — $\ln y=\ln a+bx$ for $y=ae^{bx}$, $\ln y=\ln a+b\ln x$ for $y=ax^b$, $1/y=a+bx$ for $y=1/(a+bx)$ — can use the normal equations; the cost is a changed error structure and parameter meaning, and models that cannot be straightened need nonlinear least-squares iteration.}
+\noindent\textbf{验证与敏感性。} 训练误差小不能证明预测可靠。常用检验有残差图（趋势、异方差、异常点）、留出法、$k$ 折交叉验证（留一法为 $k=n$）；拟合优度用决定系数
+\FORMULA{决定系数}{coefficient of determination}
+\[
+R^2=1-\frac{\sum_i(y_i-\hat y_i)^2}{\sum_i(y_i-\bar y)^2},
+\]
+它解释变异比例，但随参数增加而虚高、对异常值敏感，应与交叉验证误差一起报告；敏感性分析用单因素扰动、弹性 $S_p$ 或蒙特卡洛抽样，回答“参数变一点，结论变多少”。
+\EN{Small training error does not establish predictive reliability. Standard checks are residual plots, hold-out validation and $k$-fold cross-validation; the coefficient of determination explains the variance fraction but inflates with more parameters and is outlier-sensitive, so it should accompany cross-validation error. Sensitivity analysis uses one-at-a-time perturbation, elasticities or Monte Carlo sampling to answer how much the conclusion moves.}
+\EX{用 $t=0,1,2,3,4$ 小时的血药浓度 $10.0,7.6,5.9,4.4,3.5$ 估计 $C=C_0e^{-kt}$。取对数后对 $t$ 线性回归，斜率 $-0.2646$、截距 $2.2972$，故 $k\approx0.265$/小时、$C_0\approx9.95$、半衰期 $2.62$ 小时，$R^2\approx0.9989$（对数尺度）；回代预测为 $9.95,7.63,5.86,4.50,3.45$，残差绝对值不超过 $0.10$ 毫克/升，浓度降到 $2$ 的时间约 $6.06$ 小时。}{Concentrations $10.0,7.6,5.9,4.4,3.5$ at $t=0,1,2,3,4$ h are used to estimate $C=C_0e^{-kt}$. Regressing $\ln C$ on $t$ gives slope $-0.2646$ and intercept $2.2972$, hence $k\approx0.265$ per hour, $C_0\approx9.95$, half-life $2.62$ h and $R^2\approx0.9989$ on the log scale; predictions are $9.95,7.63,5.86,4.50,3.45$ with residuals below $0.10$ mg/L, and the time to reach $2$ is about $6.06$ h.}
+\ASK{拟合与插值有什么不同？}{What is the difference between fitting and interpolation?}{插值要求函数通过全部节点；拟合在含噪数据上最小化整体残差，不要求通过每个点，并且要用未参与估计的数据检验。}{Interpolation passes through every node; fitting minimizes overall residuals for noisy data, need not pass through each point, and must be validated on unused data.}
 
-\noindent\textbf{插值公式。} 对互异节点 $x_0,\ldots,x_n$，Lagrange 插值多项式为
+\subsection{插值：Lagrange、Newton 与样条 | Interpolation}
+$n+1$ 个互异节点上存在唯一的不超过 $n$ 次的插值多项式。Lagrange 形式把基函数写成“在本节点为 $1$、在其余节点为 $0$”的乘积：
 \FORMULA{Lagrange 插值公式与余项}{Lagrange interpolation formula and remainder}
 \[
 P_n(x)=\sum_{i=0}^{n}y_i\prod_{j\ne i}\frac{x-x_j}{x_i-x_j},\qquad
-f(x)-P_n(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}\prod_{i=0}^{n}(x-x_i).
+f(x)-P_n(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}\prod_{i=0}^{n}(x-x_i),
 \]
-Newton 差商形式便于增加节点；高次等距节点插值可能出现 Runge 现象，故课件还介绍分段插值和三次样条。插值精度不一定随次数单调提高。
-\READ{“P n of x equals the sum from i equals zero to n of y i times the product over j not equal to i of x minus x j over x i minus x j.”}
-\EN{For distinct nodes, the Lagrange polynomial and its remainder are given above. Newton divided differences make it easy to add nodes. High-degree interpolation on equally spaced nodes may exhibit Runge's phenomenon, so the course also covers piecewise interpolation and cubic splines. Increasing degree does not guarantee increasing accuracy.}
+余项说明节点越密、$f$ 越光滑误差越小，但 $\prod(x-x_i)$ 在区间端部可能很大。Newton 形式用差商逐列计算，增加节点只需补一列，与 Lagrange 形式给出同一多项式。对 $1/(1+25x^2)$ 在等距节点上高次插值会在端部剧烈振荡（Runge 现象），故工程上用分段低次插值或三次样条（二阶连续可导）；次数越高不一定越准。
+\EN{On $n+1$ distinct nodes there is a unique interpolating polynomial of degree at most $n$. The Lagrange form builds each basis function to equal one at its own node and zero at the others; the remainder can be large near the interval ends. The Newton form uses divided differences, adds one column per new node, and gives the same polynomial. High-degree interpolation of $1/(1+25x^2)$ on equally spaced nodes oscillates strongly near the ends (Runge's phenomenon), so engineering practice uses piecewise low-degree interpolation or cubic splines; higher degree is not necessarily more accurate.}
+\EX{节点 $(0,1),(1,2),(2,5),(3,10)$ 的差商表：一阶 $1,3,5$，二阶 $1,1$，三阶 $0$。故 $N_3(x)=1+x+x(x-1)=x^2+1$，与 Lagrange 结果一致，$P(1.5)=3.25$。三阶差商为零说明数据来自二次函数，次数可降为 $2$。}{For nodes $(0,1),(1,2),(2,5),(3,10)$ the divided differences are $1,3,5$; $1,1$; $0$. Hence $N_3(x)=1+x+x(x-1)=x^2+1$, matching the Lagrange form, with $P(1.5)=3.25$. A zero third difference shows the data come from a quadratic, so the degree can be reduced to $2$.}
 
-\noindent\textbf{求根方法。} 二分法要求连续函数在区间端点异号，迭代保持根被夹在区间内；区间长度每步减半。固定点迭代 $x_{k+1}=g(x_k)$ 在邻域内若 $|g'(x)|\le q<1$，可收敛。Newton 法为
-\FORMULA{Newton 求根迭代公式}{Newton iteration for root finding}
+\subsection{数值求根与收敛阶 | Root finding and convergence order}
+先做根的隔离：连续函数在 $[a,b]$ 上若 $f(a)f(b)<0$ 则至少有一根，若 $f'$ 不变号则根唯一。二分法保持区间端点异号，$k$ 步后
+\FORMULA{二分法的误差界}{error bound of bisection}
 \[
-x_{k+1}=x_k-\frac{f(x_k)}{f'(x_k)}.
+|x_k-x^*|\le\frac{b-a}{2^k},\qquad k\ge\log_2\frac{b-a}{\varepsilon}.
 \]
-在单根附近、初值充分接近且 $f'$ 不为零等条件下，Newton 法通常二次收敛；远离根时可能不收敛或跳出目标区域。
-\READ{“X k plus one equals x k minus f of x k divided by f prime of x k.”}
-\EN{Bisection requires a continuous function with opposite signs at the endpoints and keeps the root bracketed while halving the interval. Fixed-point iteration $x_{k+1}=g(x_k)$ converges locally if $|g'|\le q<1$. Newton's method is given above and is typically quadratically convergent near a simple root with a sufficiently close initial value and nonzero derivative; it may fail from a poor starting point.}
+它只要求连续、必然收敛（线性收敛），但速度慢且不便推广到方程组。不动点迭代 $x_{k+1}=g(x_k)$ 在根邻域内若 $|g'|\le q<1$ 则以比率 $q$ 线性收敛。Newton 法取切线零点：
+\FORMULA{Newton 求根迭代}{Newton iteration for root finding}
+\[
+x_{k+1}=x_k-\frac{f(x_k)}{f'(x_k)} .
+\]
+单根附近、初值充分接近且 $f'\ne0$ 时误差满足 $e_{k+1}\approx\frac{f''(x^*)}{2f'(x^*)}e_k^2$，即二次收敛（有效数字约翻倍）；远离根时可能不收敛。收敛阶定义为 $|e_{k+1}|/|e_k|^p\to C>0$：二分法 $p=1$，单根 Newton 法 $p=2$。
+\EN{First isolate roots: a continuous $f$ with $f(a)f(b)<0$ has a root on $[a,b]$, and if $f'$ keeps one sign the root is unique. Bisection keeps opposite signs and after $k$ steps the error is at most $(b-a)/2^k$, so about $\log_2((b-a)/\varepsilon)$ steps reach tolerance $\varepsilon$; it converges linearly but is slow. Fixed-point iteration converges linearly with ratio $q$ if $|g'|\le q<1$ near the root. Newton's method uses the tangent zero; near a simple root with a close start the error satisfies $e_{k+1}\approx\frac{f''(x^*)}{2f'(x^*)}e_k^2$, i.e., quadratic convergence, while far from the root it may diverge. The order is defined by $|e_{k+1}|/|e_k|^p\to C>0$: bisection has $p=1$ and Newton's method $p=2$ for a simple root.}
+\READ{“X k plus one equals x k minus f of x k divided by f prime of x k.” “The bisection error is at most b minus a over two to the k.”}
+\EX{求 $f(x)=x^3-x-1=0$ 的正根：$f(1)=-1$、$f(2)=5$、$f'>0$，根唯一。二分 $10$ 次得 $1.324707$（区间宽 $9.77\times10^{-4}$）；Newton 法从 $1.5$ 出发得 $1.347826$、$1.325200$、$1.324718$，$3$ 次迭代达到 $10^{-6}$，验证二次收敛。}{Find the positive root of $f(x)=x^3-x-1=0$: $f(1)=-1$, $f(2)=5$ and $f'>0$, so the root is unique. Ten bisection steps give $1.324707$ (interval width $9.77\times10^{-4}$); Newton from $1.5$ gives $1.347826$, $1.325200$, $1.324718$, reaching $10^{-6}$ in three iterations, which confirms quadratic convergence.}
 
-\ASK{拟合与插值有什么不同？}{What is the difference between fitting and interpolation?}{插值要求近似函数通过全部给定节点；拟合在含噪数据上优化整体残差，不要求通过每个点。}{Interpolation requires the approximating function to pass through every data node. Fitting optimizes overall residuals for potentially noisy data and need not pass through each point.}
 
-\ASK{为什么高次插值不一定更准确？}{Why is higher-degree interpolation not always more accurate?}{节点分布不合适时，高次多项式可能在区间端部振荡，出现 Runge 现象；分段低次插值或样条可能更稳定。}{With unsuitable node distributions, high-degree polynomials may oscillate near the interval endpoints, causing Runge's phenomenon. Piecewise low-degree interpolation or splines may be more stable.}
-
-\section{常微分与差分模型 | Dynamic models}
-\noindent\textbf{人口模型。} Malthus 指数增长模型 $\dot x=rx$，解为 $x(t)=x_0e^{rt}$。Logistic 阻滞增长模型为
+\section{连续动力系统模型 | Continuous dynamic models}
+\noindent\textbf{统一框架。} 连续模型写成 $\dot x=f(x,\theta)$，分析分三层：解析解、定性分析（平衡点、稳定性、单调性、极限行为）、数值解。平衡点满足 $f(x^*)=0$；线性化得 $\dot z=Jz$，特征值实部全负则局部渐近稳定，有正实部则不稳定。
+\EN{\textbf{A unified framework.} A continuous model is $\dot x=f(x,\theta)$, analysed on three levels: closed-form solution, qualitative analysis (equilibria, stability, monotonicity, limits) and numerical solution. Equilibria satisfy $f(x^*)=0$; linearization gives $\dot z=Jz$, with local asymptotic stability when all eigenvalues have negative real part and instability when some have positive real part.}
+\subsection{人口增长：Malthus 与 Logistic | Population growth}
+Malthus 模型假设人均增长率 $r$ 恒定：$\dot x=rx$，解 $x(t)=x_0e^{rt}$，倍增时间 $\ln2/r$；长期会高估。Logistic 模型假设环境容纳量 $K$，人均增长率随 $x/K$ 线性下降：
 \FORMULA{Logistic 人口增长方程及其解}{Logistic population equation and its solution}
 \[
 \dot x=rx\left(1-\frac{x}{K}\right),\qquad
-x(t)=\frac{K}{1+(K/x_0-1)e^{-rt}}.
+x(t)=\frac{K}{1+(K/x_0-1)e^{-rt}} .
 \]
-其中 $K$ 为环境容纳量；增长率在 $x=K/2$ 达到最大，拐点代表增长速度由增转减。
+$K$ 是环境容纳量；增长率在 $x=K/2$ 最大，拐点表示由加速转为减速；$x=0$ 不稳定、$x=K$ 渐近稳定（$f'(0)=r>0$，$f'(K)=-r<0$）。参数估计可用早期数据估 $r$、饱和数据估 $K$，或把解改写为 $\ln((K-x)/x)=\ln(K/x_0-1)-rt$ 后回归。
+\EN{The Malthus model assumes a constant per-capita growth rate $r$: $\dot x=rx$, $x(t)=x_0e^{rt}$, doubling time $\ln2/r$; it overestimates in the long run. The Logistic model assumes a carrying capacity $K$ and a per-capita rate falling linearly with $x/K$. $K$ is the saturation level; the growth rate is maximal at $x=K/2$, the inflection where growth changes from accelerating to decelerating; $x=0$ is unstable and $x=K$ is asymptotically stable because $f'(0)=r>0$ and $f'(K)=-r<0$. Parameters can be estimated from early data for $r$ and saturation data for $K$, or by regressing $\ln((K-x)/x)$ on $t$.}
 \READ{“X dot equals r x times one minus x over K.” “X of t equals K divided by a denominator of one plus the quantity K over x zero minus one, multiplied by e to the negative r t.”}
-\EN{The Malthus model has exponential growth. The Logistic model includes a carrying capacity $K$; its growth rate is maximal at $x=K/2$, the inflection point where growth changes from accelerating to decelerating.}
+\EX{$\dot x=3x(1-0.005x)$，$x(0)=20$：$r=3$、$K=200$，$x(t)=200/(1+9e^{-3t})$，拐点 $x=100$ 在 $t=\ln9/3\approx0.732$，此时 $\dot x=150$ 最大；$t=1$ 时 $x\approx138.1$，$t\to\infty$ 时 $x\to200$，初始增长率 $\dot x(0)=54$。}{For $\dot x=3x(1-0.005x)$ with $x(0)=20$: $r=3$, $K=200$, $x(t)=200/(1+9e^{-3t})$, the inflection $x=100$ occurs at $t=\ln9/3\approx0.732$ with maximal rate $150$; $x(1)\approx138.1$, $x\to200$ and the initial rate is $54$.}
+\ASK{Malthus 和 Logistic 模型有何区别？}{How do the Malthus and Logistic models differ?}{Malthus 假设人均增长率恒定，产生指数增长；Logistic 加入环境容纳量，增长在 $K$ 附近减慢，并在 $K/2$ 处出现由加速转为减速的拐点。}{Malthus assumes a constant per-capita rate and gives exponential growth; Logistic includes a carrying capacity, slows near $K$, and has an inflection at $K/2$ where growth changes from accelerating to decelerating.}
 
-\APS{这里采用封闭总人口 $N$，忽略出生死亡和迁移，$s=S/N,i=I/N,r=R/N$ 分别为易感、感染、康复比例。假设均匀混合、每个感染者按常率康复、康复后永久免疫，则传播流量为 $\beta si$，康复流量为 $\gamma i$。三式相加等于零，故总比例 $s+i+r$ 守恒为 $1$。$R_0$ 中的下标零表示全易感环境下的基本再生数，不能和随时间变化的康复变量 $r$ 混淆。}{Use a closed population $N$, without births, deaths or migration, and fractions $s=S/N$, $i=I/N$, $r=R/N$. Homogeneous mixing, constant per-infective recovery and lasting immunity give transmission flow $\beta si$ and recovery flow $\gamma i$. Summing the equations gives zero, so $s+i+r=1$ is conserved. The basic reproduction number describes a fully susceptible population and is distinct from the time-dependent recovered fraction.}
+\subsection{药物动力学：房室模型 | Pharmacokinetics}
+把机体分成房室，房室内药物均匀分布、房室间按一级规律转移。单房室一级排除给出 $\dot C=-kC$、$C(t)=C_0e^{-kt}$，半衰期 $t_{1/2}=\ln2/k$，清除率 $CL=kV$，$AUC=C_0/k$。恒速静脉滴注 $\dot C=-kC+k_0/V$，解 $C(t)=\frac{k_0}{kV}(1-e^{-kt})$，稳态 $C_{\rm ss}=k_0/(kV)$。口服或肌肉注射先经吸收室：
+\FORMULA{一室模型口服给药的浓度}{one-compartment concentration after oral dosing}
+\[
+C(t)=\frac{k_aFD}{V(k_a-k)}\left(e^{-kt}-e^{-k_at}\right),
+\qquad
+t_{\max}=\frac{\ln(k_a/k)}{k_a-k},
+\]
+$k_a$ 为吸收速率、$D$ 为剂量、$F$ 为生物利用度；$t_{\max}$ 由 $\dot C=0$ 得到。二室模型把中心室与周边室分开：$\dot x_1=-(k_{12}+k_{10})x_1+k_{21}x_2$、$\dot x_2=k_{12}x_1-k_{21}x_2$，特征值给出快、慢两个消除相；参数由浓度数据最小二乘估计。
+\EN{The body is divided into compartments that are well mixed internally, with first-order transfer between them. One-compartment first-order elimination gives $\dot C=-kC$, $C(t)=C_0e^{-kt}$, half-life $\ln2/k$, clearance $CL=kV$ and $AUC=C_0/k$. Constant infusion gives $\dot C=-kC+k_0/V$, hence $C(t)=\frac{k_0}{kV}(1-e^{-kt})$ with steady state $C_{\rm ss}=k_0/(kV)$. Oral dosing passes through an absorption compartment, yielding the displayed concentration with $t_{\max}$ from $\dot C=0$; $k_a$ is the absorption rate, $D$ the dose and $F$ the bioavailability. A two-compartment model separates central and peripheral compartments, and its eigenvalues give a fast and a slow elimination phase; parameters are fitted by least squares.}
+\EX{(1) 静脉注射 $C_0=10$ 毫克/升、$C(2)=5$：$k\approx0.347$/小时，$t_{1/2}=2$ 小时，$C(4)=2.5$，降到 $2$ 需 $4.64$ 小时。(2) 口服 $D=500$ 毫克、$F=1$、$V=40$ 升、$k_a=1.2$/小时、$k=0.25$/小时：$t_{\max}\approx1.65$ 小时，$C_{\max}\approx8.27$ 毫克/升，$C(4)\approx5.68$ 毫克/升。}{(1) Intravenous: $C_0=10$ mg/L and $C(2)=5$ give $k\approx0.347$ per hour, $t_{1/2}=2$ h, $C(4)=2.5$ and time $4.64$ h to reach $2$. (2) Oral with $D=500$ mg, $F=1$, $V=40$ L, $k_a=1.2$ per hour and $k=0.25$ per hour gives $t_{\max}\approx1.65$ h, $C_{\max}\approx8.27$ mg/L and $C(4)\approx5.68$ mg/L.}
 
-\noindent\textbf{传染病模型。} 归一化人群中 SIR 模型为
+\subsection{传染病模型 | Epidemic models}
+按病程分易感 $S$、感染 $I$、康复 $R$（及潜伏 $E$）。SIS 允许康复后重新易感；SIR 假设永久免疫；SIRS 考虑免疫消退；SEIR 加入潜伏期。归一化 $s=S/N$、$i=I/N$、$r=R/N$，封闭人群 $s+i+r=1$，均匀混合、常率 $\gamma$ 康复、永久免疫下
 \FORMULA{SIR 易感--感染--康复模型}{susceptible-infectious-recovered model}
 \[
 \dot s=-\beta si,\qquad \dot i=\beta si-\gamma i,\qquad \dot r=\gamma i,
-\quad s+i+r=1.
+\quad s+i+r=1,
 \]
-基本再生数 $R_0=\beta/\gamma$；初期当 $\beta s_0-\gamma>0$（等价于 $R_0s_0>1$）时感染比例增长。SIS 模型允许康复者重新易感，SIR 模型假设永久免疫，SIRS 模型考虑免疫消退。
-\READ{“S dot equals negative beta s i; i dot equals beta s i minus gamma i; r dot equals gamma i.”}
-\EN{The normalized SIR model is given above. Its basic reproduction number is $R_0=\beta/\gamma$. At the beginning, infections grow if $\beta s_0-\gamma>0$, equivalently $R_0s_0>1$. SIS allows recovered people to become susceptible again; SIR assumes permanent immunity; SIRS includes waning immunity.}
+$\beta$ 为传播率、$\gamma$ 为康复率（单位 $1/$日）。基本再生数 $R_0=\beta/\gamma$ 是全易感环境中一个感染者的二代感染数；初期 $i'\approx(\beta s_0-\gamma)i$，故 $R_0s_0>1$ 时增长、$<1$ 时下降，疾病自由平衡点 $(1,0)$ 在 $R_0<1$ 时局部稳定、在 $R_0>1$ 时不稳定。
+\EN{The population splits into susceptible $S$, infectious $I$, recovered $R$ (and exposed $E$): SIS allows reinfection, SIR assumes permanent immunity, SIRS includes waning immunity, and SEIR adds a latent stage. With fractions $s,i,r$ and a closed population, homogeneous mixing, recovery at rate $\gamma$ and permanent immunity give the normalized SIR equations above, where $\beta$ is the transmission rate and $\gamma$ the recovery rate per day. The basic reproduction number $R_0=\beta/\gamma$ is the number of secondary infections from one infective in a fully susceptible population. Early on $i'\approx(\beta s_0-\gamma)i$, so infections grow if $R_0s_0>1$ and decline if $R_0s_0<1$, and the disease-free equilibrium is locally stable for $R_0<1$.}
+\noindent\textbf{相轨线与最终规模。} 由 $\mathrm di/\mathrm ds=-1+\gamma/(\beta s)$ 积分得
+\FORMULA{SIR 的相轨线与最终规模}{phase trajectory and final size}
+\[
+i(s)=i_0+s_0-s+\frac{\gamma}{\beta}\ln\frac{s}{s_0},
+\qquad
+s_0+i_0-s_\infty=\frac{\gamma}{\beta}\ln\frac{s_0}{s_\infty},
+\]
+第二式令 $i=0$ 得到。$s_\infty$ 为疫情结束时的剩余易感比例，$1-s_\infty$ 为最终感染比例；$i$ 在 $s=1/R_0$ 处达到峰值。SIR 只流行一次；SIS 的地方性平衡点 $i^*=1-1/R_0$ 在 $R_0>1$ 时存在且稳定。群体免疫阈值 $p>1-1/R_0$ 使有效再生数降到 $1$ 以下，是疫苗接种策略的依据。
+\EN{\textbf{Phase trajectory and final size.} Integrating $\mathrm di/\mathrm ds=-1+\gamma/(\beta s)$ gives the phase trajectory above. Setting $i=0$ gives the final-size equation: $s_\infty$ is the remaining susceptible fraction and $1-s_\infty$ the final infected fraction; $i$ peaks at $s=1/R_0$. SIR produces a single epidemic wave; the SIS endemic equilibrium $i^*=1-1/R_0$ exists and is stable for $R_0>1$. The herd-immunity threshold $p>1-1/R_0$ makes the effective reproduction number fall below one, which is the basis of vaccination policy.}
+\EX{取 $s_0=0.99$、$i_0=0.01$、$\beta=0.3$/日、$\gamma=0.1$/日：$R_0=3$，初始增长率 $0.197$/日，峰值 $s=1/3$ 处 $i_{\max}\approx0.304$；最终规模方程给出 $s_\infty\approx0.0588$（约 $94.1\%$ 被感染），群体免疫阈值 $66.7\%$。$\beta$ 降到 $0.08$/日后 $R_0s_0=0.792<1$，感染下降；麻疹 $R_0=12$--$18$ 对应阈值 $91.7\%$--$94.4\%$。}{With $s_0=0.99$, $i_0=0.01$, $\beta=0.3$ per day and $\gamma=0.1$ per day: $R_0=3$, initial growth $0.197$ per day, peak $i_{\max}\approx0.304$ at $s=1/3$, and the final-size equation gives $s_\infty\approx0.0588$ (about $94.1\%$ infected), with herd-immunity threshold $66.7\%$. Reducing $\beta$ to $0.08$ gives $R_0s_0=0.792<1$ and decline; measles $R_0=12$--$18$ corresponds to thresholds of $91.7\%$--$94.4\%$.}
+\READ{“S dot equals negative beta s i; i dot equals beta s i minus gamma i; r dot equals gamma i.” “The basic reproduction number is beta over gamma.”}
+\noindent\textbf{SEIR 与其他变体。} SEIR 在 $S$ 与 $I$ 之间加入潜伏期：$\dot e=\beta si-\sigma e$、$\dot i=\sigma e-\gamma i$，使峰值推迟、增长率改变，但不改变最终传播总量；$R_0$ 应按完整传播链定义。参数 $\beta$ 常由早期增长率反推、$\gamma$ 由病程估计，结论必须注明人群与时段。
+\EN{\textbf{SEIR and variants.} SEIR inserts a latent stage with $\dot e=\beta si-\sigma e$ and $\dot i=\sigma e-\gamma i$, delaying the peak and changing the growth rate but not the total eventual infections; $R_0$ should be defined through the full transmission chain. The transmission rate is usually inferred from early growth and the recovery rate from disease duration, and conclusions must state the population and time period.}
+\ASK{如何解释 $R_0$？为什么它不是可直接观测的常数？}{How should $R_0$ be interpreted, and why is it not a directly observed constant?}{$R_0=\beta/\gamma$ 是模型参数之比：全易感环境中一个感染者的二代感染数，决定阈值 $R_0s_0>1$。它由接触行为、病原体和人群免疫共同决定，随干预和时间变化，必须连同数据来源与适用时段一起说明。}{$R_0=\beta/\gamma$ is a ratio of model parameters: the secondary infections from one infective in a fully susceptible population, controlling the threshold $R_0s_0>1$. It depends on contact behaviour, the pathogen and population immunity, changes with interventions and time, and must be reported with its data source and time period.}
 
-\noindent\textbf{捕食者--被捕食者模型。} 课件复习提纲中的 Volterra 模型可写为
+\subsection{多种群生态模型 | Multi-species ecology}
+设 $x$ 为被捕食者、$y$ 为捕食者，$a,b,c,d>0$：
 \FORMULA{Lotka--Volterra 捕食者--被捕食者方程}{Lotka--Volterra predator--prey equations}
 \[
-\dot x=ax-bxy,\qquad \dot y=-cy+dxy,
+\dot x=x(a-by),\qquad \dot y=y(-c+dx).
 \]
-其中 $x$ 是被捕食者、$y$ 是捕食者，$a,b,c,d>0$。无相互作用时被捕食者增长、捕食者衰减；相互作用项 $xy$ 分别降低被捕食者、增加捕食者。正平衡点为 $(c/d,a/b)$，解的变化体现两种群之间的周期性耦合。
-\READ{“X dot equals a x minus b x y; y dot equals negative c y plus d x y.”}
-\EN{The Volterra predator-prey model from the course review is shown above. Here $x$ is the prey population and $y$ is the predator population, with positive parameters. Without interaction, prey grow and predators decline. The interaction term decreases prey and increases predators. The positive equilibrium is $(c/d,a/b)$, and the trajectories reflect the coupled population dynamics.}
+无相互作用时被捕食者增长、捕食者衰减；$xy$ 项表示相遇。平衡点为 $(0,0)$（鞍点）与 $(c/d,a/b)$；正平衡点线性化得纯虚特征值 $\pm\mathrm i\sqrt{ac}$，故为中心、轨线为闭曲线、周期约 $2\pi/\sqrt{ac}$，首次积分为 $H=a\ln y-by+c\ln x-dx=\text{常数}$，振幅由初值决定。
+\EN{Without interaction prey grow and predators decay; the $xy$ terms represent encounters. Equilibria are $(0,0)$ (a saddle) and $(c/d,a/b)$. At the positive equilibrium the eigenvalues are purely imaginary, $\pm\mathrm i\sqrt{ac}$, so it is a centre with closed orbits and period about $2\pi/\sqrt{ac}$; the first integral $H=a\ln y-by+c\ln x-dx=\text{constant}$ fixes the amplitude through the initial condition.}
+\noindent\textbf{Volterra 原理与多种群。} 按比例捕捞强度 $\varepsilon$ 后平衡点变为 $\big((c+\varepsilon)/d,(a-\varepsilon)/b\big)$：被捕食者上升、捕食者下降，即 Volterra 原理——适度捕捞有利于被捕食者。多种群竞争写成 $\dot x_i=x_i(a_i-\sum_jb_{ij}x_j)$，两种群共存要求种内竞争强于种间竞争。
+\EN{\textbf{Volterra principle and multiple species.} Proportional harvesting at intensity $\varepsilon$ moves the equilibrium to $\big((c+\varepsilon)/d,(a-\varepsilon)/b\big)$: prey rise and predators fall, the Volterra principle that moderate harvesting favours prey. Multi-species competition is written $\dot x_i=x_i(a_i-\sum_jb_{ij}x_j)$; coexistence of two species requires intraspecific competition to dominate interspecific competition.}
+\EX{取 $a=1$、$b=0.02$、$c=0.5$、$d=0.01$：平衡点 $(50,50)$，近似周期 $2\pi/\sqrt{0.5}\approx8.89$ 个时间单位。加入 $\varepsilon=0.1$ 的捕捞后平衡点为 $(60,45)$，被捕食者由 $50$ 升到 $60$、捕食者由 $50$ 降到 $45$，定量印证 Volterra 原理。}{With $a=1$, $b=0.02$, $c=0.5$ and $d=0.01$ the equilibrium is $(50,50)$ and the period is about $2\pi/\sqrt{0.5}\approx8.89$ time units. Harvesting at $\varepsilon=0.1$ moves the equilibrium to $(60,45)$: prey rise from $50$ to $60$ and predators fall from $50$ to $45$, quantitatively confirming the Volterra principle.}
 
-\noindent\textbf{药物动力学模型。} 在单房室、一级排除的简化情形下，药物浓度满足 $\dot C=-kC$，故 $C(t)=C_0e^{-kt}$。多房室模型还需表示中心室与周边室之间的转移；不同给药方式对应不同输入项，参数通常由浓度观测估计。
-\EN{In a simplified one-compartment model with first-order elimination, concentration satisfies $\dot C=-kC$, so $C(t)=C_0e^{-kt}$. A multi-compartment model also represents transfer between central and peripheral compartments. Different dosing methods give different input terms, and parameters are typically estimated from concentration measurements.}
-
-\noindent\textbf{差分方程稳定性。} 线性系统 $x_{k+1}=Ax_k+b$ 的平衡点满足 $(I-A)x^*=b$。平衡点附近的扰动满足 $z_{k+1}=Az_k$；若矩阵谱半径 $\rho(A)<1$，则扰动趋于零。标量仿射模型 $x_{k+1}=ax_k+b$ 的平衡点为 $x^*=b/(1-a)$（$a\ne1$），当 $|a|<1$ 时渐近稳定。
-\READ{“X k plus one equals A x k plus b.” “The equilibrium is b over one minus a, and it is asymptotically stable if the absolute value of a is less than one.”}
-\EN{For the linear difference equation, equilibria solve $(I-A)x^*=b$. Perturbations decay if the spectral radius $\rho(A)<1$. In the scalar affine case, the equilibrium is $b/(1-a)$ and is asymptotically stable when $|a|<1$.}
-
-\noindent\textbf{正则马氏链。} 转移矩阵 $P$ 的元素非负且每行和为 $1$。若状态分布按行向量 $p_n$ 表示，则 $p_{n+1}=p_nP$。平稳分布满足 $\pi=\pi P$ 且分量和为 $1$。正则链（某个 $P^m$ 的元素全正）有唯一平稳分布，并在常见有限状态设定下从初始分布收敛至该分布。
-\READ{“P n plus one equals P n times P.” “Pi equals pi times P.”}
-\EN{A transition matrix has nonnegative entries and each row sums to one. State distributions evolve by $p_{n+1}=p_nP$. A stationary distribution satisfies $\pi=\pi P$ and sums to one. A regular chain has a positive power of its transition matrix; for a finite chain this gives a unique stationary distribution and convergence to it from common initial distributions.}
-
-\noindent\textbf{Leslie 人口模型。} 按年龄组建立列向量 $x_t$，其转移关系为 $x_{t+1}=Lx_t$。Leslie 矩阵首行放各年龄组生育率，次对角线放存活率，其余项通常为零。主特征值决定长期增长率，主特征向量经归一化给出稳定年龄结构（需满足相应正性/本原条件）。
-\EN{The Leslie model groups a population by age and evolves the age vector by $x_{t+1}=Lx_t$. The first row contains fertility rates, and the subdiagonal contains survival rates. The dominant eigenvalue determines long-term growth, and its normalized eigenvector gives the stable age structure under suitable positivity or primitivity conditions.}
-
-\EX{若每期人口按 $x_{k+1}=0.9x_k+10$ 变化，平衡点为 $x^*=10/(1-0.9)=100$；因 $|0.9|<1$，任意初值的偏差逐期缩小。}{If population follows $x_{k+1}=0.9x_k+10$, the equilibrium is $10/(1-0.9)=100$. Since $|0.9|<1$, deviations from equilibrium shrink each period.}
-
-\ASK{Malthus 和 Logistic 模型有何区别？}{How do the Malthus and Logistic models differ?}{Malthus 模型假设人均增长率恒定，产生指数增长；Logistic 模型加入环境承载量，种群接近 $K$ 时增长率下降。}{The Malthus model assumes a constant per-capita growth rate and gives exponential growth. The Logistic model includes a carrying capacity, so growth slows as the population approaches $K$.}
-
-\ASK{差分系统平衡点稳定性的谱半径判据是什么？}{What is the spectral-radius criterion for stability of a difference system?}{线性化扰动按矩阵幂 $A^k$ 演化；若 $\rho(A)<1$，矩阵幂趋于零，平衡点局部渐近稳定。}{Linearized perturbations evolve through powers of the matrix $A$. If $\rho(A)<1$, these powers tend to zero and the equilibrium is locally asymptotically stable.}
-
-\ASK{Leslie 矩阵各部分代表什么？}{What do the parts of a Leslie matrix represent?}{首行表示各年龄组生育贡献，次对角线表示个体存活到下一年龄组的比例；乘以当前年龄分布得到下一期分布。}{The first row represents fertility contributions from age groups, and the subdiagonal represents survival into the next age group. Multiplying by the current age distribution gives the next period's distribution.}
-
-\subsection{SIR 阈值的数值读法与模型边界 | Reading an SIR threshold}
-\noindent 前文的归一化 SIR 模型给出 $i'=\beta si-\gamma i$，其中 $s=S/N$ 是易感比例。感染早期 $s(t)\approx s_0$，故
-\FORMULA{SIR 模型的初期增长率与有效再生数}{initial growth rate and effective reproduction number in the SIR model}
+\subsection{Leslie 年龄结构模型 | The Leslie model}
+按年龄分组，$x_t=(x_{1,t},\ldots,x_{m,t})^{\mathsf T}$，只考虑生育与存活：
+\FORMULA{Leslie 人口模型}{Leslie population model}
 \[
-I'\approx\left(\beta\frac{S_0}{N}-\gamma\right)I,
-\qquad
-\mathcal R_0=\frac{\beta}{\gamma},\quad
-\mathcal R_{\mathrm e}(0)=\mathcal R_0s_0=\frac{\beta S_0}{\gamma N}.
+x_{t+1}=Lx_t,\qquad
+L=\begin{pmatrix}
+b_1&b_2&\cdots&b_{m}\\
+s_1&0&\cdots&0\\
+0&s_2&\ddots&\vdots\\
+\vdots&&\ddots&0\\
+0&\cdots&0&s_{m-1}
+\end{pmatrix},
 \]
-若 $\mathcal R_{\mathrm e}(0)>1$，感染比例初期增长；若小于 $1$，则初期下降。这是局部于疫情早期的判断，不代表感染数一直指数变化，因为易感比例会继续下降。
-\EN{The initial growth condition is $\mathcal R_{\mathrm e}(0)=\mathcal R_0s_0>1$. This is an early-stage conclusion, not a claim that infections grow exponentially forever, since the susceptible fraction changes over time.}
-\EX{取初始易感比例 $s_0=0.99$、传播率 $\beta=0.3$ 每日、康复率 $\gamma=0.1$ 每日，则 $\mathcal R_0=\beta/\gamma=3$，有效阈值为 $\mathcal R_0s_0=2.97$，初始近似增长率为 $\beta s_0-\gamma=0.197$ 每日。若干预使参数 $\beta$ 降至 $0.08$ 每日，则新阈值为 $0.08\cdot0.99/0.1=0.792<1$，初期感染数转为下降。}{With susceptible fraction $s_0=0.99$, transmission rate $\beta=0.3$ per day, and recovery rate $\gamma=0.1$ per day, $\mathcal R_0=3$, the effective threshold is $2.97$, and the initial growth rate is $0.197$ per day. Reducing $\beta$ to $0.08$ per day gives threshold $0.792<1$, so infections initially decline.}
-\par\noindent\begin{minipage}{\linewidth}
-\ASK{模型算出的 $R_0$ 为什么不一定是可直接观测的常数？}{Why is the model's $R_0$ not necessarily a directly observed constant?}{它由模型假设和参数估计定义；接触行为、干预和易感比例变化都会改变实际增长率。SIR 的均匀混合假设不适合所有人群，估计结果必须连同数据来源和适用时段说明。}{It is defined through model assumptions and estimated parameters. Contact behavior, interventions, and changes in susceptibility affect the realized growth rate. The homogeneous-mixing assumption may not fit every population, so estimates should be stated with their data source and time period.}
-\end{minipage}
+首行 $b_i$ 是生育率，次对角线 $s_i$ 是存活率；展开即 $x_{1,t+1}=\sum_ib_ix_{i,t}$、$x_{i+1,t+1}=s_ix_{i,t}$。$L$ 非负，Perron--Frobenius 定理给出唯一正特征值 $\lambda_0=\rho(L)$ 与正特征向量 $n^*$，且 $x_t/\lambda_0^t\to Cn^*$：长期增长率 $\lambda_0$、自然增长率 $\ln\lambda_0$、归一化 $n^*$ 为稳定年龄结构。特征方程为
+\[
+\lambda^{m}=b_1\lambda^{m-1}+s_1b_2\lambda^{m-2}+\cdots+s_1s_2\cdots s_{m-1}b_m .
+\]
+先算循环指数 $h=\gcd\{i:b_i>0\}$：$h=1$ 时本原，趋于唯一稳定年龄结构、数量按 $\lambda_0^t$ 变化；$h>1$ 时非本原，模最大的特征值有 $h$ 个，结构以周期 $h$ 振荡。谱半径是模最大特征值的大小，正特征值是唯一的正实数，主特征值指模最大者（非本原时可能不唯一），Perron 特征值即正特征值 $\lambda_0$。
+\EN{Age groups form $x_t$; keeping only fertility and survival gives $x_{t+1}=Lx_t$ with fertilities in the first row and survival fractions on the subdiagonal, so $x_{1,t+1}=\sum_ib_ix_{i,t}$ and $x_{i+1,t+1}=s_ix_{i,t}$. The nonnegative matrix has, by Perron--Frobenius, a unique positive eigenvalue $\lambda_0=\rho(L)$ and positive eigenvector $n^*$ with $x_t/\lambda_0^t\to Cn^*$: long-run growth factor $\lambda_0$, intrinsic rate $\ln\lambda_0$, and normalized $n^*$ the stable age distribution. The characteristic equation is shown. The cyclic index $h=\gcd\{i:b_i>0\}$ must be computed first: $h=1$ gives a primitive matrix and a unique stable age structure growing like $\lambda_0^t$; $h>1$ gives an imprimitive matrix with $h$ eigenvalues of maximal modulus, so the structure oscillates with period $h$. Thus spectral radius is the largest modulus, the positive eigenvalue is the unique positive real one, the dominant eigenvalue means largest modulus (not unique when imprimitive), and the Perron eigenvalue is this positive $\lambda_0$.}
+\EX{最大年龄 $5$ 岁、每年一组，相邻观测 $x_0=(12000,9000,8000,6000,4000)$、$x_1=(13200,9900,8800,6600,4400)$，各组都放大 $1.1$ 倍，故已稳定：$\lambda_0=1.1$，自然增长率 $\ln1.1\approx0.0953$/年，稳定年龄结构 $(0.3077,0.2308,0.2051,0.1538,0.1026)$；存活率为 $0.8250$、$0.9778$、$0.8250$、$0.7333$。按 $0:2:2:2:0$ 控制生育率并令 $b_2=b_3=b_4=b$，由 $\lambda_0'=1$ 得 $1=b(s_1+s_1s_2+s_1s_2s_3)$，故 $b\approx0.4353$；此时 $1$ 为主特征值、其余模小于 $1$，新稳定年龄结构为 $(0.2642,0.2180,0.2131,0.1758,0.1289)$，总量不变。}{With maximum age $5$, yearly groups and observations $x_0=(12000,9000,8000,6000,4000)$, $x_1=(13200,9900,8800,6600,4400)$, every group grows by $1.1$, so the state is stable: $\lambda_0=1.1$, intrinsic growth $\ln1.1\approx0.0953$ per year, stable age structure $(0.3077,0.2308,0.2051,0.1538,0.1026)$ and survival fractions $0.8250$, $0.9778$, $0.8250$, $0.7333$. For the fertility ratio $0:2:2:2:0$ with $b_2=b_3=b_4=b$, the condition $\lambda_0'=1$ gives $1=b(s_1+s_1s_2+s_1s_2s_3)$, hence $b\approx0.4353$; then $1$ is dominant with all other moduli below $1$, the new stable age structure is $(0.2642,0.2180,0.2131,0.1758,0.1289)$, and the total stays constant.}
+
+\subsection{常微分方程的数值解 | Numerical solution of ODEs}
+Euler 法为一阶，改进 Euler 法（Heun）为二阶，经典四阶 Runge--Kutta 局部误差 $O(h^5)$、全局误差 $O(h^4)$；阶数在精度与计算量之间折中，刚性方程需隐式方法。步长减半时误差按阶数下降，可作为数值验证（Richardson 外推）。
+\EN{Euler's method is first order, improved Euler (Heun) second order, and classical fourth-order Runge--Kutta has local error $O(h^5)$ and global error $O(h^4)$; the order trades accuracy against computation, and stiff equations need implicit methods. Halving the step reduces error at the method's order, a numerical check known as Richardson extrapolation.}
 
 
-\section{优化、变分与图论网络 | Optimization, variational methods and networks}
-\noindent\textbf{函数优化模型。} 标准约束优化形式为
+\section{离散模型：差分方程与马氏链 | Difference equations and Markov chains}
+\subsection{一阶差分方程与贷款模型 | First-order difference equations and loans}
+标量仿射模型 $x_{k+1}=ax_k+b$ 的平衡点为 $x^*=b/(1-a)$（$a\ne1$）；令 $z_k=x_k-x^*$ 得 $z_{k+1}=az_k$，故 $|a|<1$ 时渐近稳定，$|a|>1$ 时不稳定，$a<0$ 时正负交替。$n$ 维系统 $x_{k+1}=Ax_k+b$ 的平衡点满足 $(I-A)x^*=b$，扰动满足 $z_{k+1}=Az_k$；若谱半径 $\rho(A)<1$，则 $A^k\to0$，平衡点渐近稳定——这是离散系统稳定性的核心判据。非线性方程 $x_{k+1}=f(x_k)$ 的平衡点满足 $f(x^*)=x^*$，$|f'(x^*)|<1$ 时局部稳定、$>1$ 时不稳定；Logistic 映射在参数增大时出现倍周期分岔和混沌，说明离散化不是无代价的近似。
+\EN{The scalar affine model $x_{k+1}=ax_k+b$ has equilibrium $x^*=b/(1-a)$ for $a\ne1$; with $z_k=x_k-x^*$, $z_{k+1}=az_k$, so it is asymptotically stable for $|a|<1$, unstable for $|a|>1$, and alternating for $a<0$. For $x_{k+1}=Ax_k+b$ the equilibrium solves $(I-A)x^*=b$ and perturbations follow $z_{k+1}=Az_k$; if the spectral radius $\rho(A)<1$ then $A^k\to0$ and the equilibrium is asymptotically stable — the central criterion for discrete systems. A nonlinear equilibrium satisfies $f(x^*)=x^*$ and is locally stable for $|f'(x^*)|<1$, unstable for $>1$; the Logistic map shows period doubling and chaos as the parameter grows, so discretization is not a free approximation.}
+\EX{(1) $x_{k+1}=0.9x_k+10$ 的平衡点为 $100$，$|0.9|<1$ 故稳定；若系数改为 $1.1$，平衡点 $-100$ 不稳定。(2) 等额本息贷款余额 $x_{k+1}=(1+r)x_k-a$，$x_0=A$、$x_n=0$，解得
+\[
+a=\frac{Ar(1+r)^n}{(1+r)^n-1}.
+\]
+$A=100$ 万元、年利率 $4.9\%$（$r=0.049/12$）、$n=360$ 时 $a\approx5307.27$ 元/月，总还款约 $191.06$ 万元、利息约 $91.06$ 万元；期限越长每期越少但总利息越多。(3) $x_{n+1}=4x_n(3-x_n)$ 的平衡点为 $0$ 与 $2.75$，导数 $12$ 与 $-10$，模都大于 $1$，均不稳定。}{(1) $x_{k+1}=0.9x_k+10$ has equilibrium $100$ and is stable since $|0.9|<1$; with coefficient $1.1$ the equilibrium $-100$ is unstable. (2) For an equal-installment loan the balance satisfies $x_{k+1}=(1+r)x_k-a$, $x_0=A$, $x_n=0$, giving the payment formula above. For $A=1{,}000{,}000$ yuan, annual rate $4.9\%$ ($r=0.049/12$) and $n=360$, the payment is about $5307.27$ per month, total repayment about $1.9106$ million and interest about $0.9106$ million; longer terms lower the payment but raise total interest. (3) $x_{n+1}=4x_n(3-x_n)$ has equilibria $0$ and $2.75$ with derivatives $12$ and $-10$, both of modulus above one, so neither is stable.}
+\ASK{差分系统平衡点稳定性的谱半径判据是什么？}{What is the spectral-radius criterion for stability of a difference system?}{线性化扰动按矩阵幂 $A^k$ 演化；若 $\rho(A)<1$，矩阵幂趋于零，平衡点局部渐近稳定。}{Linearized perturbations evolve through powers $A^k$; if $\rho(A)<1$ these powers vanish and the equilibrium is locally asymptotically stable.}
+
+\subsection{正则马氏链与吸收链 | Regular and absorbing Markov chains}
+转移矩阵 $P=(p_{ij})$ 满足 $p_{ij}\ge0$、每行和为 $1$。分布按行向量 $p_n$ 演化：$p_{n+1}=p_nP$；平稳分布满足
+\FORMULA{马氏链的平稳分布}{stationary distribution}
+\[
+\pi=\pi P,\qquad \sum_i\pi_i=1,\qquad \pi_i\ge0,
+\]
+即 $P$ 的特征值 $1$ 对应的归一化左特征向量。若存在 $m$ 使 $P^m$ 元素全正（正则链），则平稳分布唯一且从任意初始分布 $p_n\to\pi$，其余特征值模小于 $1$ 决定收敛速度；周期 $h>1$ 时分布振荡，须按 $h$ 步观察。吸收链 $P=\begin{pmatrix}Q&R\\0&I\end{pmatrix}$ 的基本矩阵 $N=(I-Q)^{-1}$ 给出平均访问次数，$NR$ 为吸收概率、$N\mathbf 1$ 为平均吸收时间。Leslie 矩阵元素不是概率，故不是马氏链转移矩阵，但两者都用 Perron--Frobenius 理论。
+\EN{The transition matrix has nonnegative entries and row sums one. Distributions evolve as row vectors $p_{n+1}=p_nP$, and a stationary distribution satisfies $\pi=\pi P$, $\sum_i\pi_i=1$, i.e., it is the normalized left eigenvector for eigenvalue $1$. If some $P^m$ is strictly positive (a regular chain), the stationary distribution is unique and $p_n\to\pi$ from any initial distribution, with the other eigenvalues controlling the rate; a periodic chain oscillates and converges only every $h$ steps. An absorbing chain ordered as $P=\begin{pmatrix}Q&R\\0&I\end{pmatrix}$ has fundamental matrix $N=(I-Q)^{-1}$ giving expected visits, with $NR$ the absorption probabilities and $N\mathbf 1$ the expected absorption times. The Leslie matrix is not a Markov transition matrix because its entries are not probabilities, though both use Perron--Frobenius theory.}
+\EX{(1) $P=\begin{pmatrix}0.7&0.3\\0.4&0.6\end{pmatrix}$：解 $\pi=\pi P$ 得 $\pi=(4/7,3/7)\approx(0.5714,0.4286)$，另一特征值 $0.3$ 决定收敛速度。(2) 吸收链取 $Q=\begin{pmatrix}0.5&0.3\\0.2&0.3\end{pmatrix}$、$R=(0.2,0.5)^{\mathsf T}$，则 $N=(I-Q)^{-1}\approx\begin{pmatrix}2.4138&1.0345\\0.6897&1.7241\end{pmatrix}$，吸收概率 $(1,1)^{\mathsf T}$，平均吸收时间 $(3.45,2.41)$ 步。}{(1) For $P=\begin{pmatrix}0.7&0.3\\0.4&0.6\end{pmatrix}$, $\pi=\pi P$ gives $\pi=(4/7,3/7)\approx(0.5714,0.4286)$, with the other eigenvalue $0.3$ controlling convergence. (2) For the absorbing chain with $Q=\begin{pmatrix}0.5&0.3\\0.2&0.3\end{pmatrix}$ and $R=(0.2,0.5)^{\mathsf T}$, $N=(I-Q)^{-1}\approx\begin{pmatrix}2.4138&1.0345\\0.6897&1.7241\end{pmatrix}$, absorption probabilities $(1,1)^{\mathsf T}$ and mean absorption times $(3.45,2.41)$ steps.}
+
+
+\section{优化模型、变分方法与图论网络 | Optimization, variation and networks}
+\noindent\textbf{建模要素。} 优化模型由决策变量、目标函数、约束和可行域组成；先问“谁决策、能改什么、何为好、受何限制”，再判断类型、解的存在与唯一性。一般非线性约束优化写成
 \FORMULA{一般非线性约束优化模型}{general nonlinear constrained optimization problem}
 \[
-\min_{x\in\mathbb R^n} f(x)\quad\text{subject to }g_i(x)\le0,\ h_j(x)=0.
+\min_{x\in\mathbb R^n}f(x)\quad\text{subject to }g_i(x)\le0,\ h_j(x)=0 .
 \]
-根据目标和约束可分为线性规划、二次规划、非线性规划、整数规划、多目标和极大极小问题。模型需明确决策变量、目标、可行域和单位，再讨论最优解是否存在及求解器的适用条件。
-\READ{“Minimize f of x subject to g i of x less than or equal to zero and h j of x equal to zero.”}
-\EN{A standard constrained optimization model minimizes an objective subject to inequality and equality constraints. Depending on the objective and constraints, it may be a linear, quadratic, nonlinear, integer, multiobjective, or minimax problem. Specify decision variables, objective, feasible set, and units, then consider existence and solver assumptions.}
+按目标与约束可分为线性规划、二次规划、非线性规划、整数规划、多目标与极大极小问题。凸问题的局部最优即全局最优；非凸问题需多起点或全局算法。
+\EN{\textbf{Building blocks.} An optimization model has decision variables, an objective, constraints and a feasible region; ask who decides, what can change, what “better” means and what limits apply, then classify the problem and check existence and uniqueness. A general nonlinear constrained problem is stated above. It may be linear, quadratic, nonlinear, integer, multiobjective or minimax. For convex problems a local optimum is global; nonconvex problems need multi-start or global methods.}
+\subsection{线性规划与函数优化 | Linear and function optimization}
+线性规划标准形式为 $\max c^{\mathsf T}x$，s.t. $Ax\le b$、$x\ge0$。可行域是凸多面体，最优解若存在则至少有一个顶点最优；变量少时用图解法或枚举顶点，变量多用单纯形法或内点法。对偶理论给出影子价格：$b_i$ 每增加一单位，最优值的增量就是第 $i$ 个对偶变量，直接回答“多一份资源值多少钱”；灵敏度分析给出最优基不变的范围。
+\EN{The linear-programming standard form maximizes $c^{\mathsf T}x$ subject to $Ax\le b$, $x\ge0$. The feasible set is a convex polytope, and if an optimum exists at least one vertex is optimal; small problems use graphical or vertex enumeration, large ones the simplex or interior-point method. Duality gives shadow prices: the increase in the optimal value per unit increase of $b_i$ equals the $i$-th dual variable, directly answering what one more unit of a resource is worth; sensitivity analysis gives the ranges over which the optimal basis is unchanged.}
+\EX{利润 $3x+2y$，约束 $x+y\le4$、$x+3y\le6$、$x,y\ge0$。顶点 $(0,0)$、$(4,0)$、$(0,2)$、$(3,1)$ 的目标值为 $0,12,4,11$，故最优 $(4,0)$、利润 $12$。对偶为 $\min4u+6v$，s.t. $u+v\ge3$、$u+3v\ge2$，最优 $u=3,v=0$，目标同为 $12$（强对偶）。影子价格：第一种资源每多一单位利润增 $3$；第二种资源在最优处剩余 $2$ 单位（$x+3y=4<6$），影子价格为 $0$。整数限制不能靠对线性规划解四舍五入处理。}{Profit $3x+2y$ subject to $x+y\le4$, $x+3y\le6$ and $x,y\ge0$. The vertices $(0,0)$, $(4,0)$, $(0,2)$, $(3,1)$ give values $0,12,4,11$, so the optimum is $(4,0)$ with profit $12$. The dual $\min4u+6v$ subject to $u+v\ge3$, $u+3v\ge2$ has optimum $u=3,v=0$ with the same value $12$ (strong duality). The shadow prices are $3$ for resource one and $0$ for resource two, which has two units of slack at the optimum ($x+3y=4<6$). Integer restrictions cannot be handled by rounding the linear-programming solution.}
 
-\noindent\textbf{变分问题。} 若目标是选取函数 $y(t)$ 以极小化泛函 $J[y]=\int_a^b L(t,y,y')\,dt$，固定端点下极值函数满足 Euler--Lagrange 方程
+
+\subsection{泛函优化与变分法 | Functional optimization}
+若决策对象是函数 $y(t)$，目标是泛函 $J[y]=\int_a^bL(t,y,y')\,\mathrm dt$。固定端点时极值函数满足
 \FORMULA{Euler--Lagrange 方程}{Euler--Lagrange equation}
 \[
-\frac{d}{dt}\frac{\partial L}{\partial y'}-\frac{\partial L}{\partial y}=0.
+\frac{\mathrm d}{\mathrm dt}\frac{\partial L}{\partial y'}-\frac{\partial L}{\partial y}=0 ,
 \]
-等周问题还包含积分约束，可引入拉格朗日乘子并对增广泛函写 Euler--Lagrange 方程。
-\READ{“The time derivative of the partial derivative of L with respect to y prime, minus the partial derivative of L with respect to y, equals zero.”}
-\EN{For a functional $J[y]=\int_a^bL(t,y,y')dt$, an extremal with fixed endpoints satisfies the Euler--Lagrange equation above. An isoperimetric problem adds an integral constraint; a Lagrange multiplier can be used to form an augmented functional.}
+当 $L$ 不显含 $t$ 时有 Beltrami 恒等式 $L-y'\partial L/\partial y'=C$。最速降线在重力下求最快下滑曲线，时间泛函 $T=\int\sqrt{(1+y'^2)/(2gy)}\,\mathrm dx$，解为摆线而非直线；等周问题在给定周长下求面积最大的曲线，答案是圆（用拉格朗日乘子并入约束）。最短、最快与最直不是同一件事，必须用整体泛函刻画。
+\EN{If $L$ does not depend explicitly on $t$, the Beltrami identity gives a first integral. The brachistochrone minimizes descent time under gravity, $T=\int\sqrt{(1+y'^2)/(2gy)}\,\mathrm dx$, and the solution is a cycloid, not a straight line; the isoperimetric problem maximizes area for a given perimeter, and the answer is a circle, obtained with a Lagrange multiplier. Shortest, fastest and straightest are different things, so the whole trajectory must be scored by a functional.}
 
-\noindent\textbf{图论与优化。} 图用顶点和边描述关系，可用邻接矩阵或关联矩阵表示。最短路问题在边权非负时可用 Dijkstra 算法；最小生成树可用 Kruskal 或 Prim 算法。项目网络中的关键路径由决定总工期的最长路径给出，PERT/CPM 用于时间安排和资源分析。
 
-\EN{A graph represents relationships through vertices and edges and can be encoded by adjacency or incidence matrices. Dijkstra's algorithm solves shortest paths with nonnegative edge weights. Kruskal's or Prim's algorithm finds a minimum spanning tree. In a project network, the critical path is the longest-duration path that determines the project completion time; PERT/CPM supports scheduling and resource analysis.}
+\subsection{图论与网络优化 | Graph and network optimization}
+图 $G=(V,E)$ 由顶点与边组成；赋权图给边权 $w_{ij}$。基本概念包括路径、回路、连通性、树与度。邻接矩阵 $A=(a_{ij})$ 记录 $1$ 或 $w_{ij}$，$A^k$ 的元素统计长度为 $k$ 的路径数；关联矩阵 $B=(b_{ie})$ 表示顶点与边的关联（有向图用 $\pm1$），用于流守恒约束。算法选择取决于图的性质与目标：
+\begin{center}\small
+\begin{tabular}{@{}p{0.19\linewidth}p{0.25\linewidth}p{0.50\linewidth}@{}}
+\hline
+问题 & 算法 & 适用条件与复杂度 \\
+\hline
+单源最短路 & Dijkstra & 边权非负，$O(|E|\log|V|)$ \\
+单源最短路 & Bellman--Ford & 允许负权，可判负环，$O(|V||E|)$ \\
+全源最短路 & Floyd & 稠密图或需所有点对，$O(|V|^3)$ \\
+最小生成树 & Kruskal / Prim & 连通无向图，分别适合稀疏/稠密图 \\
+最大流 & Ford--Fulkerson 类 & 容量非负，最大流等于最小割 \\
+二分图匹配 & 匈牙利 / Hopcroft--Karp & 二分图最大匹配 \\
+关键路径 & CPM（DAG 最长路） & 有向无环工序网络 \\
+\hline
+\end{tabular}
+\end{center}
+最小生成树要求连通全部顶点且总权最小，最短路要求指定两点间权最小，目标不同。Dijkstra 要求非负权，因为它一旦确定某点标号就不再更新，负权边可能使更短路径在之后出现。最大流等于最小割，是运输、可靠性与匹配问题的理论基础。
+\EN{A graph $G=(V,E)$ consists of vertices and edges; a weighted graph assigns $w_{ij}$. Paths, cycles, connectivity, trees and degrees are the basic notions. The adjacency matrix records $1$ or $w_{ij}$, and entries of $A^k$ count walks of length $k$; the incidence matrix records vertex--edge incidence ($\pm1$ for directed graphs) and expresses flow conservation. Algorithm choice depends on graph properties and the objective, as in the table: Dijkstra for nonnegative single-source shortest paths, Bellman--Ford for negative weights, Floyd for all pairs, Kruskal or Prim for minimum spanning trees, Ford--Fulkerson-type methods for maximum flow, Hungarian or Hopcroft--Karp for bipartite matching, and CPM for critical paths in a DAG. A spanning tree connects all vertices with minimum total weight, while a shortest path minimizes weight between specified vertices; the objectives differ. Dijkstra needs nonnegative weights because a finalized label is never updated, and a negative edge could create a shorter path later. Maximum flow equals minimum cut, the basis of transportation, reliability and matching problems.}
+\EX{六个城市（小时）：$v_0v_1=4$、$v_0v_2=2$、$v_1v_2=1$、$v_1v_3=5$、$v_2v_3=8$、$v_2v_4=10$、$v_3v_4=2$、$v_3v_5=6$、$v_4v_5=3$。Dijkstra 从 $v_0$ 出发得最短路长度 $(0,3,2,8,10,13)$，例如到 $v_1$ 经 $v_2$（$3$）比直达（$4$）短；Kruskal 按权递增加边得生成树 $v_1v_2,v_0v_2,v_3v_4,v_4v_5,v_1v_3$，总权 $13$。}{A six-city network (hours): $v_0v_1=4$, $v_0v_2=2$, $v_1v_2=1$, $v_1v_3=5$, $v_2v_3=8$, $v_2v_4=10$, $v_3v_4=2$, $v_3v_5=6$, $v_4v_5=3$. Dijkstra from $v_0$ gives distances $(0,3,2,8,10,13)$; for example, $v_1$ is reached via $v_2$ with length $3$, shorter than the direct $4$. Kruskal adds edges in increasing weight without cycles, giving the tree $v_1v_2,v_0v_2,v_3v_4,v_4v_5,v_1v_3$ with total weight $13$.}
+\noindent\textbf{网络与线性规划。} 最短路、最大流、匹配可写成线性或整数规划；最长路在一般图中是 NP 难的，但在 DAG 中可用约束 $x_j\ge x_i+w_{ij}$ 的线性规划求最早开工时间——这正是模拟试卷“最长路径的标准优化模型”一题的答案。
+\EN{\textbf{Networks and linear programming.} Shortest paths, maximum flow and matching can be written as linear or integer programs; longest paths are NP-hard in general, but in a DAG the linear program with $x_j\ge x_i+w_{ij}$ gives earliest start times, which answers the mock-exam question on the standard model for a longest path.}
+\ASK{Dijkstra 算法有什么适用条件？}{When is Dijkstra's algorithm appropriate?}{用于边权非负的图；存在负权边时标准 Dijkstra 可能给出错误结果，应改用 Bellman--Ford。}{It applies to graphs with nonnegative weights; with negative edges the standard Dijkstra algorithm may give a wrong answer, so use Bellman--Ford.}
+\ASK{最短路和最小生成树的目标有什么不同？}{How do shortest paths and minimum spanning trees differ?}{最短路求指定起点到其他顶点的最低权路径；最小生成树连接所有顶点并使树边总权重最小。}{A shortest path minimizes the weight between a source and other vertices; a minimum spanning tree connects all vertices while minimizing total edge weight.}
 
-\ASK{Dijkstra 算法有什么适用条件？}{When is Dijkstra's algorithm appropriate?}{用于边权非负的图；若存在负权边，标准 Dijkstra 算法可能给出错误结果。}{It applies to graphs with nonnegative edge weights. With negative-weight edges, the standard Dijkstra algorithm may return an incorrect result.}
+\section{随机模型与决策 | Stochastic models and decisions}
+\noindent\textbf{不确定性建模。} 随机模型用概率分布描述需求、寿命或到达时间，输出分布、概率或期望。步骤是识别随机源、选分布、估参数、用期望或分位数定义目标、评估风险；期望比较长期平均成本，只看期望可能掩盖风险。
+\EN{\textbf{Modeling uncertainty.} Stochastic models describe demand, lifetimes or arrival times by distributions and output distributions, probabilities or expectations. The steps are to identify random sources, choose distributions, estimate parameters, define the objective through expectations or quantiles, and assess risk; expectations compare long-run average costs, but looking only at means can hide risk.}
+\subsection{报童模型、库存与排队 | Newsvendor, inventory and queues}
+每期订量 $q$，需求 $D$ 随机，剩余成本 $c_o$、缺货成本 $c_u$，期望成本 $C(q)=c_oE[(q-D)^+]+c_uE[(D-q)^+]$，求导得临界分位数
+\FORMULA{报童模型的最优订货量}{optimal order quantity in the newsvendor model}
+\[
+F(q^*)=\frac{c_u}{c_u+c_o},
+\]
+即订货量取需求的该分位数；缺货成本越高订得越激进。EOQ 模型平衡订货费与存储费：$Q^*=\sqrt{2KD/h}$，最小年成本 $\sqrt{2KDh}$。M/M/1 排队：到达率 $\lambda$、服务率 $\mu$、$\rho=\lambda/\mu<1$ 时 $L=\rho/(1-\rho)$、$W=1/(\mu-\lambda)$；$\rho\to1$ 时队长急剧增大，说明利用率不能无限接近 $100\%$。随机库存常用 $(s,S)$ 策略：库存降到 $s$ 就补到 $S$。
+\EN{Order $q$ each period with random demand $D$, leftover cost $c_o$ and shortage cost $c_u$; differentiation gives the critical fractile $F(q^*)=c_u/(c_u+c_o)$, so order that quantile and more aggressively when shortage is costlier. The EOQ model balances ordering and holding costs with $Q^*=\sqrt{2KD/h}$ and minimum annual cost $\sqrt{2KDh}$. For M/M/1 with arrival rate $\lambda$, service rate $\mu$ and $\rho=\lambda/\mu<1$, $L=\rho/(1-\rho)$ and $W=1/(\mu-\lambda)$; as $\rho\to1$ the queue explodes, so utilization cannot approach $100\%$. Stochastic inventory often uses an $(s,S)$ policy: reorder up to $S$ when inventory falls to $s$.}
+\EX{需求以等概率取 $100,110,120,130,140$，$c_o=2$、$c_u=6$：临界分位数 $0.75$，$q^*=130$；期望成本 $q=120$ 为 $48$、$q=130$ 为 $36$、$q=140$ 为 $40$，确在 $130$ 最小。EOQ 取 $K=500$、$D=10000$、$h=4$：$Q^*\approx1581$，约 $6.3$ 次/年，最小成本约 $6325$。M/M/1 取 $\lambda=8$、$\mu=10$：$\rho=0.8$、$L=4$、$W=0.5$ 小时。}{Demand equally likely $100,110,120,130,140$ with $c_o=2$ and $c_u=6$ gives critical fractile $0.75$ and $q^*=130$; expected costs are $48$ for $q=120$, $36$ for $q=130$ and $40$ for $q=140$, so $130$ is optimal. EOQ with $K=500$, $D=10000$ and $h=4$ gives $Q^*\approx1581$, about $6.3$ orders per year and minimum cost about $6325$. M/M/1 with $\lambda=8$ and $\mu=10$ gives $\rho=0.8$, $L=4$ and $W=0.5$ h.}
 
-\ASK{最短路和最小生成树的目标有什么不同？}{How do shortest paths and minimum spanning trees differ?}{最短路寻找指定起点到其他顶点的最低权路径；最小生成树连接所有顶点并使树边总权重最小。}{A shortest-path problem finds minimum-weight routes from a specified source to other vertices. A minimum spanning tree connects all vertices while minimizing the total weight of its tree edges.}
+\subsection{预防性更换策略 | Preventive replacement}
+零件寿命 $X$ 有分布 $F$、密度 $f$、可靠度 $R=1-F$、失效率 $r=f/R$。使用上限 $T$：$X<T$ 故障后更换费用 $c_1$，$X\ge T$ 预防性更换费用 $c_2<c_1$。一次更换为一个周期，周期长度 $\int_0^TR(t)\,\mathrm dt$，周期期望损失 $c_1F(T)+c_2(1-F(T))$，故
+\FORMULA{预防性更换的单位时间期望损失}{long-run average cost of preventive replacement}
+\[
+\min_{T>0}\ c(T)=\frac{c_2+(c_1-c_2)F(T)}{\int_0^TR(t)\,\mathrm dt},
+\]
+令 $c'(T)=0$ 得最优性条件
+\[
+h(T)=r(T)\int_0^TR(t)\,\mathrm dt-F(T)=\frac{c_2}{c_1-c_2}.
+\]
+若 $r(T)$ 严格递增且 $r(+\infty)E[X]>\frac{c_1}{c_1-c_2}$，则存在唯一最优 $T^*$，且 $c(T^*)=(c_1-c_2)r(T^*)$。失效率上升越快、故障代价相对越高，预防性更换越值得做。
+\EN{Lifetime $X$ has distribution $F$, density $f$, reliability $R=1-F$ and hazard rate $r=f/R$. Choose a usage limit $T$: failure before $T$ costs $c_1$, while preventive replacement at $T$ costs $c_2<c_1$. One replacement is a cycle, with expected length $\int_0^TR(t)\,\mathrm dt$ and expected cost $c_1F(T)+c_2(1-F(T))$, giving the long-run average cost above. Setting $c'(T)=0$ gives the optimality condition $h(T)=r(T)\int_0^TR\,\mathrm dt-F(T)=c_2/(c_1-c_2)$. If $r(T)$ is strictly increasing and $r(+\infty)E[X]>c_1/(c_1-c_2)$, there is a unique optimum $T^*$ with $c(T^*)=(c_1-c_2)r(T^*)$. Faster wear-out and higher relative failure cost make preventive replacement more worthwhile.}
+\EX{设 $X\sim U[0,6]$ 月、$c_1=5$、$c_2=1$ 万元：$c(T)=(12+8T)/(12T-T^2)$，$h(T)=T^2/[12(6-T)]$。令 $h(T)=1/4$ 得 $T^2+3T-18=0$，唯一正根 $T^*=3$ 个月，$c(T^*)=4/3\approx1.33$ 万元/月。指数寿命失效率恒定，$c(T)$ 单调下降，最优是“用到坏再换”；Weibull（$\beta=2$、$\eta=8$）失效率递增，数值解 $T^*\approx4.09$ 月、$c(T^*)\approx0.51$ 万元/月——寿命分布形状决定预防性更换是否有意义。}{With $X\sim U[0,6]$ months, $c_1=5$ and $c_2=1$ (ten thousand yuan): $c(T)=(12+8T)/(12T-T^2)$ and $h(T)=T^2/[12(6-T)]$. Setting $h(T)=1/4$ gives $T^2+3T-18=0$, so the unique positive root is $T^*=3$ months with $c(T^*)=4/3\approx1.33$ per month. For an exponential lifetime the constant hazard makes $c(T)$ decrease, so the optimum is to run to failure; for a Weibull lifetime ($\beta=2$, $\eta=8$) with increasing hazard the solution is $T^*\approx4.09$ months and $c(T^*)\approx0.51$ per month — the shape of the lifetime distribution decides whether preventive replacement pays.}
 
-\section{随机模型与更换策略 | Stochastic models and replacement}
-随机模型用概率分布描述需求、寿命或不确定参数。期望可用于比较长期平均成本或收益。报童/库存类模型需要平衡缺货成本与剩余库存成本；零件预防性更换模型依据寿命分布比较“预防更换成本”和“失效后更换成本”，选择长期平均成本较低的更换周期。课件还以 Weibull 分布讨论磨损失效寿命，建模时需说明寿命分布与成本假设。
 
-\EN{Stochastic models represent uncertain demand, lifetimes, or parameters through probability distributions. Expectations compare long-run average costs or returns. Inventory models balance shortage cost against leftover-stock cost. Preventive replacement models use a lifetime distribution to compare planned replacement cost with replacement after failure and choose a low long-run average cost policy. The slides also use the Weibull distribution for wear-related lifetimes; the lifetime and cost assumptions must be stated.}
-
-\ASK{随机模型和确定性模型有什么区别？}{How does a stochastic model differ from a deterministic model?}{确定性模型在给定参数和初值后给出单一结果；随机模型显式描述不确定性，输出分布、概率或期望。}{A deterministic model gives one outcome for fixed parameters and initial conditions. A stochastic model explicitly represents uncertainty and produces distributions, probabilities, or expectations.}
+\subsection{Monte Carlo 模拟 | Monte Carlo simulation}
+Monte Carlo 用随机抽样估计期望、概率或积分：抽 $n$ 组样本得 $\bar Y_n$，由大数定律 $\bar Y_n\to E[Y]$，标准误约 $\sigma_Y/\sqrt n$，误差 $O(n^{-1/2})$ 且与维数无关；代价是精度每提高一位约需 $100$ 倍样本。方差缩减技术（对偶变量、公共随机数、重要抽样、分层抽样）可在同样样本量下降低标准误。
+\EN{Monte Carlo estimates expectations, probabilities or integrals by random sampling: with $n$ samples, the standard error is about $\sigma_Y/\sqrt n$, so the error is $O(n^{-1/2})$ independent of dimension, and one more digit costs about $100$ times the samples. Variance reduction (antithetic variates, common random numbers, importance sampling) lowers the standard error at fixed $n$.}
+\EX{用单位正方形随机点估计 $\pi$：$\hat\pi=4\bar I$，$E[I]=\pi/4\approx0.7854$，标准误约 $0.0052$（$n=10^5$）；取种子 $2026$、$n=10^6$ 得 $\hat\pi\approx3.1416$，与真值相差约 $1$ 个标准误。}{Estimate $\pi$ with random points in the unit square: $\hat\pi=4\bar I$ with $E[I]=\pi/4\approx0.7854$ and standard error about $0.0052$ for $n=10^5$; with seed $2026$ and $n=10^6$ the estimate is $3.1416$, about one standard error from the true value.}
+\ASK{随机模型和确定性模型有什么区别？}{How does a stochastic model differ from a deterministic model?}{确定性模型在给定参数和初值后给出单一结果；随机模型显式描述不确定性，输出分布、概率或期望。}{A deterministic model gives one outcome for fixed parameters and initial conditions; a stochastic model represents uncertainty explicitly and produces distributions, probabilities or expectations.}
+\ASK{为什么指数寿命的最优策略是不做预防性更换？}{Why is running to failure optimal for an exponential lifetime?}{指数分布无记忆、失效率恒定，提前更换不能降低单位时间故障率；代入 $R(t)=e^{-\lambda t}$ 可证 $c(T)$ 单调递减，最优为 $T\to\infty$。只有失效率随年龄递增时预防性更换才有价值。}{The exponential distribution is memoryless with constant hazard, so early replacement cannot reduce the failure rate per unit time; substituting $R(t)=e^{-\lambda t}$ shows $c(T)$ decreases in $T$, so the optimum is $T\to\infty$. Preventive replacement pays only when the hazard increases with age.}
 
 \section*{口试表达 | Oral response structure}
-介绍任何一个模型时，可依次说明现实问题、关键假设、变量与参数、模型方程或优化目标、求解方法、主要结论和验证方式。解释预测结果时说明参数敏感性与模型局限，不把相关关系直接说成因果关系。
+\noindent\textbf{答题模板。} 介绍模型时依次说明现实问题、关键假设、变量与参数（含单位）、方程或优化目标、求解方法、主要结论和验证方式；解释结果时说明敏感性与局限，不把相关关系说成因果关系。遇到“如果……会怎样”，先指出改变了哪条假设，再说明结论如何变化。最容易加分的三句话：假设排除了什么、参数怎么估计、结论在何处成立。
+\EN{\textbf{Answer template.} Present a model through the real problem, key assumptions, variables and parameters (with units), equations or objective, solution method, main result and validation; discuss sensitivity and limitations and do not present correlation as causation. For “what if” questions, identify which assumption changes and then how the conclusions change. Three sentences that impress most: what the assumption excludes, how parameters were estimated, and where the conclusion is valid.}
+\noindent\textbf{常见追问。} “假设不成立会怎样”——SIR 的永久免疫换成 SIS 会转为地方性流行，均匀混合换成网络接触则 $R_0$ 与阈值都要改。“如何验证”——量纲与边界情形检查、残差分析、留出数据或交叉验证、与已知极限比较。“模型有什么用”——把定性认识变成可计算、可比较、可做敏感性分析的结论。
+\EN{\textbf{Common follow-ups.} “What if the assumption fails?” Replacing permanent immunity in SIR by SIS makes the infection endemic, and replacing homogeneous mixing by a contact network changes both $R_0$ and the threshold. “How is it validated?” Through dimensional and limiting-case checks, residual analysis, held-out data or cross-validation, and comparison with known limits. “What is the model good for?” Turning qualitative understanding into computable, comparable, sensitivity-tested conclusions.}
 
-\EN{When presenting a model, explain the real problem, key assumptions, variables and parameters, equations or objective, solution method, main result, and validation. Discuss parameter sensitivity and limitations, and do not interpret correlation as causation without justification.}
+\section*{中英术语表 | Glossary}
+\par\noindent\footnotesize\renewcommand{\arraystretch}{0.95}\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}p{0.17\linewidth}p{0.31\linewidth}p{0.48\linewidth}@{}}
+\hline
+中文 & English & 一句话说明 / One-line meaning \\
+\hline
+假设 & assumption & 建模前对现实的有意简化，必须写明并检验。 \\
+变量 / 参数 & variable / parameter & 变量随时间或位置变化；参数是待估常数。 \\
+量纲分析 & dimensional analysis & 由量纲关系推出模型可能形式与相似准则。 \\
+$\Pi$ 定理 & Buckingham Pi theorem & $n$ 个量纲变量、秩 $k$ 时化为 $n-k$ 个无量纲组合。 \\
+层次分析法 & AHP & 分层两两比较，用主特征向量定权重。 \\
+判断矩阵 & pairwise comparison matrix & 正互反矩阵，$a_{ji}=1/a_{ij}$。 \\
+一致性比率 & consistency ratio & $CR=CI/RI$，通常小于 $0.1$ 才可接受。 \\
+最小二乘 & least squares & 使残差平方和最小的参数估计。 \\
+正规方程 & normal equations & $X^{\mathsf T}X\hat\beta=X^{\mathsf T}y$，残差与列空间正交。 \\
+可辨识性 & identifiability & 数据是否足以唯一确定参数。 \\
+插值 & interpolation & 构造通过全部节点的函数。 \\
+二分法 & bisection & 保持异号区间并减半，线性收敛。 \\
+Newton 法 & Newton's method & 切线零点迭代，单根附近二次收敛。 \\
+平衡点 & equilibrium & 使 $\dot x=0$ 或 $x_{k+1}=x_k$ 的状态。 \\
+稳定性 & stability & 小扰动是否衰减；连续看特征值实部，离散看谱半径。 \\
+环境容纳量 & carrying capacity & Logistic 模型的饱和水平 $K$。 \\
+基本再生数 & basic reproduction number & 全易感人群中一个感染者的二代感染数 $R_0$。 \\
+群体免疫阈值 & herd immunity threshold & $1-1/R_0$，使有效再生数降到 $1$ 以下。 \\
+捕食者--被捕食者 & predator--prey & Lotka--Volterra 的 $xy$ 相互作用产生周期振荡。 \\
+Leslie 矩阵 & Leslie matrix & 首行生育率、次对角存活率的年龄结构矩阵。 \\
+主特征值 & dominant eigenvalue & 模最大的特征值，决定长期增长率。 \\
+稳定年龄结构 & stable age distribution & 归一化主特征向量，长期比例不变。 \\
+谱半径 & spectral radius & 特征值模的最大值，离散稳定性判据。 \\
+差分方程 & difference equation & 离散时间的递推关系。 \\
+马氏链 & Markov chain & 下一步只依赖当前状态的随机过程。 \\
+平稳分布 & stationary distribution & 满足 $\pi=\pi P$ 的分布，与初值无关。 \\
+最短路 / 最小生成树 & shortest path / spanning tree & 前者求两点间最低权路径，后者连通全部顶点且总权最小。 \\
+报童模型 & newsvendor model & 最优订货量取需求的临界分位数。 \\
+预防性更换 & preventive replacement & 按寿命上限 $T$ 提前更换，最小化单位时间成本。 \\
+失效率 & hazard rate & $r=f/R$，递增时预防性更换才有价值。 \\
+Monte Carlo 模拟 & Monte Carlo simulation & 随机抽样估计期望或概率，误差 $O(n^{-1/2})$。 \\
+敏感性分析 & sensitivity analysis & 参数或假设扰动对结论的影响。 \\
+\hline
+\end{tabular}
+\par\normalsize\renewcommand{\arraystretch}{1}\setlength{\tabcolsep}{6pt}
 
+\section*{参考文献 | References}
 \par\medskip\begingroup\small
-\noindent\textbf{来源与范围 | Source and scope.} 依据课程讲义 PDF 与《复习2025》；各应用的数据、参数和边界条件以具体题目为准。
-\EN{Sources: course PDFs and the 2025 review. Use the data from each problem, including, parameters and boundary conditions.}
+\begin{itemize}[leftmargin=1.2em,itemsep=1pt,topsep=2pt]
+\item 《数学建模与数学实验》课程课件（东南大学数学学院）：第 1 章概述；2.1 实物交换；2.3 抢渡长江（CUMCM 2003 D 题）；2.6 非线性方程求近似根；3.1 量纲分析；3.4 层次分析；第 5 章数值分析、5-2 插值；6.1--6.4、6.7 人口、药物、传染病、多种群与 ODE 数值解；7.1--7.2 差分方程、7.3--7.4 正则马氏链、7.6 Leslie；8-1--8-3 优化与图论；9.3 预防性更换；《复习2025》.
+\item 姜启源、谢金星、叶俊，《数学模型》（第五版），高等教育出版社：第 2 章初等模型（实物交换、量纲分析）；第 3 章简单优化模型；第 4 章数学规划模型；第 5 章微分方程模型；第 7 章差分方程模型；第 8 章离散模型（层次分析）；第 9 章概率模型（报童、库存、预防性更换）；第 10 章统计回归模型（最小二乘）。
+\item 模拟试卷：东南大学《数学建模与数学实验》试卷 A 卷及模拟试卷 1--3（用于核对题型与算例结构）。
+\end{itemize}
+\noindent\textbf{来源与范围 | Source and scope.} 依据课程讲义、《复习2025》与模拟试卷整理；应用按课件题设与标准数值整理，数据以题目为准，数值算例均用 Python 复核。
+\EN{Sources: the course PDFs, the 2025 review and the mock exams; applications follow the course problem settings, data are taken from each problem, and all numerical examples were checked with Python.}
 \par\endgroup
 \end{document}
+
+
+

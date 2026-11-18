@@ -7,9 +7,9 @@
 \newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
 \newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
 \let\APSsubsection\subsection
-\renewcommand{\subsection}[1]{\Needspace{10\baselineskip}\APSsubsection{#1}}
-\newcommand{\chaptersection}[1]{\Needspace{14\baselineskip}\refstepcounter{section}\section*{#1}}
-\newcommand{\FORMULA}[2]{\par\Needspace{12\baselineskip}\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
+\renewcommand{\subsection}[1]{\Needspace{6\baselineskip}\APSsubsection{#1}}
+\newcommand{\chaptersection}[1]{\Needspace{10\baselineskip}\refstepcounter{section}\section*{#1}}
+\newcommand{\FORMULA}[2]{\par\Needspace{3\baselineskip}\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
 \newcommand{\EX}[2]{\par\noindent\textbf{例子 / Example.} #1\par\EN{#2}}
 \newcommand{\ASK}[4]{\par\noindent\textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent\textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
 \title{实变函数 APS 面试准备\\[4pt]\large 新讲义第 1--4 章：集合、度量、测度与积分}
@@ -62,6 +62,34 @@ f_n\text{ continuous on }E,\quad f_n\to f\text{ uniformly on }E
 \READ{“If every f n is continuous and f n converges uniformly to f, then f is continuous.”}
 \EX{在 $[0,1]$ 上 $f_n(x)=x^n$ 对每个 $x<1$ 趋于 $0$，在 $x=1$ 处趋于 $1$，所以点态极限不连续；每个 $f_n$ 却连续。这不违背一致收敛定理，因为 $\sup_{[0,1]}|f_n-f|=1$，并不趋于 $0$。}{On $[0,1]$, $x^n$ tends to zero for $x<1$ and to one at $x=1$, so its pointwise limit is discontinuous although every $f_n$ is continuous. This does not contradict the uniform limit theorem: the supremum error remains one.}
 
+\subsection{基数：可数与不可数 | Cardinality}
+\noindent 两个集合等势，若存在双射；与 $\mathbb N$ 等势的集合称可数。$\mathbb Z$ 可数；$\mathbb Q$ 可数，因为既约分数可按 $p+q$ 再按 $p$ 排队。$\mathbb N\times\mathbb N$ 用配对函数 $\pi(m,n)=(m+n)(m+n+1)/2+m$ 沿对角线枚举。实数不可数：若 $[0,1]=\{x_1,x_2,\ldots\}$，把 $x_n$ 的第 $n$ 位小数改成不同数字（避开 $0$ 与 $9$），所得 $y$ 有唯一展开且不在表中。故 $|\mathbb N|<|\mathbb R|=2^{\aleph_0}$，且 $|\mathbb R^n|=|\mathbb R|$。
+\EN{Two sets are equipotent if a bijection exists, and a set in bijection with the naturals is countable. The rationals are countable by ordering reduced fractions by increasing p+q and then p, and the grid of pairs is enumerated by the pairing function along diagonals. The reals are not countable: change the n-th digit of the n-th number in any proposed list to obtain a real missing from it. Hence the naturals are strictly fewer than the reals, and finite-dimensional spaces have the cardinality of the line.}
+\EX{代数数（整系数多项式的根）可数，因为整系数多项式可数且每个只有有限个根，故超越数不可数。$|\mathbb R|=|\mathbb R^2|$ 并不矛盾：基数只比较能否一一配对，不保持维数。}{Algebraic numbers are countable, since there are countably many integer-coefficient polynomials with finitely many roots each, so transcendental numbers are uncountable. The line and the plane having the same cardinality is not a contradiction: cardinality compares one-to-one pairings and ignores dimension.}
+\ASK{为什么 $\mathbb Q$ 可数而 $\mathbb R$ 不可数？}{Why are the rationals countable but the reals not?}{有理数由两个整数决定，可沿对角线排队；任何实数列表都能用对角线造出一个漏掉的数。}{A rational is determined by two integers and can be listed diagonally, while any list of reals can be diagonalized to produce a missing one.}
+
+\subsection{\texorpdfstring{$\mathbb R$}{R} 中的开集、闭集与聚点 | Open sets, closed sets, and limit points}
+\noindent 点 $x$ 的邻域是 $(x-r,x+r)$。$x$ 是 $A$ 的内点，若某邻域含于 $A$；是聚点，若每个邻域都含 $A$ 中除 $x$ 外的点；是边界点，若每个邻域同时与 $A$ 和 $A^c$ 相交。$A$ 开当且仅当它等于内部；闭当且仅当它含全部聚点，也等价于其中收敛序列的极限仍在 $A$ 内。$\mathbb Q$ 与无理数集都稠密；$A$ 无处稠密，若 $\overline A$ 内部为空。
+\EN{A neighbourhood of x is an interval centered at x. The point x is interior to A if a neighbourhood lies in A, a limit point if every neighbourhood meets A in another point, and a boundary point if every neighbourhood meets both A and its complement. A set is open exactly when it equals its interior, and closed exactly when it contains all limit points, equivalently when limits of convergent sequences stay inside. The rationals and irrationals are dense, and a set is nowhere dense when the interior of its closure is empty.}
+\EX{$\{1/n\}\cup\{0\}$ 闭：唯一聚点是 $0$，已在集合中；$\mathbb Q\cap[0,1]$ 既不开也不闭，导集为 $[0,1]$。$\varnothing$ 与 $\mathbb R$ 既开又闭，故“开”与“闭”不是互补关系。}{The set of numbers 1/n together with 0 is closed, since its only limit point belongs to it; the rationals in [0,1] are neither open nor closed, with derived set [0,1]. The empty set and the line are both open and closed, so open and closed are not opposites.}
+
+\subsection{Cantor 集：不可数的零测集 | The Cantor set}
+\noindent 从 $[0,1]$ 出发，每步删去每个构成区间的中间三分之一，得递减闭集列 $C_0\supseteq C_1\supseteq\cdots$，Cantor 集为 $C=\bigcap_nC_n$，$C_n$ 由 $2^n$ 个长 $3^{-n}$ 的区间组成。三进制下，删去中间三分之一恰是删去必须用数字 $1$ 的数，故
+\[
+C=\Big\{\sum_{k=1}^{\infty}\frac{2\varepsilon_k}{3^k}:\varepsilon_k\in\{0,1\}\Big\}.
+\]
+\EN{Delete the open middle third of every remaining interval at each step, and let the Cantor set be the intersection of the resulting closed sets; the $n$-th stage consists of $2^n$ intervals of length $3^{-n}$. In ternary notation the deletion removes exactly the numbers that need the digit 1, leaving the displayed series with digits 0 and 2.}
+\FORMULA{Cantor 集的测度与基数}{measure and cardinality of the Cantor set}
+\[
+m(C)=\lim_{n\to\infty}\Big(\frac23\Big)^n=0,
+\qquad
+|C|=2^{\aleph_0}=|\mathbb R|.
+\]
+\READ{“The Cantor set has measure zero but the cardinality of the continuum.”}
+\EN{Measure is continuous from above, so the decreasing stages give measure zero; the ternary digits 0 or 2 can be chosen freely, giving a bijection with all zero-one sequences. The set is closed, compact, perfect, totally disconnected, and nowhere dense, and the deleted open intervals have total length one. A null set can therefore be uncountable.}
+\EX{长度：$m(C_1)=2/3$，$m(C_2)=4/9$，$m(C_{10})=(2/3)^{10}\approx0.0173$；被删区间总长 $1/3+2/9+\cdots=1$。Cantor 函数把三进制数字 $0,2$ 映为二进制数字，得到连续单调、导数几乎处处为零却不常值的函数，说明微积分基本定理需要额外条件。}{The stage lengths are two thirds, four ninths, and about 0.0173 at the tenth step, and the deleted intervals have total length one. The Cantor function maps ternary digits 0 and 2 to binary digits, producing a continuous monotone function with derivative zero almost everywhere that is not constant, which shows that the fundamental theorem of calculus needs extra hypotheses.}
+\ASK{Cantor 集说明了什么？}{What does the Cantor set illustrate?}{“大小”有三种互不等价的含义：基数（与实数一样多）、测度（零）、拓扑（无处稠密）。零测不等于点少，稠密也不等于测度大。}{Size has three inequivalent meanings: cardinality, where the Cantor set matches the reals; measure, where it is null; and topology, where it is nowhere dense. Measure zero does not mean few points, and density does not mean large measure.}
+
 \subsection{Riemann 上下和与积分定义 | Riemann sums and the integral}
 \noindent 对有界函数 $f:[a,b]\to\mathbb R$，取分割 $P:a=x_0<\cdots<x_n=b$，在每段 $[x_{i-1},x_i]$ 上令 $M_i=\sup f$、$m_i=\inf f$。上和、下和分别用每小段的最大可能高度和最小可能高度估算面积：
 \FORMULA{Riemann 上和与下和}{the upper and lower Riemann sums}
@@ -88,6 +116,19 @@ S(f,P,\xi)=\sum_{i=1}^n f(\xi_i)(x_i-x_{i-1}),\qquad
 \]
 \READ{“The sum of f at each chosen sample point times the width of its subinterval; the mesh is the largest subinterval width.”}
 \EX{连续函数 $f(x)=x^2$ 在 $[0,1]$ 上 Riemann 可积，且 $\int_0^1x^2\,dx=1/3$。Dirichlet 函数 $D=\mathbf1_{\mathbb Q\cap[0,1]}$ 则不 Riemann 可积：每个非退化小区间都同时含有有理数和无理数，因此任意分割的上和为 $1$、下和为 $0$，两者不可能逼近同一个积分值。}{The continuous function $x^2$ is Riemann integrable on $[0,1]$ and its integral is $1/3$. The Dirichlet function $D=\mathbf1_{\mathbb Q\cap[0,1]}$ is not Riemann integrable: every nondegenerate subinterval contains both rational and irrational numbers, so every partition has upper sum one and lower sum zero.}
+
+\subsection{Riemann 可积的振幅判据与不连续点 | Oscillation and discontinuities}
+\noindent 设 $f$ 在 $[a,b]$ 上有界，$f$ 在 $x$ 的振幅是 $x$ 附近最大摆动的极限，振幅为零恰是连续：
+\[
+\omega_f(x)=\lim_{r\to0^+}\sup_{y,z\in(x-r,x+r)}|f(y)-f(z)|,
+\qquad
+D_f=\{x:\omega_f(x)>0\}.
+\]
+\EN{For a bounded function the oscillation at x is the limiting largest fluctuation near x; it vanishes exactly at points of continuity, so the discontinuity set consists of the points where it is positive.}
+\noindent 于是 Darboux 判据可写成：对每个 $\varepsilon>0$ 存在分割使 $\sum_i\omega_i\Delta x_i<\varepsilon$；按测度组织即得第 3 章的判别准则：有界 $f$ Riemann 可积 $\iff m(D_f)=0$。可积性关心的不是“有没有不连续点”，而是不连续点占据多大的集合。
+\EN{The Darboux criterion then requires, for every epsilon, a partition whose oscillation-weighted length is below epsilon. Organizing this by measure gives the criterion proved in Chapter 3: a bounded function is Riemann integrable exactly when its discontinuity set is null. Integrability depends not on the existence of discontinuities but on their measure.}
+\EX{Thomae 函数 $f(p/q)=1/q$、$f(x)=0$（$x$ 无理）在每个无理点连续、每个有理点不连续：给定 $\varepsilon>0$ 只有有限多个分母使 $1/q\ge\varepsilon$。不连续点集是有理数，零测，故 $f$ Riemann 可积且积分为 $0$。}{Thomae's function equals 1/q at reduced fractions and zero at irrationals; it is continuous at every irrational and discontinuous at every rational, since only finitely many denominators give 1/q at least epsilon. The discontinuity set is the rationals, a null set, so the function is Riemann integrable with integral zero.}
+\ASK{不连续点稠密是否就不可积？}{Does a dense discontinuity set prevent Riemann integrability?}{不一定。Thomae 函数在稠密的有理点上不连续，但该集合零测，故仍可积；Dirichlet 函数的不连续点是整个区间、测度为 $1$，才不可积。}{Not necessarily. Thomae's function is discontinuous on the dense rationals, but that set is null, so it is integrable; the Dirichlet function has the whole interval as discontinuity set, of measure one, and is not integrable.}
 
 \chaptersection{第 2 章：度量空间与连续性 | Chapter 2: Metric spaces and continuity}
 \subsection{度量、开集、闭集与收敛 | Metrics, open sets, closed sets, and convergence}
@@ -153,7 +194,7 @@ A\subseteq B\Longrightarrow\mu(A)\le\mu(B),\qquad
 \]
 \READ{“A subset has measure no larger than its superset; the measure of a countable union is at most the sum of the measures.”}
 \EN{Monotonicity follows by writing $B=A\cup(B\setminus A)$. Countable subadditivity follows by replacing a union with disjoint successive differences and applying countable additivity.}
-\EX{掷一次公平硬币时，$\Omega=\{H,T\}$，可取 $\mathcal F=\{\varnothing,\{H\},\{T\},\Omega\}$，并定义 $\mathbb P(\{H\})=\mathbb P(\{T\})=1/2$。掷出正面的事件就是 $\{H\}$，补事件为 $\{T\}$，两者的概率相加为 $1$。在 $\mathbb R$ 上，由开集生成的最小 $\sigma$-代数是 Borel $\sigma$-代数；Lebesgue $\sigma$-代数还包含所有零测集的子集。}{For one fair coin toss, let $\Omega=\{H,T\}$, take its power set as $\mathcal F$, and assign probability one half to each singleton. The event of heads is $\{H\}$, its complement is $\{T\}$, and their probabilities sum to one. On $\mathbb R$, the smallest sigma-algebra containing all open sets is the Borel sigma-algebra; the Lebesgue sigma-algebra also contains every subset of a null set.}
+\EX{掷一次公平硬币时，$\Omega=\{H,T\}$，可取 $\mathcal F=\{\varnothing,\{H\},\{T\},\Omega\}$，并定义 $\mathbb P(\{H\})=\mathbb P(\{T\})=1/2$。掷出正面的事件就是 $\{H\}$，补事件为 $\{T\}$，两者的概率相加为 $1$。在 $\mathbb R$ 上，由开集生成的最小 $\sigma$-代数是 Borel $\sigma$-代数；Lebesgue $\sigma$-代数还包含所有零测集的子集。}{For one fair coin toss, let $\Omega=\{H,T\}$, take as $\mathcal F$ the four-element sigma-algebra consisting of the empty set, the two singletons, and the whole space, and assign probability one half to each singleton. The event of heads is $\{H\}$, its complement is $\{T\}$, and their probabilities sum to one. On $\mathbb R$, the smallest sigma-algebra containing all open sets is the Borel sigma-algebra; the Lebesgue sigma-algebra also contains every subset of a null set.}
 \ASK{为什么测度论要从 $\sigma$-代数开始？}{Why does measure theory begin with a sigma-algebra?}{因为测度只能对指定集合族定义，而可数并、交和补会在极限过程中自然出现。$\sigma$-代数保证这些极限集合仍在定义域内，测度才有意义。}{A measure is defined on a specified family of sets, while countable unions, intersections, and complements arise naturally in limits. A sigma-algebra keeps these limit sets in the domain of the measure.}
 
 \subsection{外测度与可测性判据 | Outer measure and measurability}
@@ -165,7 +206,17 @@ E\subseteq\bigcup_{j=1}^{\infty}I_j\right\}.
 \]
 \READ{“The outer measure of E is the infimum of the total lengths of countable interval covers of E.”}
 \EN{The Lebesgue outer measure is the infimum of the total lengths of all countable interval covers of $E$. It is defined for every subset, but is only countably subadditive before measurability is imposed.}
-\noindent Carath\'eodory 判据要求 $E$ 把任意集合 $S$ 的外测度精确切成内外两部分：
+\noindent 外测度对一切集合都有定义，并满足空集为零、单调、可数次可加与平移不变；区间的外测度等于它的长度。但“覆盖”定义只能给出次可加：两个不交集合通常满足 $m^*(E\cup F)\le m^*(E)+m^*(F)$，等号未必成立，这正是需要从所有集合中挑出可测集的原因。
+\EN{Outer measure is defined for every set and satisfies: the empty set is null, it is monotone, countably subadditive, and translation invariant; an interval has outer measure equal to its length. The covering definition gives only subadditivity: for disjoint sets one usually has only an inequality, and equality can fail. This is exactly why measurable sets must be selected from all sets.}
+\FORMULA{Lebesgue 外测度的基本性质}{basic properties of Lebesgue outer measure}
+\[
+m^*(\varnothing)=0,\qquad
+E\subseteq F\Rightarrow m^*(E)\le m^*(F),\qquad
+m^*\Big(\bigcup_{n}E_n\Big)\le\sum_{n}m^*(E_n),\qquad
+m^*(E+t)=m^*(E).
+\]
+\READ{“Outer measure is zero on the empty set, monotone, countably subadditive, and invariant under translation.”}
+\EN{Translation invariance says that length does not change when a set is shifted. Countable subadditivity follows by covering each set with intervals whose total length is at most its outer measure plus an epsilon, and then collecting the countably many covers into one cover of the union.}
 \FORMULA{Carath\'eodory 可测性判据}{Caratheodory's measurability criterion}
 \[
 m^*(S)=m^*(S\cap E)+m^*(S\setminus E)
@@ -173,8 +224,22 @@ m^*(S)=m^*(S\cap E)+m^*(S\setminus E)
 \]
 \READ{“For every S, the outer measure of S equals the outer measure of S intersect E plus that of S outside E.”}
 \EN{A set satisfying this splitting identity for every $S$ is Lebesgue measurable. Restricting outer measure to the measurable sets gives a countably additive measure.}
+\noindent Carath\'eodory 条件的作用是：在满足这一“干净切割”条件的族上，外测度自动变成可列可加的测度。可以证明这个族 $\mathcal M$ 是 $\sigma$-代数：对补集封闭来自条件的对称性；对可数并封闭用次可加性与条件逐项估计；每个区间都满足条件，故 $\mathcal M$ 包含全部区间，从而包含整个 Borel $\sigma$-代数。条件里用任意测试集 $S$ 而不仅用区间，正是为了让封闭性论证对一切集合成立。
+\EN{The role of the Carath\'eodory condition is that outer measure becomes countably additive on the family satisfying this clean splitting property. One proves that the family is a sigma-algebra: complements follow from the symmetry of the condition, countable unions follow from subadditivity together with the condition, and every interval satisfies it, so the family contains all intervals and hence the whole Borel sigma-algebra. Testing against every set S, not only intervals, is what makes the closure argument work.}
 \noindent 测度构造的逻辑是：先对所有集合定义外测度，再用 Carath\'eodory 条件挑出可测集，最后把外测度限制在可测集上。区间 $[a,b]$ 的测度为 $b-a$；Borel 集可测，而 Lebesgue 可测集还包括零测集的任意子集。
 \EX{把 $[0,1]$ 中的有理数列为 $q_1,q_2,\ldots$。给 $q_n$ 盖一个长度小于 $\varepsilon/2^n$ 的开区间，总长度小于 $\varepsilon$。由于 $\varepsilon>0$ 任意，$m(\mathbb Q\cap[0,1])=0$。所以一个集合可以稠密于区间，同时测度为零。}{Enumerate the rationals in $[0,1]$ as $q_1,q_2,\ldots$. Cover $q_n$ by an interval of length less than $\varepsilon/2^n$. The total length is less than $\varepsilon$, so the rationals in $[0,1]$ have measure zero. A set can therefore be dense and still have measure zero.}
+
+\subsection{不可测集与选择公理 | Nonmeasurable sets and the axiom of choice}
+\noindent 在 $[0,1)$ 上令 $x\sim y\iff x-y\in\mathbb Q$；每个等价类是 $\mathbb Q$ 的平移，可数。由选择公理从每个等价类取一个代表，组成 $V$。不同有理平移不交，而“附近”的有理平移覆盖 $[0,1)$：
+\[
+V\cap(V+q)=\varnothing\ (q\ne0),
+\qquad
+[0,1)\subseteq\bigcup_{q\in\mathbb Q\cap(-1,1)}(V+q)\subseteq[-1,2).
+\]
+\EN{On [0,1) declare x equivalent to y when x-y is rational; each class is a countable translate of the rationals. The axiom of choice selects one representative from each class, forming V. Distinct rational translates are disjoint, and the translates by rationals between minus one and one cover the unit interval while staying inside an interval of length three.}
+\noindent 若 $V$ 可测且 $m(V)=\alpha$，可列可加与平移不变给出 $\sum_{q}\alpha=m(\bigcup_q(V+q))\le3$。若 $\alpha>0$ 则和为 $+\infty$，矛盾；若 $\alpha=0$ 则并为零测集却包含 $[0,1)$，矛盾。所以 $V$ 不可测。这说明“可列可加 + 平移不变 + 区间长度为长度”互相矛盾，选择公理是构造 $V$ 的关键；Solovay 证明：在 ZF 加依赖选择、并假设存在不可达基数时，“每个实数集都可测”是相容的，故不可测集无法显式写出。
+\EN{If V were measurable with measure alpha, countable additivity and translation invariance would give the sum of the alphas as the measure of the union, which lies in an interval of measure three. A positive alpha gives an infinite sum, while alpha equal to zero makes the union null although it contains [0,1). Hence V is not measurable. Countable additivity, translation invariance, and interval length are therefore mutually inconsistent, and the axiom of choice is essential for constructing V; Solovay showed that in ZF with dependent choice, assuming an inaccessible cardinal, it is consistent that every set of reals is measurable, so a nonmeasurable set cannot be exhibited explicitly.}
+\ASK{为什么不能给每个集合都定义“长度”？}{Why can we not assign a length to every set?}{Vitali 集的有理平移两两不交、覆盖 $[0,1)$ 又落在长 $3$ 的区间内：若它可测且测度为正，总长无穷；若为零，则覆盖不了测度为 $1$ 的区间。所以测度只能定义在 $\sigma$-代数上。}{The rational translates of a Vitali set are pairwise disjoint, cover the unit interval, and stay inside an interval of length three. A positive measure would give infinite total length, while measure zero could not cover an interval of measure one. Hence measure must be restricted to a sigma-algebra.}
 
 \subsection{测度的连续性与零测集 | Continuity of measure and null sets}
 \noindent 若 $A_n\uparrow A$，即 $A_n$ 递增且并为 $A$，可把并拆成两两不交的增量，再用可列可加性得到测度从下连续。若 $A_n\downarrow A$，还要求 $\mu(A_1)<\infty$ 才能得到从上连续：
@@ -187,7 +252,8 @@ A_n\downarrow A,\ \mu(A_1)<\infty
 \]
 \READ{“For increasing sets, the measures increase to the measure of the union. For decreasing sets of finite initial measure, the measures decrease to the measure of the intersection.”}
 \EN{For increasing measurable sets, the measure converges to the measure of their union. For decreasing sets, continuity from above requires the first set to have finite measure.}
-\noindent 测度为零的集合称零测集；若命题除去一个零测集外处处成立，称几乎处处成立，记为 a.e.。零测集可以有无限多个点，也可以稠密。Lebesgue 测度是完备的，即零测集的每个子集也可测。
+\noindent 测度为零的集合称零测集；若命题除去一个零测集外处处成立，称几乎处处成立，记为 a.e.。零测集可以有无限多个点，也可以稠密。Lebesgue 测度是完备的，即零测集的每个子集也可测。Lebesgue $\sigma$-代数严格大于 Borel $\sigma$-代数：Cantor 集零测，它的每个子集都可测，而 Borel 集只有连续统多个，故存在可测但非 Borel 的集合。
+\EN{A set of measure zero is called a null set; a statement that holds everywhere except on a null set holds almost everywhere, written a.e. A null set may have infinitely many points and may even be dense. Lebesgue measure is complete: every subset of a null set is measurable. The Lebesgue sigma-algebra is strictly larger than the Borel sigma-algebra, because the Cantor set is null, so all of its subsets are measurable, whereas there are only continuum many Borel sets; hence some measurable set is not Borel.}
 \EX{令 $A_n=(0,1/n)$，则 $A_n\downarrow\varnothing$ 且 $m(A_n)=1/n\to0$。但若改用 $A_n=(n,\infty)$，每个测度都为无穷，不能据此直接套用有限测度的从上连续结论；有限性条件不能省。}{For $A_n=(0,1/n)$, the sets decrease to the empty set and their measures tend to zero. For $A_n=(n,\infty)$, each measure is infinite, so the finite-measure hypothesis in continuity from above cannot be omitted.}
 
 \noindent 测度建立后，可以回头把第 1 章的上下和判据与测度联系起来。有界函数 $f:[a,b]\to\mathbb R$ Riemann 可积，当且仅当它的不连续点集合的 Lebesgue 测度为零。
@@ -206,6 +272,21 @@ m\bigl(\{x\in[a,b]:f\text{ is discontinuous at }x\}\bigr)=0.
 \subsection{可测函数与收敛方式 | Measurable functions and modes of convergence}
 \noindent 实值函数 $f$ 可测，若每个开集 $U\subseteq\mathbb R$ 的原像 $f^{-1}(U)$ 可测；等价地，对每个实数 $a$，集合 $\{x:f(x)>a\}$ 可测。可测函数对加法、乘法和连续函数复合等常见运算封闭；在完备测度空间中，可测函数列的几乎处处极限仍可测。
 \EN{A real-valued function is measurable if the inverse image of every open set is measurable; equivalently, each set $\{x:f(x)>a\}$ is measurable. Measurable functions are closed under common operations such as addition, multiplication, and composition with continuous functions. On a complete measure space, an almost-everywhere limit of measurable functions is measurable.}
+\FORMULA{可测性的等价刻画}{equivalent characterizations of measurability}
+\[
+\begin{gathered}
+f\text{ measurable}
+\iff \{f>a\}\text{ measurable for all }a\in\mathbb R
+\iff \{f\ge a\}\text{ for all }a,\\
+\iff \{f<a\}\text{ for all }a
+\iff \{f\le a\}\text{ for all }a,
+\end{gathered}
+\]
+并且只需对有理数 $a$ 检验。
+\READ{“A function is measurable exactly when each set where it exceeds a is measurable for every real a, and the same holds with greater-or-equal, less, or less-or-equal; testing rational thresholds is enough.”}
+\EN{The four families are obtained from one another by complements and countable unions, so measurability of one family for all real levels implies the others. Rational thresholds suffice because a set of the form where f exceeds a real number is a countable increasing union of sets with rational thresholds. This criterion is the one used in practice, since half-lines are easier to handle than arbitrary open sets.}
+\noindent 可测函数对常见运算封闭：$f+g$、$cf$、$fg$、$|f|$、$\max(f,g)$、$\min(f,g)$ 仍可测（在表达式有定义的点上）；可测函数列的上确界、下确界、上极限、下极限仍可测，因此在测度完备时几乎处处收敛的极限也可测。证明的关键是把取值条件翻译成可数并交，例如 $\{\sup_n f_n>a\}=\bigcup_n\{f_n>a\}$。
+\EN{Measurable functions are closed under the usual operations: sums, scalar multiples, products, absolute values, and pointwise maxima and minima remain measurable where defined. Suprema, infima, limit superiors, and limit inferiors of measurable sequences are measurable, so almost-everywhere limits are measurable when the measure is complete. The key is to translate value conditions into countable unions and intersections, for instance the set where the supremum exceeds a is the union of the sets where some term exceeds a.}
 \noindent\textbf{三种常用收敛方式。} 点态收敛要求对每个固定 $x$，$f_n(x)\to f(x)$；几乎处处收敛允许该结论在一个零测集上失败；一致收敛则要求定义域上最大的误差一起趋于零。依测度收敛从集合大小衡量误差：
 \FORMULA{点态、几乎处处与一致收敛}{pointwise, almost-everywhere, and uniform convergence}
 \[
@@ -231,6 +312,26 @@ f_n\to f\text{ in measure}
 \EX{在 $[0,1]$ 上，$f_n(x)=x^n$ 对每个 $x<1$ 趋于 $0$，而在 $x=1$ 趋于 $1$，所以它几乎处处趋于 $0$。由于 $[0,1]$ 测度有限，它也依测度趋于 $0$；但 $\sup_{[0,1]}|f_n|=1$，故不一致收敛。另一个重要例子是尖峰 $g_n=n\mathbf1_{[0,1/n]}$：它几乎处处且依测度趋于 $0$，但 $\int_0^1g_n=1$ 始终不变。这说明几乎处处或依测度收敛本身都不足以交换积分与极限。}{On $[0,1]$, $f_n(x)=x^n$ tends to zero for every $x<1$ and to one at $x=1$, so it converges to zero almost everywhere. Since the interval has finite measure, it also converges in measure. However, its supremum remains one, so convergence is not uniform. A second example is the spike $g_n=n\mathbf1_{[0,1/n]}$: it converges to zero almost everywhere and in measure, but $\int_0^1g_n=1$ for every $n$. Almost-everywhere or in-measure convergence alone therefore does not justify passing a limit through an integral.}
 \EX{有限测度空间条件不能省略。定义 $h_n=\mathbf1_{[n,n+1]}$ 于 $\mathbb R$。每个固定 $x$ 最终不在区间 $[n,n+1]$ 中，所以 $h_n\to0$ 处处；但对 $0<\varepsilon<1$，$m(\{|h_n|>\varepsilon\})=1$，因此 $h_n$ 不依测度趋于零。}{The finite-measure hypothesis cannot be omitted. Define $h_n=\mathbf1_{[n,n+1]}$ on $\mathbb R$. Every fixed $x$ eventually lies outside $[n,n+1]$, so $h_n\to0$ pointwise. Yet for $0<\varepsilon<1$, the set where $|h_n|>\varepsilon$ has measure one, so $h_n$ does not converge to zero in measure.}
 
+\FORMULA{Egorov 定理}{Egorov's theorem}
+\[
+\mu(X)<\infty,\quad f_n\to f\ \text{a.e.}
+\quad\Longrightarrow\quad
+\forall\varepsilon>0\ \exists A:\ \mu(A)<\varepsilon,\ f_n\to f\ \text{uniformly on }X\setminus A.
+\]
+\READ{“On a finite measure space, almost-everywhere convergence becomes uniform after removing a set of arbitrarily small measure.”}
+\EN{For fixed $k$ the sets where some late error exceeds $1/k$ decrease to a null set; continuity from above chooses an index from which their union has measure below $\varepsilon/2^k$. Removing the union of these sets for all $k$ leaves measure above $1-\varepsilon$ and uniform convergence. Finite measure is essential; on the line the moving indicator of $[n,n+1]$ converges pointwise but not almost uniformly.}
+\FORMULA{Lusin 定理}{Lusin's theorem}
+\[
+\begin{gathered}
+f\ \text{measurable and finite a.e. on }[a,b],\ \varepsilon>0\\
+\Longrightarrow\ \exists F\subseteq[a,b]\ \text{closed}:\ m([a,b]\setminus F)<\varepsilon,\ f|_F\ \text{continuous}.
+\end{gathered}
+\]
+\READ{“A measurable finite function on a closed interval becomes continuous after deleting a closed set of arbitrarily small measure.”}
+\EN{Lusin's theorem makes precise the slogan that a measurable function differs from a continuous one only on a small set. The exceptional set cannot generally be taken null: the indicator of [0,1/2] equals no continuous function almost everywhere. The proof approximates measurable sets by finite unions of intervals using regularity, then approximates simple functions by step functions.}
+\noindent 由此可以准确表述“可测函数与连续函数只差一个零测集”这句直觉：正确的版本是“去掉一个测度任意小的闭集后连续”，而不是“几乎处处等于某个连续函数”。两者的区别在于例外集能否为零；Dirichlet 函数是 $0$ 几乎处处，因此它确实几乎处处等于连续函数 $0$，但一般的可测函数（如 $\mathbf1_{[0,1/2]}$）做不到，只能做到“连续到小集”。
+\EN{This makes precise the intuition that a measurable function differs from a continuous function only on a null set. The correct statement is continuity after deleting a closed set of arbitrarily small measure, not almost-everywhere equality with a continuous function. The difference is whether the exceptional set can be taken null: the Dirichlet function is zero almost everywhere, so it is almost everywhere equal to the continuous function zero, but a general measurable function such as the indicator of [0,1/2] is not, and only continuity up to a small set is available.}
+\EX{“打字机”序列说明依测度收敛不蕴含几乎处处收敛。把 $[0,1]$ 中的二进区间按层枚举：第 $k$ 层有 $2^k$ 个长度 $2^{-k}$ 的区间，按从左到右排成 $I_1,I_2,\ldots$，令 $f_n=\mathbf1_{I_n}$。对任意 $0<\varepsilon<1$，$m(\{|f_n|>\varepsilon\})=|I_n|\to0$，故 $f_n\to0$ 依测度。但每个点 $x$ 在每一层恰属于一个区间，因此在无穷多个 $n$ 上 $f_n(x)=1$，又在无穷多个 $n$ 上 $f_n(x)=0$，故 $\liminf f_n(x)=0$、$\limsup f_n(x)=1$，序列处处不收敛。}{The typewriter sequence shows that convergence in measure does not imply almost-everywhere convergence. List the dyadic intervals of $[0,1]$ layer by layer: layer $k$ has $2^k$ intervals of length $2^{-k}$, ordered from left to right. Let $f_n$ be the indicator of the $n$-th interval. For every epsilon between zero and one the measure of the set where $f_n$ exceeds epsilon equals the interval length and tends to zero, so $f_n$ tends to zero in measure. But every point lies in exactly one interval of each layer, so it sees the value one infinitely often and zero infinitely often; the limit inferior is zero and the limit superior is one everywhere, and the sequence converges nowhere.}
 \chaptersection{第 4 章：Lebesgue 积分与极限定理 | Chapter 4: Lebesgue integration and limit theorems}
 \subsection{简单函数与 Lebesgue 积分 | Simple functions and the Lebesgue integral}
 \noindent 指示函数 $\mathbf1_A$ 在 $A$ 上等于 $1$，在外面等于 $0$。非负简单函数可写为有限个可测集指示函数的线性组合；先把这些集合拆成两两不交的部分，再按“取值乘以该取值集合的测度”定义积分：
@@ -243,6 +344,8 @@ f_n\to f\text{ in measure}
 \]
 \READ{“The integral is the sum, over k, of the value c k times the measure of the set A k.”}
 \EN{The indicator integrates to the measure of its set. For a nonnegative simple function, the integral is the finite sum of each value times the measure of the set where it occurs.}
+\noindent 这里采用约定 $0\cdot(+\infty)=0$：非负可测函数在零测集上取 $+\infty$ 时，该零测集不贡献积分；取值为 $0$ 的层即使覆盖无限测度集，也只贡献 $0$。积分不区分零测集上的取值，这是 Lebesgue 积分与 Riemann 积分的一个根本差别，也是“几乎处处”能进入积分定义的原因。
+\EN{We use the convention that zero times plus infinity is zero: a nonnegative measurable function that equals plus infinity on a null set gets no contribution from that set, and a layer of value zero contributes zero even over a set of infinite measure. The integral ignores values on null sets, a fundamental difference from the Riemann integral and the reason almost-everywhere statements enter the definition.}
 \Needspace{12\baselineskip}
 \noindent 对一般非负可测函数 $f$，Lebesgue 积分定义为所有不超过 $f$ 的非负简单函数积分的上确界：
 \FORMULA{非负可测函数的 Lebesgue 积分}{the Lebesgue integral of a nonnegative function}
@@ -267,6 +370,15 @@ f=g\text{ a.e.}\Longrightarrow\int f\,d\mu=\int g\,d\mu.
 \]
 \READ{“The integral is linear and monotone; the absolute value of the integral is at most the integral of the absolute value; changing a function on a null set does not change its integral.”}
 \EN{For integrable functions, the Lebesgue integral is linear and monotone. The absolute value of an integral is bounded by the integral of the absolute value. Consequently, changing an integrable function on a null set does not change its integral.}
+\FORMULA{积分的绝对连续性}{absolute continuity of the integral}
+\[
+f\in L^1(\mu)
+\quad\Longrightarrow\quad
+\forall\varepsilon>0\ \exists\delta>0:\quad
+\mu(E)<\delta\Rightarrow\int_E|f|\,d\mu<\varepsilon.
+\]
+\READ{“For an integrable function and every positive epsilon there is a delta such that every set of measure below delta contributes less than epsilon to the integral of the absolute value.”}
+\EN{Proof idea: truncate the integrand and split the integral over E into the part where the absolute value is at most a large level M and the tail beyond M. The bounded part is controlled by M times the measure of E, while the tail is small uniformly in E by monotone convergence applied to the decreasing tails of the absolute value.}
 \noindent\textbf{具体应用：元件寿命。} 若元件寿命 $T$ 服从参数 $\lambda>0$ 的指数分布，密度为 $f_T(t)=\lambda e^{-\lambda t}$（$t\ge0$），则故障晚于时刻 $t$ 的概率是密度在 $[t,\infty)$ 上的积分，平均寿命是 $t f_T(t)$ 的积分：
 \FORMULA{指数寿命的生存概率与期望}{survival probability and mean of an exponential lifetime}
 \[
@@ -320,12 +432,48 @@ f_n\to f\text{ a.e.},\quad |f_n|\le g\in L^1
 \READ{“If f n converges almost everywhere to f and all absolute values are bounded by one integrable function g, then the integral of the absolute difference tends to zero.”}
 \EN{The crucial hypothesis is one common integrable dominator, independent of $n$. Fatou applied to $g+f_n$ and $g-f_n$ gives convergence of the integrals. Applying Fatou to $2g-|f_n-f|$ then shows that $\int|f_n-f|\,d\mu$ tends to zero. Here $L^1(\mu)$ denotes measurable functions whose absolute value has finite integral.}
 \noindent\textbf{证明思路。} 由 $|f_n|\le g$ 和几乎处处收敛得 $|f|\le g$，所以 $f\in L^1$ 且 $|f_n-f|\le2g$。对非负函数 $g+f_n$ 与 $g-f_n$ 使用 Fatou 引理，可夹出 $\int f_n\to\int f$；再对 $2g-|f_n-f|\ge0$ 使用 Fatou，可得 $\limsup_n\int|f_n-f|\le0$，从而 $L^1$ 收敛。
+\noindent 控制收敛的关键是“同一个可积函数控制整列”。把“统一控制”弱化为“一致可积”（尾部质量 $\int_{\{|f_n|>M\}}|f_n|$ 关于 $n$ 一致趋于零），就得到 Vitali 收敛定理：有限测度上依测度收敛加一致可积可推出 $L^1$ 收敛。尖峰 $n\mathbf1_{(0,1/n)}$ 不一致可积；这正是控制收敛不能用于它的原因。
+\EN{The key to dominated convergence is one common integrable dominator. Weakening this to uniform integrability, meaning that the tail masses above a high level vanish uniformly in n, gives the Vitali convergence theorem: on a finite measure space, convergence in measure plus uniform integrability implies convergence in L-one. The shrinking spikes are not uniformly integrable, which is exactly why dominated convergence does not apply to them.}
+
 \EX{在 $[0,1]$ 上取 $f_n(x)=x^n$。它几乎处处趋于零，且 $|f_n|\le1$，而常数 $1$ 可积，所以 $\int_0^1x^n\,dx=1/(n+1)\to0$。相反，$n\mathbf1_{[0,1/n]}$ 没有统一的可积控制函数，因此不能使用 DCT。}{On $[0,1]$, $x^n$ tends to zero almost everywhere and is bounded by the integrable function one, so its integral $1/(n+1)$ tends to zero. The spike sequence $n\mathbf1_{[0,1/n]}$ has no common integrable dominator, so DCT does not apply.}
 \ASK{看到函数列时，怎样在 MCT、Fatou 和 DCT 中选择？}{How do you choose among MCT, Fatou, and DCT?}{非负且单调递增用 MCT；只有非负性和下极限信息时用 Fatou，并保留不等号；几乎处处收敛且存在统一可积控制函数时用 DCT。每次先检查条件，不能只凭“函数列收敛”交换极限与积分。}{Use MCT for nonnegative increasing functions, Fatou when only nonnegativity and a limit inferior are available, and DCT when there is almost-everywhere convergence with a common integrable dominator. Check the hypotheses before interchanging a limit and an integral.}
 
 \subsection{三个收敛定理的推理链 | How the convergence theorems connect}
 \APS{从单调收敛推出 Fatou：对 $f_n\ge0$，令 $g_k=\inf_{n\ge k}f_n$，则 $g_k\uparrow\liminf f_n$。单调收敛给 $\int\liminf f_n=\lim_k\int g_k$，而 $\int g_k\le\inf_{n\ge k}\int f_n$，于是得到 Fatou 不等式。若还有 $|f_n|\le g\in L^1$ 且 $f_n\to f$ 几乎处处，则对非负函数 $g+f_n$ 与 $g-f_n$ 分别用 Fatou，得到积分极限的上下界，合起来就是控制收敛。}{To derive Fatou from monotone convergence, let $g_k=\inf_{n\ge k}f_n$ for nonnegative $f_n$. Then $g_k\uparrow\liminf f_n$, and $\int g_k\le\inf_{n\ge k}\int f_n$ gives Fatou after taking limits. If also $|f_n|\le g\in L^1$ and $f_n\to f$ almost everywhere, apply Fatou to $g+f_n$ and $g-f_n$ to obtain lower and upper bounds for the integral limits. Together they give dominated convergence.}
 \APS{选择顺序是：非负且递增用单调收敛；只有非负、需要单侧下界用 Fatou；可能变号但有同一个可积控制函数用控制收敛。不能把“每个函数都可积”误当成“存在共同可积控制”。尖峰 $n\mathbf1_{(0,1/n)}$ 正好说明这个区别。}{Use monotone convergence for increasing nonnegative functions, Fatou for a one-sided bound with nonnegative functions, and dominated convergence for possibly signed functions with a common integrable bound. Individual integrability does not supply a common integrable dominating function, as the shrinking-spike example shows.}
+
+\subsection{极限与积分交换的实用判据 | A practical checklist for exchanging limits and integrals}
+\noindent 遇到“$\lim_n\int f_n$ 与 $\int\lim_n f_n$ 是否相等”时，按固定顺序检查：先看单调性（单调收敛定理），再看是否有统一可积控制（控制收敛定理）；有限测度上一致收敛可直接估计，依测度收敛则需要一致可积（Vitali）。只想要不等式时用 Fatou 或反向 Fatou。表格把条件与结论并列，便于面试口述。
+\EN{Given a question about exchanging a limit and an integral, check in a fixed order: monotonicity first (monotone convergence), then a common integrable dominator (dominated convergence); uniform convergence on a finite measure space can be estimated directly, while convergence in measure needs uniform integrability (Vitali). Use Fatou or reverse Fatou when only an inequality is available. The table pairs each hypothesis with its conclusion for oral presentation.}
+\begin{center}\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}p{4.5cm}p{3.7cm}p{7.4cm}@{}}
+\hline
+情形 / Situation & 工具 / Tool & 结论 / Conclusion\\
+\hline
+$0\le f_n\uparrow f$ a.e. & 单调收敛 MCT & $\int f_n\to\int f$，可为 $+\infty$\\
+$f_n\to f$ a.e.，$|f_n|\le g\in L^1$ & 控制收敛 DCT & $\int|f_n-f|\to0$\\
+$\mu(X)<\infty$，$f_n\rightrightarrows f$ & 一致收敛估计 & $\int|f_n-f|\le\mu(X)\sup|f_n-f|\to0$\\
+$f_n\to f$ 依测度，$\{f_n\}$ 一致可积 & Vitali 定理 & $\int|f_n-f|\to0$\\
+$f_n\ge0$ & Fatou 引理 & $\int\liminf f_n\le\liminf\int f_n$\\
+$f_n\le g\in L^1$ & 反向 Fatou & $\limsup\int f_n\le\int\limsup f_n$\\
+\hline
+\end{tabular}
+\end{center}
+\subsection{Riemann 积分与 Lebesgue 积分的关系 | Riemann versus Lebesgue integrals}
+\noindent 有界函数在闭区间上 Riemann 可积，则它 Lebesgue 可积且两者相等。证明用上下和夹逼：阶梯函数是简单函数，Darboux 上下和的积分给出上下界，分割加细后两边逼近同一个值。因此 Lebesgue 积分是 Riemann 积分的真推广，而不是另一套无关的积分。
+\EN{If a bounded function on a closed interval is Riemann integrable, then it is Lebesgue integrable and the two integrals agree. The proof squeezes the function between step functions, which are simple functions: the integrals of the Darboux upper and lower sums bound it from above and below, and refining the partition makes the two bounds approach the same value. The Lebesgue integral is thus a genuine extension of the Riemann integral, not an unrelated construction.}
+\FORMULA{Riemann 可积蕴含 Lebesgue 可积}{Riemann integrability implies Lebesgue integrability}
+\[
+f\in\mathcal R[a,b]
+\quad\Longrightarrow\quad
+f\in L^1[a,b],
+\qquad
+\int_a^b f(x)\,dx=\int_{[a,b]}f\,dm.
+\]
+\READ{“Every Riemann integrable function on a closed interval is Lebesgue integrable there, and the two integrals are equal.”}
+\EN{The converse fails: the Dirichlet function is Lebesgue integrable but not Riemann integrable. The Lebesgue integral only sees the size of level sets, not whether the function oscillates on every small interval, so it is insensitive to the difference between the two integrals here.}
+\ASK{Riemann 可积与 Lebesgue 可积的准确关系是什么？}{What is the precise relation between Riemann and Lebesgue integrability?}{对有界函数：Riemann 可积等价于不连续点集零测，因此推出 Lebesgue 可积且积分相等；反之不然，Dirichlet 函数是反例。对无界函数或无穷区间：Riemann 反常积分可能条件收敛，而 Lebesgue 积分要求绝对可积，所以 $\int_0^\infty\frac{\sin x}{x}dx$ 不是 Lebesgue 可积。}{For bounded functions, Riemann integrability is equivalent to a null discontinuity set and therefore implies Lebesgue integrability with the same value; the converse fails, with the Dirichlet function as counterexample. For unbounded functions or infinite intervals, an improper Riemann integral may converge conditionally, whereas the Lebesgue integral requires absolute integrability, so the Dirichlet integral of sin x over x on the positive axis is not Lebesgue integrable.}
 
 \subsection{Tonelli 与 Fubini 定理 | Tonelli's and Fubini's theorems}
 \noindent 测度空间 $(X,\mathcal F,\mu)$ 称为 $\sigma$-有限，若 $X$ 可写成可数个有限测度可测集的并。设 $(X,\mathcal F,\mu)$、$(Y,\mathcal G,\nu)$ 为 $\sigma$-有限测度空间，并在乘积 $\sigma$-代数 $\mathcal F\otimes\mathcal G$ 上使用乘积测度 $\mu\times\nu$。对乘积空间上的非负可测函数，Tonelli 定理允许交换积分次序，即使积分为 $+\infty$；对有符号函数，Fubini 定理要求绝对可积 $\int|f|\,d(\mu\times\nu)<\infty$。先检查“非负”或“绝对可积”，再交换积分号：
@@ -340,6 +488,100 @@ f_n\to f\text{ a.e.},\quad |f_n|\le g\in L^1
 \EN{For nonnegative measurable functions, Tonelli permits either order, even if the value is infinite. For signed functions, Fubini requires absolute integrability. The sigma-finiteness assumption is part of the standard theorem.}
 \EX{单位正方形上 $f(x,y)=x+y$ 非负且有界，所以可交换积分次序：先对 $y$ 积分得 $x+1/2$，再对 $x$ 积分得到 $1$。在概率论中，若联合密度满足相应可积条件，Fubini 可把二维期望写成迭代积分。}{On the unit square, $f(x,y)=x+y$ is nonnegative and bounded, so either order is valid. Integrating first in $y$ gives $x+1/2$, and integrating over $x$ gives one. In probability, Fubini writes expectations under a joint density as iterated integrals when the required integrability holds.}
 
+\EX{没有绝对可积性时 Fubini 会失败。在 $(0,1)^2$ 上令 $f(x,y)=(x^2-y^2)/(x^2+y^2)^2$。先对 $y$ 积分得 $1/(1+x^2)$，再对 $x$ 积分得 $\pi/4$；交换次序得 $-\pi/4$。原因是对绝对值的二重积分发散：极坐标下 $|f|\sim1/r^2$，而面积元 $r\,dr\,d\theta$ 留下 $\int dr/r=+\infty$。}{Fubini fails without absolute integrability. On the unit square let f equal (x squared minus y squared) over (x squared plus y squared) squared. Integrating first in y gives 1 over (1 plus x squared), and then in x gives pi over four; the other order gives minus pi over four. The double integral of the absolute value diverges, since in polar coordinates the integrand grows like one over r squared while the area element leaves a divergent integral of dr over r.}
+\subsection{Lp 空间：Hölder 与 Minkowski | Lp spaces: Hölder and Minkowski}
+\noindent 对 $1\le p<\infty$，$L^p(\mu)$ 是满足 $\int|f|^p\,d\mu<\infty$ 的可测函数按几乎处处相等取等价类，范数 $\|f\|_p=(\int|f|^p\,d\mu)^{1/p}$。$L^2$ 是带内积 $\langle f,g\rangle=\int f\bar g\,d\mu$ 的 Hilbert 空间。
+\EN{For p between one and infinity, L-p consists of measurable functions with integrable p-th power, modulo almost-everywhere equality, with norm the p-th root of the integral. The space L-two is a Hilbert space with inner product given by the integral of f times the conjugate of g.}
+\FORMULA{Hölder 与 Minkowski 不等式}{Hölder's and Minkowski's inequalities}
+\[
+\frac1p+\frac1q=1\Rightarrow\|fg\|_1\le\|f\|_p\|g\|_q;
+\qquad
+\|f+g\|_p\le\|f\|_p+\|g\|_p.
+\]
+\READ{“With conjugate exponents, the integral of a product is at most the product of the norms, and the p-norm satisfies the triangle inequality.”}
+\EN{Hölder reduces to the elementary inequality for two numbers after normalizing the norms; Minkowski is the triangle inequality, and the Riesz--Fischer theorem states that L-p is complete for finite p.}
+\EX{在 $[0,1]$ 上 $f(x)=x^{-1/3}$ 满足 $\int f^p=\int x^{-p/3}$ 有限当且仅当 $p<3$，故 $f\in L^2$ 而 $f\notin L^4$。有限测度上 $q>p$ 时 $L^q\subseteq L^p$；无穷测度时无此包含：$1/(1+x)\in L^2(0,\infty)\setminus L^1$，$x^{-1/2}\mathbf1_{(0,1)}\in L^1\setminus L^2$。}{On the unit interval the function x to the minus one third has finite p-th power integral exactly when p is less than three, so it lies in L-two but not in L-four. On finite measure spaces L-q is contained in L-p when q exceeds p, while no inclusion holds for infinite measure: one over (1+x) lies in L-two but not L-one on the positive axis, and x to the minus one half on (0,1) lies in L-one but not L-two.}
+\subsection{应用：概率论、Fourier 分析与泛函分析 | Applications}
+\noindent 概率空间是总测度为 $1$ 的测度空间；随机变量是可测函数，事件是可测集，概率是测度：
+\[
+F_X(x)=\mathbb P(X\le x)=m_X((-\infty,x]),
+\qquad
+\mathbb E[X]=\int_\Omega X\,d\mathbb P=\int_{\mathbb R}x\,dm_X(x).
+\]
+\EN{A probability space is a measure space of total measure one; random variables are measurable functions, events are measurable sets, and probabilities are measures. The distribution function is the image measure of a half-line, and the expectation is the integral of the random variable against the probability measure, equivalently of the identity against the distribution measure.}
+\EX{指数分布 $\mathbb P(T>t)=e^{-\lambda t}$ 的期望为 $\mathbb E[T]=\int_0^\infty t\lambda e^{-\lambda t}dt=1/\lambda$；Chebyshev 给出尾概率估计 $\mathbb P(T\ge a)\le1/(\lambda a)$，与 $e^{-\lambda a}\le1/(\lambda a)$ 一致。}{For an exponential lifetime the survival probability is e to the minus lambda t and the mean is one over lambda; Chebyshev gives the tail bound that the probability of exceeding a is at most one over lambda a, consistent with the exponential formula.}
+\noindent Fourier 分析：$f\in L^2(-\pi,\pi)$ 的 Fourier 系数满足 Parseval 等式，$L^1$ 函数的系数趋于零（Riemann--Lebesgue 引理，用简单函数逼近加控制收敛证明）。积分号下求导的常用判据是 $|\partial_tf(x,t)|\le g(x)\in L^1$，对差商用控制收敛即得 $F'(t)=\int\partial_tf(x,t)\,dx$。$L^p$ 是 Banach 空间、$L^2$ 是 Hilbert 空间，Riesz 表示、$L^p$--$L^q$ 对偶与算子理论都以测度论为基础。
+\EN{For Fourier analysis, the coefficients of an L-two function satisfy the Parseval identity, and the coefficients of an L-one function tend to zero by the Riemann--Lebesgue lemma, proved by approximation with simple functions and dominated convergence. The standard criterion for differentiating under an integral sign is a bound of the time derivative by one integrable function, and dominated convergence applied to difference quotients gives the derivative formula. L-p is a Banach space and L-two a Hilbert space; the Riesz representation theorem, L-p duality, and operator theory rest on measure theory.}
+\ASK{概率论为什么用 Lebesgue 积分而不用 Riemann 积分？}{Why does probability theory use the Lebesgue integral?}{概率要求可列可加，而极限事件是可数并交，只有测度论能保证它们有概率；期望的收敛定理（大数律、中心极限定理）依赖单调收敛与控制收敛，Riemann 积分不够用。}{Probability requires countable additivity, and limit events are countable unions and intersections that only measure theory handles; convergence theorems for expectations, the basis of the law of large numbers and the central limit theorem, rely on monotone and dominated convergence.}
+
 \noindent\textbf{范围 / Scope.} 本稿按新实变讲义第 1--4 章的顺序整理；定义、公式名称、英文读法、具体例子和口试追问均放在对应知识点旁边。证明按“条件为何需要、结论如何得到”的线索给出，便于从定义重新建立整门课的主线。
 \EN{This review follows the order of Chapters 1--4 of the new real-analysis notes. Definitions, formula names, spoken English readings, concrete examples, and oral questions are placed beside the concepts they concern. Proof sketches emphasize why the hypotheses are needed and how they lead to the conclusion, so the course can be reconstructed from its definitions.}
+
+\section*{中英术语表 | Glossary}
+\noindent 术语按课程顺序排列；面试时用英文说定义，用中文补直觉。
+\EN{The terms follow the order of the course; state each definition in English and add the intuition in Chinese.}
+\begin{center}\small
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}p{4.4cm}p{6.5cm}p{4.9cm}@{}}
+\hline
+中文 & English & 提示 / Reminder\\
+\hline
+$\sigma$-代数 & sigma-algebra & 对补与可数并封闭\\
+生成 $\sigma$-代数 & generated sigma-algebra & 包含给定族的最小者\\
+Borel $\sigma$-代数 & Borel sigma-algebra & 由开集生成\\
+测度 & measure & 空集为零、可列可加\\
+外测度 & outer measure & 覆盖总长的下确界\\
+Lebesgue 测度 & Lebesgue measure & 外测度限制到可测集\\
+可测集 & measurable set & 满足 Carath\'eodory 条件\\
+零测集 & null set & 测度为零\\
+几乎处处 & almost everywhere & 除一个零测集外\\
+可列可加 & countable additivity & 不交并的测度等于求和\\
+次可加 & subadditivity & 并的测度不超过和\\
+基数 & cardinality & 按一一对应比较\\
+可数 & countable & 与 $\mathbb N$ 等势\\
+不可数 & uncountable & 不能排成序列\\
+聚点 & limit point & 邻域含集合另一点\\
+稠密 & dense & 闭包为全空间\\
+无处稠密 & nowhere dense & 闭包内部为空\\
+Cantor 集 & Cantor set & 三进制只用 $0,2$\\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{center}\small
+\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}p{4.4cm}p{6.5cm}p{4.9cm}@{}}
+\hline
+中文 & English & 提示 / Reminder\\
+\hline
+简单函数 & simple function & 示性函数的有限组合\\
+示性函数 & indicator function & 集合上取 $1$\\
+可测函数 & measurable function & 各 $\{f>a\}$ 可测\\
+Lebesgue 积分 & Lebesgue integral & 简单函数积分的上确界\\
+可积 & integrable & 绝对值的积分有限\\
+单调收敛定理 & monotone convergence theorem & 非负且递增\\
+Fatou 引理 & Fatou's lemma & 非负列的单侧不等式\\
+控制收敛定理 & dominated convergence theorem & 统一可积控制\\
+依测度收敛 & convergence in measure & 误差集测度趋零\\
+一致可积 & uniform integrability & 尾部质量一致小\\
+Egorov 定理 & Egorov's theorem & 去掉小集后一致收敛\\
+Lusin 定理 & Lusin's theorem & 去掉小集后连续\\
+H\"older 不等式 & H\"older's inequality & 共轭指数下估计乘积\\
+Minkowski 不等式 & Minkowski's inequality & $L^p$ 三角不等式\\
+$\sigma$-有限 & sigma-finite & 可数个有限测度集之并\\
+乘积测度 & product measure & 乘积 $\sigma$-代数上的测度\\
+Fubini 定理 & Fubini's theorem & 绝对可积时交换次序\\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{参考文献 | References}
+\begin{itemize}[leftmargin=1.6em,itemsep=2pt,topsep=3pt]
+\item 周民强.《实变函数论》（教育部重点教材）. 第 1--4 章：集合与点集、测度、可测函数、Lebesgue 积分与 Fubini 定理.
+\item 课程新讲义《实变函数》（ln.pdf）. 第 1--4 章：Riemann 积分、$\mathbb R^n$ 中的点集拓扑、测度与可测函数、Lebesgue 积分；第 5 章 $L^p$ 仅作简介.
+\item G. B. Folland, \emph{Real Analysis: Modern Techniques and Their Applications}, 2nd ed. Chapters 1--3 (measures, integration, differentiation) and Chapter 6 ($L^p$ spaces).
+\item W. Rudin, \emph{Real and Complex Analysis}, 3rd ed. Chapters 1--3 (abstract integration, positive Borel measures, $L^p$ spaces).
+\item E. M. Stein and R. Shakarchi, \emph{Real Analysis: Measure Theory, Integration, and Hilbert Spaces}. Chapters 1--3.
+\item P. Billingsley, \emph{Probability and Measure}, 3rd ed. Chapters 1--2 and 5 (probability spaces, integration, limit theorems).
+\end{itemize}
 \end{document}

@@ -1,7 +1,12 @@
 \documentclass[UTF8,11pt,a4paper]{ctexart}
 \usepackage{amsmath,amssymb,geometry,enumitem,hyperref}
-\geometry{margin=2.1cm}\setlist{itemsep=2pt,topsep=3pt}
+\geometry{margin=2.0cm}\setlist{itemsep=2pt,topsep=3pt}
 \hypersetup{colorlinks=true,linkcolor=blue}
+\renewcommand{\arraystretch}{1.05}
+\setlength{\abovedisplayskip}{4pt plus 1pt minus 1pt}
+\setlength{\belowdisplayskip}{4pt plus 1pt minus 1pt}
+\setlength{\abovedisplayshortskip}{2pt plus 1pt}
+\setlength{\belowdisplayshortskip}{2pt plus 1pt}
 \newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
 \newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
 \newcommand{\FORMULA}[2]{\par\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
@@ -19,8 +24,7 @@
 \subsection*{例二：稳定步长并不等于准确 | A stable step may still be inaccurate}
 \APS{对 $y^{\prime}=-10y,y(0)=1$，显式 Euler 给 $y_{n+1}=(1-10h)y_n$。要让数值解衰减，需要 $|1-10h|<1$，即 $0<h<0.2$。取 $h=0.1$ 时，第一步就得到零，而精确值为 $e^{-1}\approx0.368$，因此虽在稳定区间内，误差仍很大。取 $h=0.3$ 时放大因子为 $-2$，数值解振荡增长，与真实衰减相反。这个例子分别检验稳定性和精度。}{For $y^{\prime}=-10y$ with $y(0)=1$, explicit Euler gives $y_{n+1}=(1-10h)y_n$. Decay requires $|1-10h|<1$, or $0<h<0.2$. At $h=0.1$ the first numerical value is zero, while the exact value is $e^{-1}\approx0.368$, so stability still allows a large error. At $h=0.3$ the multiplier is $-2$ and the method oscillates with growing magnitude. Stability and accuracy require separate checks.}
 
-
-\section{误差、收敛与稳定 | Error, convergence and stability}
+\section{误差、浮点与有效数字 | Error, floating point and significant digits}
 \noindent\textbf{误差定义。} 真值 $x$ 与近似值 $\tilde x$ 的绝对误差为 $|x-\tilde x|$；真值非零时，相对误差为 $|x-\tilde x|/|x|$。截断误差来自用有限过程近似无限过程（如截断 Taylor 展开或积分公式）；舍入误差来自计算机有限位数表示和运算。模型误差、观测误差、截断误差与舍入误差是不同来源。数值算法的\textbf{收敛性}讨论步长趋于零或迭代次数增加时近似解是否趋于目标解；\textbf{稳定性}讨论输入、舍入误差和中间误差是否被算法过度放大。
 
 \EN{The absolute error between the exact value $x$ and approximation $\tilde x$ is $|x-\tilde x|$. When $x\ne0$, the relative error is $|x-\tilde x|/|x|$. Sources include model, observation, truncation, and rounding errors. Convergence asks whether the approximation approaches the target as the step size decreases or iteration count increases. Stability asks whether input and intermediate errors are excessively amplified.}
@@ -41,6 +45,10 @@ $\kappa(A)$ 大表示输入数据的小相对误差可能造成解的较大相�
 \ASK{条件数和相对误差有什么关系？}{What is the relationship between conditioning and relative error?}{条件数刻画问题对输入相对扰动的敏感度。在线性方程组中，较大的 $\kappa(A)$ 意味着右端或矩阵数据的小相对误差可能导致解的较大相对误差。}{The condition number measures sensitivity to relative perturbations in the input. For a linear system, a large $\kappa(A)$ means small relative errors in the matrix or right-hand side may produce large relative errors in the solution.}
 
 \ASK{问题条件数和算法稳定性有什么区别？}{What is the difference between problem conditioning and algorithmic stability?}{条件数是问题本身对输入误差的敏感度；算法稳定性是计算过程对输入或舍入扰动的放大程度。病态问题即使使用稳定算法也可能难以得到高精度结果。}{Conditioning is the sensitivity of the problem itself to input errors. Algorithmic stability concerns how the computation amplifies input or rounding perturbations. An ill-conditioned problem can remain difficult even with a stable algorithm.}
+
+\APS{浮点数与有效数字：计算机用有限位二进制浮点数表示实数，每次运算可建模为 $\mathrm{fl}(x)=x(1+\delta)$、$|\delta|\le u$。IEEE 双精度有 53 位有效位，机器精度 $\varepsilon_{\mathrm{mach}}=2^{-52}\approx2.22\times10^{-16}$，舍入单位 $u=2^{-53}\approx1.11\times10^{-16}$；$0.1$ 在二进制中不精确，故双精度下 $0.1+0.2=0.30000000000000004\ne0.3$。若 $|x-\tilde x|/|x|\le0.5\times10^{-n}$，则 $\tilde x$ 至少有 $n$ 位有效数字：$\pi\approx3.1416$ 保证 5 位，$3.14$ 只保证 2 位。}{Floating point: each operation is modeled as $\mathrm{fl}(x)=x(1+\delta)$ with $|\delta|\le u$. IEEE double precision has 53 significant bits, machine epsilon $2^{-52}\approx2.22\times10^{-16}$ and unit roundoff $u=2^{-53}\approx1.11\times10^{-16}$; $0.1$ is inexact in binary, so $0.1+0.2=0.30000000000000004\ne0.3$. If $|x-\tilde x|/|x|\le0.5\times10^{-n}$, then $\tilde x$ has at least $n$ significant digits: $\pi\approx3.1416$ guarantees five and $3.14$ only two.}
+\APS{误差传播：对可微 $f$，$\Delta f\approx f'(x)\Delta x$，相对误差满足 $|\Delta f/f|\approx\kappa_f(x)|\Delta x/x|$，其中 $\kappa_f=|xf'/f|$ 是函数求值问题的条件数。$f=\sqrt x$ 时 $\kappa_f=1/2$，输入误差减半；$f=x^{10}$ 时放大 10 倍。$f=\cos x$ 在 $x=\pi/2-10^{-8}$ 处 $\kappa_f\approx1.6\times10^{8}$：输入极小扰动造成输出巨大相对变化，这是问题病态，不是算法不稳定。}{Error propagation: for differentiable $f$, $\Delta f\approx f'(x)\Delta x$ and $|\Delta f/f|\approx\kappa_f(x)|\Delta x/x|$ with $\kappa_f=|xf'/f|$. For $\sqrt x$, $\kappa_f=1/2$ halves the relative error; for $x^{10}$ it is magnified tenfold. For $\cos x$ at $x=\pi/2-10^{-8}$, $\kappa_f\approx1.6\times10^{8}$: a tiny input perturbation gives a huge output change, which is ill-conditioning of the problem, not instability of the algorithm.}
+\ASK{有效数字如何由相对误差判断？}{How does relative error determine significant digits?}{若 $|x-\tilde x|/|x|\le0.5\times10^{-n}$，则 $\tilde x$ 至少有 $n$ 位有效数字；例如 $3.1416$ 对 $\pi$ 的相对误差约 $2.3\times10^{-6}$，保证 5 位有效数字。}{If $|x-\tilde x|/|x|\le0.5\times10^{-n}$, then $\tilde x$ has at least $n$ significant digits; for example $3.1416$ has relative error about $2.3\times10^{-6}$ for $\pi$, guaranteeing five digits.}
 
 \subsection{同一问题的病态性与算法不稳定 | Problem conditioning versus algorithm stability}
 \noindent 计算 $\sqrt{1+x}-1$ 在很小正 $x$ 时，直接相减会把两个接近 $1$ 的浮点数相减，造成有效数字丢失。代数有理化给出等价形式
@@ -68,9 +76,28 @@ m=\frac{a+b}{2},\qquad \text{interval length after }n\text{ steps}=\frac{b-a}{2^
 \READ{“The midpoint is the sum of a and b, all divided by two. After n steps, the interval length is the quantity b minus a, all divided by two to the n-th power.”}
 \EN{If $f$ is continuous on $[a,b]$ and $f(a)f(b)<0$, at least one root lies inside. Bisection repeatedly takes the midpoint and keeps the half-interval whose endpoints have opposite signs. The interval length halves at every step, giving robust but usually linear convergence.}
 
+\noindent\textbf{二分法的数值过程。} 对 $x^3-x-1=0$，$f(1)=-1<0$、$f(2)=5>0$，在 $[1,2]$ 上二分（$n$ 表示步数）：
+\EN{\textbf{The bisection process in numbers.} For $x^3-x-1=0$ with $f(1)=-1<0$ and $f(2)=5>0$, bisection on $[1,2]$ gives ($n$ is the step count):}
+\begin{center}\footnotesize
+\begin{tabular}{c c c c c}
+\hline
+$n$ & $a_n$ & $b_n$ & $m_n$ & $f(m_n)$\\
+\hline
+1 & 1.000000 & 2.000000 & 1.500000 & $+0.875000$\\
+2 & 1.000000 & 1.500000 & 1.250000 & $-0.296875$\\
+3 & 1.250000 & 1.500000 & 1.375000 & $+0.224609$\\
+4 & 1.250000 & 1.375000 & 1.312500 & $-0.051514$\\
+5 & 1.312500 & 1.375000 & 1.343750 & $+0.082611$\\
+\hline
+\end{tabular}
+\end{center}
+\noindent 8 步后区间长 $1/256\approx3.9\times10^{-3}$；要求区间长不超过 $10^{-6}$ 需 20 步，要求中点误差不超过 $10^{-6}$ 需 19 步。根 $\alpha\approx1.324718$。
+\EN{After eight steps the interval length is $1/256\approx3.9\times10^{-3}$; interval length at most $10^{-6}$ requires 20 steps and midpoint error at most $10^{-6}$ requires 19 steps. The root is $\alpha\approx1.324718$.}
+
 \noindent\textbf{不动点迭代。} 将 $f(x)=0$ 等价改写为 $x=g(x)$，迭代 $x_{k+1}=g(x_k)$。若 $g$ 将闭区间映入自身，且 $|g'(x)|\le q<1$，Banach 压缩原理保证唯一不动点和收敛。不同等价改写的收敛性可能完全不同。
 \READ{“X k plus one equals g of x k.”}
 \EN{Rewrite $f(x)=0$ as $x=g(x)$ and iterate. If $g$ maps a closed interval into itself and $|g'(x)|\le q<1$, the contraction theorem gives a unique fixed point and convergence. Different rearrangements of the same equation may have very different convergence behavior.}
+\APS{不动点的数值例子：对 $x^3-x-1=0$ 改写为 $x=(x+1)^{1/3}$，$g'(x)=\tfrac13(x+1)^{-2/3}$，在根处 $g'(\alpha)\approx0.190<1$，故从 $x_0=1.5$ 出发线性收敛，迭代值 $1.357209,1.330861,1.325884,1.324939,1.324760$，误差每步约乘 $0.19$。若改写为 $x=x^3-1$，则 $g'(\alpha)=3\alpha^2\approx5.27>1$，迭代发散。}{A numerical fixed-point example: rewrite $x^3-x-1=0$ as $x=(x+1)^{1/3}$. Then $g'(x)=\tfrac13(x+1)^{-2/3}$ and $g'(\alpha)\approx0.190<1$ at the root, so from $x_0=1.5$ the iteration converges linearly: $1.357209,1.330861,1.325884,1.324939,1.324760$, with the error multiplied by about $0.19$ per step. Rewriting as $x=x^3-1$ gives $g'(\alpha)=3\alpha^2\approx5.27>1$ and diverges.}
 
 \noindent\textbf{Newton 法。} 对单根 $\alpha$，在适当光滑性和初值接近条件下，
 \FORMULA{Newton 求根迭代公式}{Newton iteration for root finding}
@@ -79,9 +106,36 @@ x_{k+1}=x_k-\frac{f(x_k)}{f'(x_k)}
 \]
 具有局部二次收敛。若导数接近零、初值不合适或根为重根，标准结论可能失效。停机准则可结合 $|f(x_k)|$、$|x_{k+1}-x_k|$ 和迭代次数。
 \READ{“X k plus one equals x k minus f of x k divided by f prime of x k.”}
-\EN{Newton's method is given above and converges quadratically near a simple root under suitable smoothness and initial-value assumptions. A small derivative, poor initial guess, or multiple root can invalidate the usual result. A stopping rule can use the residual, step size, and a maximum iteration count.}
+\EN{Newton's method is given above and converges quadratically near a simple root under suitable smoothness and initial-value assumptions. A small derivative, poor initial guess, or multiple root can invalidate the usual result. A stopping rule can use the residual, the step size, and a maximum iteration count.}
+
+\noindent\textbf{收敛阶的数值验证。} 对 $x^3-x-1=0$，从 $x_0=1.5$ 做 Newton 迭代，误差 $e_k=|x_k-\alpha|$ 与比值 $|e_{k+1}|/e_k^2$ 如下。比值趋于 $|f''(\alpha)/(2f'(\alpha))|=6\alpha/(2(3\alpha^2-1))\approx0.932$，即二次收敛：新误差与旧误差的平方成正比。
+\EN{\textbf{Numerical verification of the order.} Newton's method for $x^3-x-1=0$ from $x_0=1.5$ gives the errors and ratios below. The ratio approaches $|f''(\alpha)/(2f'(\alpha))|=6\alpha/(2(3\alpha^2-1))\approx0.932$, confirming quadratic convergence: the new error is proportional to the square of the old one.}
+\begin{center}\footnotesize
+\begin{tabular}{c c c c}
+\hline
+$k$ & $x_k$ & $e_k$ & $e_{k+1}/e_k^2$\\
+\hline
+0 & 1.500000000 & $1.753\times10^{-1}$ & 0.752\\
+1 & 1.347826087 & $2.311\times10^{-2}$ & 0.903\\
+2 & 1.325200399 & $4.824\times10^{-4}$ & 0.931\\
+3 & 1.324718174 & $2.168\times10^{-7}$ & 0.931\\
+\hline
+\end{tabular}
+\end{center}
+\noindent 对 $x^2-2=0$ 从 $x_0=1$ 出发，误差依次为 $4.14\times10^{-1},8.58\times10^{-2},2.45\times10^{-3},2.12\times10^{-6},1.59\times10^{-12}$，比值依次为 $0.500,0.333,0.353,0.354$，极限 $1/(2\sqrt2)\approx0.354$；二次收敛是极限性质。
+\EN{For $x^2-2=0$ from $x_0=1$, the errors are $4.14\times10^{-1}$, $8.58\times10^{-2}$, $2.45\times10^{-3}$, $2.12\times10^{-6}$ and $1.59\times10^{-12}$, and the ratios are $0.500,0.333,0.353,0.354$, tending to $1/(2\sqrt2)\approx0.354$; quadratic convergence is an asymptotic property.}
+\EX{Newton 法也会失败：对 $f(x)=x^3-2x+2$ 取 $x_0=0$，迭代为 $1,0,1,0,\ldots$ 的二周期，不收敛；因为 $f'(0)=-2$ 把第一步送到 $1$，而 $f(1)=1,f'(1)=1$ 又送回 $0$。又 $f(x)=x^{1/3}$ 在根处导数无界，$x_{k+1}=-2x_k$ 从任何非零初值发散。}{Newton's method can fail: for $f(x)=x^3-2x+2$ with $x_0=0$, the iterates $1,0,1,0,\ldots$ form a two-cycle and do not converge, since $f'(0)=-2$ sends the first step to one and $f(1)=1,f'(1)=1$ send it back. Also $f(x)=x^{1/3}$ has an unbounded derivative at the root, and $x_{k+1}=-2x_k$ diverges from every nonzero starting value.}
 
 \EX{对 $x^2-2=0$，Newton 迭代为 $x_{k+1}=\tfrac12(x_k+2/x_k)$。取 $x_0=1.5$，两步得 $x_1=1.4166667$、$x_2\approx1.4142157$，接近 $\sqrt2$。}{For $x^2-2=0$, Newton's iteration is $x_{k+1}=\tfrac12(x_k+2/x_k)$. Starting from $x_0=1.5$, two steps give $x_1=1.4166667$ and $x_2\approx1.4142157$, close to $\sqrt2$.}
+
+\noindent\textbf{割线法。} 用差商代替导数可避免计算 $f'$：
+\FORMULA{割线法迭代公式}{secant method iteration}
+\[
+x_{k+1}=x_k-f(x_k)\frac{x_k-x_{k-1}}{f(x_k)-f(x_{k-1})}.
+\]
+它需要两个初值，每步只算一次新的函数值；在单根附近局部收敛，收敛阶 $p=(1+\sqrt5)/2\approx1.618$。
+\EN{The secant method replaces the derivative by a divided difference. It needs two starting values and only one new function evaluation per step; near a simple root it converges locally with order $p=(1+\sqrt5)/2\approx1.618$.}
+\EX{对 $x^2-2=0$ 取 $x_0=1,x_1=2$，割线法给 $x_2=4/3\approx1.333333$、$x_3=1.4$、$x_4\approx1.414634$、$x_5\approx1.414211$，误差依次为 $8.09\times10^{-2},1.42\times10^{-2},4.21\times10^{-4},2.12\times10^{-6}$，快于线性。}{For $x^2-2=0$ with $x_0=1$ and $x_1=2$, the secant method gives $x_2=4/3\approx1.333333$, $x_3=1.4$, $x_4\approx1.414634$ and $x_5\approx1.414211$, with errors $8.09\times10^{-2},1.42\times10^{-2},4.21\times10^{-4},2.12\times10^{-6}$, faster than linear.}
 
 \ASK{如何估计二分法所需的迭代次数？}{How can you estimate the number of bisection iterations?}{每步把区间长度减半。若初始长度为 $b-a$，要使最终长度不超过 $\varepsilon$，解 $(b-a)/2^n\le\varepsilon$，所以 $n$ 至少为 $\lceil\log_2((b-a)/\varepsilon)\rceil$。}{The interval is halved at every step. To reduce an initial length $b-a$ to at most $\varepsilon$, solve $(b-a)/2^n\le\varepsilon$, giving at least $\lceil\log_2((b-a)/\varepsilon)\rceil$ iterations.}
 
@@ -91,10 +145,26 @@ x_{k+1}=x_k-\frac{f(x_k)}{f'(x_k)}
 
 \ASK{不动点迭代的收敛条件是什么？}{What is a convergence condition for fixed-point iteration?}{一个常用充分条件是 $g$ 将所选闭区间映入自身，并且在区间上 $|g'|\le q<1$。}{A common sufficient condition is that $g$ maps the chosen closed interval into itself and satisfies $|g'|\le q<1$ throughout the interval.}
 
+\ASK{如何数值验证收敛阶？}{How is the order of convergence verified numerically?}{计算相邻误差比值：线性收敛时 $|e_{k+1}|/|e_k|$ 趋于常数 $C<1$，二次收敛时 $|e_{k+1}|/|e_k|^2$ 趋于常数。}{Form ratios of successive errors: for linear convergence $|e_{k+1}|/|e_k|$ tends to a constant $C<1$; for quadratic convergence $|e_{k+1}|/|e_k|^2$ tends to a constant.}
+
 \section{线性方程组 | Linear systems}
 \noindent\textbf{直接法。} 线性系统写作 $Ax=b$。Gauss 消去利用初等行变换化为上三角系统，再回代；列主元策略在当前列选择绝对值较大的主元以减小除以小数的风险。LU 分解将 $A=LU$（含置换时为 $PA=LU$），对多个右端项可重复使用分解。
 
 \EN{A linear system is written $Ax=b$. Gaussian elimination applies elementary row operations to obtain an upper-triangular system, followed by back substitution. Partial pivoting selects a large-magnitude pivot in the current column to reduce numerical risk. LU factorization writes $A=LU$, or $PA=LU$ with pivoting, and is reusable for multiple right-hand sides.}
+
+\noindent\textbf{选主元。} 若首列主元很小，消元乘子会很大，把舍入误差放大到与解同量级。例如 $10^{-4}x_1+x_2=1$、$x_1+x_2=2$ 的精确解约 $(1.0001,0.99990)$；不做主元时乘子为 $10^{4}$，第二行主元 $1-10^{4}\cdot10^{-4}$ 在相消后为 $0$ 或与舍入同量级的极小值，消元失效；交换两行后主元为 $1$。选主元是稳定性要求，不改变精度阶。
+\EN{\textbf{Pivoting.} A very small first pivot makes the multipliers huge and amplifies rounding error to the size of the solution. For $10^{-4}x_1+x_2=1$, $x_1+x_2=2$, the solution is about $(1.0001,0.99990)$; without pivoting the multiplier is $10^{4}$ and the second pivot $1-10^{4}\cdot10^{-4}$ collapses to zero or a value of the order of rounding error, so elimination fails. Swapping rows gives pivot one. Pivoting is a stability requirement and does not change the order of accuracy.}
+\EX{对 $A=\begin{pmatrix}4&1\\2&3\end{pmatrix}$、$b=(1,2)^{\mathsf T}$，从 $x^{(0)}=(0,0)^{\mathsf T}$ 做一次 Jacobi 迭代，得 $x_1^{(1)}=1/4$、$x_2^{(1)}=2/3$。Gauss 消去将第二行减去第一行的 $1/2$ 倍，得到 $2.5x_2=1.5$，故解为 $(0.1,0.6)^{\mathsf T}$。}{For $A=\begin{pmatrix}4&1\\2&3\end{pmatrix}$ and $b=(1,2)^{\mathsf T}$, one Jacobi step from $x^{(0)}=(0,0)^{\mathsf T}$ gives $x_1^{(1)}=1/4$ and $x_2^{(1)}=2/3$. Gaussian elimination subtracts one half of row one from row two, giving $2.5x_2=1.5$ and the solution $(0.1,0.6)^{\mathsf T}$.}
+
+\APS{LU 分解（Doolittle）：$A=LU$，$L$ 单位下三角、$U$ 上三角，按
+$u_{kj}=a_{kj}-\sum_{s<k}l_{ks}u_{sj}$、$l_{ik}=(a_{ik}-\sum_{s<k}l_{is}u_{sk})/u_{kk}$ 计算；计算量约 $2n^3/3$，多个右端项只需一次分解。例：$A=\begin{pmatrix}2&1&-1\\-3&-1&2\\-2&1&2\end{pmatrix}$、$b=(8,-11,-3)^{\mathsf T}$ 得
+\[
+L=\begin{pmatrix}1&0&0\\-1.5&1&0\\-1&4&1\end{pmatrix},\quad
+U=\begin{pmatrix}2&1&-1\\0&0.5&0.5\\0&0&-1\end{pmatrix};
+\]
+前代 $Ly=b$ 得 $y=(8,1,1)^{\mathsf T}$，回代 $Ux=y$ 得 $x=(2,3,-1)^{\mathsf T}$。}{Doolittle LU: $A=LU$ with unit lower-triangular $L$ and upper-triangular $U$; cost about $2n^3/3$, reusable for many right-hand sides. For the $A,b$ shown, forward substitution gives $y=(8,1,1)^{\mathsf T}$ and back substitution $x=(2,3,-1)^{\mathsf T}$.}
+\APS{追赶法（三对角）：对 $a_ix_{i-1}+b_ix_i+c_ix_{i+1}=d_i$，令 $c_1'=c_1/b_1$、$d_1'=d_1/b_1$，
+$c_i'=c_i/(b_i-a_ic_{i-1}')$、$d_i'=(d_i-a_id_{i-1}')/(b_i-a_ic_{i-1}')$（$i\ge2$），再由 $x_n=d_n'$、$x_i=d_i'-c_i'x_{i+1}$ 回代，计算量与存储均为 $O(n)$；严格对角占优时无需选主元。例：三对角矩阵 $\begin{pmatrix}2&-1&0\\-1&2&-1\\0&-1&2\end{pmatrix}$、$d=(1,0,0)^{\mathsf T}$ 得 $c'=(-1/2,-2/3,0)$、$d'=(1/2,1/3,1/4)$、$x=(3/4,1/2,1/4)^{\mathsf T}$。}{Thomas algorithm for tridiagonal systems: eliminate and back-substitute with the recurrences shown; cost and storage are $O(n)$, and no pivoting is needed under strict diagonal dominance. For the tridiagonal matrix and $d=(1,0,0)^{\mathsf T}$, $c'=(-1/2,-2/3,0)$, $d'=(1/2,1/3,1/4)$, $x=(3/4,1/2,1/4)^{\mathsf T}$.}
 
 \noindent\textbf{迭代法。} 采用 $A=D-L-U$ 的符号约定，其中 $D$ 为对角部分，$L$、$U$ 分别为严格下、上三角部分的\emph{负值}。于是
 \FORMULA{Jacobi、Gauss--Seidel 与 SOR 迭代格式}{Jacobi, Gauss--Seidel, and SOR iteration schemes}
@@ -107,24 +177,31 @@ x_{k+1}=x_k-\frac{f(x_k)}{f'(x_k)}
 \end{aligned}
 \]
 Jacobi 的整步都使用旧向量；Gauss--Seidel 一旦算出新分量就立刻使用；SOR 再以 $\omega$ 调整更新幅度。一般线性迭代 $x^{(k+1)}=Bx^{(k)}+c$ 对任意初值收敛到唯一不动点的充要条件为 $\rho(B)<1$；$A$ 严格行对角占优是 Jacobi 和 Gauss--Seidel 收敛的常见充分条件，不能直接对任意 $\omega$ 的 SOR 套用。若 $A$ 对称正定，则 SOR 在 $0<\omega<2$ 时收敛。迭代法对大型稀疏系统常较省存储。
-
 \READ{“X k plus one equals B x k plus c. The iteration converges if the spectral radius of B is less than one.”}
 \EN{After splitting $A=D-L-U$, Jacobi uses the previous iterate and Gauss--Seidel immediately uses new components. SOR adds a relaxation parameter $\omega$. A general linear iteration converges from every starting point to a unique fixed point if and only if the iteration matrix has spectral radius less than one. Strict row diagonal dominance of $A$ is sufficient for Jacobi and Gauss--Seidel, but not for SOR with arbitrary $\omega$. For symmetric positive-definite $A$, SOR converges for $0<\omega<2$.}
+
+\APS{收敛性例子与范数：对 $A=\begin{pmatrix}4&1\\2&3\end{pmatrix}$，Jacobi 迭代矩阵特征值为 $\pm\sqrt{1/6}\approx\pm0.408$，Gauss--Seidel 为 $0$ 与 $1/6$，故都收敛且 $\rho(B_{GS})=1/6<0.408$；对 $A=\begin{pmatrix}1&2\\2&1\end{pmatrix}$，$\rho(B_J)=2>1$，Jacobi 发散（对角占优只是充分条件）。常用范数为 $\|\cdot\|_1,\|\cdot\|_\infty,\|\cdot\|_2$；$\kappa_p(A)=\|A\|_p\|A^{-1}\|_p\ge1$，右端扰动满足 $\|\delta x\|/\|x\|\le\kappa(A)\|\delta b\|/\|b\|$。Hilbert 矩阵 $H_n=(1/(i+j-1))$ 典型病态：$\kappa_2(H_3)\approx524$、$\kappa_2(H_4)\approx1.55\times10^{4}$、$\kappa_2(H_6)\approx1.50\times10^{7}$；$H_3$ 中 $b_1$ 增 $1\%$（相对扰动 $8.08\times10^{-3}$）使解相对变化 $0.505$。}{Convergence example and norms: for $A=\begin{pmatrix}4&1\\2&3\end{pmatrix}$ the Jacobi matrix has eigenvalues $\pm\sqrt{1/6}\approx\pm0.408$ and the Gauss--Seidel matrix has $0$ and $1/6$, so both converge and $\rho(B_{GS})=1/6<0.408$; for $A=\begin{pmatrix}1&2\\2&1\end{pmatrix}$, $\rho(B_J)=2>1$ and Jacobi diverges (diagonal dominance is only sufficient). The usual norms are the one-, infinity- and two-norms; $\kappa_p(A)=\|A\|_p\|A^{-1}\|_p\ge1$, and a perturbed right-hand side obeys $\|\delta x\|/\|x\|\le\kappa(A)\|\delta b\|/\|b\|$. Hilbert matrices $H_n=(1/(i+j-1))$ are a standard ill-conditioned family: $\kappa_2(H_3)\approx524$, $\kappa_2(H_4)\approx1.55\times10^{4}$, $\kappa_2(H_6)\approx1.50\times10^{7}$; increasing $b_1$ of $H_3$ by $1\%$ (relative perturbation $8.08\times10^{-3}$) changes the solution by $0.505$ in relative norm.}
 
 \ASK{直接法和迭代法有什么区别？}{What is the difference between direct and iterative methods?}{直接法经有限步骤的消去和回代得到解（忽略舍入误差时）；迭代法从初值生成序列，按收敛和误差准则停止。大规模稀疏问题常考虑迭代法。}{A direct method obtains the solution through a finite sequence of elimination and substitution steps, ignoring rounding error. An iterative method generates a sequence from an initial guess and stops according to convergence and error criteria. Iterative methods are often considered for large sparse problems.}
 
 \ASK{为什么需要主元选取？}{Why is pivoting used in Gaussian elimination?}{若主元过小，除法会放大舍入误差，甚至造成除零；选取较大主元可改善数值稳定性。}{A very small pivot can amplify rounding error or cause division by zero. Choosing a larger pivot improves numerical stability.}
 
-\EX{对 $A=\begin{pmatrix}4&1\\2&3\end{pmatrix}$、$b=(1,2)^{\mathsf T}$，从 $x^{(0)}=(0,0)^{\mathsf T}$ 做一次 Jacobi 迭代，得 $x_1^{(1)}=1/4$、$x_2^{(1)}=2/3$。Gauss 消去将第二行减去第一行的 $1/2$ 倍，得到 $2.5x_2=1.5$，故解为 $(0.1,0.6)^{\mathsf T}$。}{For $A=\begin{pmatrix}4&1\\2&3\end{pmatrix}$ and $b=(1,2)^{\mathsf T}$, one Jacobi step from $x^{(0)}=(0,0)^{\mathsf T}$ gives $x_1^{(1)}=1/4$ and $x_2^{(1)}=2/3$. Gaussian elimination subtracts one half of row one from row two, giving $2.5x_2=1.5$ and the solution $(0.1,0.6)^{\mathsf T}$.}
-
 \ASK{Jacobi 与 Gauss--Seidel 的主要计算区别是什么？}{What is the main computational difference between Jacobi and Gauss--Seidel?}{Jacobi 在第 $k+1$ 步的所有分量都只用第 $k$ 步数据；Gauss--Seidel 按顺序计算并立即复用新分量，因此每轮更新顺序会影响结果。}{Jacobi computes every component of step $k+1$ using only step $k$. Gauss--Seidel updates sequentially and immediately reuses new components, so the ordering affects each sweep.}
 
 \ASK{SOR 在什么常见条件下收敛？}{Under what common condition does SOR converge?}{若矩阵对称正定，SOR 对 $0<\omega<2$ 收敛；$\omega$ 控制松弛或超松弛程度。一般矩阵上不能不加条件地保证该结论。}{For a symmetric positive-definite matrix, SOR converges when $0<\omega<2$. The parameter controls relaxation or over-relaxation. This guarantee does not hold unconditionally for arbitrary matrices.}
+\APS{实际意义：按结构选算法——稠密小系统用 LU，三对角用追赶法，大规模稀疏用迭代法；条件数告诉结果能相信几位，必要时提高精度或正则化。}{Why it matters: choose algorithms by structure---LU for small dense systems, the Thomas algorithm for tridiagonal ones, and iterative methods for large sparse systems; the condition number tells us how many digits are trustworthy.}
 
 \section{插值与最佳逼近 | Interpolation and best approximation}
 \subsection{插值的定义、唯一性与差商 | Interpolation and divided differences}
 \APS{给定互异节点 $x_0,\ldots,x_n$ 和数据 $y_i$，插值要求次数不超过 $n$ 的 $p$ 满足 $p(x_i)=y_i$，不是最小化残差。Lagrange 基函数 $\ell_i(x)=\prod_{j\ne i}(x-x_j)/(x_i-x_j)$ 在节点上为 Kronecker 符号，故 $p=\sum y_i\ell_i$ 存在。若有两个解，其差至多 $n$ 次却有 $n+1$ 个不同零点，只能恒零，所以唯一。}{For distinct nodes $x_0,\ldots,x_n$ and data $y_i$, interpolation requires $p(x_i)=y_i$ with degree at most $n$; it does not minimize a residual. The Lagrange functions $\ell_i(x)=\prod_{j\ne i}(x-x_j)/(x_i-x_j)$ have the required nodal values, proving existence. The difference of two candidates has degree at most $n$ and $n+1$ distinct zeros, proving uniqueness.}
-\APS{Newton 差商递推为 $f[x_i]=y_i$，$f[x_i,\ldots,x_{i+k}]=(f[x_{i+1},\ldots,x_{i+k}]-f[x_i,\ldots,x_{i+k-1}])/(x_{i+k}-x_i)$，插值式为 $p_n=\sum_{k=0}^n f[x_0,\ldots,x_k]\prod_{j=0}^{k-1}(x-x_j)$。例如 $(0,1),(1,2),(2,5)$ 的一阶差商为 $1,3$，二阶为 $1$，所以 $p=1+x+x(x-1)=1+x^2$。}{Newton divided differences satisfy $f[x_i]=y_i$ and $f[x_i,\ldots,x_{i+k}]=(f[x_{i+1},\ldots,x_{i+k}]-f[x_i,\ldots,x_{i+k-1}])/(x_{i+k}-x_i)$. The polynomial is $p_n=\sum_{k=0}^n f[x_0,\ldots,x_k]\prod_{j<k}(x-x_j)$. For $(0,1),(1,2),(2,5)$, first differences are one and three and the second is one, yielding $p=1+x+x(x-1)=1+x^2$.}
+\APS{Newton 差商递推为 $f[x_i]=y_i$ 与
+\[
+\begin{aligned}
+f[x_i,\ldots,x_{i+k}]&=\frac{f[x_{i+1},\ldots,x_{i+k}]-f[x_i,\ldots,x_{i+k-1}]}{x_{i+k}-x_i},\\
+p_n&=\sum_{k=0}^{n}f[x_0,\ldots,x_k]\prod_{j=0}^{k-1}(x-x_j).
+\end{aligned}
+\]
+例如 $(0,1),(1,2),(2,5)$ 的一阶差商为 $1,3$，二阶为 $1$，所以 $p=1+x+x(x-1)=1+x^2$。}{Newton divided differences satisfy $f[x_i]=y_i$ and the recurrence displayed above; the interpolating polynomial is the second displayed formula. For $(0,1),(1,2),(2,5)$, the first differences are $1$ and $3$ and the second is $1$, giving $p=1+x+x(x-1)=1+x^2$.}
 \APS{若 $f\in C^{n+1}$，误差为 $f(x)-p_n(x)=f^{(n+1)}(\xi)\prod_{i=0}^n(x-x_i)/(n+1)!$，$\xi$ 在节点和 $x$ 所在区间中。提高次数并不必然改善全区间误差，等距高次插值可出现 Runge 现象。三次样条改用每段三次多项式并要求整体 $C^2$，还需自然端点 $S^{\prime\prime}=0$ 或夹持端点导数等条件来唯一确定；Hermite 插值则直接匹配指定导数。}{For $f\in C^{n+1}$, the interpolation error is $f^{(n+1)}(\xi)\prod_i(x-x_i)/(n+1)!$. Increasing degree does not necessarily improve the error over the full interval; equally spaced nodes can show Runge behavior. A cubic spline uses piecewise cubics with global $C^2$ continuity and endpoint conditions such as natural second derivatives or prescribed first derivatives. Hermite interpolation instead matches specified derivative data.}
 
 互异节点 $(x_i,y_i)$ 唯一确定次数不超过 $n$ 的插值多项式。Lagrange 公式为
@@ -137,14 +214,38 @@ f(x)-P_n(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}\prod_{i=0}^{n}(x-x_i).
 \READ{“The interpolation error is the product of the divided-difference term and the nodal factors. Here, xi is some point in an interval containing the interpolation nodes and x; it may depend on x.”}
 \EN{Distinct interpolation nodes determine a unique polynomial of degree at most $n$. The Lagrange formula and its remainder are shown above. Newton's divided-difference form is convenient when adding data points. Hermite interpolation also matches derivative values. Piecewise interpolation and cubic splines reduce high-degree oscillation; natural cubic splines use zero second derivatives at the endpoints.}
 
+\noindent\textbf{差商表算例。} 对 $f(x)=e^x$ 取节点 $0,0.5,1,1.5$，差商表为：
+\EN{\textbf{A divided-difference example.} For $f(x)=e^x$ at nodes $0,0.5,1,1.5$ the divided-difference table is:}
+\begin{center}\footnotesize
+\begin{tabular}{c c c c c}
+\hline
+$x_i$ & $f[x_i]$ & 一阶 / 1st & 二阶 / 2nd & 三阶 / 3rd\\
+\hline
+0.0 & 1.000000 & & &\\
+0.5 & 1.648721 & 1.297443 & &\\
+1.0 & 2.718282 & 2.139121 & 0.841679 &\\
+1.5 & 4.481689 & 3.526814 & 1.387693 & 0.364010\\
+\hline
+\end{tabular}
+\end{center}
+\noindent 于是 $p_3(x)=1+1.297443x+0.841679x(x-0.5)+0.364010x(x-0.5)(x-1)$，$p_3(0.25)=1.288819$，与 $e^{0.25}=1.284025$ 相差 $+4.79\times10^{-3}$；只用前三个节点时 $p_2(0.25)=1.271756$，误差 $-1.23\times10^{-2}$。增加节点只需追加一个对角线系数，这是 Newton 形式的优点。
+\EN{Thus $p_3$ is as displayed; $p_3(0.25)=1.288819$ against $e^{0.25}=1.284025$, an error of $+4.79\times10^{-3}$, while the three-node interpolant gives $p_2(0.25)=1.271756$ with error $-1.23\times10^{-2}$. Adding a node appends one diagonal coefficient and leaves the old ones unchanged, the advantage of the Newton form.}
+
+\noindent\textbf{Runge 现象与节点选择。} 等距节点的高次插值可能在区间边缘剧烈振荡：对 $f(x)=1/(1+25x^2)$ 在 $[-1,1]$ 上插值，$n=6,10,16$ 时最大误差分别约为 $0.617,1.92,14.4$，节点加密反而变差。改用 Chebyshev 节点 $x_i=\cos\frac{(2i+1)\pi}{2(n+1)}$ 后，同样 $n$ 下最大误差降为 $0.264,0.109,0.0326$。实际做法是避免整段单个高次多项式，改用 Chebyshev 节点、分段低次插值或三次样条：分段线性误差不超过 $M_2h^2/8$，自然三次样条整体 $C^2$ 并由三对角方程组确定。
+\EN{\textbf{Runge phenomenon and node choice.} High-degree interpolation at equally spaced nodes can oscillate near the interval ends: for $f(x)=1/(1+25x^2)$ on $[-1,1]$ the maximum errors are about $0.617,1.92,14.4$ for $n=6,10,16$, so refining the grid makes it worse. With Chebyshev nodes $x_i=\cos\frac{(2i+1)\pi}{2(n+1)}$ the maxima drop to $0.264,0.109,0.0326$. In practice use Chebyshev nodes, piecewise low-degree interpolation or cubic splines instead of one high-degree polynomial: piecewise linear error is at most $M_2h^2/8$, and a natural cubic spline is globally $C^2$ and determined by a tridiagonal system.}
+\APS{Hermite 插值：同时匹配函数值和导数。两节点三次 Hermite 插值在 $[0,1]$ 上为
+\[
+H_3(x)=f_0(1-3x^2+2x^3)+f_1(3x^2-2x^3)+f_0'(x-2x^2+x^3)+f_1'(-x^2+x^3),
+\]
+余项 $f^{(4)}(\xi)x^2(x-1)^2/4!$。例：对 $e^x$ 在 $[0,1]$ 用两端函数值和导数，$H_3(0.5)=1.644356$，精确值 $1.648721$，误差 $-4.37\times10^{-3}$；同两点的线性插值误差为 $+0.210$。}{Hermite interpolation matches function and derivative values. For two nodes the cubic Hermite interpolant on $[0,1]$ is displayed above, with remainder $f^{(4)}(\xi)x^2(x-1)^2/4!$. Example: for $e^x$ on $[0,1]$ using both function values and derivatives, $H_3(0.5)=1.644356$ against the exact $1.648721$, an error of $-4.37\times10^{-3}$; the linear interpolant through the same points has error $+0.210$.}
+
 \noindent\textbf{其他插值与逼近。} Newton 差商形式适合增添节点；Hermite 插值同时匹配函数值及导数；分段 Lagrange 和三次样条避免对整个区间使用单个高次多项式。函数最佳一致逼近最小化最大绝对误差。对离散数据及基函数展开，最小二乘系数解
 \FORMULA{线性最小二乘目标与正规方程}{linear least-squares objective and normal equations}
 \[
 \min_c\|Ac-b\|_2^2,\qquad A^{\mathsf T}Ac=A^{\mathsf T}b.
 \]
-若 $A$ 满列秩，正规方程有唯一解。残差 $r=b-Ac$ 满足 $A^{\mathsf T}r=0$，即与 $A$ 的列空间正交。插值要求近似函数通过每个给定节点；拟合则允许残差非零，力求整体平方误差最小。带噪数据通常适合拟合而不是强制插值。
-
-\EN{Newton divided differences are convenient when adding nodes. Hermite interpolation matches function and derivative values. Piecewise Lagrange interpolation and cubic splines avoid using one high-degree polynomial over the whole interval. Best uniform approximation minimizes the maximum absolute error; least-squares approximation minimizes an integrated squared error or sum of squared residuals. In a basis expansion, the least-squares residual is orthogonal to the approximation space.}
+若 $A$ 满列秩，正规方程有唯一解；实际计算可用 QR 分解 $A=QR$，解 $Rc=Q^{\mathsf T}b$，避免形成 $A^{\mathsf T}A$ 使条件数平方。残差 $r=b-Ac$ 满足 $A^{\mathsf T}r=0$，即与 $A$ 的列空间正交。插值要求近似函数通过每个给定节点；拟合则允许残差非零，力求整体平方误差最小。带噪数据通常适合拟合而不是强制插值。
+\EN{Newton divided differences are convenient when adding nodes. Hermite interpolation matches function and derivative values. Piecewise Lagrange interpolation and cubic splines avoid using one high-degree polynomial over the whole interval. Best uniform approximation minimizes the maximum absolute error; least-squares approximation minimizes the sum of squared residuals, with normal equations $A^{\mathsf T}Ac=A^{\mathsf T}b$; in practice a QR factorization $A=QR$ solves $Rc=Q^{\mathsf T}b$ and avoids squaring the condition number. The residual is orthogonal to the column space. Interpolation passes through every node, while fitting allows nonzero residuals and is preferable for noisy data.}
 
 \EX{两点 $(0,1)$ 和 $(1,3)$ 的一次插值多项式为 $P_1(x)=1+2x$。若数据来自带测量误差的实验，最小二乘拟合通常比强制通过所有观测点更合理。}{The linear interpolant through $(0,1)$ and $(1,3)$ is $P_1(x)=1+2x$. If measurements contain noise, a least-squares fit is often more appropriate than forcing the curve through every observation.}
 
@@ -157,6 +258,8 @@ f(x)-P_n(x)=\frac{f^{(n+1)}(\xi)}{(n+1)!}\prod_{i=0}^{n}(x-x_i).
 \ASK{最小二乘正规方程是什么？为什么残差正交？}{What are the normal equations in least-squares approximation, and why is the residual orthogonal?}{最小化 $\|Ac-b\|_2^2$，对 $c$ 求导并令梯度为零，得到 $A^{\mathsf T}Ac=A^{\mathsf T}b$。因此 $A^{\mathsf T}(b-Ac)=0$，残差与每个基函数方向都正交。}{Minimize $\|Ac-b\|_2^2$, differentiate with respect to $c$, and set the gradient to zero to obtain $A^{\mathsf T}Ac=A^{\mathsf T}b$. Hence $A^{\mathsf T}(b-Ac)=0$, so the residual is orthogonal to every basis direction.}
 
 \ASK{样条插值为什么常用？}{Why is spline interpolation often used?}{样条在小区间上使用低次多项式并在节点处满足光滑拼接，能避免单个高次插值多项式的振荡，同时计算较稳定。}{Splines use low-degree polynomials on subintervals and join them smoothly at the nodes. They avoid oscillations of a single high-degree interpolant and are often numerically stable.}
+
+\ASK{Runge 现象是什么？如何避免？}{What is the Runge phenomenon and how is it avoided?}{等距节点上高次插值在区间端点附近剧烈振荡，且误差不随节点加密而下降。可用 Chebyshev 节点、分段低次插值或三次样条避免。}{With equally spaced nodes, high-degree interpolation oscillates strongly near the endpoints and the error does not decrease as nodes are refined. Avoid it with Chebyshev nodes, piecewise low-degree interpolation or cubic splines.}
 
 \section{数值积分与数值微分 | Numerical integration and differentiation}
 \noindent\textbf{插值型求积。} 求积公式用加权函数值近似积分：$\int_a^bf(x)dx\approx\sum_{i=0}^nw_if(x_i)$。复化梯形公式和复化 Simpson 公式分别为
@@ -171,10 +274,16 @@ S_n=\frac h3\left[f(x_0)+f(x_n)+4\sum_{i\,\mathrm{odd}}f(x_i)+2\sum_{\substack{i
 复化梯形误差为 $O(h^2)$，复化 Simpson 误差为 $O(h^4)$（要求相应光滑性）。
 \READ{“The composite trapezoidal rule equals h times one half f of a plus one half f of b plus the interior function values.” “The composite Simpson rule uses weights one, four, two, four, two, and so on, ending with one, multiplied by h over three.”}
 \EN{An interpolatory quadrature formula approximates an integral by a weighted sum of function values. The composite trapezoidal rule and composite Simpson rule are given above. Their errors are of orders $h^2$ and $h^4$, respectively, under sufficient smoothness; Simpson's rule requires an even number of subintervals.}
+\APS{误差常数：存在 $\xi\in(a,b)$ 使
+\[
+\int_a^bf\,dx-T_n=-\frac{(b-a)h^2}{12}f''(\xi),\qquad
+\int_a^bf\,dx-S_n=-\frac{(b-a)h^4}{180}f^{(4)}(\xi).
+\]
+步长减半时梯形误差约除以 4、Simpson 约除以 16。对 $I=\int_0^1e^x dx=e-1=1.718281828$，复化梯形误差在 $n=1,2,4,8$ 时为 $1.41\times10^{-1},3.57\times10^{-2},8.94\times10^{-3},2.24\times10^{-3}$（比值趋于 4）；复化 Simpson 在 $n=2,4,8$ 时为 $5.79\times10^{-4},3.70\times10^{-5},2.33\times10^{-6}$（比值趋于 16）。两点 Gauss 公式给 $1.717896378$，误差 $-3.85\times10^{-4}$，只用了两次函数求值。}{Error constants: the displayed formulas show that halving the step divides the trapezoidal error by about four and the Simpson error by about sixteen. For $I=\int_0^1e^x dx=e-1=1.718281828$, the trapezoidal errors for $n=1,2,4,8$ are $1.41\times10^{-1},3.57\times10^{-2},8.94\times10^{-3},2.24\times10^{-3}$ and the Simpson errors for $n=2,4,8$ are $5.79\times10^{-4},3.70\times10^{-5},2.33\times10^{-6}$. The two-point Gauss rule gives $1.717896378$ with error $-3.85\times10^{-4}$ using only two evaluations.}
 
 \noindent\textbf{Romberg 与 Gauss 求积。} Romberg 方法对不同步长的复化梯形结果作 Richardson 外推，逐次消去低阶误差项。$n$ 点 Gauss 求积通过选择节点和权重，使公式对次数不超过 $2n-1$ 的多项式精确，通常可用较少节点取得高精度。
-
 \EN{Romberg integration applies Richardson extrapolation to composite trapezoidal approximations at different step sizes, successively canceling lower-order error terms. An $n$-point Gaussian quadrature chooses nodes and weights to integrate polynomials through degree $2n-1$ exactly, often achieving high accuracy with relatively few nodes.}
+\APS{Romberg 外推公式为 $R_{k,j}=R_{k,j-1}+(R_{k,j-1}-R_{k-1,j-1})/(4^{j}-1)$，$R_{k,0}=T_{2^k}$。对 $I=\int_0^1e^x dx$，对角线 $R_{0,0},R_{1,1},R_{2,2},R_{3,3}$ 为 $1.859141,1.718861,1.7182827,1.7182818$，误差为 $1.41\times10^{-1},5.79\times10^{-4},8.60\times10^{-7},3.36\times10^{-10}$，每列提高一阶。}{The Romberg extrapolation formula is displayed above with $R_{k,0}=T_{2^k}$. For $I=\int_0^1e^x dx$ the diagonal values $R_{0,0},R_{1,1},R_{2,2},R_{3,3}$ are $1.859141,1.718861,1.7182827,1.7182818$ with errors $1.41\times10^{-1},5.79\times10^{-4},8.60\times10^{-7},3.36\times10^{-10}$, each column gaining one order.}
 
 \EX{标准区间上的两点 Gauss--Legendre 公式为
 \FORMULA{两点 Gauss--Legendre 求积公式}{two-point Gauss--Legendre quadrature rule}
@@ -197,10 +306,11 @@ f'(x)&\approx\frac{f(x+h)-f(x-h)}{2h} &&(O(h^2)).
 三者依次为向前、向后和中心差分；计算 $f(x+h)-f(x-h)$ 时偶次项抵消，除以 $2h$ 后主误差为 $O(h^2)$。减小 $h$ 可降低截断误差，但可能增大舍入误差，因此步长需权衡。
 \READ{“The centered difference is f of x plus h minus f of x minus h, divided by two h.”}
 \EN{These are forward, backward, and centered differences. In $f(x+h)-f(x-h)$, the even-order Taylor terms cancel; the linear term remains, followed by a cubic remainder. Dividing by $2h$ gives second-order error when $f$ has a continuous third derivative nearby. The one-sided formulas have first-order error with a continuous second derivative. A smaller step reduces truncation error but can increase rounding error.}
+\APS{截断与舍入的平衡：中心差分的截断误差约 $Mh^2/6$（$M=\max|f'''|$），舍入误差约 $u|f|/h$，最优步长 $h^*\approx(3u|f|/M)^{1/3}$。对 $f=e^x$ 在 $x=1$ 处，$h=10^{-1},10^{-2},10^{-3},10^{-4}$ 时误差为 $4.53\times10^{-3},4.53\times10^{-5},4.53\times10^{-7},4.53\times10^{-9}$（$h$ 缩小 10 倍误差约缩小 100 倍）；$h=10^{-6}$ 时误差 $-1.64\times10^{-10}$，$h=10^{-8}$ 时回升到 $-6.60\times10^{-9}$，舍入误差主导，理论最优 $h^*\approx7\times10^{-6}$。}{Balancing truncation and rounding: the truncation error is about $Mh^2/6$ with $M=\max|f'''|$, the rounding error about $u|f|/h$, and the optimal step is $h^*\approx(3u|f|/M)^{1/3}$. For $f=e^x$ at $x=1$ the errors for $h=10^{-1},10^{-2},10^{-3},10^{-4}$ are $4.53\times10^{-3},4.53\times10^{-5},4.53\times10^{-7},4.53\times10^{-9}$; at $h=10^{-6}$ the error is $-1.64\times10^{-10}$ and at $h=10^{-8}$ it grows back to $-6.60\times10^{-9}$ as rounding dominates.}
 
 \EX{对 $f(x)=x^2$，在 $x=1,h=0.1$ 处中心差分给出 $[f(1.1)-f(0.9)]/0.2=2=f'(1)$。本例中心公式恰好精确，因为二次多项式的三阶导数为零。}{For $f(x)=x^2$ at $x=1$ with $h=0.1$, the centered difference is $[f(1.1)-f(0.9)]/0.2=2=f'(1)$. It is exact here because the third derivative of a quadratic is zero.}
 
-\ASK{为什么数值微分不能无限减小步长？}{Why can the step size in numerical differentiation not be made arbitrarily small?}{步长变小时截断误差下降，但两个接近函数值相减会产生消去误差，随后除以小步长会放大舍入误差。}{A smaller step reduces truncation error, but subtracting nearly equal function values causes cancellation, and division by a small step amplifies rounding error.}
+\ASK{为什么数值微分不能无限减小步长？}{Why can the step size in numerical differentiation not be made arbitrarily small?}{步长变小时截断误差下降，但两个接近函数值相减会产生消去误差，随后除以小步长会放大舍入误差；最优步长约为 $(3u|f|/M)^{1/3}$。}{A smaller step reduces truncation error, but subtracting nearly equal function values causes cancellation, and division by a small step amplifies rounding error; the optimal step is about $(3u|f|/M)^{1/3}$.}
 
 \ASK{梯形和 Simpson 求积的精度阶有什么区别？}{How do the error orders of trapezoidal and Simpson quadrature differ?}{复化梯形误差为 $O(h^2)$；复化 Simpson 在函数足够光滑且子区间数为偶数时为 $O(h^4)$。}{The composite trapezoidal rule has error $O(h^2)$. Composite Simpson has error $O(h^4)$ when the function is sufficiently smooth and the number of subintervals is even.}
 
@@ -242,10 +352,27 @@ y_{n+1}=y_n+\frac h6(k_1+2k_2+2k_3+k_4).
 \READ{“The method evaluates four slopes, then combines them with weights one, two, two, and one.”}
 \EN{The classical fourth-order Runge--Kutta method combines four slope estimates with weights one, two, two, and one. Its global error is $O(h^4)$ under standard smoothness assumptions.}
 
+\APS{数值表格：对 $y'=y-t^2+1$、$y(0)=0.5$，精确解 $y=(t+1)^2-\tfrac12e^t$，取 $h=0.2$：
+\begin{center}\footnotesize
+\begin{tabular}{c c c c c}
+\hline
+$t$ & 精确解 / exact & Euler & Heun & RK4\\
+\hline
+0.2 & 0.8292986 & 0.8000000 & 0.8260000 & 0.8292933\\
+0.4 & 1.2140877 & 1.1520000 & 1.2069200 & 1.2140762\\
+0.6 & 1.6489406 & 1.5504000 & 1.6372424 & 1.6489220\\
+0.8 & 2.1272295 & 1.9884800 & 2.1102357 & 2.1272027\\
+1.0 & 2.6408591 & 2.4581760 & 2.6176876 & 2.6408227\\
+\hline
+\end{tabular}
+\end{center}
+$t=1$ 时误差分别为 $-1.83\times10^{-1},-2.32\times10^{-2},-3.64\times10^{-5}$。步长减半到 $h=0.1$ 时终值误差为 $-9.71\times10^{-2},-6.06\times10^{-3},-2.36\times10^{-6}$，比值约 $2,4,16$，对应一、二、四阶收敛。}{Numerical table: for $y'=y-t^2+1$, $y(0)=0.5$, exact solution $y=(t+1)^2-\tfrac12e^t$. At $t=1$ the errors are $-1.83\times10^{-1},-2.32\times10^{-2},-3.64\times10^{-5}$; with $h=0.1$ they become $-9.71\times10^{-2},-6.06\times10^{-3},-2.36\times10^{-6}$, ratios about $2,4,16$, i.e.\ orders one, two and four.}
+
 \noindent\textbf{误差与稳定性。} 这里的\emph{单步局部误差}指从精确值 $y(t_n)$ 出发，做一步数值推进后与精确解 $y(t_{n+1})$ 的差；阶数为 $p$ 的方法通常为 $O(h^{p+1})$，全局误差为 $O(h^p)$。有些教材把该单步误差除以 $h$ 后称作局部截断误差，此时阶为 $O(h^p)$。引用误差阶时应先说明约定。
 \EN{Here, the local error refers to the one-step error obtained by starting from the exact solution. Some textbooks define the local truncation error after dividing this quantity by the step size.}
 
 \noindent 对测试方程 $y'=\lambda y$，一步法有放大因子 $R(z)$，$z=h\lambda$。本稿把数值解随步数趋于无穷而衰减到零的条件 $|R(z)|<1$ 称为绝对稳定；$|R(z)|\le1$ 只保证不放大，边界需另查。显式 Euler 有 $R(z)=1+z$，故衰减稳定区域为开圆盘 $|1+z|<1$。对负实数 $\lambda$ 和正步长，条件为 $0<h|\lambda|<2$；在 $h|\lambda|=2$ 时放大因子为 $-1$，数值解持续振荡而不衰减。一阶 Euler、二阶改进 Euler/梯形和四阶 RK 的全局误差阶分别为 $O(h)$、$O(h^2)$ 和 $O(h^4)$，适用于足够光滑且满足相应稳定条件的有限时间区间计算。
+\EN{For the test equation $y'=\lambda y$, a one-step method has amplification factor $R(z)$ with $z=h\lambda$. Here absolute stability means $|R(z)|<1$ for decay as the step count grows; $|R(z)|\le1$ only prevents amplification and the boundary needs a separate check. Explicit Euler has $R(z)=1+z$, so its decay region is the open disk $|1+z|<1$. For negative real $\lambda$ and positive step, decay requires $0<h|\lambda|<2$; at the endpoint two the factor is $-1$ and the numerical solution oscillates without decaying. Euler, improved Euler/trapezoidal, and RK4 have global orders $O(h)$, $O(h^2)$ and $O(h^4)$ under smoothness and the corresponding stability conditions.}
 
 \noindent\textbf{Adams 多步法。} 代表性的二步 Adams--Bashforth 显式格式和 Adams--Moulton 隐式格式为
 \FORMULA{二步 Adams--Bashforth 与 Adams--Moulton 公式}{two-step Adams--Bashforth and Adams--Moulton formulas}
@@ -259,7 +386,7 @@ y_{n+1}^{\mathrm{AM2}}=y_n+\frac h{12}(5f_{n+1}+8f_n-f_{n-1}),
 \noindent\textbf{一致性、零稳定性与收敛。} 将线性多步法写为 $\sum_{j=0}^k\alpha_jy_{n+j}=h\sum_{j=0}^k\beta_jf_{n+j}$，特征多项式为 $\rho(r)=\sum_{j=0}^k\alpha_jr^j$。零稳定根条件要求 $\rho$ 的根满足 $|r|\le1$，且单位圆上的根只能是单根。一致性控制局部离散误差；零稳定性控制起步误差和舍入扰动在多步递推中是否放大。在常规条件下，一致且零稳定的线性多步法收敛。
 \EN{For a linear multistep method, zero-stability requires every root of its characteristic polynomial to lie in or on the unit disk, with roots on the unit circle being simple. Consistency controls the local discretization error, while zero-stability controls propagation of starting and rounding errors. Under standard assumptions, a consistent and zero-stable method converges.}
 \READ{“The amplification factor for explicit Euler is one plus z. Decay requires the magnitude of R of z to be strictly less than one.”}
-\EN{Under the one-step error convention used here, an order-$p$ method typically has local error $O(h^{p+1})$ and global error $O(h^p)$ on a fixed finite time interval under smoothness and stability assumptions. For $y'=\lambda y$, we use $|R(h\lambda)|<1$ for absolute stability with decay; $|R|\le1$ only ensures nonamplification. Explicit Euler has $R(z)=1+z$, so for negative real $\lambda$ decay requires $0<h|\lambda|<2$. At the endpoint two, the factor is minus one and the numerical solution oscillates without decay. Multistep convergence also requires consistency, zero-stability, and suitable starting values.}
+\EN{Under the one-step error convention used here, an order-$p$ method typically has local error $O(h^{p+1})$ and global error $O(h^p)$ on a fixed finite time interval. For $y'=\lambda y$, we use $|R(h\lambda)|<1$ for absolute stability with decay; $|R|\le1$ only ensures nonamplification. Explicit Euler has $R(z)=1+z$, so for negative real $\lambda$ decay requires $0<h|\lambda|<2$. At the endpoint two the factor is minus one and the numerical solution oscillates without decay. Multistep convergence also requires consistency, zero-stability, and suitable starting values.}
 
 \EX{对 $y'=-y,y(0)=1$，显式 Euler 给出 $y_{n+1}=(1-h)y_n$。若 $0<h<2$，测试方程意义下 $|1-h|<1$，数值解稳定；精确解为 $e^{-t}$，可用来比较误差。}{For $y'=-y$, $y(0)=1$, explicit Euler gives $y_{n+1}=(1-h)y_n$. In the test-equation sense it is stable when $0<h<2$, since $|1-h|<1$. The exact solution is $e^{-t}$ and can be used to measure error.}
 
@@ -278,6 +405,18 @@ y_{n+1}^{\mathrm{AM2}}=y_n+\frac h{12}(5f_{n+1}+8f_n-f_{n-1}),
 
 \ASK{Runge--Kutta 法和多步法有什么区别？}{How do Runge--Kutta and multistep methods differ?}{Runge--Kutta 法每一步用当前点多次计算斜率，通常不需要历史解；多步法在新步计算中使用多个已算出的历史点，可能更省函数评估但需要启动值并分析零稳定性。}{Runge--Kutta methods evaluate several slopes within each step and usually do not need past solution values. Multistep methods use several previous points, which can reduce function evaluations but require starting values and a zero-stability analysis.}
 
+\section{补充：特征值与幂法 | Supplement: eigenvalues and power iteration}
+\noindent 若课程也介绍了特征值计算，可用幂法求模最大的特征值。给定 $A$ 和初向量 $x^{(0)}$，迭代 $y^{(k)}=Ax^{(k-1)}$、$x^{(k)}=y^{(k)}/\|y^{(k)}\|$、$\lambda^{(k)}=(x^{(k)})^{\mathsf T}Ax^{(k)}/(x^{(k)})^{\mathsf T}x^{(k)}$。若 $|\lambda_1|>|\lambda_2|\ge\cdots$ 且 $x^{(0)}$ 在 $\lambda_1$ 的特征向量方向有非零分量，则 $x^{(k)}$ 收敛到该特征向量，方向误差按 $(|\lambda_2|/|\lambda_1|)^k$ 下降；对对称矩阵，Rayleigh 商误差按 $(|\lambda_2|/|\lambda_1|)^{2k}$ 下降。反幂法用 $(A-\mu I)^{-1}$ 迭代，收敛到最接近 $\mu$ 的特征值；$\mu=0$ 求模最小特征值。若 $|\lambda_1|=|\lambda_2|$，幂法不收敛。
+\EN{The power method finds the dominant eigenvalue. If $|\lambda_1|>|\lambda_2|\ge\cdots$ and $x^{(0)}$ has a nonzero component in the dominant eigendirection, then $x^{(k)}$ converges to that eigenvector with direction error decaying like $(|\lambda_2|/|\lambda_1|)^k$; for symmetric matrices the Rayleigh quotient error decays like its square. Inverse iteration with $(A-\mu I)^{-1}$ converges to the eigenvalue nearest $\mu$; $\mu=0$ gives the smallest-magnitude eigenvalue. If $|\lambda_1|=|\lambda_2|$, the power method may not converge.}
+\EX{对 $A=\begin{pmatrix}2&1\\1&2\end{pmatrix}$、$x^{(0)}=(1,0)^{\mathsf T}$，特征值为 $3$ 与 $1$。Rayleigh 商依次为 $2.0000$、$2.8000$、$2.9756$、$2.9973$、$2.9997$，误差 $|3-\lambda^{(k)}|$ 的相邻比值约 $0.111=(1/3)^2$，与理论一致。}{For $A=\begin{pmatrix}2&1\\1&2\end{pmatrix}$ and $x^{(0)}=(1,0)^{\mathsf T}$, the eigenvalues are $3$ and $1$. The Rayleigh quotients are $2.0000$, $2.8000$, $2.9756$, $2.9973$ and $2.9997$, and the ratio of successive errors $|3-\lambda^{(k)}|$ is about $0.111=(1/3)^2$, as predicted.}
+\ASK{幂法收敛的条件是什么？}{What are the convergence conditions for the power method?}{需要存在唯一模最大特征值 $|\lambda_1|>|\lambda_2|$，且初向量在对应特征向量方向有非零分量；收敛速度由 $|\lambda_2/\lambda_1|$ 决定。}{There must be a unique dominant eigenvalue $|\lambda_1|>|\lambda_2|$ and the initial vector must have a nonzero component in the dominant eigendirection; the rate is governed by $|\lambda_2/\lambda_1|$.}
+
+\section{补充：算法选择与复杂度 | Supplement: algorithm choice and complexity}
+\noindent 工程仿真按“模型 $\to$ 离散 $\to$ 求解 $\to$ 后处理”进行：离散（截断）误差由步长或网格尺度控制，迭代误差由残差与收敛准则控制，舍入误差由条件数与稳定性控制；应分别估计并合成误差预算，再用步长减半、网格加密或与解析解对比验证。算法选择看规模与结构（稠密、稀疏、三对角）、精度与条件数、计算量与存储、稳定性限制（刚性、Runge 现象）。复杂度举例：LU 约 $2n^3/3$、$O(n^2)$ 存储；追赶法 $O(n)$；Jacobi/Gauss--Seidel/SOR 每轮 $O(\mathrm{nnz}(A))$；复合梯形/Simpson $O(n)$ 次求值；RK4 每步 4 次 $f$ 求值；幂法每次一次矩阵—向量乘法。
+\EN{A simulation runs from model to discretization to solve to post-processing: truncation error is controlled by step or mesh size, iteration error by residuals and convergence criteria, and rounding error by conditioning and stability. Estimate these separately, form a budget, and verify by step halving, mesh refinement, or comparison with an analytic solution. Algorithm choice considers size and structure (dense, sparse, tridiagonal), accuracy and conditioning, cost and storage, and stability restrictions such as stiffness or the Runge phenomenon. Costs: LU about $2n^3/3$ with $O(n^2)$ storage; Thomas $O(n)$; Jacobi/Gauss--Seidel/SOR $O(\mathrm{nnz}(A))$ per sweep; composite trapezoid/Simpson $O(n)$ evaluations; RK4 four per step; the power method one matrix--vector product per iteration.}
+\ASK{工程仿真中如何控制数值误差？}{How is numerical error controlled in engineering simulation?}{分别估计模型、离散、迭代与舍入误差并合成预算；用步长减半或网格加密检验收敛阶，用解析解或实验数据验证；病态问题提高精度或使用稳定算法。}{Estimate model, discretization, iteration and rounding errors and combine them into a budget; verify by step halving or mesh refinement and validate with analytic or experimental data; use higher precision, stable algorithms or regularization for ill-conditioned problems.}
+\ASK{选择数值算法时应考虑哪些因素？}{What factors guide the choice of a numerical algorithm?}{问题规模与矩阵结构、精度要求与条件数、计算量与存储、稳定性与收敛条件、实现难度；先用稳健方法保证结果，再用快速方法加速并交叉验证。}{Size and matrix structure, accuracy and conditioning, cost and storage, stability and convergence, and implementation effort; start robustly, then accelerate and cross-check.}
+
 \section*{口试表达 | Oral response structure}
 介绍数值算法时，说明输入条件、迭代或求积公式、误差阶、收敛条件和适用场景。若比较算法，应同时比较稳定性、精度、计算量和存储需求；给出数值结果时说明停止准则与误差控制。
 
@@ -285,18 +424,60 @@ y_{n+1}^{\mathrm{AM2}}=y_n+\frac h{12}(5f_{n+1}+8f_n-f_{n-1}),
 
 \noindent\textbf{30 秒英文口述 | Short oral summaries.}
 \begin{itemize}
-\item \textbf{Error analysis.} “I distinguish errors in the problem from errors introduced by an algorithm. The condition number measures sensitivity to input perturbations, while stability measures how the computation propagates rounding and truncation errors.”
-\item \textbf{Nonlinear equations.} “Bisection is reliable when a continuous function changes sign on an interval, and its interval shrinks by half at each step. Newton's method is faster near a simple root, but it depends on a good initial guess and a nonzero derivative.”
-\item \textbf{Linear systems.} “Gaussian elimination and LU are direct methods. Jacobi and Gauss--Seidel are stationary iterations, and SOR adds a relaxation parameter. I check convergence through the iteration matrix and distinguish the update rules.”
-\item \textbf{Interpolation and approximation.} “Interpolation passes through given data, whereas least squares minimizes the residual norm. The Lagrange formula makes the nodal conditions explicit, and the normal equations express orthogonality of the residual.”
-\item \textbf{Integration and differentiation.} “Quadrature approximates an integral by weighted function values; Gaussian quadrature chooses nodes for high polynomial exactness. Finite differences approximate derivatives, with centered differences typically having second-order accuracy.”
-\item \textbf{ODE methods.} “Euler and Runge--Kutta methods advance the solution using one-step slope information. Adams methods reuse previous steps, so they need starting values and zero-stability. I compare their accuracy and stability, especially for stiff problems.”
+\item \textbf{Error analysis.} “The condition number measures sensitivity to input perturbations; stability measures how the algorithm propagates rounding and truncation errors.”
+\item \textbf{Nonlinear equations.} “Bisection is reliable when a continuous function changes sign on an interval. Newton's method is faster near a simple root but needs a good initial guess and a nonzero derivative.”
+\item \textbf{Linear systems.} “Gaussian elimination and LU are direct methods; Jacobi, Gauss--Seidel and SOR are stationary iterations. I check convergence through the iteration matrix and use the condition number to judge accuracy.”
+\item \textbf{Interpolation and approximation.} “Interpolation passes through the data, while least squares minimizes the residual norm. The normal equations express orthogonality of the residual.”
+\item \textbf{Integration and differentiation.} “Quadrature uses weighted function values; Gaussian quadrature chooses nodes for high polynomial exactness. Centered differences are second-order accurate.”
+\item \textbf{ODE methods.} “Euler and Runge--Kutta methods use one-step slope information; Adams methods reuse previous steps and need starting values. I compare accuracy, stability and stiff behaviour.”
 \end{itemize}
 
-\noindent\textbf{面试前快检。} 能否写出二分法次数估计和 Newton 迭代？能否区分 Jacobi/Gauss--Seidel 更新并解释 SOR 的 $\omega$？能否构造 Lagrange 多项式并解一个小型最小二乘正规方程？能否手算 Simpson 或两点 Gauss 求积、一次中心差分、一步 Euler/RK？能否解释误差阶约定和多步法根条件？回答每题时，同时说清适用条件与结果精度。
-\EN{Before the interview, check that you can perform a Newton step and estimate bisection iterations; distinguish Jacobi from Gauss--Seidel and explain the SOR parameter; construct a Lagrange polynomial and solve a small least-squares system; compute a simple Simpson or two-point Gauss rule, a centered difference, and one Euler or RK step; and explain the local-error convention and multistep root condition. State assumptions and accuracy with each answer.}
+\noindent\textbf{面试前快检。} 能否写出二分法次数估计和 Newton 迭代？能否区分 Jacobi/Gauss--Seidel 更新并解释 SOR 的 $\omega$？能否构造 Lagrange 多项式并解一个小型最小二乘正规方程？能否手算 Simpson 或两点 Gauss 求积、一次中心差分、一步 Euler/RK？能否解释误差阶约定和多步法根条件？回答时同时说清适用条件与结果精度。
+\EN{Be ready to perform a Newton step, estimate bisection iterations, distinguish Jacobi from Gauss--Seidel and explain SOR, construct a Lagrange polynomial, solve a small least-squares system, compute a Simpson or two-point Gauss rule, a centered difference and one Euler/RK step, and explain the local-error convention and multistep root condition.}
 
+\section*{中英术语表 | Bilingual glossary}
+\begin{center}\footnotesize
+\begin{tabular}{p{0.44\textwidth}p{0.50\textwidth}}
+\hline
+\textbf{中文} & \textbf{English}\\
+\hline
+绝对误差 / 相对误差 & absolute / relative error\\
+有效数字 & significant digits\\
+截断误差 / 舍入误差 & truncation / rounding error\\
+机器精度、舍入单位 & machine epsilon, unit roundoff\\
+条件数 / 病态问题 & condition number / ill-conditioned problem\\
+算法稳定性 & algorithmic stability\\
+收敛阶、线性/二次收敛 & order of convergence, linear/quadratic convergence\\
+二分法 / 不动点迭代 & bisection method / fixed-point iteration\\
+压缩映射 & contraction mapping\\
+Newton 迭代 / 割线法 & Newton iteration / secant method\\
+Gauss 消元 / 列主元 & Gaussian elimination / partial pivoting\\
+LU 分解 / 追赶法 & LU factorization / Thomas algorithm\\
+谱半径 / 对角占优 & spectral radius / diagonal dominance\\
+向量范数 / 矩阵范数 & vector norm / matrix norm\\
+Lagrange 插值 & Lagrange interpolation\\
+差商 / Newton 插值 & divided difference / Newton interpolation\\
+Runge 现象 / Chebyshev 节点 & Runge phenomenon / Chebyshev nodes\\
+三次样条 / Hermite 插值 & cubic spline / Hermite interpolation\\
+最小二乘 / 正规方程 & least squares / normal equations\\
+复合梯形 / 复合 Simpson 公式 & composite trapezoidal / composite Simpson rule\\
+Gauss 求积 / Romberg 外推 & Gaussian quadrature / Romberg extrapolation\\
+中心差分 & centered finite difference\\
+局部 / 全局截断误差 & local / global truncation error\\
+绝对稳定性 / 刚性方程 & absolute stability / stiff equation\\
+幂法 / 反幂法 & power method / inverse power method\\
+\hline
+\end{tabular}
+\end{center}
+
+\section*{参考文献 | References}
+\begin{itemize}
+\item 课程讲义：\emph{Numerical Analysis}, Chapters 1--6, 2025（误差、非线性方程、线性方程组、插值、数值积分、ODE 数值解）。
+\item Burden, R. L., \& Faires, J. D. \emph{Numerical Analysis}, 9th ed. 章节 Ch.~1--7 依次为：误差分析、非线性方程、插值、数值微分与积分、ODE 初值问题、线性方程组直接法、迭代法。
+\item Heath, M. T. \emph{Scientific Computing: An Introductory Survey}, 2nd ed. McGraw-Hill, 2002; Kress, R. \emph{Numerical Analysis}. Springer, 2003.
+\item Quarteroni, A., Sacco, R., \& Saleri, F. \emph{Numerical Mathematics}. Springer（线性方程组、逼近、积分、非线性方程、ODE）；中文教材：数值分析（第 5 版），清华大学出版社，2008。
+\end{itemize}
 \section*{来源与范围 | Source and scope}
-本讲义依据“数值分析”文件夹中 Chapter 1--6 课程 PPT/PDF 的目录和内容整理：误差与绪论、非线性方程、线性方程组、插值与最佳逼近、数值积分微分、常微分方程数值解。建模文件夹中的拟合/插值讲义用于交叉核对拟合主题；本讲义不扩展至课件未列出的高级数值方法。
-\EN{This handout follows Chapters 1--6 of the course slides/PDFs in the Numerical Analysis folder: error and introduction, nonlinear equations, linear systems, interpolation and best approximation, numerical integration and differentiation, and numerical ODEs. The fitting and interpolation slides in the Modeling folder were used to cross-check that topic. Advanced methods not listed in the course slides are not developed.}
+本讲义依据“数值分析”Chapter 1--6 课程 PPT/PDF 整理，覆盖六章主题；数值例子均经 Python 复核；特征值幂法与算法选择为补充。
+\EN{Based on the course slides Chapters 1--6; all numerical examples were checked with Python. The power method and algorithm-choice sections are supplementary.}
 \end{document}
