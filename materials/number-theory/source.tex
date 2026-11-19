@@ -29,7 +29,7 @@
 \]
 若 $\gcd(a,b)=1$，称 $a,b$ 互素；Bézout 等式说明存在整数 $s,t$ 使 $sa+tb=1$。
 \EN{The notation $a\mid b$ means that $b$ is an integer multiple of $a$. The greatest common divisor is the largest positive integer dividing both inputs. The division algorithm repeatedly reduces the pair until the last nonzero remainder is the gcd; back-substitution expresses it as an integer linear combination.}
-\READ{“The greatest common divisor of a and b equals s times a plus t times b for some integers s and t.”}
+\READ{“For some integers s and t, the greatest common divisor of a and b equals s times a plus t times b.”}
 
 \noindent\textbf{素因数分解。} 每个大于 $1$ 的整数都可唯一写成素数幂的乘积 $N=\prod_p p^{\alpha_p}$（忽略因子顺序）。若 $A=\prod_p p^{a_p}$、$B=\prod_p p^{b_p}$，则 $\gcd(A,B)=\prod_p p^{\min(a_p,b_p)}$、$\operatorname{lcm}(A,B)=\prod_p p^{\max(a_p,b_p)}$。唯一分解把整除问题转为比较素数指数。
 \EN{Every integer greater than one has a unique prime factorization, up to the order of its factors. The gcd takes the smaller exponent of each prime, while the least common multiple takes the larger exponent. Divisibility can therefore be checked by comparing prime exponents.}
@@ -47,7 +47,7 @@ ax\equiv b\pmod n
 \]
 有解当且仅当 $d=\gcd(a,n)$ 整除 $b$；若有解，模 $n$ 恰有 $d$ 个不同解。若 $d=1$，Bézout 等式给出 $a$ 在模 $n$ 下的乘法逆元。
 \EN{The congruence $a\equiv b\pmod n$ means that $a-b$ is divisible by $n$, so the two integers have the same remainder. Addition and multiplication preserve congruence. The linear congruence $ax\equiv b\pmod n$ is solvable exactly when $\gcd(a,n)$ divides $b$; if solvable, it has $\gcd(a,n)$ solutions modulo $n$.}
-\READ{“The congruence a x is congruent to b modulo n has a solution if and only if the greatest common divisor of a and n divides b.”}
+\READ{“For the congruence a x congruent to b modulo n, a solution exists if and only if the greatest common divisor of a and n divides b.”}
 
 \EX{解 $6x\equiv8\pmod{14}$。因为 $\gcd(6,14)=2$ 整除 $8$，方程有两个模 $14$ 的解。除以 $2$ 得 $3x\equiv4\pmod7$；$3^{-1}\equiv5\pmod7$，所以 $x\equiv20\equiv6\pmod7$，在模 $14$ 下为 $x\equiv6,13$。代回可验证两解。}{For $6x\equiv8\pmod{14}$, the gcd is $2$, which divides $8$, so there are two solutions modulo $14$. Dividing by $2$ gives $3x\equiv4\pmod7$. Since $3^{-1}\equiv5\pmod7$, $x\equiv6\pmod7$, giving $x\equiv6,13\pmod{14}$.}
 
