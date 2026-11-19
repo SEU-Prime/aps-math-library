@@ -1,0 +1,485 @@
+﻿\documentclass[UTF8,11pt,a4paper]{ctexart}
+\usepackage{amsmath,amssymb,geometry,enumitem,hyperref,array,booktabs,longtable}
+\geometry{margin=2.1cm}\setlist{itemsep=2pt,topsep=3pt}
+\ctexset{section={beforeskip=1.8ex plus .2ex minus .1ex,afterskip=1.2ex},subsection={beforeskip=1.4ex plus .2ex,afterskip=0.8ex}}
+\hypersetup{colorlinks=true,linkcolor=blue}
+\pagestyle{plain}
+\setlength{\emergencystretch}{2em}
+\setlength{\abovedisplayskip}{3pt}
+\setlength{\belowdisplayskip}{3pt}
+\setlength{\abovedisplayshortskip}{1pt}
+\setlength{\belowdisplayshortskip}{1pt}
+\newcommand{\APS}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par}
+\newcommand{\EN}[1]{\par\noindent \textbf{English.} #1\par}
+\newcommand{\FORMULA}[2]{\par\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
+\newcommand{\READ}[1]{\par\noindent \textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\EX}[2]{\par\noindent \textbf{例子 / Example.} #1\par\EN{#2}}
+\newcommand{\ASK}[4]{\par\noindent \textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent \textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
+\title{常微分方程 APS 面试准备\\[4pt]\large 第 1--5 章：初等积分法、存在唯一性、依赖性与线性方程组}
+\author{Ordinary Differential Equations: Bilingual Review}
+\date{}
+\begin{document}\maketitle
+\section*{课程概述 | Course overview}
+\APS{本讲义对应柳彬《常微分方程》（北京大学出版社，2021）第 1--5 章，主线是四级推进。第一级：一阶方程在五类可积形式下用初等积分法求解——恰当方程、变量分离、一阶线性、积分因子、一阶隐式方程；得到的是显式或隐式公式，以及由初值确定的特解。第二级：绝大多数方程无法初等积分（Liouville 已证明 Riccati 方程一般不可积），于是问题改为“解是否存在、是否唯一、能延拓多远”，这就是 Picard--Lindel\"of 定理、Peano 定理、解的延伸与比较定理。第三级：方程若是线性的，无论一阶还是 $n$ 阶、单个方程还是方程组，解集都是线性空间，有基础解系、Wronskian、矩阵指数这套完整理论，常系数情形可以把解写成特征值与 Jordan 块的显式组合。第四级：解对初值与参数连续依赖、甚至连续可微，导数满足变分方程；这一级把前面的理论接到数值计算、灵敏度分析与稳定性上。面试时讲这四层结构，比零散罗列解法更能说明你真的理解了这门课。}{This review follows Chapters 1--5 of Liu Bin, \emph{Ordinary Differential Equations} (Peking University Press, 2021). The thread has four levels. First, first-order equations in five integrable classes are solved by elementary integration: exact equations, separable equations, first-order linear equations, integrating factors and first-order implicit equations; the output is an explicit or implicit formula and the particular solution fixed by the initial value. Second, most equations admit no elementary integral (Liouville proved that Riccati equations are in general not integrable), so the question becomes whether a solution exists, whether it is unique, and how far it can be extended: this is the Picard--Lindel\"of theorem, Peano's theorem, extension of solutions and the comparison theorem. Third, when the equation is linear --- scalar or $n$-th order, single equation or system --- the solution set is a linear space with a full theory of fundamental systems, Wronskians and matrix exponentials; in the constant-coefficient case the solution is an explicit combination of eigenvalues and Jordan blocks. Fourth, solutions depend continuously, and even differentiably, on initial values and parameters, the derivatives satisfying variational equations; this level connects the theory to numerical computation, sensitivity analysis and stability. Presenting these four levels in an interview shows genuine understanding rather than a list of tricks.}
+\subsection*{导入例子一：Logistic 方程 | First example: the logistic equation}
+\APS{设种群数量为 $y(t)$，内禀增长率 $r>0$，环境容量 $K>0$，则单位时间增长既正比于现有数量、又受剩余资源限制：$y'=ry(1-y/K)$。这是可分离方程，$y\equiv0$ 与 $y\equiv K$ 是两个平衡解；分离变量并部分分式得 $\ln\frac{y}{K-y}=rt+C$，故
+\[
+y(t)=\frac{K}{1+\left(\frac{K}{y_0}-1\right)e^{-rt}},\qquad y(0)=y_0 .
+\]
+取 $r=1$、$K=10$、$y_0=1$，得 $y=10/(1+9e^{-t})$：$t=0$ 时 $y=1$，$t=\ln9\approx2.197$ 时 $y=5=K/2$（增长率最大、曲线拐点），$t\to\infty$ 时 $y\to10$。平衡点 $y=0$ 不稳定，$y=K$ 渐近稳定。}{Let $y(t)$ be a population with intrinsic growth rate $r>0$ and carrying capacity $K>0$; growth per unit time is proportional to the present size but limited by the remaining resources, so $y'=ry(1-y/K)$. This is separable, with equilibrium solutions $y\equiv0$ and $y\equiv K$; separating and using partial fractions gives $\ln\frac{y}{K-y}=rt+C$, hence the displayed solution with $y(0)=y_0$. For $r=1$, $K=10$ and $y_0=1$ one gets $y=10/(1+9e^{-t})$: $y=1$ at $t=0$, $y=5=K/2$ at $t=\ln9\approx2.197$ (maximal growth rate and an inflection point), and $y\to10$ as $t\to\infty$. The equilibrium $y=0$ is unstable and $y=K$ is asymptotically stable.}
+\APS{这条曲线浓缩了本课的四个主题：它有显式解（初等积分法）；解只对 $t>-C/r$ 有意义且可延拓到全直线（存在性与延伸）；解连续依赖于 $y_0$（第 4 章）；线性化 $u'=r(1-2y/K)u$ 决定平衡点的稳定性（第 5 章与稳定性理论）。}{This single curve condenses the four themes: it has a closed form (elementary integration); the solution is meaningful for all $t$ here but the general question of how far it extends is Chapter 3; it depends continuously on $y_0$ (Chapter 4); and the linearization $u'=r(1-2y/K)u$ decides stability of the equilibria (Chapter 5 and stability theory).}
+\subsection*{导入例子二：RLC 电路与常系数线性方程 | Second example: the RLC circuit}
+\APS{串联 RLC 电路中，电感电压 $L\dot I$、电阻电压 $RI$、电容电压 $Q/C$ 之和等于外加电动势 $E(t)$，且 $I=\dot Q$，故
+\[
+LQ''+RQ'+\frac1C Q=E(t)\quad\Longleftrightarrow\quad Q''+2\zeta\omega_0Q'+\omega_0^2Q=\frac{E(t)}{L},
+\]
+其中 $\omega_0=1/\sqrt{LC}$ 是无阻尼固有频率，$2\zeta\omega_0=R/L$ 定义阻尼比 $\zeta$。齐次方程的特征方程 $\lambda^2+2\zeta\omega_0\lambda+\omega_0^2=0$ 给三种情形：$\zeta<1$ 欠阻尼，$\lambda=-\zeta\omega_0\pm i\omega_0\sqrt{1-\zeta^2}$，解为衰减振荡；$\zeta=1$ 临界阻尼，重根 $\lambda=-\omega_0$，解为 $(C_1+C_2t)e^{-\omega_0t}$；$\zeta>1$ 过阻尼，两个负实根，无振荡。取 $L=1$、$C=1$、$R=0.4$，则 $\omega_0=1$、$\zeta=0.2$，特征值为 $-0.2\pm0.98i$，振荡周期约 $2\pi/0.98\approx6.4$。}{In a series RLC circuit the sum of the inductor voltage $L\dot I$, the resistor voltage $RI$ and the capacitor voltage $Q/C$ equals the applied electromotive force $E(t)$, and $I=\dot Q$, giving the displayed equation, where $\omega_0=1/\sqrt{LC}$ is the undamped natural frequency and $2\zeta\omega_0=R/L$ defines the damping ratio $\zeta$. The characteristic equation $\lambda^2+2\zeta\omega_0\lambda+\omega_0^2=0$ gives three cases: for $\zeta<1$ (underdamped) $\lambda=-\zeta\omega_0\pm i\omega_0\sqrt{1-\zeta^2}$ and the solution is a decaying oscillation; for $\zeta=1$ (critically damped) there is a double root $\lambda=-\omega_0$ and the solution is $(C_1+C_2t)e^{-\omega_0t}$; for $\zeta>1$ (overdamped) there are two negative real roots and no oscillation. For $L=1$, $C=1$ and $R=0.4$ one has $\omega_0=1$, $\zeta=0.2$, eigenvalues $-0.2\pm0.98i$ and oscillation period about $2\pi/0.98\approx6.4$.}
+
+\section[基本概念]{微分方程的基本概念 | Basic concepts of differential equations}
+\subsection{定义、阶与线性性 | Definition, order and linearity}
+\APS{含有未知函数及其导数的方程称为微分方程；未知函数只有一个自变量的称为常微分方程，$n$ 阶常微分方程的一般（隐式）形式为
+\[
+F\bigl(x,y,y',\dots,y^{(n)}\bigr)=0 .
+\]
+若能从其中解出最高阶导数，得到 $y^{(n)}=f\bigl(x,y,y',\dots,y^{(n-1)}\bigr)$，称为显式形式或标准形。方程的阶是出现的最高阶导数；方程关于未知函数及其各阶导数是线性的，若它可写成 $y^{(n)}+a_1(x)y^{(n-1)}+\dots+a_n(x)y=g(x)$，否则为非线性。不显含自变量的方程称为自治方程。}{An equation containing an unknown function and its derivatives is a differential equation; if the unknown depends on a single independent variable it is an ordinary differential equation, and an $n$-th order ODE in general (implicit) form is displayed. If the highest derivative can be solved for, one obtains the explicit or normal form displayed. The order is the highest derivative present; the equation is linear in the unknown and its derivatives if it can be written as displayed, otherwise nonlinear. An equation not containing the independent variable explicitly is autonomous.}
+\APS{例：$y''+\sin y=0$ 是二阶非线性自治方程（单摆）；$y'+2xy=x$ 是一阶线性非齐次方程；$(y')^2+y^2=1$ 是一阶非线性方程；$y'''y''+y=\sin x$ 是三阶非线性方程。判断阶看最高导数，判断线性只看 $y,y',\dots$ 是否以一次方且系数只依赖 $x$ 的形式出现；$\sin y$、$y^2$、$yy'$、$1/y$ 都破坏线性。}{Examples: $y''+\sin y=0$ is a second-order nonlinear autonomous equation (the pendulum); $y'+2xy=x$ is first-order linear nonhomogeneous; $(y')^2+y^2=1$ is first-order nonlinear; $y'''y''+y=\sin x$ is third-order nonlinear. Order is read off the highest derivative, while linearity only asks whether $y,y',\dots$ appear to the first power with coefficients depending on $x$ alone; $\sin y$, $y^2$, $yy'$ and $1/y$ all destroy linearity.}
+\APS{解的定义要带区间：若函数 $y=\varphi(x)$ 在区间 $I$ 上 $n$ 次可微，代入方程后在 $I$ 上成为恒等式，则称它是方程在 $I$ 上的解。解必须定义在一个区间上，而不是若干孤立点；讨论解时永远要问“在哪个区间上”。}{The definition of a solution must include an interval: if $y=\varphi(x)$ is $n$ times differentiable on an interval $I$ and substitution makes the equation an identity on $I$, it is a solution on $I$. A solution lives on an interval, not on isolated points; one should always ask on which interval a solution is meant.}
+\subsection{通解、特解与初值问题 | General solution, particular solution and initial value problem}
+\APS{$n$ 阶方程含 $n$ 个独立任意常数的解族称为通解，例如 $y''+y=0$ 的通解为 $y=C_1\cos x+C_2\sin x$；给常数赋特定值得到特解。所谓独立，是指这 $n$ 个常数不能合并减少，等价于对应的 $n$ 个解线性无关（Wronskian 不为零，见第 5 章）。$n$ 阶方程的初值问题（Cauchy 问题）是在同一点 $x_0$ 给定 $n$ 个数据
+\[
+y(x_0)=y_0,\quad y'(x_0)=y_0^{(1)},\quad\dots,\quad y^{(n-1)}(x_0)=y_0^{(n-1)},
+\]
+求满足它们的解。一阶情形就是 $y'=f(x,y)$、$y(x_0)=y_0$。}{A family of solutions of an $n$-th order equation containing $n$ independent arbitrary constants is a general solution, for instance $y=C_1\cos x+C_2\sin x$ for $y''+y=0$; assigning values to the constants gives a particular solution. Independence means the $n$ constants cannot be merged or reduced, equivalently the $n$ corresponding solutions are linearly independent (nonzero Wronskian, see Chapter 5). The initial value problem (Cauchy problem) for an $n$-th order equation prescribes $n$ data at one point $x_0$, as displayed, and asks for a solution satisfying them. For first order this is just $y'=f(x,y)$, $y(x_0)=y_0$.}
+\APS{几何上，一阶方程的解 $y=\varphi(x)$ 在 $xy$ 平面上的图像称为积分曲线；通解是一族单参数曲线，初值条件挑出过点 $(x_0,y_0)$ 的那一条。$n$ 阶方程的通解是 $n$ 参数曲线族，初值条件挑出在 $x_0$ 处有指定位置、斜率、曲率等的曲线。物理上，$n$ 阶方程需要 $n$ 个初始状态量，这正是“初始条件个数等于方程阶数”的来源。}{Geometrically, the graph of a solution $y=\varphi(x)$ of a first-order equation is an integral curve; the general solution is a one-parameter family and the initial condition selects the curve through $(x_0,y_0)$. For an $n$-th order equation the general solution is an $n$-parameter family and the initial data select the curve with prescribed position, slope, curvature and so on at $x_0$. Physically an $n$-th order equation needs $n$ pieces of initial state, which is the origin of the rule that the number of initial conditions equals the order.}
+\subsection{方向场、积分曲线与等斜线 | Direction field, integral curves and isoclines}
+\APS{把标准形 $y'=f(x,y)$ 在每一点 $(x,y)$ 处看成一个斜率 $f(x,y)$，就在平面上得到一个方向场；积分曲线是处处与方向场相切的曲线。$f$ 连续时方向场连续，$f$ 的零点是斜率为零的点，$f$ 无定义的点（如 $f=y/x$ 在 $x=0$）方向场缺项。等斜线是斜率取同一常数的点集：
+\[
+f(x,y)=k\quad\Longleftrightarrow\quad \text{等斜线 / isocline of slope } k .
+\]
+画出一族等斜线及其上的短斜线，就能徒手勾出积分曲线的走向，这是定量求解之前的定性一步。}{Reading the normal form $y'=f(x,y)$ as a slope $f(x,y)$ at every point $(x,y)$ gives a direction field on the plane; an integral curve is a curve tangent to the field everywhere. Where $f$ is continuous the field is continuous; zeros of $f$ are points of zero slope, and points where $f$ is undefined (such as $f=y/x$ at $x=0$) are missing from the field. An isocline is the level set where the slope is a fixed constant, displayed. Drawing a family of isoclines with their short slope marks lets one sketch integral curves by hand, a qualitative step before any quantitative solving.}
+\EX{对 $y'=x^2+y^2$，等斜线 $x^2+y^2=k$ 是以原点为心的圆，斜率随半径增大而增大，故积分曲线向上弯曲、斜率处处为正，解在有限时间内爆破（第 3 章会证明：$y'\ge1+y^2$ 时解在 $\pi/2$ 量级内爆破）。对 $y'=xy$，等斜线 $xy=k$ 是双曲线，$x$ 轴与 $y$ 轴是零斜率线；第一象限中 $x,y>0$ 时斜率为正、$|x|$ 越大越陡，故积分曲线是 $y=Ce^{x^2/2}$ 型的钟形曲线。对 $y'=y/x$，等斜线 $y=kx$ 是过原点的射线，积分曲线也是射线 $y=Cx$：方向场在每条射线上常数。}{For $y'=x^2+y^2$ the isoclines $x^2+y^2=k$ are circles centred at the origin, the slope grows with the radius, integral curves bend upward with everywhere positive slope, and solutions blow up in finite time (Chapter 3 will show that $y'\ge1+y^2$ forces blow-up on a scale of $\pi/2$). For $y'=xy$ the isoclines $xy=k$ are hyperbolas and the axes are zero-slope lines; in the first quadrant the slope is positive and steepens with $|x|$, so integral curves are the bell-shaped curves $y=Ce^{x^2/2}$. For $y'=y/x$ the isoclines $y=kx$ are rays through the origin and the integral curves are also rays $y=Cx$: the field is constant along each ray.}
+\subsection{建模：从实际问题到方程 | Modelling: from a real problem to an equation}
+\APS{建模三步是“设变量、用定律列方程、用数据定常数”，求解后必须代回原问题检验量纲与极限行为。经典的四类模型如下。Malthus 人口模型假设增长率恒定：$N'=rN$，$N(t)=N_0e^{rt}$，只适合资源无限的早期阶段；Logistic 模型加上环境容量，已在概述中给出。放射性衰变：$N'=-\lambda N$，$N=N_0e^{-\lambda t}$，半衰期 $T_{1/2}=\ln2/\lambda$，与初始量无关，这是碳定年的基础。Newton 冷却：物体温度 $T$ 与环境温度 $T_m$ 之差按比例衰减，$T'=-k(T-T_m)$，故 $T=T_m+(T_0-T_m)e^{-kt}$，$k>0$ 由材料与表面决定。}{Modelling has three steps --- choose variables, write the law as an equation, fit constants from data --- and after solving one must substitute back and check dimensions and limiting behaviour. Four classical models follow. The Malthus model assumes a constant growth rate, $N'=rN$, $N(t)=N_0e^{rt}$, valid only in an early phase with unlimited resources; the logistic model adds a carrying capacity and was given in the overview. Radioactive decay: $N'=-\lambda N$, $N=N_0e^{-\lambda t}$, with half-life $T_{1/2}=\ln2/\lambda$ independent of the initial amount, the basis of radiocarbon dating. Newton cooling: the temperature difference $T-T_m$ from the surroundings decays proportionally, $T'=-k(T-T_m)$, hence $T=T_m+(T_0-T_m)e^{-kt}$ with $k>0$ set by the material and surface.}
+\EX{混合问题。一水箱盛 $100$ L 盐水，含盐 $5$ kg；以 $2$ L/min 注入浓度 $0.2$ kg/L 的盐水，同时以 $2$ L/min 排出充分搅拌的混合液，求含盐量 $S(t)$。体积不变，故 $S'=0.4-0.02S$，$S(0)=5$；这是线性方程，解为
+\[
+S(t)=20-15e^{-0.02t}\ \text{kg}.
+\]
+检验：$S(0)=5$；$t=50$ min 时 $S=20-15e^{-1}\approx14.48$ kg；$t\to\infty$ 时 $S\to20$ kg，与流入浓度乘体积相符，此时流入与流出速率相等。}{Mixing problem. A tank holds $100$ L of brine with $5$ kg of salt; brine of concentration $0.2$ kg/L enters at $2$ L/min and the well-stirred mixture leaves at $2$ L/min. Find the salt mass $S(t)$. The volume is constant, so $S'=0.4-0.02S$ with $S(0)=5$; this linear equation has the displayed solution $S=20-15e^{-0.02t}$ kg. Check: $S(0)=5$; at $t=50$ min, $S=20-15e^{-1}\approx14.48$ kg; as $t\to\infty$, $S\to20$ kg, matching inflow concentration times volume, when inflow and outflow rates balance.}
+\subsection{通解是否覆盖全部解 | Does the general solution contain every solution?}
+\APS{答案是否定的，这是第 2、3 章必须点明的细节。反例一：$y'=y^2$ 的通解是 $y=1/(C-x)$（对 $y\ne0$ 积分得到），但 $y\equiv0$ 也是解，它不对应任何有限 $C$。反例二：Clairaut 方程 $y=xp+p^2$ 的通解是直线族 $y=Cx+C^2$，而 $y=-x^2/4$ 也是解，它不是族中任何一条，称为奇解。反例三：$y'=\sqrt{|y|}$、$y(0)=0$ 除 $y\equiv0$ 外还有 $y=(x-x_0)^2/4$（$x\ge x_0$），初值相同而解不同，说明通解不能代替存在唯一性。}{The answer is no, a point that Chapters 2 and 3 must make explicit. First counterexample: the general solution of $y'=y^2$ is $y=1/(C-x)$ (obtained by integrating for $y\ne0$), yet $y\equiv0$ is also a solution and corresponds to no finite $C$. Second: the Clairaut equation $y=xp+p^2$ has the general solution $y=Cx+C^2$, a family of lines, while $y=-x^2/4$ is also a solution and is none of them; it is called a singular solution. Third: for $y'=\sqrt{|y|}$ with $y(0)=0$, besides $y\equiv0$ there is $y=(x-x_0)^2/4$ for $x\ge x_0$, so the same initial value gives different solutions and the general solution cannot replace existence and uniqueness.}
+\ASK{什么是通解？它是否包含方程的所有解？}{What is a general solution, and does it contain every solution?}{通解是含 $n$ 个独立任意常数的解族，在解由初值唯一确定的区域内覆盖全部解。反例：$y'=y^2$ 的通解 $y=1/(C-x)$ 不含零解；Clairaut 方程的通解是直线族，还漏掉奇解 $y=-x^2/4$。因此通解不等于全部解，存在唯一性定理才是讨论“全部解”的正确工具。}{A general solution is a family containing $n$ independent arbitrary constants; it covers all solutions on a region where initial values determine the solution uniquely. Counterexamples: the general solution $y=1/(C-x)$ of $y'=y^2$ misses the zero solution; for a Clairaut equation the general solution is a family of lines and misses the singular solution $y=-x^2/4$. So a general solution is not all solutions, and the existence--uniqueness theorem is the right tool for discussing all solutions.}
+
+\section[初等积分法]{初等积分法 | Elementary methods of integration}
+\APS{一阶方程的初等积分法是一条逻辑链：若 $Mdx+Ndy$ 恰是某个二元函数的全微分，方程就是恰当方程；若不是，先看能否分离变量，再看能否写成线性方程；线性形式套积分因子公式；更一般地寻找积分因子把方程变成恰当方程；显式形式都不好用时就引入参数 $p=y'$，用微分法或参数法处理隐式方程。关键不是背公式，而是每一步都能判断适用条件是否满足、是否丢了特解。}{The elementary methods for first-order equations form a chain: if $Mdx+Ndy$ is the total differential of some function, the equation is exact; if not, try separation, then a linear form; for the linear form use an integrating factor; more generally look for an integrating factor making the equation exact; and when no explicit form is convenient, introduce the parameter $p=y'$ and use differentiation or a parametric method for implicit equations. The point is not memorizing formulas but judging at each step whether the hypotheses hold and whether particular solutions were lost.}
+\subsection{恰当方程与全微分判定 | Exact equations and the criterion for a total differential}
+\APS{把一阶方程写成微分形式 $M(x,y)dx+N(x,y)dy=0$。若存在可微函数 $u(x,y)$ 使 $du=Mdx+Ndy$，即 $u_x=M$、$u_y=N$，则方程称为恰当方程（全微分方程），解为 $u(x,y)=C$。在单连通区域内，$M,N$ 连续可微时恰当当且仅当
+\[
+\frac{\partial M}{\partial y}=\frac{\partial N}{\partial x},
+\]
+因为混合偏导可交换；充分性由路径积分与路径无关得到。实际求 $u$ 用两次积分或分组凑全微分。}{Write a first-order equation in differential form $M(x,y)dx+N(x,y)dy=0$. If a differentiable $u(x,y)$ satisfies $du=Mdx+Ndy$, that is $u_x=M$ and $u_y=N$, the equation is exact and its solution is $u(x,y)=C$. On a simply connected region with continuously differentiable $M,N$, exactness is equivalent to the displayed equality because mixed partials commute; sufficiency follows from path independence of the line integral. In practice $u$ is found by two integrations or by grouping terms into total differentials.}
+\EX{解 $(2x+y)dx+(x+2y)dy=0$。这里 $M=2x+y$、$N=x+2y$，$\partial_yM=1=\partial_xN$，故恰当。按 $u_x=2x+y$ 对 $x$ 积分得 $u=x^2+xy+\varphi(y)$；再对 $y$ 求导并令其等于 $N$：$x+\varphi'(y)=x+2y$，故 $\varphi=y^2$。通解为
+\[
+x^2+xy+y^2=C,
+\]
+过点 $(1,0)$ 的特解为 $x^2+xy+y^2=1$。也可直接分组得 $d(x^2+xy+y^2)=0$。}{Solve $(2x+y)dx+(x+2y)dy=0$. Here $M=2x+y$, $N=x+2y$ and $\partial_yM=1=\partial_xN$, so it is exact. Integrating $u_x=2x+y$ gives $u=x^2+xy+\varphi(y)$; differentiating in $y$ and equating to $N$ gives $x+\varphi'(y)=x+2y$, so $\varphi=y^2$. The general solution is displayed, and the particular solution through $(1,0)$ is $x^2+xy+y^2=1$. Grouping gives $d(x^2+xy+y^2)=0$ directly.}
+\subsection{变量分离方程 | Separable equations}
+\APS{若方程可写成 $y'=f(x)g(y)$，则称为变量分离方程。当 $g(y)\ne0$ 时，
+\[
+\frac{dy}{g(y)}=f(x)\,dx\quad\Longrightarrow\quad \int\frac{dy}{g(y)}=\int f(x)\,dx+C,
+\]
+左端是 $y$ 的原函数，右端是 $x$ 的原函数加常数。若 $g(y_0)=0$，则 $y\equiv y_0$ 也是解，这条常数解通常不在积分得到的族中（除以 $g(y)$ 丢掉了它），必须单独补上。}{If the equation can be written $y'=f(x)g(y)$ it is separable. Where $g(y)\ne0$ the displayed separation holds, with an antiderivative of $1/g$ on the left and one of $f$ plus a constant on the right. If $g(y_0)=0$, then $y\equiv y_0$ is also a solution, usually missing from the integrated family because division by $g(y)$ discarded it, so it must be added separately.}
+\EX{解 $y'=xy$，$y(0)=2$。分离得 $dy/y=x\,dx$，积分 $\ln|y|=x^2/2+C$，故 $y=Ce^{x^2/2}$；初值给 $C=2$，即 $y=2e^{x^2/2}$，对一切 $x\in\mathbb R$ 有定义。若初值为 $y(0)=0$，则 $y\equiv0$，正是被除掉的因子 $y=0$ 对应的解。}{Solve $y'=xy$ with $y(0)=2$. Separating gives $dy/y=x\,dx$ and $\ln|y|=x^2/2+C$, hence $y=Ce^{x^2/2}$; the initial value gives $C=2$, so $y=2e^{x^2/2}$ for all $x\in\mathbb R$. For $y(0)=0$ the solution is $y\equiv0$, exactly the solution corresponding to the discarded factor $y=0$.}
+\subsection{一阶线性微分方程 | First-order linear equations}
+\APS{标准形为 $y'+P(x)y=Q(x)$，$P,Q$ 在区间 $I$ 上连续。齐次方程 $y'+Py=0$ 分离得 $y=Ce^{-\int P dx}$。非齐次方程用积分因子 $\mu(x)=e^{\int P dx}>0$，因为
+\[
+(\mu y)'=\mu y'+\mu P y=\mu(y'+Py)=\mu Q ,
+\]
+故 $\mu y=\int\mu Q\,dx+C$，从而
+\[
+y=e^{-\int P dx}\left(\int Q(x)e^{\int P dx}dx+C\right).
+\]
+这就是常数变易法：把齐次解中的常数换成函数 $C(x)$，代入后得到同一公式。}{The normal form is $y'+P(x)y=Q(x)$ with $P,Q$ continuous on an interval $I$. The homogeneous equation separates to $y=Ce^{-\int P dx}$. For the nonhomogeneous one use the integrating factor $\mu(x)=e^{\int P dx}>0$, because the displayed identity holds; hence $\mu y=\int\mu Q\,dx+C$ and the general solution is displayed. This is variation of constants: replace the constant in the homogeneous solution by a function $C(x)$, which gives the same formula.}
+\EX{解 $y'+2xy=x$。这里 $P=2x$，$\mu=e^{x^2}$，故 $(ye^{x^2})'=xe^{x^2}$，积分得 $ye^{x^2}=\frac12e^{x^2}+C$，即 $y=\frac12+Ce^{-x^2}$。若 $y(0)=1$，则 $C=\frac12$，$y=\frac12(1+e^{-x^2})$：$x\to\infty$ 时 $y\to1/2$，$x=0$ 时取最大值 $1$。}{Solve $y'+2xy=x$. Here $P=2x$ and $\mu=e^{x^2}$, so $(ye^{x^2})'=xe^{x^2}$ and integration gives $ye^{x^2}=\frac12e^{x^2}+C$, that is $y=\frac12+Ce^{-x^2}$. With $y(0)=1$ one gets $C=\frac12$ and $y=\frac12(1+e^{-x^2})$: $y\to1/2$ as $x\to\infty$ and $y$ attains its maximum $1$ at $x=0$.}
+\EX{解 $y'+\frac1x y=1$（$x>0$），$y(1)=0$。$P=1/x$，$\mu=x$，$(xy)'=x$，故 $xy=x^2/2+C$，$y=x/2+C/x$；初值给 $C=-1/2$，$y=x/2-1/(2x)$。检验：$y'=1/2+1/(2x^2)$，$y'+y/x=1$。}{Solve $y'+\frac1x y=1$ for $x>0$ with $y(1)=0$. Here $P=1/x$, $\mu=x$ and $(xy)'=x$, so $xy=x^2/2+C$ and $y=x/2+C/x$; the initial value gives $C=-1/2$, hence $y=x/2-1/(2x)$. Check: $y'=1/2+1/(2x^2)$ and $y'+y/x=1$.}
+\subsection{Bernoulli 方程与齐次方程 | Bernoulli equations and homogeneous equations}
+\APS{Bernoulli 方程形如
+\[
+y'+P(x)y=Q(x)y^{n},\qquad n\ne0,1 .
+\]
+令 $u=y^{1-n}$，则 $u'=(1-n)y^{-n}y'$，代入并除以 $y^n$ 得线性方程 $u'+(1-n)Pu=(1-n)Q$，解出 $u$ 再开方。$n>0$ 时要单独检查 $y\equiv0$ 是否满足原方程，它对应 $u=0$，开方后可能丢失。}{A Bernoulli equation has the displayed form with $n\ne0,1$. Setting $u=y^{1-n}$ gives $u'=(1-n)y^{-n}y'$; substituting and dividing by $y^n$ yields the linear equation $u'+(1-n)Pu=(1-n)Q$. Solve for $u$ and take roots. For $n>0$ check separately whether $y\equiv0$ solves the original equation, since it corresponds to $u=0$ and may be lost.}
+\EX{解 $y'=y+y^2$，$y(0)=1$。这是 $n=2$ 的 Bernoulli 方程，令 $u=1/y$，则 $y'=-u'/u^2$，代入得 $-u'/u^2=1/u+1/u^2$，即 $u'+u=-1$。解得 $u=Ce^{-x}-1$，$y=1/(Ce^{-x}-1)$；初值给 $C=2$，故
+\[
+y=\frac{1}{2e^{-x}-1},\qquad x<\ln2 .
+\]
+$2e^{-x}-1=0$ 时 $x=\ln2\approx0.693$，解正向爆破，这是第 3 章“饱和解在有限端点发散”的例子。检验：$y'=2e^{-x}/(2e^{-x}-1)^2$，而 $y+y^2=\frac{(2e^{-x}-1)+1}{(2e^{-x}-1)^2}=\frac{2e^{-x}}{(2e^{-x}-1)^2}$。}{Solve $y'=y+y^2$ with $y(0)=1$. This is Bernoulli with $n=2$; setting $u=1/y$ gives $y'=-u'/u^2$ and substitution yields $u'+u=-1$. Hence $u=Ce^{-x}-1$ and $y=1/(Ce^{-x}-1)$; the initial value gives $C=2$, so $y=1/(2e^{-x}-1)$ for $x<\ln2$. The solution blows up forward at $x=\ln2\approx0.693$, the Chapter 3 example of a saturated solution diverging at a finite endpoint. Check: $y'=2e^{-x}/(2e^{-x}-1)^2$ equals $y+y^2$.}
+\APS{另一类可化为可分离的是齐次方程 $y'=f(y/x)$，这里齐次指 $f$ 只依赖比值，不是线性齐次。令 $v=y/x$，即 $y=xv$，则 $y'=v+xv'$，方程化为 $x v'=f(v)-v$，即可分离方程
+\[
+\frac{dv}{f(v)-v}=\frac{dx}{x}.
+\]
+解出 $v$ 后回代 $y=xv$；$f(v_0)=v_0$ 时 $v\equiv v_0$ 给出射线解 $y=v_0x$。}{Another class reducible to separation is $y'=f(y/x)$, where homogeneous refers to dependence on the ratio only. Set $v=y/x$, so $y=xv$ and $y'=v+xv'$; the equation becomes $xv'=f(v)-v$, which is separable, displayed. Solve for $v$ and substitute back; when $f(v_0)=v_0$, $v\equiv v_0$ gives the ray solution $y=v_0x$.}
+\EX{解 $y'=\frac{y}{x}+\tan\frac{y}{x}$（$x>0$，$|y/x|<\pi/2$）。令 $v=y/x$，得 $v+xv'=v+\tan v$，即 $xv'=\tan v$，分离得 $\cot v\,dv=dx/x$，积分 $\ln|\sin v|=\ln x+C$，故
+\[
+\sin\frac{y}{x}=Cx .
+\]
+检验：两边求导得 $\cos(y/x)\cdot\frac{xy'-y}{x^2}=C$；用 $\sin(y/x)=Cx$ 消去 $C$ 并整理即得原方程。}{Solve $y'=y/x+\tan(y/x)$ for $x>0$ and $|y/x|<\pi/2$. With $v=y/x$ one gets $v+xv'=v+\tan v$, that is $xv'=\tan v$; separation gives $\cot v\,dv=dx/x$ and $\ln|\sin v|=\ln x+C$, hence $\sin(y/x)=Cx$. Check: differentiating gives $\cos(y/x)(xy'-y)/x^2=C$; eliminating $C$ by $\sin(y/x)=Cx$ returns the equation.}
+
+\subsection{积分因子 | Integrating factors}
+\APS{若 $Mdx+Ndy=0$ 不是恰当方程，但存在非零可微函数 $\mu(x,y)$ 使 $\mu M\,dx+\mu N\,dy=0$ 成为恰当方程，即 $\partial_y(\mu M)=\partial_x(\mu N)$，则称 $\mu$ 为积分因子。这等价于
+\[
+N\frac{\partial\mu}{\partial x}-M\frac{\partial\mu}{\partial y}=\left(\frac{\partial M}{\partial y}-\frac{\partial N}{\partial x}\right)\mu ,
+\]
+这是关于 $\mu$ 的一阶偏微分方程，一般难解；但两种常见情形可化为常微分方程。只含 $x$ 的积分因子存在，当且仅当 $\frac1N(\partial_yM-\partial_xN)=\varphi(x)$，此时 $\mu=e^{\int\varphi(x)dx}$；只含 $y$ 的积分因子存在，当且仅当 $\frac1M(\partial_xN-\partial_yM)=\psi(y)$，此时 $\mu=e^{\int\psi(y)dy}$。}{If $Mdx+Ndy=0$ is not exact but a nonzero differentiable $\mu(x,y)$ makes $\mu M\,dx+\mu N\,dy=0$ exact, that is $\partial_y(\mu M)=\partial_x(\mu N)$, then $\mu$ is an integrating factor. This is equivalent to the displayed first-order PDE for $\mu$, generally hard; two common cases reduce it to an ODE. An integrating factor depending on $x$ alone exists if and only if the displayed quotient equals $\varphi(x)$, and then $\mu=e^{\int\varphi dx}$; one depending on $y$ alone exists if and only if the other quotient equals $\psi(y)$, and then $\mu=e^{\int\psi dy}$.}
+\EX{解 $2y\,dx+x\,dy=0$。这里 $M=2y$、$N=x$，$\partial_yM=2$、$\partial_xN=1$，不恰当。计算 $\frac{1}{N}(\partial_yM-\partial_xN)=\frac1x$，只含 $x$，故 $\mu=e^{\int dx/x}=x$。乘后得 $2xy\,dx+x^2\,dy=0$，左边恰为 $d(x^2y)$，故通解
+\[
+x^2y=C .
+\]
+}{Solve $2y\,dx+x\,dy=0$. Here $M=2y$, $N=x$ and the equation is not exact. The quotient $\frac1N(\partial_yM-\partial_xN)=1/x$ depends on $x$ alone, so $\mu=e^{\int dx/x}=x$. Multiplying gives $2xy\,dx+x^2\,dy=0$, whose left side is $d(x^2y)$, hence the general solution $x^2y=C$.}
+\subsection{一阶隐式方程：微分法与参数法 | First-order implicit equations}
+\APS{一般一阶隐式方程为 $F(x,y,p)=0$，$p=y'$。若解出 $y=f(x,p)$，就对 $x$ 求全导数：$p=f_x+f_p\frac{dp}{dx}$，这是关于 $x(p)$ 的一阶线性方程，解出 $x=\varphi(p,C)$ 后与 $y=f(x,p)$ 联立得参数形式的解。若解出 $x=f(y,p)$，就用 $p=dy/dx$ 把 $dx$ 换成 $dy/p$，得到 $y(p)$ 的方程。若 $F$ 不显含 $y$，即 $F(x,p)=0$，把 $x,p$ 参数化为 $t$ 的函数，再由 $dy=p\,dx$ 积分出 $y$；若不显含 $x$，即 $F(y,p)=0$，参数化后由 $dx=dy/p$ 积分出 $x$。}{A general first-order implicit equation is $F(x,y,p)=0$ with $p=y'$. If $y=f(x,p)$ can be solved for, differentiate totally in $x$: $p=f_x+f_p\,dp/dx$, a linear equation for $x(p)$; solving $x=\varphi(p,C)$ and combining with $y=f(x,p)$ gives a parametric solution. If $x=f(y,p)$, use $p=dy/dx$ to replace $dx$ by $dy/p$ and get an equation for $y(p)$. If $F$ does not contain $y$, i.e. $F(x,p)=0$, parametrize $x,p$ by $t$ and integrate $dy=p\,dx$; if it does not contain $x$, i.e. $F(y,p)=0$, integrate $dx=dy/p$.}
+\EX{解 $(y')^2=4y$。这是不显含 $x$ 的情形：$p^2=4y$，故 $p=\pm2\sqrt y$。由 $dy/dx=p$ 得 $dy/\sqrt y=\pm2\,dx$，积分 $2\sqrt y=\pm2x+2C$，即
+\[
+y=(x+C)^2 .
+\]
+检验：$y'=2(x+C)$，$(y')^2=4(x+C)^2=4y$。$y=0$ 也是解，对应 $p=0$ 的退化情形。}{Solve $(y')^2=4y$. This does not contain $x$: $p^2=4y$, so $p=\pm2\sqrt y$. From $dy/dx=p$ one gets $dy/\sqrt y=\pm2\,dx$ and $2\sqrt y=\pm2x+2C$, that is $y=(x+C)^2$. Check: $y'=2(x+C)$ and $(y')^2=4y$. The zero function is also a solution, the degenerate case $p=0$.}
+\EX{解 $y=xp+p^2$（Clairaut 方程）。对 $x$ 求导：$p=p+xp'+2pp'$，即 $(x+2p)p'=0$。若 $p'=0$，则 $p=C$，代回得直线族 $y=Cx+C^2$；若 $x+2p=0$，则 $p=-x/2$，代回得
+\[
+y=x\left(-\frac x2\right)+\frac{x^2}{4}=-\frac{x^2}{4},
+\]
+这是抛物线，也是解，且不在直线族中。}{Solve $y=xp+p^2$ (a Clairaut equation). Differentiating in $x$ gives $p=p+xp'+2pp'$, that is $(x+2p)p'=0$. If $p'=0$ then $p=C$ and substitution gives the family of lines $y=Cx+C^2$; if $x+2p=0$ then $p=-x/2$ and substitution gives $y=-x^2/4$, a parabola that is also a solution and is not in the family.}
+\EX{解 $y=2xp+p^2$（Lagrange 方程）。对 $x$ 求导得 $p=2p+2xp'+2pp'$，即 $-p=(2x+2p)p'$。把它看成 $x$ 关于 $p$ 的方程：$\frac{dx}{dp}+\frac2p x=-2$，积分因子 $p^2$，故 $(p^2x)'=-2p^2$，积分得
+\[
+p^2x=-\frac{2p^3}{3}+C,\qquad x=-\frac{2p}{3}+\frac{C}{p^2},
+\]
+代回 $y=2xp+p^2$ 得 $y=-\frac{p^2}{3}+\frac{2C}{p}$。这是参数形式的通解；验证 $\frac{dy/dp}{dx/dp}=p$：分子 $-\frac{2p}{3}-\frac{2C}{p^2}$，分母 $-\frac23-\frac{2C}{p^3}$，比值恒为 $p$。}{Solve $y=2xp+p^2$ (a Lagrange equation). Differentiation gives $p=2p+2xp'+2pp'$, i.e. $-p=(2x+2p)p'$. Treat it as an equation for $x(p)$: $dx/dp+2x/p=-2$ with integrating factor $p^2$, so $(p^2x)'=-2p^2$ and integration gives $p^2x=-2p^3/3+C$, that is $x=-2p/3+C/p^2$; substituting into $y=2xp+p^2$ gives $y=-p^2/3+2C/p$. This is the general solution in parametric form; indeed $(dy/dp)/(dx/dp)=p$.}
+\subsection{Clairaut 方程、奇解与包络 | Clairaut equations, singular solutions and envelopes}
+\APS{Clairaut 方程是 $y=xp+f(p)$，通解为直线族 $y=Cx+f(C)$；另一支由 $x+f'(p)=0$ 与 $y=xp+f(p)$ 消去 $p$ 得到一条曲线。这条曲线是直线族的包络：它与族中每条直线相切，在每点与某条直线有相同的位置和斜率，所以它本身也是解，称为奇解。奇解不是通解中任何一条曲线，也不由初值唯一确定——过奇解上每一点，既有奇解又有族中一条直线，唯一性被破坏。}{A Clairaut equation is $y=xp+f(p)$ with general solution the family of lines $y=Cx+f(C)$; the other branch comes from eliminating $p$ between $x+f'(p)=0$ and $y=xp+f(p)$. That curve is the envelope of the family: tangent to every line and sharing position and slope with one line at each point, so it is itself a solution, called a singular solution. It is none of the general-solution curves and is not determined uniquely by initial data --- through each of its points pass both the singular solution and one line, so uniqueness fails.}
+\FORMULA{包络的判别式条件}{discriminant conditions for an envelope}
+\[
+\Phi(x,y,C)=0,\quad \frac{\partial\Phi}{\partial C}=0
+\quad\Longrightarrow\quad \text{包络 / envelope } y=\psi(x).
+\]
+\APS{对 Clairaut 方程，$p$-判别式 $F=0$、$F_p=0$ 与 $C$-判别式给出同一条曲线。以 $y=xp+p^2$ 为例，$F=y-xp-p^2$，$F_p=-x-2p=0$ 给 $p=-x/2$，代回即 $y=-x^2/4$；直线族 $y=Cx+C^2$ 的包络恰是这条抛物线。但判别式给出的曲线不一定是解，必须代回验证：它可能是切点轨迹或尖点轨迹。}{For a Clairaut equation the $p$-discriminant $F=0$, $F_p=0$ and the $C$-discriminant give the same curve. For $y=xp+p^2$, $F=y-xp-p^2$ and $F_p=-x-2p=0$ give $p=-x/2$, hence $y=-x^2/4$; the envelope of the lines $y=Cx+C^2$ is exactly this parabola. A discriminant curve need not be a solution, however, and must be checked by substitution: it may be a locus of tangency points or of cusps.}
+\APS{要区分两类唯一性破坏。第一类由包络产生，是本章意义下的奇解，如 $-x^2/4$。第二类由 $f$ 不 Lipschitz 产生，如 $y'=\sqrt{|y|}$ 在原点，解不唯一但没有包络，通常不称为奇解。把两类分开说，能显示对定理条件与几何图像的双重理解。}{Two kinds of lost uniqueness must be distinguished. The first comes from envelopes and gives singular solutions in the sense of this chapter, such as $-x^2/4$. The second comes from failure of the Lipschitz condition, as for $y'=\sqrt{|y|}$ at the origin; solutions are non-unique but there is no envelope, so it is usually not called a singular solution. Separating the two shows both the hypotheses and the geometry.}
+\ASK{怎么判断一个一阶方程该用哪种方法？}{How do you decide which first-order method to use?}{先写成标准形看是否可分离或线性；再看是否为 Bernoulli 或齐次；再检验恰当性，不恰当就试积分因子；若解不出 $y'$，则用隐式方程的微分法或参数法。顺序从最特殊到最一般，每一步先看适用条件再动手。}{Write the equation in normal form and check whether it is separable or linear; then test Bernoulli or homogeneous form; then exactness and, if it fails, an integrating factor; if $y'$ cannot be solved for, use differentiation or a parameter. The order goes from the most special to the most general, checking hypotheses first.}
+
+\section[存在唯一性]{解的存在和唯一性 | Existence and uniqueness of solutions}
+\APS{初等积分法只覆盖很窄的一类方程，一般方程必须换问题：先问局部解是否存在、是否唯一，再问能延拓多远。本章的逻辑是：把微分方程改写成等价的积分方程，用 Picard 迭代构造解（需要 Lipschitz 条件）；减弱到只要求连续，用 Euler 折线与紧性得到 Peano 存在定理（此时唯一性可能失效）；把局部解沿区间延拓到饱和解，用爆破刻画最大存在区间；用比较定理把解与已知方程的解作比较；最后系统处理奇解与包络这两个“唯一性失效”的几何现象。}{Elementary integration covers only a narrow class, so for general equations the question must change: first whether a local solution exists and is unique, then how far it extends. The logic of this chapter: rewrite the ODE as an equivalent integral equation and construct the solution by Picard iteration (needing a Lipschitz condition); weaken continuity alone and use Euler polygons with compactness to get Peano's existence theorem (uniqueness may then fail); extend local solutions along intervals to saturated solutions and describe the maximal interval by blow-up; use the comparison theorem to compare a solution with that of a known equation; and finally treat singular solutions and envelopes, the geometric phenomena of lost uniqueness.}
+\subsection{准备知识与等价积分方程 | Preliminaries and the equivalent integral equation}
+\APS{考虑初值问题
+\[
+y'=f(x,y),\qquad y(x_0)=y_0,
+\]
+其中 $f$ 在矩形 $R=\{(x,y):|x-x_0|\le a,\ |y-y_0|\le b\}$ 上连续，记 $M=\max_R|f|$。若 $y=\varphi(x)$ 是 $I$ 上的连续可微解，则对 $x\in I$ 积分得
+\[
+y(x)=y_0+\int_{x_0}^{x}f\bigl(t,y(t)\bigr)dt ,
+\]
+反之，右端连续函数 $y$ 满足此积分方程时自动可微且满足初值问题。因此初值问题等价于积分方程，后者只涉及连续函数，可以在完备的函数空间里用不动点方法处理。}{Consider the initial value problem displayed, where $f$ is continuous on the rectangle $R$ with $|x-x_0|\le a$, $|y-y_0|\le b$, and let $M=\max_R|f|$. If $y=\varphi(x)$ is a continuously differentiable solution on $I$, integrating from $x_0$ gives the displayed integral equation; conversely, a continuous $y$ satisfying it is automatically differentiable and solves the initial value problem. The initial value problem is therefore equivalent to an integral equation involving only continuous functions, which can be handled by fixed-point methods in a complete function space.}
+\APS{关键的附加条件是 Lipschitz 条件：若存在 $L>0$ 使对 $R$ 中所有 $(x,y_1),(x,y_2)$ 有
+\[
+|f(x,y_1)-f(x,y_2)|\le L|y_1-y_2|,
+\]
+则称 $f$ 在 $R$ 上关于 $y$ 满足 Lipschitz 条件，$L$ 为 Lipschitz 常数。若 $f_y$ 连续，则由中值定理 $L=\max_R|f_y|$ 即可；$f$ 在 $R$ 上连续可微必然局部 Lipschitz。}{The key extra hypothesis is the Lipschitz condition: if some $L>0$ satisfies the displayed inequality for all $(x,y_1),(x,y_2)$ in $R$, then $f$ satisfies a Lipschitz condition in $y$ on $R$ with constant $L$. If $f_y$ is continuous, the mean value theorem gives $L=\max_R|f_y|$; a continuously differentiable $f$ on $R$ is automatically locally Lipschitz.}
+\APS{三个例子必须记住。$f(x,y)=y^2$ 在条形 $|y|\le1$ 上 Lipschitz，$L=2$；但在全平面 $f_y=2y$ 无界，只有局部 Lipschitz，这正是 $y'=y^2$ 的解会在有限时间爆破的根源。$f(x,y)=|y|$ 的 Lipschitz 常数 $L=1$，因为 $||y_1|-|y_2||\le|y_1-y_2|$。$f(x,y)=\sqrt{|y|}$ 在 $y=0$ 不满足 Lipschitz 条件：取 $y_1=\varepsilon$、$y_2=0$，比值为 $1/\sqrt\varepsilon\to\infty$，这一失败将直接导致 $y'=\sqrt{|y|}$ 的解不唯一。}{Three examples must be remembered. $f(x,y)=y^2$ is Lipschitz on the strip $|y|\le1$ with $L=2$, but on the whole plane $f_y=2y$ is unbounded and only locally Lipschitz, which is exactly why solutions of $y'=y^2$ blow up in finite time. $f(x,y)=|y|$ has Lipschitz constant $L=1$ since $||y_1|-|y_2||\le|y_1-y_2|$. $f(x,y)=\sqrt{|y|}$ fails the Lipschitz condition at $y=0$: with $y_1=\varepsilon$, $y_2=0$ the ratio is $1/\sqrt\varepsilon\to\infty$, and this failure will directly cause non-uniqueness for $y'=\sqrt{|y|}$.}
+\subsection{Picard 逐步逼近与 Picard--Lindel\"of 定理 | Picard iteration and the Picard--Lindel\"of theorem}
+\APS{Picard 的想法是：从常值函数 $y_0(x)\equiv y_0$ 出发，用积分方程反复修正，
+\[
+y_{n+1}(x)=y_0+\int_{x_0}^{x}f\bigl(t,y_n(t)\bigr)dt,\qquad n=0,1,2,\dots
+\]
+只要 $y_n$ 还在矩形 $R$ 内，迭代就有定义；在区间 $I=[x_0-h,x_0+h]$、$h=\min(a,b/M)$ 上，归纳法给出 $|y_n(x)-y_0|\le M|x-x_0|\le b$，故所有迭代都留在 $R$ 内。}{Picard's idea: start from the constant function $y_0(x)\equiv y_0$ and correct repeatedly by the integral equation, as displayed, for $n=0,1,2,\dots$; the iteration is defined as long as $y_n$ stays in $R$. On the interval $I=[x_0-h,x_0+h]$ with $h=\min(a,b/M)$, induction gives $|y_n(x)-y_0|\le M|x-x_0|\le b$, so all iterates stay in $R$.}
+\APS{收敛性靠相邻两项之差的估计。由 Lipschitz 条件，
+\[
+|y_{n+1}(x)-y_n(x)|\le L\left|\int_{x_0}^{x}|y_n(t)-y_{n-1}(t)|\,dt\right|,
+\]
+归纳可得
+\[
+|y_{n+1}(x)-y_n(x)|\le\frac{M L^{n}}{(n+1)!}|x-x_0|^{n+1}.
+\]
+于是 $\sum\|y_{n+1}-y_n\|_\infty\le\frac{M}{L}(e^{Lh}-1)$ 收敛，$\{y_n\}$ 在 $I$ 上一致收敛到连续函数 $y$；在积分方程中取极限（$f$ 的 Lipschitz 性保证积分项收敛），得 $y$ 满足积分方程，从而 $y$ 是解。}{Convergence rests on estimating the difference of consecutive terms. The Lipschitz condition gives the displayed integral inequality, and induction yields the displayed factorial bound. Hence the series $\sum\|y_{n+1}-y_n\|_\infty$ is dominated by $\frac ML(e^{Lh}-1)$ and converges, so $\{y_n\}$ converges uniformly on $I$ to a continuous $y$; passing to the limit in the integral equation (the Lipschitz property controls the integral term) shows that $y$ solves the integral equation and hence the problem.}
+\APS{唯一性：设 $y,z$ 是 $I$ 上两个解，则
+\[
+|y(x)-z(x)|\le L\left|\int_{x_0}^{x}|y(t)-z(t)|\,dt\right| .
+\]
+记 $u(x)=\int_{x_0}^{x}|y-z|\,dt$，则 $u'=|y-z|\le Lu$、$u(x_0)=0$，由 Gronwall 不等式 $u\equiv0$，故 $y=z$。这一步是本章所有唯一性论证的模板：把微分不等式化为积分不等式，再用 Gronwall。}{Uniqueness: let $y,z$ be two solutions on $I$; then the displayed integral inequality holds. Setting $u(x)=\int_{x_0}^x|y-z|\,dt$ gives $u'=|y-z|\le Lu$ with $u(x_0)=0$, and Gronwall's inequality forces $u\equiv0$, so $y=z$. This is the template for every uniqueness argument in the chapter: convert a differential inequality into an integral inequality and apply Gronwall.}
+\FORMULA{Picard--Lindel\"of 定理与误差估计}{the Picard--Lindel\"of theorem and its error estimate}
+\[
+|y(x)-y_n(x)|\le\frac{M}{L}\cdot\frac{(L|x-x_0|)^{n+1}}{(n+1)!}\,e^{L|x-x_0|}
+\le \frac{(Lh)^n}{1-Lh}\,\|y_1-y_0\|_\infty .
+\]
+\APS{定理的完整表述：$f$ 在矩形 $R$ 上连续且关于 $y$ 满足 Lipschitz 条件，则初值问题在 $I=[x_0-h,x_0+h]$、$h=\min(a,b/M)$ 上有唯一解，且 Picard 迭代一致收敛到它。上式第一个估计来自把尾部 $\sum_{k>n}$ 用指数级数放大，第二个估计来自压缩映射的几何级数（要求 $Lh<1$）。两个估计都说明：$Lh$ 越小收敛越快，这解释了为什么“解在短区间上比在长区间上更容易构造”。}{Full statement: if $f$ is continuous on the rectangle $R$ and satisfies a Lipschitz condition in $y$, then the initial value problem has a unique solution on $I=[x_0-h,x_0+h]$ with $h=\min(a,b/M)$, and the Picard iterates converge to it uniformly. The first estimate comes from bounding the tail $\sum_{k>n}$ by an exponential series, the second from the geometric series of the contraction (requiring $Lh<1$). Both show that smaller $Lh$ means faster convergence, which explains why solutions are easier to construct on short intervals than on long ones.}
+\EX{用 Picard 迭代解 $y'=y$、$y(0)=1$。$y_0=1$，$y_1=1+\int_0^x1\,dt=1+x$，$y_2=1+\int_0^x(1+t)dt=1+x+x^2/2$，归纳得
+\[
+y_n(x)=1+x+\frac{x^2}{2!}+\dots+\frac{x^n}{n!}\ \longrightarrow\ e^x ,
+\]
+在任意有限区间上一致收敛。这里 $L=1$、$M$ 在矩形内有限，定理保证局部唯一；由于线性方程的解整体存在（见 3.4 节），这个局部解延拓为全直线上的 $e^x$。}{Solve $y'=y$, $y(0)=1$ by Picard iteration. With $y_0=1$, $y_1=1+x$, $y_2=1+x+x^2/2$ and in general the displayed partial sums, which converge uniformly on every finite interval to $e^x$. Here $L=1$ and $M$ is finite on the rectangle, so the theorem gives a unique local solution; since solutions of linear equations exist globally (Section 3.4), this local solution extends to $e^x$ on the whole line.}
+\subsection{Peano 定理与 Osgood 条件 | Peano's theorem and the Osgood condition}
+\APS{把 Lipschitz 条件减弱为 $f$ 连续，唯一性会失效，但存在性仍然成立，这就是 Peano 存在定理：$f$ 在矩形 $R$ 上连续，则初值问题在某个区间 $|x-x_0|\le h$ 上至少有一个解。证明思路是 Euler 折线：把区间 $n$ 等分，在每小段用左端点的斜率 $f$ 作直线，得到折线 $y_n$；由 $|y_n'|\le M$ 得一致有界与等度连续，Arzel\`a--Ascoli 定理给出子列一致收敛到连续函数 $y$，再验证 $y$ 满足积分方程。证明中没有任何地方用到唯一性，所以结论只是“存在”。}{Weakening the Lipschitz condition to continuity of $f$ destroys uniqueness but keeps existence: this is Peano's existence theorem --- if $f$ is continuous on the rectangle $R$, the initial value problem has at least one solution on some interval $|x-x_0|\le h$. The proof uses Euler polygons: divide the interval into $n$ equal parts and draw a straight segment with the slope $f$ at the left endpoint of each, obtaining polygons $y_n$; from $|y_n'|\le M$ one gets uniform boundedness and equicontinuity, the Arzel\`a--Ascoli theorem gives a subsequence converging uniformly to a continuous $y$, and one verifies that $y$ satisfies the integral equation. Nowhere is uniqueness used, so the conclusion is existence only.}
+\APS{唯一性的精确门槛由 Osgood 条件给出：若 $|f(x,y_1)-f(x,y_2)|\le\omega(|y_1-y_2|)$，其中 $\omega$ 连续、单调递增、$\omega(0)=0$，且
+\[
+\int_{0}^{\varepsilon}\frac{du}{\omega(u)}=+\infty\quad\text{对某个 }\varepsilon>0,
+\]
+则初值问题的解唯一。Lipschitz 条件 $\omega(u)=Lu$ 显然满足（积分发散），所以 Osgood 是 Lipschitz 的推广；而 $\omega(u)=u^{\alpha}$（$0<\alpha<1$）时积分 $\frac{u^{1-\alpha}}{1-\alpha}\big|_0^\varepsilon<\infty$，唯一性可能失效，$f=\sqrt{|y|}$ 正是 $\alpha=1/2$ 的情形。}{The sharp threshold for uniqueness is the Osgood condition: if $|f(x,y_1)-f(x,y_2)|\le\omega(|y_1-y_2|)$ with $\omega$ continuous, increasing, $\omega(0)=0$, and the displayed integral diverges for some $\varepsilon>0$, then the solution is unique. The Lipschitz case $\omega(u)=Lu$ clearly satisfies it (the integral diverges), so Osgood generalizes Lipschitz; for $\omega(u)=u^{\alpha}$ with $0<\alpha<1$ the integral is finite and uniqueness may fail, and $f=\sqrt{|y|}$ is exactly the case $\alpha=1/2$.}
+\EX{非唯一性的标准反例：$y'=\sqrt{|y|}$、$y(0)=0$。$y\equiv0$ 是解；对任意 $x_0\ge0$，
+\[
+y(x)=\begin{cases}0, & x\le x_0,\\[2pt] \dfrac{(x-x_0)^2}{4}, & x\ge x_0,\end{cases}
+\]
+也是解：在 $x>x_0$ 处 $y'=(x-x_0)/2=\sqrt y$，在 $x<x_0$ 处 $y'=0=\sqrt{|y|}$，在 $x_0$ 处左右导数都为零，故 $C^1$。于是过 $(0,0)$ 有无穷多个解，Picard 定理失效的原因正是 $f=\sqrt{|y|}$ 在 $y=0$ 不 Lipschitz。}{The standard non-uniqueness example: $y'=\sqrt{|y|}$ with $y(0)=0$. The zero function is a solution; for any $x_0\ge0$ the displayed piecewise function is also a solution, since for $x>x_0$ one has $y'=(x-x_0)/2=\sqrt y$, for $x<x_0$ one has $y'=0=\sqrt{|y|}$, and at $x_0$ both one-sided derivatives vanish, so it is $C^1$. Hence infinitely many solutions pass through $(0,0)$, and Picard's theorem fails precisely because $f=\sqrt{|y|}$ is not Lipschitz at $y=0$.}
+\subsection{解的延伸、饱和解与有限时间爆破 | Extension, saturated solutions and blow-up}
+\APS{Picard 定理只给局部解。把局部解一片片接起来：若解 $\varphi$ 定义在 $(a,b)$ 上，且可延拓到更大的区间，就称它可延拓；不能延拓的解称为饱和解，其定义区间称为最大存在区间。标准的延伸定理是：若 $f$ 在区域 $G$ 内连续且局部 Lipschitz，则过每点 $(x_0,y_0)\in G$ 存在唯一饱和解，其最大存在区间是开区间 $(a,b)$，且当 $x\to b^-$ 时点 $(x,\varphi(x))$ 趋于 $G$ 的边界或无穷远——对 $G=\mathbb R^2$ 就是 $|\varphi(x)|\to\infty$。}{Picard's theorem gives only a local solution. Local solutions are glued together: a solution $\varphi$ on $(a,b)$ is extendible if it can be continued to a larger interval, and a non-extendible one is saturated, with its interval called the maximal interval of existence. The standard extension theorem: if $f$ is continuous and locally Lipschitz in a domain $G$, then through each $(x_0,y_0)\in G$ there is a unique saturated solution whose maximal interval is open, $(a,b)$, and as $x\to b^-$ the point $(x,\varphi(x))$ approaches the boundary of $G$ or infinity --- for $G=\mathbb R^2$ this means $|\varphi(x)|\to\infty$.}
+\EX{有限时间爆破：$y'=y^2$、$y(0)=1$。分离变量得 $-1/y=x+C$，初值给 $C=-1$，故
+\[
+y(x)=\frac{1}{1-x},\qquad x\in(-\infty,1).
+\]
+$x\to1^-$ 时 $y\to+\infty$，故最大存在区间是 $(-\infty,1)$，解在 $x=1$ 正向爆破，不能延拓过 $1$。这个例子说明：$f=y^2$ 在全平面光滑（局部 Lipschitz），但解仍可能只存在有限时间，原因是 $f$ 关于 $y$ 超线性增长。}{Blow-up in finite time: $y'=y^2$ with $y(0)=1$. Separation gives $-1/y=x+C$ and the initial value gives $C=-1$, hence $y=1/(1-x)$ on $(-\infty,1)$. As $x\to1^-$, $y\to+\infty$, so the maximal interval is $(-\infty,1)$ and the solution blows up forward at $x=1$ and cannot be extended past it. The example shows that $f=y^2$ is smooth on the whole plane (locally Lipschitz) yet the solution may exist only for finite time, because $f$ grows superlinearly in $y$.}
+\subsection{比较定理 | The comparison theorem}
+\APS{比较定理：设 $f,g$ 在区域 $G$ 内连续且关于 $y$ 局部 Lipschitz，$f(x,y)\le g(x,y)$。若 $y(x)$、$z(x)$ 分别是
+\[
+y'=f(x,y),\quad y(x_0)=y_0;\qquad z'=g(x,z),\quad z(x_0)=z_0
+\]
+在 $[x_0,b)$ 上的解，且 $y_0\le z_0$，则 $y(x)\le z(x)$ 对 $x\in[x_0,b)$ 成立。证明用反证：令 $w=z-y$，$w(x_0)\ge0$；若第一次出现 $w(x_1)=0$（$x_1>x_0$），则 $w'(x_1)=g(x_1,z)-f(x_1,y)\ge f(x_1,z)-f(x_1,y)\ge0$ 的符号分析给出矛盾。}{Comparison theorem: let $f,g$ be continuous and locally Lipschitz in $y$ on a domain $G$ with $f(x,y)\le g(x,y)$. If $y(x)$ and $z(x)$ solve the displayed initial value problems on $[x_0,b)$ with $y_0\le z_0$, then $y(x)\le z(x)$ on $[x_0,b)$. The proof is by contradiction: set $w=z-y$, so $w(x_0)\ge0$; if $w$ first vanishes at $x_1>x_0$, the sign analysis of $w'(x_1)=g(x_1,z)-f(x_1,y)\ge f(x_1,z)-f(x_1,y)\ge0$ gives a contradiction.}
+\subsection{奇解与包络的定理化处理 | Singular solutions and envelopes, revisited}
+\APS{第 2 章已从 Clairaut 方程看到奇解。这里给出一般定义与判别法。设 $F(x,y,p)=0$ 连续可微。若 $y=\varphi(x)$ 是解，且过其图像上任一点还有另一个解与它在同一点有相同初值（即唯一性破坏），同时 $\varphi$ 不属于通解族，则称 $\varphi$ 为奇解。$p$-判别式是消去 $p$ 后的曲线
+\[
+F(x,y,p)=0,\qquad F_p(x,y,p)=0\ \Longrightarrow\ y=\psi(x),
+\]
+它给出奇解的候选；每条候选曲线必须代回 $F(x,\psi,\psi')=0$ 验证。}{Chapter 2 already exhibited singular solutions through Clairaut equations. Here is the general definition and test. Let $F(x,y,p)=0$ be continuously differentiable. A solution $y=\varphi(x)$ is singular if through each point of its graph there is another solution with the same initial value at that point (so uniqueness fails) and $\varphi$ is not in the general family. The $p$-discriminant is the curve obtained by eliminating $p$ from the displayed system, which gives candidates for singular solutions; every candidate must be substituted back into $F(x,\psi,\psi')=0$.}
+\APS{包络是几何概念：单参数曲线族 $\Phi(x,y,C)=0$ 的包络是一条曲线，它与族中每条曲线相切，且每点是族中某条曲线的切点。包络由 $C$-判别式 $\Phi=0$、$\Phi_C=0$ 消去 $C$ 得到。对 Clairaut 方程 $y=xp+f(p)$，通解是直线族 $y=Cx+f(C)$，$C$-判别式与 $p$-判别式给同一条曲线，它就是奇解：直线族 $y=Cx+C^2$ 的包络 $y=-x^2/4$ 是 $y'=p$、$y=xp+p^2$ 的奇解，因为过抛物线上每一点既有抛物线又有切线，二者在该点位置与斜率都相同，唯一性破坏。}{An envelope is a geometric notion: the envelope of a one-parameter family $\Phi(x,y,C)=0$ is a curve tangent to every member of the family, each of its points being a tangency point with some member. The envelope comes from eliminating $C$ between $\Phi=0$ and $\Phi_C=0$. For a Clairaut equation $y=xp+f(p)$ the general solution is the family of lines $y=Cx+f(C)$, and the $C$- and $p$-discriminants give the same curve, which is the singular solution: the envelope $y=-x^2/4$ of the lines $y=Cx+C^2$ is the singular solution of $y=xp+p^2$, because through each point of the parabola pass both the parabola and its tangent line, with the same position and slope, so uniqueness fails.}
+\ASK{Picard 定理的条件能否减弱？减弱后失去什么？}{Can the hypotheses of Picard's theorem be weakened, and what is lost?}{连续可微可减弱为 Lipschitz，唯一性与迭代收敛仍成立；进一步减弱为连续，得到 Peano 存在定理，但唯一性丢失，例如 $y'=\sqrt{|y|}$。Osgood 条件给出介于两者之间的精确门槛：$\int_0 du/\omega(u)=\infty$ 时唯一。}{Continuous differentiability can be weakened to a Lipschitz condition, keeping uniqueness and convergence of the iteration; weakening further to continuity gives Peano's existence theorem but loses uniqueness, as for $y'=\sqrt{|y|}$. The Osgood condition is the sharp threshold in between: uniqueness holds when the displayed integral diverges.}
+
+\section[解对初值和参数的依赖]{解对初值和参数的依赖性 | Dependence on initial values and parameters}
+\APS{前面的存在唯一性只回答“有没有、有几个”，实际问题还要求解对数据稳定：初值或参数只变一点点，解也应只变一点点；更强地，解应连续可微地依赖数据，这样才能做灵敏度分析与稳定性判定。本章把标量方程推广到 $n$ 维空间，用 Gronwall 不等式证明连续依赖，用变分方程刻画导数，并说明这些结论为什么是数值方法与稳定性理论的基石。}{The existence theory so far answers only whether and how many solutions exist; applications also need stability in the data: a small change of initial values or parameters should change the solution only slightly, and more strongly the solution should depend differentiably on the data, which is what sensitivity analysis and stability decisions require. This chapter extends scalar equations to $n$-dimensional space, proves continuous dependence with Gronwall's inequality, describes derivatives through variational equations, and explains why these results underpin numerical methods and stability theory.}
+\subsection{n 维线性空间中的微分方程 | Differential equations in n-dimensional linear space}
+\APS{把 $n$ 个未知函数写成向量 $x=(x_1,\dots,x_n)^T$，一阶方程组为
+\[
+\frac{dx}{dt}=f(t,x),\qquad f=(f_1,\dots,f_n)^T,
+\]
+初值为 $x(t_0)=x_0\in\mathbb R^n$。这里 $t$ 是自变量，$x$ 是向量值未知函数。$n$ 阶方程 $y^{(n)}=g(t,y,y',\dots,y^{(n-1)})$ 通过令 $x_1=y$、$x_2=y'$、$\dots$、$x_n=y^{(n-1)}$ 化为一阶方程组，这是所有高阶理论的标准起点。}{Writing the $n$ unknown functions as a vector $x=(x_1,\dots,x_n)^T$, a first-order system is displayed, with $f=(f_1,\dots,f_n)^T$ and initial value $x(t_0)=x_0\in\mathbb R^n$; here $t$ is the independent variable and $x$ is the vector-valued unknown. An $n$-th order equation $y^{(n)}=g(t,y,y',\dots,y^{(n-1)})$ becomes a first-order system under $x_1=y$, $x_2=y'$, \dots, $x_n=y^{(n-1)}$, the standard starting point of all higher-order theory.}
+\APS{$\mathbb R^n$ 上任意两个范数等价，故存在唯一性、连续依赖等结论与范数选择无关；证明时用最大范数 $\|x\|_\infty=\max_i|x_i|$ 或欧氏范数 $\|x\|_2$ 都行。$f$ 关于 $x$ 的 Lipschitz 条件写成 $\|f(t,x)-f(t,y)\|\le L\|x-y\|$；若 $f$ 的 Jacobi 矩阵 $f_x=\partial f/\partial x$ 连续，则 $L=\max\|f_x\|$ 局部有效。Picard 定理逐字搬到 $\mathbb R^n$：矩形换成 $|t-t_0|\le a$、$\|x-x_0\|\le b$，压缩映射与 Gronwall 的证明完全不改。}{Any two norms on $\mathbb R^n$ are equivalent, so existence, uniqueness and continuous dependence are independent of the norm; the maximum norm $\|x\|_\infty=\max_i|x_i|$ or the Euclidean norm may be used in proofs. The Lipschitz condition in $x$ reads $\|f(t,x)-f(t,y)\|\le L\|x-y\|$; if the Jacobian $f_x$ is continuous then $L=\max\|f_x\|$ works locally. Picard's theorem carries over verbatim to $\mathbb R^n$: replace the rectangle by $|t-t_0|\le a$, $\|x-x_0\|\le b$, and the contraction and Gronwall proofs are unchanged.}
+\subsection{连续依赖性 | Continuous dependence}
+\APS{设 $x(t)$、$y(t)$ 分别是初值 $x_0$、$y_0$ 的解，$f$ 关于 $x$ 的 Lipschitz 常数为 $L$。由积分方程
+\[
+x(t)-y(t)=x_0-y_0+\int_{t_0}^{t}\bigl[f(s,x(s))-f(s,y(s))\bigr]ds,
+\]
+取范数并用 Lipschitz 条件得 $\|x(t)-y(t)\|\le\|x_0-y_0\|+L\left|\int_{t_0}^t\|x-y\|ds\right|$。记 $u(t)=\|x(t)-y(t)\|$，则 $u(t)\le u_0+L\int_{t_0}^t u(s)ds$，Gronwall 不等式给出
+\[
+\|x(t)-y(t)\|\le\|x_0-y_0\|\,e^{L|t-t_0|}.
+\]
+}{Let $x(t)$ and $y(t)$ solve the problem with initial values $x_0$ and $y_0$, and let $L$ be the Lipschitz constant of $f$ in $x$. The integral equation displayed holds; taking norms and using the Lipschitz condition gives the displayed inequality. Setting $u(t)=\|x(t)-y(t)\|$ gives $u\le u_0+L\int u$, and Gronwall's inequality yields $\|x(t)-y(t)\|\le\|x_0-y_0\|e^{L|t-t_0|}$.}
+\APS{这个估计说明三件事：初值差被指数因子放大，放大率由 $L$ 与时间长度决定；若 $L$ 很小或时间很短，解几乎不敏感；估计是双侧的，对 $t<t_0$ 同样成立。带参数的情形完全类似：若 $f=f(t,x,\lambda)$ 关于 $\lambda$ Lipschitz（常数 $K$），则
+\[
+\|x(t,\lambda_1)-x(t,\lambda_2)\|\le\frac{K}{L}\|\lambda_1-\lambda_2\|\left(e^{L|t-t_0|}-1\right),
+\]
+即参数差被同一指数因子放大。}{The estimate says three things: the initial error is amplified by an exponential factor whose rate is set by $L$ and the length of time; for small $L$ or short times the solution is almost insensitive; and the estimate is two-sided, holding also for $t<t_0$. The parameter case is entirely similar: if $f=f(t,x,\lambda)$ is Lipschitz in $\lambda$ with constant $K$, then the displayed bound holds, so the parameter difference is amplified by the same exponential factor.}
+\subsection{连续可微性与变分方程 | Differentiability and variational equations}
+\APS{若 $f$ 关于 $x$ 连续可微，则解 $x(t,t_0,x_0)$ 关于 $x_0$ 连续可微，其 Jacobi 矩阵
+\[
+\Xi(t)=\frac{\partial x(t,t_0,x_0)}{\partial x_0}
+\]
+满足变分方程（第一变分方程）
+\[
+\Xi'(t)=f_x\bigl(t,x(t)\bigr)\Xi(t),\qquad \Xi(t_0)=I_n .
+\]
+这是关于 $\Xi$ 的线性齐次方程组，系数矩阵沿已知解 $x(t)$ 取值。对参数 $\lambda$，$\partial x/\partial\lambda$ 满足非齐次变分方程 $\eta'=f_x\eta+f_\lambda$、$\eta(t_0)=0$。}{If $f$ is continuously differentiable in $x$, the solution $x(t,t_0,x_0)$ is continuously differentiable in $x_0$, and its Jacobian $\Xi(t)=\partial x/\partial x_0$ satisfies the variational equation (first variational equation) displayed, a linear homogeneous system for $\Xi$ with coefficient matrix evaluated along the known solution $x(t)$. For a parameter $\lambda$, the derivative $\partial x/\partial\lambda$ satisfies the nonhomogeneous variational equation $\eta'=f_x\eta+f_\lambda$ with $\eta(t_0)=0$.}
+\APS{为什么数值解与稳定性分析依赖这些结论？第一，数值方法每一步都有舍入与截断误差，连续依赖与 Gronwall 估计保证误差不会以超过指数的速度放大，从而给出先验误差界。第二，稳定性判定要线性化：平衡点 $x^*$ 附近的扰动 $u$ 满足 $u'=f_x(t,x^*)u$，特征值实部的符号决定渐近稳定与否，这只需要第一变分。第三，参数反演与灵敏度分析要的是 $\partial x/\partial\lambda$，它由非齐次变分方程给出，可用来做最小二乘拟合与实验设计。第四，长期预测的固有困难也来自 $e^{Lt}$：$L>0$ 时初值误差被指数放大，这是混沌与“蝴蝶效应”的数学根源（正 Lyapunov 指数）。}{Why do numerical solutions and stability analysis rely on these results? First, every numerical step carries round-off and truncation error, and continuous dependence with Gronwall bounds guarantee that errors cannot grow faster than exponentially, giving a priori error bounds. Second, stability decisions require linearization: a perturbation $u$ near an equilibrium $x^*$ satisfies $u'=f_x(t,x^*)u$, and the signs of the real parts of the eigenvalues decide asymptotic stability, using only the first variation. Third, parameter inversion and sensitivity analysis need $\partial x/\partial\lambda$, supplied by the nonhomogeneous variational equation, which supports least-squares fitting and experimental design. Fourth, the inherent difficulty of long-term prediction also comes from $e^{Lt}$: for $L>0$ initial errors are amplified exponentially, the mathematical root of chaos and the butterfly effect (positive Lyapunov exponents).}
+\ASK{变分方程是什么？它有什么用？}{What is a variational equation and what is it good for?}{对初值的导数 $\Xi=\partial x/\partial x_0$ 满足线性齐次方程组 $\Xi'=f_x(t,x(t))\Xi$、$\Xi(t_0)=I$，这就是变分方程；对参数的导数满足非齐次版本。它把非线性敏感度问题化为线性方程，用于稳定性判定、灵敏度分析和数值误差估计。}{The derivative with respect to the initial value, $\Xi=\partial x/\partial x_0$, satisfies the linear homogeneous system $\Xi'=f_x(t,x(t))\Xi$ with $\Xi(t_0)=I$, the variational equation; parameter derivatives satisfy the nonhomogeneous version. It reduces nonlinear sensitivity to a linear equation and is used for stability criteria, sensitivity analysis and numerical error estimates.}
+
+\section[线性微分方程组]{线性微分方程组 | Linear systems of differential equations}
+\APS{线性方程组是本课程唯一有完整理论的部分：解集是线性空间，维数等于未知函数个数，任意解由基础解系线性组合得到；非齐次方程的解等于齐次通解加一个特解；常系数时特征值给出全部信息；周期系数时 Floquet 理论给出乘法表示。面试若被问“线性与非线性最本质的区别”，标准答案是：线性方程的解集是线性空间，因而可以叠加、可以用有限维线性代数处理；非线性方程没有这种结构，只能局部线性化。}{Linear systems are the only part of the course with a complete theory: the solution set is a linear space whose dimension equals the number of unknown functions, and every solution is a linear combination of a fundamental system; the general solution of the nonhomogeneous equation is the homogeneous general solution plus one particular solution; constant coefficients let the eigenvalues tell the whole story; periodic coefficients lead to the multiplicative representation of Floquet theory. If asked in an interview for the essential difference between linear and nonlinear equations, the standard answer is that the solution set of a linear equation is a linear space, so superposition and finite-dimensional linear algebra apply, while nonlinear equations have no such structure and can only be linearized locally.}
+\subsection{齐次与非齐次的一般理论 | General theory: homogeneous and nonhomogeneous}
+\APS{齐次线性方程组
+\[
+\frac{dx}{dt}=A(t)x,\qquad A(t)\in C(I;\mathbb R^{n\times n}),
+\]
+的解集是 $n$ 维线性空间。理由：解对任意线性组合封闭（叠加原理），且由存在唯一性，每个解由 $x(t_0)\in\mathbb R^n$ 唯一决定，映射 $x(\cdot)\mapsto x(t_0)$ 是解空间到 $\mathbb R^n$ 的线性同构，故维数为 $n$。取 $n$ 个线性无关的解 $x_1,\dots,x_n$，称为基础解系；以它们为列组成矩阵 $\Phi(t)$，称为基本解矩阵，满足 $\Phi'=A(t)\Phi$、$\det\Phi(t)\ne0$，通解为 $x=\Phi(t)C$，$C\in\mathbb R^n$。}{For the homogeneous linear system displayed with $A(t)$ continuous, the solution set is an $n$-dimensional linear space. Reason: solutions are closed under linear combinations (superposition), and by existence and uniqueness each solution is determined by $x(t_0)\in\mathbb R^n$; the map $x(\cdot)\mapsto x(t_0)$ is a linear isomorphism from the solution space onto $\mathbb R^n$, so the dimension is $n$. Take $n$ linearly independent solutions $x_1,\dots,x_n$, a fundamental system; the matrix $\Phi(t)$ with these as columns is a fundamental matrix satisfying $\Phi'=A(t)\Phi$ and $\det\Phi(t)\ne0$, and the general solution is $x=\Phi(t)C$ with $C\in\mathbb R^n$.}
+\APS{Wronskian 定义为 $W(t)=\det\Phi(t)$。Liouville 公式（Abel 公式）给出
+\[
+W(t)=W(t_0)\exp\left(\int_{t_0}^{t}\operatorname{tr}A(s)\,ds\right),
+\]
+证明用行列式求导 $\frac{d}{dt}\det\Phi=\operatorname{tr}(\Phi^{-1}\Phi')\det\Phi=\operatorname{tr}A\cdot W$。因此 $W$ 要么恒为零、要么处处不为零：$n$ 个解线性相关当且仅当 $W(t_0)=0$；这也解释了为什么只需在一个点上检验线性无关。}{The Wronskian is $W(t)=\det\Phi(t)$. Liouville's (Abel's) formula is displayed, proved by differentiating the determinant: $\frac{d}{dt}\det\Phi=\operatorname{tr}(\Phi^{-1}\Phi')\det\Phi=\operatorname{tr}A\cdot W$. Hence $W$ is either identically zero or nowhere zero: $n$ solutions are linearly dependent if and only if $W(t_0)=0$, which is why linear independence needs to be checked at a single point.}
+\APS{非齐次方程组 $x'=A(t)x+b(t)$ 用常数变易法：设 $x=\Phi(t)C(t)$，代入得 $\Phi C'=b$，故 $C(t)=C_0+\int_{t_0}^{t}\Phi^{-1}(s)b(s)ds$，
+\[
+x(t)=\Phi(t)C_0+\Phi(t)\int_{t_0}^{t}\Phi^{-1}(s)b(s)\,ds
+=\Phi(t)\Phi^{-1}(t_0)x_0+\int_{t_0}^{t}\Phi(t)\Phi^{-1}(s)b(s)\,ds .
+\]
+第二项是特解，第一项是齐次通解。常系数时 $\Phi(t)=e^{At}$，第二项写成 $\int_{t_0}^te^{A(t-s)}b(s)ds$，即卷积。}{For the nonhomogeneous system $x'=A(t)x+b(t)$ use variation of constants: set $x=\Phi(t)C(t)$; substitution gives $\Phi C'=b$, so $C(t)=C_0+\int_{t_0}^t\Phi^{-1}(s)b(s)ds$ and the displayed formula follows. The second term is a particular solution and the first the homogeneous general solution. For constant coefficients $\Phi(t)=e^{At}$ and the second term becomes $\int_{t_0}^t e^{A(t-s)}b(s)ds$, a convolution.}
+\subsection{常系数线性方程组 | Constant-coefficient linear systems}
+\APS{当 $A$ 为常矩阵，矩阵指数
+\[
+e^{At}=I+At+\frac{A^2t^2}{2!}+\dots+\frac{A^kt^k}{k!}+\dots
+\]
+对一切 $t$ 绝对收敛（因为 $\|A^k\|\le\|A\|^k$），且 $\frac{d}{dt}e^{At}=Ae^{At}=e^{At}A$、$e^{A(t+s)}=e^{At}e^{As}$。因此 $e^{At}$ 是基本解矩阵，初值问题的解为 $x(t)=e^{At}x_0$。计算 $e^{At}$ 的三条路线对应 $A$ 的三种谱结构。}{For a constant matrix $A$ the matrix exponential displayed converges absolutely for all $t$ (since $\|A^k\|\le\|A\|^k$), and $\frac{d}{dt}e^{At}=Ae^{At}=e^{At}A$, $e^{A(t+s)}=e^{At}e^{As}$. Hence $e^{At}$ is a fundamental matrix and the solution of the initial value problem is $x(t)=e^{At}x_0$. Three routes to computing $e^{At}$ correspond to the three spectral structures of $A$.}
+\APS{情形一：$A$ 有 $n$ 个互异实特征值 $\lambda_1,\dots,\lambda_n$，对应特征向量 $v_1,\dots,v_n$ 构成基。令 $P=(v_1,\dots,v_n)$，则 $P^{-1}AP=\operatorname{diag}(\lambda_1,\dots,\lambda_n)$，
+\[
+e^{At}=P\operatorname{diag}(e^{\lambda_1t},\dots,e^{\lambda_nt})P^{-1},\qquad x(t)=\sum_{i=1}^{n}c_ie^{\lambda_it}v_i .
+\]
+情形二：共轭复特征值 $\lambda=\alpha\pm i\beta$，$v=u\pm iw$。实解为
+\[
+e^{\alpha t}\bigl(u\cos\beta t-w\sin\beta t\bigr),\qquad e^{\alpha t}\bigl(u\sin\beta t+w\cos\beta t\bigr),
+\]
+即衰减（或增长）振荡；$\alpha<0$ 时稳定螺旋，$\alpha=0$ 时闭轨，$\alpha>0$ 时不稳定螺旋。}{Case one: $A$ has $n$ distinct real eigenvalues $\lambda_1,\dots,\lambda_n$ with eigenvectors $v_1,\dots,v_n$ forming a basis. With $P=(v_1,\dots,v_n)$ one has $P^{-1}AP=\operatorname{diag}(\lambda_1,\dots,\lambda_n)$ and the displayed formulas for $e^{At}$ and $x(t)$. Case two: conjugate complex eigenvalues $\lambda=\alpha\pm i\beta$ with $v=u\pm iw$; the real solutions are displayed, decaying (or growing) oscillations: a stable spiral for $\alpha<0$, closed orbits for $\alpha=0$ and an unstable spiral for $\alpha>0$.}
+\APS{情形三：$A$ 有重特征值。若 $A$ 仍可对角化（几何重数等于代数重数），用情形一；否则出现 Jordan 块，把 $A$ 写成 $A=\lambda I+N$，$N$ 幂零且 $N$ 与 $\lambda I$ 可交换，于是
+\[
+e^{At}=e^{\lambda t}e^{Nt}=e^{\lambda t}\left(I+Nt+\frac{N^2t^2}{2!}+\dots+\frac{N^{m-1}t^{m-1}}{(m-1)!}\right),
+\]
+级数因 $N^m=0$ 而截断，出现 $t^je^{\lambda t}$ 型项。$2\times2$ 的单个 Jordan 块 $N=\begin{pmatrix}0&1\\0&0\end{pmatrix}$ 给出 $e^{At}=e^{\lambda t}\begin{pmatrix}1&t\\0&1\end{pmatrix}$。}{Case three: $A$ has repeated eigenvalues. If $A$ is still diagonalizable (geometric multiplicity equals algebraic multiplicity) use case one; otherwise Jordan blocks appear. Write $A=\lambda I+N$ with $N$ nilpotent and commuting with $\lambda I$; then the displayed finite series for $e^{At}$ holds, truncated because $N^m=0$, producing terms $t^je^{\lambda t}$. A single $2\times2$ Jordan block $N$ with ones above the diagonal gives $e^{At}=e^{\lambda t}\begin{pmatrix}1&t\\0&1\end{pmatrix}$.}
+\EX{$A=\begin{pmatrix}1&1\\0&2\end{pmatrix}$，特征值 $1,2$，特征向量 $v_1=(1,0)^T$、$v_2=(1,1)^T$，$P=\begin{pmatrix}1&1\\0&1\end{pmatrix}$、$P^{-1}=\begin{pmatrix}1&-1\\0&1\end{pmatrix}$。于是
+\[
+e^{At}=P\begin{pmatrix}e^{t}&0\\0&e^{2t}\end{pmatrix}P^{-1}
+=\begin{pmatrix}e^{t}&e^{2t}-e^{t}\\0&e^{2t}\end{pmatrix}.
+\]
+检验：$t=0$ 时为单位阵；求导得 $\begin{pmatrix}e^t&2e^{2t}-e^t\\0&2e^{2t}\end{pmatrix}$，而 $Ae^{At}=\begin{pmatrix}e^t&e^t+(2e^{2t}-e^t)\\0&2e^{2t}\end{pmatrix}$，两者相等。取 $x(0)=(0,1)^T$，则 $x(t)=(e^{2t}-e^t,\ e^{2t})^T$。}{For $A=\begin{pmatrix}1&1\\0&2\end{pmatrix}$ the eigenvalues are $1,2$, eigenvectors $v_1=(1,0)^T$, $v_2=(1,1)^T$, so $P$ and $P^{-1}$ are as displayed. Hence $e^{At}$ is the displayed matrix. Check: it equals the identity at $t=0$; differentiating gives the displayed derivative, which equals $Ae^{At}$. With $x(0)=(0,1)^T$ one gets $x(t)=(e^{2t}-e^t,e^{2t})^T$.}
+\EX{重根例：$A=\begin{pmatrix}1&1\\0&1\end{pmatrix}=I+N$，$N^2=0$，故
+\[
+e^{At}=e^{t}(I+Nt)=e^{t}\begin{pmatrix}1&t\\0&1\end{pmatrix}.
+\]
+取 $x(0)=(a,b)^T$，则 $x_2=be^t$、$x_1=(a+bt)e^t$：第二分量按 $e^t$ 增长，第一分量多出一个 $t$ 因子，这就是重特征值导致的“长期项”，与高阶方程的重根解 $te^{\lambda x}$ 完全对应。}{Repeated root example: $A=\begin{pmatrix}1&1\\0&1\end{pmatrix}=I+N$ with $N^2=0$, so $e^{At}=e^{t}(I+Nt)$ is displayed. With $x(0)=(a,b)^T$ one gets $x_2=be^t$ and $x_1=(a+bt)e^t$: the second component grows like $e^t$ while the first acquires a factor $t$, the secular term caused by a repeated eigenvalue, exactly matching the repeated-root solution $te^{\lambda x}$ of higher-order equations.}
+\APS{非齐次常系数方程组 $x'=Ax+b(t)$ 的解为
+\[
+x(t)=e^{A(t-t_0)}x_0+\int_{t_0}^{t}e^{A(t-s)}b(s)\,ds .
+\]
+若 $b(t)=e^{\mu t}p$（$p$ 为常向量），则当 $\mu$ 不是 $A$ 的特征值时特解取 $e^{\mu t}q$，$q=(\mu I-A)^{-1}p$；当 $\mu$ 是特征值时出现共振，特解需乘 $t$（Jordan 块情形可能乘 $t^k$），与高阶方程的待定系数法完全一致。}{The solution of the nonhomogeneous constant-coefficient system $x'=Ax+b(t)$ is displayed. If $b(t)=e^{\mu t}p$ with constant $p$, then when $\mu$ is not an eigenvalue of $A$ a particular solution is $e^{\mu t}q$ with $q=(\mu I-A)^{-1}p$; when $\mu$ is an eigenvalue there is resonance and the particular solution must be multiplied by $t$ (possibly by $t^k$ in the Jordan case), exactly as in the method of undetermined coefficients.}
+
+\subsection{高阶线性微分方程 | Higher-order linear equations}
+\APS{$n$ 阶线性方程
+\[
+y^{(n)}+a_1(x)y^{(n-1)}+\dots+a_n(x)y=g(x)
+\]
+与一阶方程组完全等价：令 $x_1=y,x_2=y',\dots,x_n=y^{(n-1)}$，得 $x'=A(x)x+b(x)$。因此齐次方程的解集是 $n$ 维线性空间，$n$ 个线性无关的解 $y_1,\dots,y_n$ 构成基础解系，通解为 $\sum c_iy_i$；非齐次通解等于齐次通解加一个特解。线性无关的判据是 Wronskian
+\[
+W(x)=\det\begin{pmatrix}
+y_1&\dots&y_n\\
+y_1'&\dots&y_n'\\
+\vdots&&\vdots\\
+y_1^{(n-1)}&\dots&y_n^{(n-1)}
+\end{pmatrix}\ne0 .
+\]
+Abel 公式：$W(x)=W(x_0)\exp\left(-\int_{x_0}^{x}a_1(s)ds\right)$，故同样只需在一个点检验。}{The $n$-th order linear equation displayed is equivalent to a first-order system: set $x_1=y,x_2=y',\dots,x_n=y^{(n-1)}$ to get $x'=A(x)x+b(x)$. Hence the solution set of the homogeneous equation is an $n$-dimensional linear space, $n$ linearly independent solutions form a fundamental system, and the general solution is $\sum c_iy_i$; the nonhomogeneous general solution is the homogeneous one plus a particular solution. Linear independence is tested by the displayed Wronskian, which is nonzero. Abel's formula gives the displayed expression, so again a single point suffices.}
+\APS{常系数齐次方程 $y^{(n)}+a_1y^{(n-1)}+\dots+a_ny=0$ 用特征方程
+\[
+P(\lambda)=\lambda^n+a_1\lambda^{n-1}+\dots+a_n=0
+\]
+求解：每个根 $\lambda$ 贡献 $e^{\lambda x}$；若 $\lambda$ 是 $m$ 重根，则贡献 $e^{\lambda x},xe^{\lambda x},\dots,x^{m-1}e^{\lambda x}$ 共 $m$ 个解；共轭复根 $\alpha\pm i\beta$（$m$ 重）贡献 $e^{\alpha x}x^k\cos\beta x$、$e^{\alpha x}x^k\sin\beta x$（$k=0,\dots,m-1$）。这些解凑成 $n$ 个，线性无关，构成基础解系。}{For the constant-coefficient homogeneous equation displayed, use the characteristic equation $P(\lambda)=0$: each root $\lambda$ contributes $e^{\lambda x}$; if $\lambda$ is a root of multiplicity $m$ it contributes the $m$ solutions $e^{\lambda x},xe^{\lambda x},\dots,x^{m-1}e^{\lambda x}$; conjugate complex roots $\alpha\pm i\beta$ of multiplicity $m$ contribute $e^{\alpha x}x^k\cos\beta x$ and $e^{\alpha x}x^k\sin\beta x$ for $k=0,\dots,m-1$. These add up to $n$ linearly independent solutions, a fundamental system.}
+\EX{解 $y''-3y'+2y=0$，$y(0)=0$，$y'(0)=1$。特征方程 $\lambda^2-3\lambda+2=(\lambda-1)(\lambda-2)=0$，故 $y=C_1e^{x}+C_2e^{2x}$。初值给 $C_1+C_2=0$、$C_1+2C_2=1$，解得 $C_2=1$、$C_1=-1$，故
+\[
+y=e^{2x}-e^{x}.
+\]
+两个特征值互异且为实，解是两个指数函数的组合，没有振荡。}{Solve $y''-3y'+2y=0$ with $y(0)=0$, $y'(0)=1$. The characteristic equation factors as $(\lambda-1)(\lambda-2)=0$, so $y=C_1e^{x}+C_2e^{2x}$. The initial data give $C_1+C_2=0$ and $C_1+2C_2=1$, hence $C_2=1$, $C_1=-1$ and $y=e^{2x}-e^x$. The eigenvalues are distinct and real, so the solution is a combination of two exponentials without oscillation.}
+\EX{重根与 Euler 方程：$x^2y''+xy'-y=0$（$x>0$）。令 $y=x^r$ 得 $r(r-1)+r-1=r^2-1=0$，$r=\pm1$，故 $y=C_1x+C_2/x$。这是 Euler（等维）方程，代换 $x=e^t$ 化为常系数 $y_{tt}-y=0$，$y=C_1e^t+C_2e^{-t}$，回代即得。若重根 $r$，则第二个解取 $x^r\ln x$，与常系数重根的 $xe^{\lambda x}$ 对应。}{Repeated roots and Euler's equation: for $x^2y''+xy'-y=0$ with $x>0$, substituting $y=x^r$ gives $r(r-1)+r-1=r^2-1=0$, so $r=\pm1$ and $y=C_1x+C_2/x$. This is an Euler (equidimensional) equation; the substitution $x=e^t$ reduces it to the constant-coefficient equation $y_{tt}-y=0$ with $y=C_1e^t+C_2e^{-t}$, and substituting back gives the answer. For a repeated root $r$ the second solution is $x^r\ln x$, matching $xe^{\lambda x}$ in the constant-coefficient case.}
+\APS{非齐次常系数方程用待定系数法（算子法）。把 $g$ 写成 $e^{\alpha x}$ 乘多项式或 $e^{\alpha x}\cos\beta x$、$e^{\alpha x}\sin\beta x$ 的组合，猜同型特解；若 $\alpha$（或 $\alpha\pm i\beta$）是特征方程的 $k$ 重根，则特解要额外乘 $x^k$，这就是共振。算子写法：$P(D)y=g$，$y_p=\frac{1}{P(D)}g$，把 $P(D)$ 按 $D-\lambda$ 的幂展开后用 $\frac{1}{D-\lambda}g=e^{\lambda x}\int e^{-\lambda x}g\,dx$。}{Nonhomogeneous constant-coefficient equations are solved by undetermined coefficients (the operator method). Write $g$ as $e^{\alpha x}$ times a polynomial, or as a combination of $e^{\alpha x}\cos\beta x$ and $e^{\alpha x}\sin\beta x$, and guess a particular solution of the same type; if $\alpha$ (or $\alpha\pm i\beta$) is a root of multiplicity $k$ of the characteristic equation, multiply the guess by $x^k$ --- this is resonance. In operator notation, $P(D)y=g$ has $y_p=\frac{1}{P(D)}g$, and expanding $P(D)$ in powers of $D-\lambda$ allows the rule $\frac{1}{D-\lambda}g=e^{\lambda x}\int e^{-\lambda x}g\,dx$.}
+\EX{共振：$y''+y=\sin x$。特征根 $\pm i$ 与驱动频率相同，故特解应设为 $y_p=Ax\cos x+Bx\sin x$。计算得 $y_p''+y_p=-2A\sin x+2B\cos x$，与 $\sin x$ 比较得 $A=-1/2$、$B=0$，故
+\[
+y=C_1\cos x+C_2\sin x-\frac{x}{2}\cos x .
+\]
+最后一项振幅随 $x$ 线性增长，这就是共振；方程左端是单位质量弹簧，驱动频率等于固有频率，能量不断注入。}{Resonance: $y''+y=\sin x$. The characteristic roots $\pm i$ coincide with the driving frequency, so set $y_p=Ax\cos x+Bx\sin x$. Then $y_p''+y_p=-2A\sin x+2B\cos x$, and comparing with $\sin x$ gives $A=-1/2$, $B=0$, hence the displayed general solution. The last term grows linearly in amplitude, which is resonance: the left side is a unit-mass spring and the driving frequency equals the natural frequency, so energy keeps being pumped in.}
+\APS{常数变易法适用于任意右端 $g$，包括变系数方程。设 $y_1,y_2$ 是 $y''+a_1y'+a_2y=0$ 的基础解系，$W=y_1y_2'-y_1'y_2$，则
+\[
+y_p=-y_1\int\frac{y_2g}{W}dx+y_2\int\frac{y_1g}{W}dx .
+\]
+对 $n$ 阶方程，把 $y_p=\sum c_i(x)y_i$ 代入并令 $\sum c_i'y_i^{(k)}=0$（$k=0,\dots,n-2$），得到 $c_i'$ 的线性方程组，其系数矩阵行列式就是 $W$。}{Variation of parameters works for an arbitrary right-hand side $g$, including variable coefficients. Let $y_1,y_2$ be a fundamental system of $y''+a_1y'+a_2y=0$ and $W=y_1y_2'-y_1'y_2$; then the displayed particular solution holds. For an $n$-th order equation, substitute $y_p=\sum c_i(x)y_i$ and impose $\sum c_i'y_i^{(k)}=0$ for $k=0,\dots,n-2$; this gives a linear system for the $c_i'$ whose coefficient determinant is exactly $W$.}
+\subsection{周期系数线性方程组 | Linear systems with periodic coefficients}
+\APS{若 $A(t+T)=A(t)$，Floquet 理论给出 $\Phi(t+T)=\Phi(t)M$，单值矩阵 $M$ 的特征值即 Floquet 乘子，由 $|\rho|$ 与 $1$ 的大小判定稳定性。}{If $A(t+T)=A(t)$, Floquet theory gives $\Phi(t+T)=\Phi(t)M$; the eigenvalues of the monodromy matrix $M$ are the Floquet multipliers, and comparing $|\rho|$ with $1$ decides stability.}
+\ASK{为什么线性齐次方程的解集是 $n$ 维线性空间？}{Why is the solution set of a homogeneous linear equation an $n$-dimensional linear space?}{线性组合仍是解（叠加原理），且每个解由 $x(t_0)\in\mathbb R^n$ 唯一确定，$x(\cdot)\mapsto x(t_0)$ 是解空间到 $\mathbb R^n$ 的线性同构，故维数为 $n$。}{Linear combinations are again solutions (superposition), and each solution is uniquely determined by $x(t_0)\in\mathbb R^n$; the map $x(\cdot)\mapsto x(t_0)$ is a linear isomorphism onto $\mathbb R^n$, so the dimension is $n$.}
+\ASK{共振的条件是什么？怎么处理？}{What causes resonance and how is it handled?}{驱动项的指数（或 $\alpha\pm i\beta$）是特征方程的根时发生共振。待定系数法要把猜测的特解乘 $x^k$，$k$ 是该根的重数；用矩阵指数写法则表现为 $e^{At}$ 的 Jordan 块给出 $t^je^{\lambda t}$ 项。}{Resonance occurs when the exponent of the driving term (or $\alpha\pm i\beta$) is a root of the characteristic equation. Undetermined coefficients then multiply the guess by $x^k$, where $k$ is the multiplicity; in the matrix-exponential picture it appears as $t^je^{\lambda t}$ terms from the Jordan blocks of $e^{At}$.}
+
+\section*{应用举例 | Applications}
+\APS{药动学一室模型：静脉输注速率 $R$、表观分布容积 $V$、消除速率常数 $k>0$，则血药浓度满足 $C'=-kC+R/V$，$C(0)=0$，解为
+\[
+C(t)=\frac{R}{kV}\left(1-e^{-kt}\right)\ \longrightarrow\ \frac{R}{kV},
+\]
+半衰期 $T_{1/2}=\ln2/k$ 决定到达稳态的快慢；停药后按 $e^{-kt}$ 衰减。若改为一次静脉注射剂量 $D$，则 $C(t)=(D/V)e^{-kt}$。同一线性方程既描述药物消除，也描述放射性衰变与 Newton 冷却，只是常数含义不同。}{One-compartment pharmacokinetics: with infusion rate $R$, apparent volume of distribution $V$ and elimination constant $k>0$, the plasma concentration satisfies $C'=-kC+R/V$ with $C(0)=0$, whose solution is displayed and tends to $R/(kV)$; the half-life $T_{1/2}=\ln2/k$ sets how fast the steady state is reached, and after stopping the decay is $e^{-kt}$. For a single intravenous dose $D$ instead, $C(t)=(D/V)e^{-kt}$. The same linear equation describes drug elimination, radioactive decay and Newton cooling, only the constants differ in meaning.}
+\APS{Volterra 捕食者--食饵系统
+\[
+x'=x(a-by),\qquad y'=y(-c+dx),\qquad a,b,c,d>0,
+\]
+其中 $x$ 是食饵、$y$ 是捕食者。平衡点为 $(0,0)$ 与 $(c/d,\,a/b)$。系统有首次积分
+\[
+H(x,y)=dx-c\ln x+by-a\ln y=\text{const},
+\]
+因为 $\frac{dH}{dt}=dx'-c\frac{x'}{x}+by'-a\frac{y'}{y}=0$。$H$ 的等值线是围绕平衡点的闭曲线，故正平衡点附近一切解都是周期解；这解释了为什么捕食者与食饵数量呈周期振荡，而不是趋于平衡。}{The Volterra predator--prey system displayed has $x$ as prey and $y$ as predator, with equilibria $(0,0)$ and $(c/d,a/b)$. It has the first integral displayed, since the displayed derivative vanishes. The level curves of $H$ are closed curves around the positive equilibrium, so all solutions near it are periodic; this explains why predator and prey populations oscillate periodically instead of approaching equilibrium.}
+\APS{二阶自治方程 $y''=f(y,y')$ 用 $v=y'$ 降阶：由 $\frac{dv}{dx}=\frac{dv}{dy}\frac{dy}{dx}=v\frac{dv}{dy}$ 得
+\[
+v\frac{dv}{dy}=f(y,v),
+\]
+这是关于 $v(y)$ 的一阶方程；若 $f=f(y)$ 不显含 $v$，则积分得 $\frac12v^2+\int(-f)dy=E$，即能量守恒。单摆 $y''+\sin y=0$ 对应 $E=\frac12v^2-\cos y$：平衡点 $(0,0)$ 是中心（小振动），$(\pm\pi,0)$ 是鞍点，$E=1$ 的轨线是分界线。相平面上，线性化矩阵 $A=\begin{pmatrix}0&1\\-f_y&0\end{pmatrix}$ 在平衡点处的特征值决定类型：$f_y<0$ 给中心、$f_y>0$ 给鞍点。}{A second-order autonomous equation $y''=f(y,y')$ is reduced by $v=y'$: since $dv/dx=(dv/dy)(dy/dx)=v\,dv/dy$, one gets the displayed first-order equation for $v(y)$. If $f=f(y)$ does not contain $v$, integration gives $\frac12v^2+\int(-f)dy=E$, conservation of energy. The pendulum $y''+\sin y=0$ has $E=\frac12v^2-\cos y$: the equilibrium $(0,0)$ is a centre (small oscillations), $(\pm\pi,0)$ are saddles, and the level $E=1$ is the separatrix. In the phase plane the eigenvalues of the linearization $A=\begin{pmatrix}0&1\\-f_y&0\end{pmatrix}$ at an equilibrium decide the type: $f_y<0$ gives a centre and $f_y>0$ a saddle.}
+\section*{中英术语表 | Chinese--English glossary}
+\noindent\footnotesize\renewcommand{\arraystretch}{0.94}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{4.7cm}>{\raggedright\arraybackslash}p{7.0cm}@{}}
+\toprule
+\textbf{中文} & \textbf{English} & \textbf{简要说明 / Note} \\
+\midrule
+\endhead
+常微分方程 & ordinary differential equation (ODE) & 未知函数只含一个自变量 \\
+\hline
+阶 & order & 方程中出现的最高阶导数 \\
+\hline
+通解 & general solution & 含 $n$ 个独立任意常数的解族 \\
+\hline
+初值问题 & initial value problem & 在同一初始点给定 $n$ 个数据 \\
+\hline
+积分曲线 & integral curve & 解在 $xy$ 平面上的图像 \\
+\hline
+方向场 & direction field & 每点标出斜率 $f(x,y)$ \\
+\hline
+等斜线 & isocline & 斜率取常数的点集 \\
+\hline
+恰当方程 & exact equation & $Mdx+Ndy$ 是某函数的全微分 \\
+全微分 & total differential & $du=u_xdx+u_ydy$ \\
+\hline
+\hline
+变量分离方程 & separable equation & $y'=f(x)g(y)$ \\
+\hline
+一阶线性方程 & first-order linear equation & $y'+P(x)y=Q(x)$ \\
+\hline
+积分因子 & integrating factor & 乘后使方程成为恰当方程 \\
+\hline
+常数变易法 & variation of constants (parameters) & 把齐次解中的常数换成函数 \\
+参数法 & parametric method & 以 $p=y\'$ 为参数求解 \\
+\hline
+\hline
+Bernoulli 方程 & Bernoulli equation & $y'+Py=Qy^n$，代换 $u=y^{1-n}$ \\
+\hline
+Clairaut 方程 & Clairaut equation & $y=xp+f(p)$ \\
+\hline
+奇解 & singular solution & 不属于通解、破坏唯一性的解 \\
+\hline
+包络 & envelope & 与曲线族每条曲线相切的曲线 \\
+\hline
+Lipschitz 条件 & Lipschitz condition & $|f(x,y_1)-f(x,y_2)|\le L|y_1-y_2|$ \\
+\hline
+存在唯一性定理 & existence and uniqueness theorem & Picard--Lindel\"of 定理 \\
+\hline
+Peano 定理 & Peano's theorem & 只需连续性即存在解 \\
+\hline
+有限时间爆破 & finite-time blow-up & 解在有限端点发散 \\
+\hline
+比较定理 & comparison theorem & 用已知解夹住未知解 \\
+\hline
+Gronwall 不等式 & Gronwall's inequality & 由积分不等式得指数界 \\
+\hline
+连续依赖 & continuous dependence & 数据小变则解小变 \\
+\hline
+变分方程 & variational equation & $\Xi'=f_x(t,x(t))\Xi$ \\
+自治方程 & autonomous equation & 不显含自变量 \\
+\hline
+\hline
+Wronskian & Wronskian & 解组线性无关的行列式判据 \\
+\hline
+矩阵指数 & matrix exponential & $e^{At}=\sum A^kt^k/k!$ \\
+\hline
+特征方程 & characteristic equation & $P(\lambda)=0$ \\
+\hline
+Jordan 块 & Jordan block & 决定重根时的长期项 \\
+\hline
+共振 & resonance & 驱动频率等于特征频率 \\
+\hline
+Floquet 乘子 & Floquet multiplier & 单值矩阵的特征值 \\
+\hline
+\bottomrule
+\end{longtable}
+\normalsize\renewcommand{\arraystretch}{1}
+\section*{参考文献 | References}
+\noindent 柳彬．常微分方程．北京：北京大学出版社，2021．第 1 章（微分方程的基本概念）、第 2 章（初等积分法）、第 3 章（解的存在和唯一性）、第 4 章（解对初值和参数的依赖性）、第 5 章（线性微分方程组）．\par
+\noindent 丁同仁，李承治．常微分方程教程（第二版）．北京：高等教育出版社，2004．第 1--5 章（基本概念、初等积分法、存在唯一性、线性方程组与高阶线性方程）．\par
+\noindent W. E. Boyce, R. C. DiPrima. \emph{Elementary Differential Equations and Boundary Value Problems}, 10th ed. Hoboken: Wiley, 2012. Chapters 1--7 (first-order equations, linear equations of higher order, systems of first-order linear equations, and the qualitative theory of nonlinear systems).\par
+\noindent V. I. Arnold. \emph{Ordinary Differential Equations}, 3rd ed. Berlin: Springer, 1992. Chapters 1--3 (basic concepts, first-order equations, and linear systems and linearization).\par
+\EN{Main source: Liu Bin, \emph{Ordinary Differential Equations}, Peking University Press, 2021, Chapters 1--5. Supplementary texts: Ding Tongren and Li Chengzhi, \emph{A Course in Ordinary Differential Equations} (2nd ed.), Higher Education Press, Chapters 1--5; Boyce and DiPrima, Chapters 1--7; Arnold, Chapters 1--3. References are chapter-level; page numbers are omitted on purpose.}
+\end{document}
