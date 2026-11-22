@@ -46,9 +46,9 @@ $\kappa(A)$ 大表示输入数据的小相对误差可能造成解的较大相�
 
 \ASK{问题条件数和算法稳定性有什么区别？}{What is the difference between problem conditioning and algorithmic stability?}{条件数是问题本身对输入误差的敏感度；算法稳定性是计算过程对输入或舍入扰动的放大程度。病态问题即使使用稳定算法也可能难以得到高精度结果。}{Conditioning is the sensitivity of the problem itself to input errors. Algorithmic stability concerns how the computation amplifies input or rounding perturbations. An ill-conditioned problem can remain difficult even with a stable algorithm.}
 
-\APS{浮点数与有效数字：计算机用有限位二进制浮点数表示实数，每次运算可建模为 $\mathrm{fl}(x)=x(1+\delta)$、$|\delta|\le u$。IEEE 双精度有 53 位有效位，机器精度 $\varepsilon_{\mathrm{mach}}=2^{-52}\approx2.22\times10^{-16}$，舍入单位 $u=2^{-53}\approx1.11\times10^{-16}$；$0.1$ 在二进制中不精确，故双精度下 $0.1+0.2=0.30000000000000004\ne0.3$。若 $|x-\tilde x|/|x|\le0.5\times10^{-n}$，则 $\tilde x$ 至少有 $n$ 位有效数字：$\pi\approx3.1416$ 保证 5 位，$3.14$ 只保证 2 位。}{Floating point: each operation is modeled as $\mathrm{fl}(x)=x(1+\delta)$ with $|\delta|\le u$. IEEE double precision has 53 significant bits, machine epsilon $2^{-52}\approx2.22\times10^{-16}$ and unit roundoff $u=2^{-53}\approx1.11\times10^{-16}$; $0.1$ is inexact in binary, so $0.1+0.2=0.30000000000000004\ne0.3$. If $|x-\tilde x|/|x|\le0.5\times10^{-n}$, then $\tilde x$ has at least $n$ significant digits: $\pi\approx3.1416$ guarantees five and $3.14$ only two.}
+\APS{按课程课件 Chapter 1 第 12 页，若近似数从首个非零数字数起保留 $n$ 位，且绝对误差至多为该第 $n$ 位单位的一半，则称它有 $n$ 位有效数字。写成 $x=\pm0.a_1a_2\cdots a_n\times10^m$ 时，误差界为 $\tfrac12\,10^{m-n}$。浮点舍入到最近的正常数时，可用 $\operatorname{fl}(z)=z(1+\delta)$、$|\delta|\le u$ 描述舍入。IEEE 双精度有 53 位二进制有效位，舍入单位为 $u=2^{-53}$。}{Chapter 1, slide 12, counts significant digits from the first nonzero digit. The absolute error must be at most half a unit of the last retained place. With the displayed normalization the bound is $\tfrac12\,10^{m-n}$. Round-to-nearest in the normal range admits the relative floating-point model, with unit roundoff $2^{-53}$ in binary64.}
 \APS{误差传播：对可微 $f$，$\Delta f\approx f'(x)\Delta x$，相对误差满足 $|\Delta f/f|\approx\kappa_f(x)|\Delta x/x|$，其中 $\kappa_f=|xf'/f|$ 是函数求值问题的条件数。$f=\sqrt x$ 时 $\kappa_f=1/2$，输入误差减半；$f=x^{10}$ 时放大 10 倍。$f=\cos x$ 在 $x=\pi/2-10^{-8}$ 处 $\kappa_f\approx1.6\times10^{8}$：输入极小扰动造成输出巨大相对变化，这是问题病态，不是算法不稳定。}{Error propagation: for differentiable $f$, $\Delta f\approx f'(x)\Delta x$ and $|\Delta f/f|\approx\kappa_f(x)|\Delta x/x|$ with $\kappa_f=|xf'/f|$. For $\sqrt x$, $\kappa_f=1/2$ halves the relative error; for $x^{10}$ it is magnified tenfold. For $\cos x$ at $x=\pi/2-10^{-8}$, $\kappa_f\approx1.6\times10^{8}$: a tiny input perturbation gives a huge output change, which is ill-conditioning of the problem, not instability of the algorithm.}
-\ASK{有效数字如何由相对误差判断？}{How does relative error determine significant digits?}{若 $|x-\tilde x|/|x|\le0.5\times10^{-n}$，则 $\tilde x$ 至少有 $n$ 位有效数字；例如 $3.1416$ 对 $\pi$ 的相对误差约 $2.3\times10^{-6}$，保证 5 位有效数字。}{If $|x-\tilde x|/|x|\le0.5\times10^{-n}$, then $\tilde x$ has at least $n$ significant digits; for example $3.1416$ has relative error about $2.3\times10^{-6}$ for $\pi$, guaranteeing five digits.}
+\ASK{怎样按定义判断有效数字？}{How do you check significant digits from the definition?}{$3.14$ 的末位单位是 $10^{-2}$，而 $|\pi-3.14|\approx0.00159<0.005$，所以有三位有效数字。$3.1416$ 的末位单位是 $10^{-4}$，误差约 $7.35\times10^{-6}<0.00005$，所以有五位有效数字。}{The last place of $3.14$ has unit $10^{-2}$ and the error is less than $0.005$, giving three significant digits. For $3.1416$, the error is less than half a unit of the $10^{-4}$ place, giving five.}
 
 \subsection{同一问题的病态性与算法不稳定 | Problem conditioning versus algorithm stability}
 \noindent 计算 $\sqrt{1+x}-1$ 在很小正 $x$ 时，直接相减会把两个接近 $1$ 的浮点数相减，造成有效数字丢失。代数有理化给出等价形式
@@ -471,13 +471,13 @@ Gauss 求积 / Romberg 外推 & Gaussian quadrature / Romberg extrapolation\\
 \end{center}
 
 \section*{参考文献 | References}
-\begin{itemize}
+\begin{itemize}[itemsep=0pt,topsep=2pt]
 \item 课程讲义：\emph{Numerical Analysis}, Chapters 1--6, 2025（误差、非线性方程、线性方程组、插值、数值积分、ODE 数值解）。
 \item Burden, R. L., \& Faires, J. D. \emph{Numerical Analysis}, 9th ed. 章节 Ch.~1--7 依次为：误差分析、非线性方程、插值、数值微分与积分、ODE 初值问题、线性方程组直接法、迭代法。
 \item Heath, M. T. \emph{Scientific Computing: An Introductory Survey}, 2nd ed. McGraw-Hill, 2002; Kress, R. \emph{Numerical Analysis}. Springer, 2003.
 \item Quarteroni, A., Sacco, R., \& Saleri, F. \emph{Numerical Mathematics}. Springer（线性方程组、逼近、积分、非线性方程、ODE）；中文教材：数值分析（第 5 版），清华大学出版社，2008。
 \end{itemize}
 \section*{来源与范围 | Source and scope}
-本讲义依据“数值分析”Chapter 1--6 课程 PPT/PDF 整理，覆盖六章主题；数值例子均经 Python 复核；特征值幂法与算法选择为补充。
-\EN{Based on the course slides Chapters 1--6; all numerical examples were checked with Python. The power method and algorithm-choice sections are supplementary.}
+正文依据课程课件 Chapter 1--6。幂法与算法选择为补充。
+\EN{Sources: course slides, Chapters 1--6. Power iteration and algorithm choice are supplementary.}
 \end{document}

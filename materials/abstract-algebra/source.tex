@@ -147,7 +147,7 @@ G/\ker\varphi\cong\operatorname{im}\varphi.
 
 \EX{在 $\mathbb Z$ 中，$(4,6)=\{4x+6y:x,y\in\mathbb Z\}=2\mathbb Z=(2)$。}{In $\mathbb Z$, $(4,6)=\{4x+6y:x,y\in\mathbb Z\}=2\mathbb Z=(2)$.}
 
-\noindent\textbf{定义与公式。} 若 $I$ 是环 $R$ 的理想，商环 $R/I$ 由陪集 $a+I$ 构成，运算为
+\noindent\textbf{定义与公式。} 按课程讲义定义 9.2.5，若 $I$ 是环 $R$ 的真双边理想，商环 $R/I$ 由陪集 $a+I$ 构成，运算为
 \FORMULA{商环的加法与乘法}{addition and multiplication in a quotient ring}
 \[
 (a+I)+(b+I)=(a+b)+I,\qquad (a+I)(b+I)=ab+I.
@@ -158,9 +158,9 @@ G/\ker\varphi\cong\operatorname{im}\varphi.
 R/\ker\varphi\cong\operatorname{im}\varphi.
 \]
 \READ{“R modulo the kernel of phi is isomorphic to the image of phi.”}
-\EN{If $I$ is an ideal of a ring $R$, the quotient ring $R/I$ consists of cosets $a+I$, with addition and multiplication induced from $R$. The natural projection $\pi:R\to R/I$, $a\mapsto a+I$, is surjective and has kernel $I$. For a unital ring homomorphism $\varphi:R\to S$, the kernel is an ideal and the first isomorphism theorem gives $R/\ker\varphi\cong\operatorname{im}\varphi$.}
+\EN{If $I$ is a proper two-sided ideal of a ring $R$, the quotient ring $R/I$ consists of cosets $a+I$, with addition and multiplication induced from $R$. The natural projection $\pi:R\to R/I$, $a\mapsto a+I$, is surjective and has kernel $I$. For a unital ring homomorphism $\varphi:R\to S$, the kernel is an ideal and the first isomorphism theorem gives $R/\ker\varphi\cong\operatorname{im}\varphi$.}
 
-\noindent \textbf{约定提醒。} 若 $I=R$，商只有一个元素，满足 $1=0$，因此是零环；本讲义的 $1\ne0$ 约定把它排除在所称的环之外。若要商环仍符合此约定，应取真理想 $I\ne R$。保单位映射到非零环时，其核必为真理想。
+\noindent \textbf{约定提醒。} 课程讲义定义 9.1.1 采用 $1\ne0$。因此定义商环时取 $I\ne R$。若 $I=R$，加法商只剩一个元素。保单位映射到非零环时，其核必为真理想。
 \EN{If $I=R$, the quotient has only one element and is the zero ring, with $1=0$. Our convention excludes it; to keep the quotient within this convention, require a proper ideal $I\ne R$. The kernel of a unital homomorphism into a nonzero ring is proper.}
 
 \noindent\textbf{良定义的核对。} 若 $a+I=a'+I$ 且 $b+I=b'+I$，则 $a-a',b-b'\in I$，而
@@ -172,7 +172,7 @@ $ab-a'b'=a(b-b')+(a-a')b'\in I$。因此 $ab+I=a'b'+I$，乘法不依赖代表�
 \noindent\textbf{补充联系（若课程讲过）。} 在交换含幺环中，理想 $I$ 极大当且仅当商环 $R/I$ 是域；$I$ 为素理想当且仅当 $R/I$ 是整环。若课程没有讲极大理想和素理想，把这两条当作后续代数的联系即可，不必作为已学内容陈述。
 \EN{As an optional connection, in a commutative unital ring, $I$ is maximal exactly when $R/I$ is a field, and prime exactly when $R/I$ is an integral domain. If maximal and prime ideals were not covered in the course, treat these as later connections rather than course material.}
 
-\ASK{什么是理想？为什么定义商环要用理想？}{What is an ideal, and why do we use ideals to form quotient rings?}{理想是对环乘法封闭的加法子群。这个吸收性质保证陪集乘法与代表元选择无关；一般子环不一定满足这一点。}{An ideal is an additive subgroup that absorbs multiplication by ring elements. This absorption property makes multiplication of cosets independent of the choice of representatives; a general subring need not have this property.}
+\ASK{什么是理想？为什么定义商环要用理想？}{What is an ideal, and why do we use ideals to form quotient rings?}{按课程讲义定义 9.2.1，双边理想是加法子群 $I$，且对所有 $r\in R$、$a\in I$ 都有 $ra,ar\in I$。这个吸收性质保证陪集乘法与代表元选择无关；一般子环不一定满足这一点。}{An ideal is an additive subgroup that absorbs multiplication by ring elements. This absorption property makes multiplication of cosets independent of the choice of representatives; a general subring need not have this property.}
 
 \ASK{理想 $(a_1,\ldots,a_n)$ 表示什么？}{What does the ideal $(a_1,\ldots,a_n)$ mean?}{它由生成元的所有环系数线性组合组成。例如 $\mathbb Z$ 中 $(4,6)=(2)$。}{It consists of all ring-linear combinations of the generators. For example, $(4,6)=(2)$ in $\mathbb Z$.}
 

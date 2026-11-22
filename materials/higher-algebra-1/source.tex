@@ -32,7 +32,9 @@
 \APS{对 $q(x,y)=x^2+2xy+3y^2$，配方得 $q=(x+y)^2+2y^2$。令 $u=x+y,v=y$，这是可逆替换，得到两个正平方项，故 $q$ 正定，正惯性指数为 $2$。其矩阵为 $A=\left(\begin{smallmatrix}1&1\\1&3\end{smallmatrix}\right)$；若旧坐标 $x=Py$，新矩阵为 $P^{\mathsf T}AP$。这叫合同，它保留惯性，不能与保留特征值的相似变换混为一谈。}{For $q(x,y)=x^2+2xy+3y^2$, completing the square gives $(x+y)^2+2y^2$. The invertible substitution $u=x+y$, $v=y$ produces two positive squares, so the form is positive definite with positive index two. Its matrix is displayed; under $x=Py$ the new matrix is $P^{\mathsf T}AP$. This is congruence, which preserves inertia and must not be confused with similarity, which preserves eigenvalues.}
 
 \section{多项式与整除 | Polynomials and divisibility}
-\subsection{数域与一元多项式环 | Fields and the polynomial ring}
+\subsection{数域与一元多项式环 | Scalar fields and the polynomial ring}
+\noindent 按《高等代数》第五版第 1 章第 1 节，数域指含 $0,1$ 且对加、减、乘及非零数作除数的除法封闭的数集。教材第 2 页以 $\mathbb Q(\sqrt2)$ 为例。这里的数域按书中数集的约定使用。
+\EN{Chapter 1 uses a set of numbers containing $0,1$ and closed under addition, subtraction, multiplication and division by a nonzero member. The book gives $\mathbb Q(\sqrt2)$ as an example.}
 \noindent\textbf{数域.} 数域 $F$ 是含 $0,1$ 且对加、减、乘、除（除数非零）封闭的数集，等价地 $F\subseteq\mathbb C$ 且非零元的倒数仍在 $F$ 中。$\mathbb Q,\mathbb R,\mathbb C$ 是数域，$\mathbb Z$ 不是（$1/2\notin\mathbb Z$）。要求 $F$ 是数域，是为了让带余除法中“除以首项系数”总能进行，并保证 $F[x]$ 无零因子：$f,g\ne0\Rightarrow fg\ne0$。
 \EN{A field $F$ is a set of numbers containing $0,1$ and closed under addition, subtraction, multiplication, and division by nonzero elements; equivalently $F\subseteq\mathbb C$ and reciprocals of nonzero elements stay in $F$. The rationals, reals and complex numbers are fields, while $\mathbb Z$ is not, since $1/2\notin\mathbb Z$. Working over a field guarantees that division by a leading coefficient is possible and that $F[x]$ has no zero divisors.}
 \noindent\textbf{多项式环 $F[x]$.} $F[x]$ 的元素是形式和 $f=a_nx^n+\cdots+a_1x+a_0$，$a_i\in F$。相等指同次项系数全相等；加法对齐次数，乘法用分配律并合并同类项。最高非零项的次数称 $\deg f$，其系数称首项系数；零多项式不定义次数，但约定 $\deg0=-\infty$ 可使公式统一。首项系数为 $1$ 时称首一。$F[x]$ 是整环但不是域：$x$ 没有乘法逆元。
@@ -455,7 +457,7 @@ Vieta 定理 & Vieta's formulas & 惯性定理 & inertia theorem\\
 \normalsize
 
 \section*{参考文献 | References}
-\begin{enumerate}[label={[\arabic*]}]
+\begin{enumerate}[label={[\arabic*]},itemsep=0pt,topsep=2pt]
 \item 北京大学数学系几何与代数教研室前代数小组. 高等代数（第五版）. 王萼芳, 石生明 修订. 北京: 高等教育出版社. 第 1--5 章（多项式、行列式、线性方程组、矩阵、二次型）.
 \item 张禾瑞, 郝鈵新. 高等代数（第五版）. 北京: 高等教育出版社. 第 1--5 章.
 \item 丘维声. 高等代数（第二版）. 北京: 高等教育出版社. 第 1--5 章.

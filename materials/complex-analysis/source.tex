@@ -14,14 +14,14 @@
 \newcommand{\EX}[2]{\par\noindent \textbf{例子 / Example.} #1\par\EN{#2}}
 \newcommand{\ASK}[4]{\par\noindent \textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent \textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
 \newcommand{\APS}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par\smallskip}
-\title{复变函数 APS 面试准备\\[4pt]\large 第 1--7 章：复数、解析性、复积分、级数、留数与共形映射}
+\title{复变函数 APS 面试准备\\[4pt]\large 复数、全纯函数、复积分、级数、留数与共形映射}
 \author{Complex Analysis: Bilingual Review}
 \date{}
 \begin{document}
 \maketitle
 
 \section*{课程概述 | Course overview}
-\APS{本讲义覆盖史济怀、刘太顺《复变函数》前七章：复数与复平面；复函数、极限、连续与多值分支；解析性与 Cauchy--Riemann 方程；初等复函数；复积分与 Cauchy 理论；级数、孤立奇点与留数；共形映射与调和函数。面试时每个结果按四步复述：定义动机、定理条件、证明思路、数值例子，再补一句实际意义和一个易错点。}{These notes cover Chapters 1--7 of Shi Jihuai and Liu Taishun, \emph{Complex Analysis}: complex numbers; complex functions, limits, continuity, and branches; analyticity and the Cauchy--Riemann equations; elementary functions; contour integration and Cauchy theory; series, isolated singularities, and residues; conformal mapping and harmonic functions. In an interview I present each result in four steps: motivation, precise hypotheses, proof idea, and a numerical example, followed by one application and one common mistake.}
+\APS{本讲义按史济怀、刘太顺《复变函数》的术语整理。教材第 1 章是复数与复变函数，第 2 章是全纯函数，第 3 章是全纯函数的积分表示，第 4、5 章分别讲 Taylor 与 Laurent 展开及应用，第 6、7 章分别讲全纯开拓和共形映射。调和函数对应第 8 章。讲义小节按复习主题拆分，标题标明主要对应的教材章节。}{The review uses the terminology of Shi and Liu. Chapters 1--3 cover complex numbers and functions, holomorphic functions, and integral representations. Chapters 4 and 5 cover Taylor and Laurent expansions, Chapters 6 and 7 cover continuation and conformal maps, and Chapter 8 covers harmonic functions. The review headings label the corresponding textbook chapters.}
 
 \section[第 1 章 复数与复平面]{第 1 章：复数、复平面与扩充复平面 | Chapter 1: Complex numbers, the complex plane, and the extended plane}
 
@@ -57,7 +57,7 @@ d(z,w)=\frac{2|z-w|}{\sqrt{(1+|z|^2)(1+|w|^2)}}.
 \]
 \EX{$0$ 映到南极，$1$ 映到 $(1,0,0)$，$i$ 映到 $(0,1,0)$，$|z|=1$ 映到赤道，$\infty$ 映到北极。球极投影保圆：平面上的圆对应球面上不过 $N$ 的圆，直线对应过 $N$ 的圆（去掉 $N$）；因此圆、直线在球面上统一成圆。}{The origin maps to the south pole, $1$ to $(1,0,0)$, $i$ to $(0,1,0)$, the unit circle to the equator, and infinity to the north pole. Projection sends planar circles to sphere circles not through $N$, and lines to circles through $N$ with $N$ removed; circles and lines are thus unified on the sphere.}
 \ASK{为什么要把复数域扩充一个无穷远点？}{Why add a point at infinity?}{球极投影使 $\mathbb C_\infty$ 成为紧空间（同胚于球面），从而可以统一处理 $z\to\infty$、留数、有理函数的次数；物理上远处的边界条件也可写成无穷远邻域条件。}{Stereographic projection makes $\mathbb C_\infty$ compact (homeomorphic to the sphere), so limits at infinity, residues, and the degree of rational functions can be treated uniformly; physically, boundary conditions far away become conditions in a neighborhood of infinity.}
-\section[第 2 章 复函数与极限]{第 2 章：复变函数、极限、连续与多值分支 | Chapter 2: Complex functions, limits, continuity, and branches}
+\section[教材第 1 章 复函数与极限]{教材第 1 章：复变函数、极限、连续与多值分支 | Ch. 1: Complex functions, limits, continuity, and branches}
 
 \subsection{复变函数与映射观点 | Complex functions as mappings}
 \APS{复变函数 $f:D\to\mathbb C$ 可写成 $f(z)=u(x,y)+iv(x,y)$，图像需四维空间，所以通常画映射图：$z$ 平面中的区域在 $w=f(z)$ 平面中的像。}{A complex function $f:D\to\mathbb C$ can be written $f(z)=u(x,y)+iv(x,y)$; its graph needs four dimensions, so one draws the mapping instead: the image in the $w$-plane of domains in the $z$-plane.}
@@ -85,10 +85,10 @@ d(z,w)=\frac{2|z-w|}{\sqrt{(1+|z|^2)(1+|w|^2)}}.
 \]
 \APS{割线上函数不连续：$\operatorname{Log}z$ 的虚部从上方趋于 $\pi$、从下方趋于 $-\pi$，虚部跳跃 $2\pi$（函数值跳跃 $2\pi i$）。$\sqrt z$ 在 $0$ 连续（$r^{1/2}\to0$）但不可微（导函数无界）。另一个易错点：$\sqrt{z^2}$ 一般不是 $z$ 而是 $\pm z$，符号由分支决定。}{On the cut the logarithm is discontinuous: its imaginary part tends to $\pi$ from above and $-\pi$ from below, a jump of $2\pi$ in the imaginary part (a jump of $2\pi i$ in the function value). The principal root is continuous at $0$ but not differentiable there. Another easy mistake: $\sqrt{z^2}$ is generally $\pm z$, not $z$, with the sign fixed by the branch.}
 \ASK{为什么复对数、开方必须讨论分支？}{Why must the logarithm and roots be discussed through branches?}{绕分支点一周，连续延拓的辐角增加 $2\pi$，对数值增加 $2\pi i$，$n$ 次方根乘 $e^{2\pi i/n}$，回不到原值。删去连接分支点的割线、使剩余区域单连通后，才能选到连续单值的解析分支；不同分支的函数值（如 $\sqrt z$ 的 $\pm$）不同。}{After one loop around a branch point a continuously continued argument gains $2\pi$, so the logarithm gains $2\pi i$ and the $n$-th root is multiplied by $e^{2\pi i/n}$; the value does not return. Only after removing a cut joining the branch points, making the remaining domain simply connected, can a continuous single-valued analytic branch be selected; different branches take different values (the two signs of $\sqrt z$).}
-\section[第 3 章 解析性]{第 3 章：复导数、Cauchy--Riemann 方程与调和函数 | Chapter 3: Complex derivatives, the Cauchy--Riemann equations, and harmonic functions}
+\section[教材第 2 章 全纯性]{教材第 2 章：复导数、Cauchy--Riemann 方程与调和函数 | Ch. 2: Complex derivatives, the Cauchy--Riemann equations, and harmonic functions}
 
 \subsection{复导数与求导法则 | The complex derivative and differentiation rules}
-\APS{若复差商 $\dfrac{f(z_0+h)-f(z_0)}{h}$ 当 $h\in\mathbb C$、$h\to0$ 时存在同一极限（与方向、路径无关），称 $f$ 在 $z_0$ 复可微，极限记为 $f'(z_0)$；在开区域 $D$ 内处处复可微称解析（holomorphic），在 $\mathbb C$ 上解析称整函数。可微必连续；和、积、商、复合的求导法则与实变量相同。}{If the difference quotient displayed above has one limit as $h\in\mathbb C\to0$, independent of direction and path, then $f$ is complex differentiable at $z_0$ and the limit is $f'(z_0)$; if this holds throughout an open domain $D$, $f$ is analytic (holomorphic), and if $D=\mathbb C$ it is entire. Differentiability implies continuity, and the rules for sums, products, quotients, and compositions are as in the real case.}
+\APS{按教材定义 2.1.1（第 35 页），若复差商 $\dfrac{f(z_0+h)-f(z_0)}{h}$ 当 $h\in\mathbb C$、$h\to0$ 时存在同一极限（与方向、路径无关），称 $f$ 在 $z_0$ 复可微，极限记为 $f'(z_0)$；在区域 $D$ 每一点都复可微，就称为 $D$ 上的全纯函数或解析函数。若在 $z_0$ 的一个邻域内全纯，则称在 $z_0$ 处全纯。在整个 $\mathbb C$ 上全纯的函数称为整函数。可微必连续；和、积、商、复合的求导法则与实变量相同。}{If the difference quotient displayed above has one limit as $h\in\mathbb C\to0$, independent of direction and path, then $f$ is complex differentiable at $z_0$ and the limit is $f'(z_0)$; If this holds at every point of $D$, $f$ is holomorphic (analytic) on $D$. It is holomorphic at $z_0$ when it is holomorphic in a neighbourhood of $z_0$, and entire when it is holomorphic on all of $\mathbb C$. Differentiability implies continuity, and the rules for sums, products, quotients, and compositions are as in the real case.}
 \FORMULA{复导数与求导法则}{complex derivative and differentiation rules}
 \[
 f'(z_0)=\lim_{h\to0}\frac{f(z_0+h)-f(z_0)}{h},\qquad
@@ -99,7 +99,7 @@ f'(z_0)=\lim_{h\to0}\frac{f(z_0+h)-f(z_0)}{h},\qquad
 \subsection{Cauchy--Riemann 方程：必要条件}{The Cauchy--Riemann equations: necessary conditions}
 \APS{设 $f=u+iv$ 在 $z_0$ 复可微。沿实方向 $h\to0$ 得 $f'(z_0)=u_x+iv_x$；沿虚方向取 $h=ik$ 得
 \[
-\frac{f(z_0+ik)-f(z_0)}{ik}=\frac{u_yk+iv_yk}{ik}=v_y-iu_y,
+\frac{f(z_0+ik)-f(z_0)}{ik}=\xrightarrow[k\to0]{}v_y-iu_y,
 \]
 故 $f'(z_0)=v_y-iu_y$。比较实虚部得 $u_x=v_y$、$u_y=-v_x$。这一步只需偏导存在，不需要偏导连续。}{Suppose $f=u+iv$ is complex differentiable at $z_0$. Taking $h$ real gives $f'(z_0)=u_x+iv_x$; taking $h=ik$ gives the displayed quotient $v_y-iu_y$, so $f'(z_0)=v_y-iu_y$. Comparing real and imaginary parts yields $u_x=v_y$ and $u_y=-v_x$. Only existence of the partials is used, not continuity.}
 \FORMULA{Cauchy--Riemann 方程}{the Cauchy--Riemann equations}
@@ -119,7 +119,7 @@ u_x=v_y,\qquad u_y=-v_x,\qquad f'=u_x+iv_x=v_y-iu_y.
 
 
 \subsection{调和函数与共轭调和函数 | Harmonic functions and harmonic conjugates}
-\APS{若 $u\in C^2(D)$ 且 $\Delta u=u_{xx}+u_{yy}=0$，称 $u$ 调和。解析函数的实部、虚部自动调和：对 C-R 方程再求导，利用混合偏导相等，得 $u_{xx}+u_{yy}=v_{yx}-v_{xy}=0$，对 $v$ 同理。}{$u\in C^2(D)$ is harmonic if $\Delta u=u_{xx}+u_{yy}=0$. The real and imaginary parts of an analytic function are automatically harmonic: differentiating the C-R equations and using equality of mixed partials gives $u_{xx}+u_{yy}=v_{yx}-v_{xy}=0$, and similarly for $v$.}
+\APS{若 $u\in C^2(D)$ 且 $\Delta u=u_{xx}+u_{yy}=0$，称 $u$ 调和。全纯函数的实部、虚部是调和函数：对 C-R 方程再求导，利用混合偏导相等，得 $u_{xx}+u_{yy}=v_{yx}-v_{xy}=0$，对 $v$ 同理。}{$u\in C^2(D)$ is harmonic if $\Delta u=u_{xx}+u_{yy}=0$. The real and imaginary parts of an analytic function are automatically harmonic: differentiating the C-R equations and using equality of mixed partials gives $u_{xx}+u_{yy}=v_{yx}-v_{xy}=0$, and similarly for $v$.}
 \FORMULA{Laplace 方程与共轭调和函数}{Laplace's equation and harmonic conjugates}
 \[
 \Delta u=u_{xx}+u_{yy}=0,\qquad
@@ -130,7 +130,7 @@ v(x,y)=\int_{(x_0,y_0)}^{(x,y)}\big(-u_y\,dx+u_x\,dy\big)+C.
 \EX{求 $u=x^2-y^2$ 的共轭：$\Delta u=2-2=0$。由 $v_y=u_x=2x$ 得 $v=2xy+\phi(x)$；再由 $v_x=-u_y=2y$ 得 $\phi'=0$，故 $v=2xy+C$，对应解析函数 $z^2+iC$。反例：$u=x^2+y^2$ 的 $\Delta u=4\ne0$，不存在共轭。}{For $u=x^2-y^2$ we have $\Delta u=0$. From $v_y=u_x=2x$ we get $v=2xy+\phi(x)$, and $v_x=-u_y=2y$ forces $\phi'=0$; hence $v=2xy+C$ and the analytic function is $z^2+iC$. In contrast $u=x^2+y^2$ has $\Delta u=4\ne0$ and no conjugate.}
 \APS{实际意义：二维无源稳态问题的势函数（温度、电势、速度势）都是调和函数，其共轭给出流函数或通量函数；解析函数把势函数与流函数打包在一起，奇点和分支分别对应源、汇、涡和割线（见最后一章）。}{Why it matters: potentials of two-dimensional source-free steady problems (temperature, electric potential, velocity potential) are harmonic, and their conjugates give stream or flux functions. Analytic functions package the potential with the stream function, and singularities and branches correspond to sources, sinks, vortices, and cuts (final chapter).}
 \ASK{Cauchy--Riemann 方程与 Laplace 方程是什么关系？}{What is the relation between the C-R equations and Laplace's equation?}{C-R 是复可微的一阶条件，耦合 $u,v$ 的一阶偏导；对 C-R 再求导并用混合偏导相等，得 $u,v$ 各自满足二阶 Laplace 方程。反过来，给定调和函数，解 C-R 可局部得到共轭，从而得到解析函数。}{The C-R equations are the first-order conditions for complex differentiability and couple the first partials of $u$ and $v$; differentiating them again gives Laplace's equation for each. Conversely, solving the C-R equations for a harmonic function gives a local conjugate, hence an analytic function.}
-\section[第 4 章 初等函数]{第 4 章：初等复函数 | Chapter 4: Elementary complex functions}
+\section[教材第 2 章 初等函数]{教材第 2.4 节：初等全纯函数 | Sec. 2.4: Elementary holomorphic functions}
 
 \subsection{复指数函数 | The complex exponential}
 \APS{$e^z=\sum_{n=0}^{\infty}z^n/n!$ 对一切 $z$ 收敛，所以是整函数且 $(e^z)'=e^z$。代入 $z=x+iy$ 并分离实虚部，得到 Euler 公式、模、辐角与周期。}{The series $e^z=\sum z^n/n!$ converges for every $z$, so $e^z$ is entire with derivative $e^z$. Substituting $z=x+iy$ and separating real and imaginary parts gives Euler's formula, the modulus, the argument, and the period.}
@@ -174,7 +174,7 @@ z^\alpha_{\text{principal}}=\exp(\alpha\operatorname{Log}z),\qquad
 \]
 \APS{四者都是整函数，导数为 $\cos z$、$-\sin z$、$\cosh z$、$\sinh z$；恒等式 $\sin^2z+\cos^2z=1$、$\cosh^2z-\sinh^2z=1$、$\sin(iz)=i\sinh z$ 仍成立。零点为 $\sin z=0\iff z=k\pi$、$\cos z=0\iff z=\pi/2+k\pi$。与实数不同，$|\sin z|$、$|\cos z|$ 无界：$\sin(iy)=i\sinh y$，因为非常数整函数必无界（Liouville 定理）。}{All four are entire with the displayed derivatives; the identities $\sin^2z+\cos^2z=1$, $\cosh^2z-\sinh^2z=1$, and $\sin(iz)=i\sinh z$ still hold. Zeros are $\sin z=0$ iff $z=k\pi$ and $\cos z=0$ iff $z=\pi/2+k\pi$. Unlike the real case, $|\sin z|$ and $|\cos z|$ are unbounded, since $\sin(iy)=i\sinh y$ and a nonconstant entire function must be unbounded (Liouville).}
 \ASK{为什么 $e^z$ 是周期函数，而实指数函数单调？}{Why is $e^z$ periodic while the real exponential is monotone?}{$e^{z+2\pi i}=e^z e^{2\pi i}=e^z$，虚方向平移是旋转，不改变值；实指数只看实轴，没有这种周期。周期导致 $e^z$ 非单射，也导致对数多值。}{Because $e^{z+2\pi i}=e^z e^{2\pi i}=e^z$: a translation in the imaginary direction is a rotation and does not change the value, while the real exponential only sees the real axis. The period makes $e^z$ non-injective and causes the logarithm to be multivalued.}
-\section[第 5 章 复积分]{第 5 章：复积分与 Cauchy 理论 | Chapter 5: Contour integration and Cauchy theory}
+\section[教材第 3 章 复积分]{教材第 3 章：复积分与 Cauchy 理论 | Ch. 3: Contour integration and Cauchy theory}
 
 \subsection{路径与复积分的定义 | Paths and the definition of the contour integral}
 \APS{路径是连续映射 $\gamma:[a,b]\to\mathbb C$；分段 $C^1$ 指可分成有限段、每段连续可微。长度 $L(\gamma)=\int_a^b|\gamma'(t)|dt$。无自交点的闭曲线称为简单闭曲线（Jordan 曲线），它把平面分成内部与外部；逆时针使内部在左侧，称为正向。保持方向的重参数化不改变积分，反向使积分变号。}{A path is a continuous map $\gamma:[a,b]\to\mathbb C$; it is piecewise $C^1$ if it splits into finitely many continuously differentiable pieces, and its length is $L(\gamma)=\int_a^b|\gamma'(t)|dt$. A closed curve without self-intersections is a simple closed (Jordan) curve, dividing the plane into an inside and an outside; counterclockwise orientation keeps the inside on the left and is called positive. Reparametrization preserving direction leaves integrals unchanged, while reversing direction changes the sign.}
@@ -231,7 +231,7 @@ f\ \text{整且}\ |f|\le M\ \text{处处成立}\ \Longrightarrow\ f\ \text{为�
 \subsection{Morera 定理 | Morera's theorem}
 \APS{Morera 定理是 Cauchy 定理的逆：若 $f$ 在区域 $D$ 内连续，且对 $D$ 内每个三角形的边界 $\oint_{\partial T}f\,dz=0$，则 $f$ 在 $D$ 内解析。证明：固定 $z_0$，定义 $F(z)=\int_{z_0}^{z}f(w)dw$，三角形条件保证路径无关，于是 $F$ 解析、$F'=f$，$F$ 无穷次可导故 $f$ 也解析。}{Morera's theorem is the converse of Cauchy's theorem: if $f$ is continuous in a domain $D$ and the integral over the boundary of every triangle in $D$ is zero, then $f$ is analytic. Proof: fix $z_0$ and define $F(z)=\int_{z_0}^{z}f(w)dw$; the triangle condition makes it path-independent, so $F$ is analytic with $F'=f$, and since $F$ is infinitely differentiable, so is $f$.}
 \ASK{为什么 $\oint_{|z|=1}\frac{dz}{z}=2\pi i$ 与 Cauchy 定理不矛盾？}{Why does $\oint_{|z|=1}dz/z=2\pi i$ not contradict Cauchy's theorem?}{定理要求 $f$ 在围道及其内部解析，但 $1/z$ 在内部的 $0$ 处没有定义；若把定义域改为挖去原点的平面，则它不是单连通的。两条假设都失效，结论当然可以不成立。}{The theorem requires analyticity on the contour and inside, but $1/z$ is undefined at the interior point $0$; on the punctured plane the domain is not simply connected. Both hypotheses fail, so the conclusion need not hold.}
-\section[第 6 章 级数与留数]{第 6 章：幂级数、Taylor 与 Laurent 展开、孤立奇点与留数 | Chapter 6: Power series, Taylor and Laurent expansions, isolated singularities, and residues}
+\section[教材第 4、5 章 级数与留数]{教材第 4、5 章：幂级数、Taylor 与 Laurent 展开、孤立奇点与留数 | Ch. 4--5: Power series, Taylor and Laurent expansions, isolated singularities, and residues}
 
 \subsection{幂级数与收敛半径 | Power series and radius of convergence}
 \APS{幂级数 $\sum_{n=0}^{\infty}a_n(z-z_0)^n$ 的收敛域总是一个圆盘：存在 $R\in[0,\infty]$，使 $|z-z_0|<R$ 时绝对收敛、$|z-z_0|>R$ 时发散；$|z-z_0|=R$ 上需具体判断。$R$ 称为收敛半径。在收敛圆内每个紧子集上一致收敛，故可逐项求导、逐项积分，且半径不变。}{The domain of convergence of a power series is always a disk: there is $R\in[0,\infty]$ such that the series converges absolutely for $|z-z_0|<R$ and diverges for $|z-z_0|>R$, while the boundary needs a separate discussion. The number $R$ is the radius of convergence. On compact subsets of the disk the series converges uniformly, so it can be differentiated and integrated term by term without changing the radius.}
@@ -334,7 +334,7 @@ I=\oint_{|z|=1}\frac{dz}{i(2z^2+5z+2)}.
 \APS{Rouché 定理的证明思路：考虑连续族 $f_t=f+tg$（$0\le t\le1$）。在 $C$ 上 $|tg|\le|g|<|f|$，故 $f_t$ 在 $C$ 上无零点；零点数随 $t$ 连续且取整数值，因此恒定；$t=0$ 与 $t=1$ 的零点数相同。}{Proof idea for Rouché: consider the continuous family $f_t=f+tg$ with $0\le t\le1$. On $C$ we have $|tg|\le|g|<|f|$, so $f_t$ has no zero on $C$; the zero count depends continuously on $t$ and is integer-valued, hence constant, so the counts at $t=0$ and $t=1$ agree.}
 \EX{$z^3+z+1$ 在 $|z|<2$ 内恰有 $3$ 个零点：在 $|z|=2$ 上 $|z^3|=8>|z+1|\le3$，与 $z^3$ 比较。$e^z-3z$ 在 $|z|<1$ 内恰有 $1$ 个零点：在 $|z|=1$ 上 $|e^z|\le e<3=|3z|$，与 $-3z$ 比较。}{$z^3+z+1$ has exactly three zeros in $|z|<2$, since $|z^3|=8>|z+1|\le3$ on the boundary. $e^z-3z$ has exactly one zero in $|z|<1$, since $|e^z|\le e<3=|3z|$ there.}
 \EX{代数基本定理的 Rouché 证明：$P(z)=z^n+a_{n-1}z^{n-1}+\cdots+a_0$，当 $R$ 足够大时在 $|z|=R$ 上低次项之和的模小于 $R^n=|z^n|$，故 $P$ 在 $|z|<R$ 内与 $z^n$ 一样有 $n$ 个零点。}{Rouché proof of the fundamental theorem of algebra: for large $R$ the lower-order terms are dominated by $|z^n|$ on $|z|=R$, so $P$ has $n$ zeros in $|z|<R$, like $z^n$.}
-\section[第 7 章 共形映射]{第 7 章：共形映射与调和函数 | Chapter 7: Conformal mapping and harmonic functions}
+\section[教材第 7、8 章 共形映射与调和函数]{教材第 7、8 章：共形映射与调和函数 | Ch. 7--8: Conformal mapping and harmonic functions}
 
 \subsection{解析映射的保角性 | Conformality of analytic maps}
 \APS{若 $f$ 在 $z_0$ 解析且 $f'(z_0)\ne0$，则 $f(z_0+h)=f(z_0)+f'(z_0)h+o(|h|)$，局部近似为乘以非零复数 $f'(z_0)$：长度放大 $|f'(z_0)|$ 倍、方向旋转 $\arg f'(z_0)$，于是过 $z_0$ 的任意两条曲线夹角大小与方向都不变，称 $f$ 在 $z_0$ 共形。}{If $f$ is analytic at $z_0$ with $f'(z_0)\ne0$, then $f(z_0+h)=f(z_0)+f'(z_0)h+o(|h|)$, so locally $f$ is multiplication by the nonzero complex number $f'(z_0)$: lengths scale by $|f'(z_0)|$ and directions rotate by $\arg f'(z_0)$. Hence any two curves through $z_0$ keep their angle and orientation, and $f$ is conformal at $z_0$.}
@@ -379,7 +379,7 @@ P_r(\varphi)=\frac{1-r^2}{1-2r\cos\varphi+r^2}.
 \]
 \APS{非常数解析函数不能在内部取得模的局部最大值；有界区域上连续到闭包的解析函数，最大模在边界达到。调和函数版本：非常数调和函数不能在内部取得最大或最小值。实用价值是“用边界控制内部”，也给出 Dirichlet 问题解的唯一性。}{A nonconstant analytic function cannot attain a local maximum of its modulus inside; if it is analytic on a bounded domain and continuous on the closure, the maximum modulus is attained on the boundary. The harmonic version: a nonconstant harmonic function cannot attain an interior maximum or minimum. The practical value is ``control the interior by the boundary'', which also gives uniqueness for the Dirichlet problem.}
 
-\ASK{共形映射为什么能解 Laplace 边值问题？}{Why can conformal maps solve Laplace boundary-value problems?}{解析映射把调和函数拉回成调和函数：若 $f:D\to G$ 解析、$u$ 在 $G$ 调和，则 $u\circ f$ 在 $D$ 调和（由链式法则和 C-R 方程，或把 $u$ 写成解析函数的实部）。所以把区域共形映到圆盘或半平面后，用 Poisson 公式求解，再映回原区域；边界数据也要一起变换。}{An analytic map pulls harmonic functions back to harmonic functions: if $f:D\to G$ is analytic and $u$ is harmonic in $G$, then $u\circ f$ is harmonic in $D$ (by the chain rule and the C-R equations, or by writing $u$ as the real part of an analytic function). Hence one maps the domain conformally to a disk or half-plane, solves by the Poisson formula, and maps back, transforming the boundary data too.}
+\ASK{共形映射为什么能解 Laplace 边值问题？}{Why can conformal maps solve Laplace boundary-value problems?}{解析映射把调和函数拉回成调和函数：若 $f:D\to G$ 解析、$u$ 在 $G$ 调和，则 $u\circ f$ 在 $D$ 调和（由链式法则和 C-R 方程，或把 $u$ 写成全纯函数的实部）。所以把区域共形映到圆盘或半平面后，用 Poisson 公式求解，再映回原区域；边界数据也要一起变换。}{An analytic map pulls harmonic functions back to harmonic functions: if $f:D\to G$ is analytic and $u$ is harmonic in $G$, then $u\circ f$ is harmonic in $D$ (by the chain rule and the C-R equations, or by writing $u$ as the real part of an analytic function). Hence one maps the domain conformally to a disk or half-plane, solves by the Poisson formula, and maps back, transforming the boundary data too.}
 \section*{实际应用与面试总结 | Applications and interview summary}
 
 \subsection*{平面势流：复势与流函数 | Planar potential flow}
@@ -436,12 +436,12 @@ z 变换 & z-transform & 离散信号的 Laurent 型变换 \\
 
 \section*{参考文献 | References}
 \begin{itemize}
-\item[{[1]}] 史济怀，刘太顺．《复变函数》．中国科学技术大学出版社．本稿对应其第 1--7 章．
+\item[{[1]}] 史济怀，刘太顺．《复变函数》．中国科学技术大学出版社．本稿选取第 1--5、7、8 章的主题．
 \item[{[2]}] L. V. Ahlfors, \emph{Complex Analysis}, 3rd ed., McGraw-Hill, 1979. Chapters 1--6.
 \item[{[3]}] J. B. Conway, \emph{Functions of One Complex Variable I}, 2nd ed., GTM 11, Springer, 1978. Chapters I--VII.
 \item[{[4]}] W. Rudin, \emph{Real and Complex Analysis}, 3rd ed., McGraw-Hill, 1987. Chapter 10.
 \end{itemize}
 
 \section*{来源与范围 | Source and scope}
-\APS{本稿依据史济怀、刘太顺《复变函数》第 1--7 章，涵盖复数、解析函数、复积分、级数、留数、共形映射、调和函数及应用；APS 无官方素材，范围按教材常规确定。}{These notes follow Chapters 1--7 of Shi Jihuai and Liu Taishun, from complex numbers through series, residues, conformal mapping, harmonic functions, and applications; APS provides no official material, so the scope follows the textbook.}
+\APS{本稿的复数、全纯函数、复积分和级数分别对照教材第 1--5 章，共形映射和调和函数对照第 7、8 章。}{The main textbook references are Chapters 1--5, 7 and 8.}
 \end{document}

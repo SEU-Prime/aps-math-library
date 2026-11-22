@@ -15,18 +15,18 @@
 \begin{document}\maketitle
 
 \section*{课程概述 | Course overview}
-\APS{这份范围以线性规划为主，顺序是决策变量与标准形式、可行多面体与基可行解、单纯形字典和约化成本、入基出基与最小比值、退化与两阶段法，然后进入对偶、弱/强对偶、互补松弛、Farkas 不可行性证书及灵敏度分析。单纯形法维持原问题可行性并改善目标，对偶提供可验证的上界，两者在最优解处相遇；灵敏度分析还要给出当前基保持有效的参数范围。}{The scope is mainly linear programming: decision variables and standard form, feasible polyhedra and basic feasible solutions, simplex dictionaries and reduced costs, entering and leaving variables and the ratio test, degeneracy and Phase I, followed by duality, complementary slackness, Farkas certificates and sensitivity analysis. Simplex preserves primal feasibility while improving the objective; the dual provides verifiable bounds. They meet at optimality, and sensitivity statements require a range over which the current basis remains valid.}
+\APS{这份范围以线性规划为主，顺序是决策变量与标准形式、可行多面体与基可行解、单纯形表和判别数、进基离基与最小比值、退化与两阶段法，然后进入对偶、弱/强对偶、互补松弛、Farkas 不可行性证书及灵敏度分析。单纯形法维持原问题可行性并改善目标，对偶提供可验证的上界，两者在最优解处相遇；灵敏度分析还要给出当前基保持有效的参数范围。}{The scope is mainly linear programming: decision variables and standard form, feasible polyhedra and basic feasible solutions, simplex tableaux and criterion numbers, entering and leaving variables and the ratio test, degeneracy and Phase I, followed by duality, complementary slackness, Farkas certificates and sensitivity analysis. Simplex preserves primal feasibility while improving the objective; the dual provides verifiable bounds. They meet at optimality, and sensitivity statements require a range over which the current basis remains valid.}
 \subsection*{例一：可行方案加对偶证书 | A feasible plan with an optimality certificate}
-\APS{工厂最大化 $3x_1+2x_2$，约束为 $2x_1+x_2\le4$、$x_1+2x_2\le4$、$x\ge0$。两条边界交于 $(4/3,4/3)$，利润为 $20/3$。资源价格取 $y=(4/3,1/3)$，满足 $2y_1+y_2=3$、$y_1+2y_2=2$ 且非负，所以对任何可行产量，利润不超过 $4y_1+4y_2=20/3$。产量达到该上界，因此最优；这比只报告一个交点更完整，因为给出了全局最优的证明。}{A factory maximizes $3x_1+2x_2$ subject to $2x_1+x_2\le4$, $x_1+2x_2\le4$, and $x\ge0$. The boundary intersection $(4/3,4/3)$ gives profit $20/3$. Prices $y=(4/3,1/3)$ are nonnegative and satisfy $2y_1+y_2=3$ and $y_1+2y_2=2$. Thus every feasible production plan has profit at most $4y_1+4y_2=20/3$. The plan attains the bound and is optimal. A feasible point plus a matching dual bound is a complete certificate.}
+\APS{工厂最大化 $3x_1+2x_2$，约束为 $2x_1+x_2\le4$、$x_1+2x_2\le4$、$x\ge0$。两条边界交于 $(4/3,4/3)$，利润为 $20/3$。资源价格取 $w=(4/3,1/3)$，满足 $2w_1+w_2=3$、$w_1+2w_2=2$ 且非负，所以对任何可行产量，利润不超过 $4w_1+4w_2=20/3$。产量达到该上界，因此最优；这比只报告一个交点更完整，因为给出了全局最优的证明。}{A factory maximizes $3x_1+2x_2$ subject to $2x_1+x_2\le4$, $x_1+2x_2\le4$, and $x\ge0$. The boundary intersection $(4/3,4/3)$ gives profit $20/3$. Prices $w=(4/3,1/3)$ are nonnegative and satisfy $2w_1+w_2=3$ and $w_1+2w_2=2$. Thus every feasible production plan has profit at most $4w_1+4w_2=20/3$. The plan attains the bound and is optimal. A feasible point plus a matching dual bound is a complete certificate.}
 \subsection*{例二：影子价格的有效范围 | The range of a shadow price}
 \APS{只将第一资源量改为 $4+\Delta$，保持同一基时，解为 $x_1=(4+2\Delta)/3$、$x_2=(4-\Delta)/3$。非负性要求 $-2\le\Delta\le4$；目标变成 $20/3+(4/3)\Delta$，所以在此范围第一资源的边际价值为 $4/3$。例如增加一单位，利润增加 $4/3$。若 $\Delta>4$，原基给 $x_2<0$，该公式就不能继续代表可行最优方案，必须重新求解或换基。}{Change only the first resource to $4+\Delta$. With the same basis, $x_1=(4+2\Delta)/3$ and $x_2=(4-\Delta)/3$. Nonnegativity requires $-2\le\Delta\le4$. Profit is $20/3+(4/3)\Delta$, so the first resource has marginal value $4/3$ over that range. Increasing it by one raises profit by $4/3$. For $\Delta>4$, this basis produces a negative second output and can no longer describe a feasible optimum; a new basis is needed.}
 
 
 \section{线性规划模型与约束 | Linear-programming models and constraints}
-\noindent 线性规划的基本形式为
-\FORMULA{线性规划的最大化不等式形式}{inequality form of a maximization linear program}
+\noindent 教材第 2.1 节用 $\min cx,\ Ax=b,\ x\ge0$ 作为标准形式。生产模型常写成以下极大化不等式形式。
+\FORMULA{线性规划的极大化不等式形式}{inequality form of a maximization linear program}
 \[
-\max\;c^{\mathsf T}x\quad\text{s.t.}\quad Ax\le b,\quad x\ge0.
+\max\;cx\quad\text{s.t.}\quad Ax\le b,\quad x\ge0.
 \]
 $x$ 是决策变量，$c$ 是收益系数，$A$ 是资源消耗矩阵，$b$ 是资源上限。可行解满足全部约束；最优解是在可行解中使目标值最大者。最小化问题可以把目标乘以 $-1$ 变成最大化问题。
 \EN{A linear program has a linear objective and linear constraints. The vector $x$ contains decisions, $c$ contains profits or costs, $A$ records resource use, and $b$ gives resource bounds. A feasible solution satisfies every constraint; an optimal solution has the best objective value among feasible solutions.}
@@ -37,8 +37,8 @@ $x$ 是决策变量，$c$ 是收益系数，$A$ 是资源消耗矩阵，$b$ 是�
 \EX{工厂模型加入 $s_1,s_2$ 后为 $2x_1+x_2+s_1=4$、$x_1+2x_2+s_2=4$。在原点，$s_1=s_2=4$；在 $(4/3,4/3)$，两个松弛量均为零。}{After adding slacks, the constraints are $2x_1+x_2+s_1=4$ and $x_1+2x_2+s_2=4$. At the origin both slacks are four; at $(4/3,4/3)$ both are zero.}
 
 \subsection{从零建立线性规划模型 | Building a linear program from scratch}
-\noindent 建模时先问三个问题：\textbf{决定什么}、\textbf{想让什么最好}、\textbf{受到什么限制}。决定的量写成变量 $x_j$；目标函数写成 $c^{\mathsf T}x$；限制写成 $Ax\le b$、$Ax\ge b$ 或等式。这里“线性”意味着变量只以一次幂出现，不能有 $x_1x_2$、$x_1^2$ 或 $\sin x_1$。这一步很重要，因为单纯形法只直接处理线性模型。
-\EN{To build a model, ask three questions: what decisions are made, what should be optimized, and what restrictions must be respected. Decision quantities are variables, the objective is $c^{\mathsf T}x$, and the restrictions are linear inequalities or equations. Linearity means that variables occur only to the first power; products such as $x_1x_2$ are not linear.}
+\noindent 建模时先问三个问题：\textbf{决定什么}、\textbf{想让什么最好}、\textbf{受到什么限制}。决定的量写成变量 $x_j$；目标函数写成 $cx$；限制写成 $Ax\le b$、$Ax\ge b$ 或等式。这里“线性”意味着变量只以一次幂出现，不能有 $x_1x_2$、$x_1^2$ 或 $\sin x_1$。这一步很重要，因为单纯形法只直接处理线性模型。
+\EN{To build a model, ask three questions: what decisions are made, what should be optimized, and what restrictions must be respected. Decision quantities are variables, the objective is $cx$, and the restrictions are linear inequalities or equations. Linearity means that variables occur only to the first power; products such as $x_1x_2$ are not linear.}
 
 \EX{例如配餐问题中，$x_1$、$x_2$ 分别表示两种食品的份数，每份价格为 $2$ 和 $3$。如果每天至少需要 $12$ 单位热量和 $8$ 单位蛋白质，可以写成
 \FORMULA{配餐问题的线性规划模型}{linear-programming model for a diet problem}
@@ -64,417 +64,236 @@ $x$ 是决策变量，$c$ 是收益系数，$A$ 是资源消耗矩阵，$b$ 是�
 \EX{配餐模型中的第一条约束可写为 $4x_1+3x_2-s_1+a_1=12$，其中 $s_1\ge0$ 是剩余量，$a_1\ge0$ 是人工变量。第二条约束同样写成 $2x_1+4x_2-s_2+a_2=8$。完整第一阶段最小化 $a_1+a_2$；其最优值大于零才说明原模型不可行。}{The first diet constraint can be written as $4x_1+3x_2-s_1+a_1=12$. The surplus variable and the artificial variable are introduced for the algorithm. The second constraint similarly requires $2x_1+4x_2-s_2+a_2=8$. Phase I minimizes $a_1+a_2$; a strictly positive optimum certifies infeasibility of the full original model.}
 
 
-\section{可行域、顶点与基可行解 | Feasible vertices and basic feasible solutions}
-\subsection{基、凸性和退化的准确含义 | Bases, convexity and degeneracy}
-\APS{集合凸，指任意两点的线段都在其中；线性等式、不等式的交构成凸多面体。极点不能表示成两个不同可行点的非平凡凸组合。在标准形式 $\widetilde Ax=b,x\ge0$ 中，先删去冗余等式使 $\widetilde A$ 有行秩 $m$，再选择 $m$ 个独立列组成 $B$，其余列记 $N$；令 $x_N=0$、$x_B=B^{-1}b$，若非负即基可行解，且对应极点。}{A convex set contains every segment between its points; intersections of linear equalities and inequalities form convex polyhedra. An extreme point is not a nontrivial convex combination of two different feasible points. For standard form $\widetilde Ax=b,x\ge0$, remove redundant equations to obtain row rank $m$, then choose $m$ independent columns as $B$. Setting $x_N=0$, $x_B=B^{-1}b\ge0$ gives a basic feasible solution and an extreme point.}
-\APS{若有基变量为零，称退化；换基可能步长为零、目标不变，所以“正约化成本”并不保证每次目标严格增加。Bland 等防循环规则可处理循环。对本稿的非负标准形式，非空且目标有有限上界时存在顶点最优解；任意一般多面体若包含整条直线，则未必有顶点，不能脱离标准形式直接照搬。}{A basic feasible solution is degenerate when a basic variable is zero. A pivot can then have zero step and unchanged objective, even with positive reduced cost. Anticycling rules such as Bland\textquotesingle s rule address cycling. In the nonnegative standard form used here, a nonempty feasible set with finite objective bound has an optimal vertex. A general polyhedron containing a line need not have vertices, so the qualification matters.}
+\section{可行域、极点与基本可行解 | Feasible regions, extreme points and basic feasible solutions}
+\APS{按教材第 2.2 节，满足约束的点组成可行域。线性规划的可行域为凸集，因为任意两个可行点的凸组合仍满足每个线性约束。若一个可行点无法表示成两个不同可行点的非平凡凸组合，它就是可行域的极点。}{A feasible region consists of all points satisfying the constraints. It is convex because a convex combination of feasible points satisfies each linear constraint. An extreme point cannot be written as a nontrivial convex combination of two distinct feasible points.}
+\APS{在 $Ax=b,\ x\ge0$ 中，检查等式相容后删去冗余行，设 $A$ 的行秩为 $m$。取 $m$ 个线性无关列为基矩阵 $B$，其余列组成 $N$。令 $x_N=0$，解得 $x_B=B^{-1}b$，称为一个基本解。它的所有分量非负时，称为基本可行解。若其中有基变量为零，则为退化基本可行解。}{Choose a nonsingular basis matrix $B$ from $m$ independent columns. The basic solution sets $x_N=0$ and solves $Bx_B=b$. It is basic feasible if all components are nonnegative, and degenerate if any basic variable is zero.}
+\APS{教材定理 2.2.3 给出极点与基本可行解的等价关系。若是基本可行解，则任意将它写成两个可行点的凸组合时，这两个点的非基分量也必须为零，而 $B$ 可逆使两个点都等于该解。反过来，若一个可行点的正分量对应的列线性相关，就能沿这些列的一个非零零空间方向作正负两次小扰动，保持非负和 $Ax=b$，把它写成两点的中点。极点因此对应一组线性无关列，可补足成基。教材定理 2.2.2 说明，标准形式的线性规划有有限最优解时，至少有一个最优解在极点上。}{Theorem 2.2.3 identifies basic feasible solutions with extreme points. In a convex decomposition of a basic feasible solution, nonnegativity forces both points to have the same zero nonbasic entries, and the basis fixes the remaining entries. Conversely, dependent positive-support columns allow small feasible perturbations of both signs, excluding extremality. By Theorem 2.2.2, a finite optimum in standard form is attained at an extreme point.}
 
-\noindent 线性约束的可行域是凸集：若 $x,y$ 可行，则 $\lambda x+(1-\lambda)y$ 也可行，$0\le\lambda\le1$。线性目标在非空有界多面体上一定取得最优值，并且至少有一个最优顶点。顶点在代数上对应一个基可行解：在 $Ax=b,x\ge0$ 中选取 $m$ 个线性无关列组成基矩阵 $B$，令非基变量为零，解 $x_B=B^{-1}b$；若 $x_B\ge0$，就得到基可行解。
-\EN{A feasible region defined by linear inequalities is convex. A linear objective attains an optimum on a nonempty bounded polyhedron, and at least one optimum is a vertex. Algebraically, a basic feasible solution is obtained by choosing a nonsingular basis matrix $B$, setting nonbasic variables to zero, and solving $x_B=B^{-1}b$.}
-\EX{标准形式 $x_1+x_2+s=2$ 的基可以选 $s$，得到 $(x_1,x_2,s)=(0,0,2)$；也可以选 $x_1$，令 $x_2=s=0$，得到 $(2,0,0)$。二者都是顶点。}{For $x_1+x_2+s=2$, choosing $s$ as the basis gives $(0,0,2)$; choosing $x_1$ gives $(2,0,0)$. Both are basic feasible solutions and vertices.}
+\section{使用表格形式的单纯形方法 | The simplex tableau method}
+\noindent 本节采用陈宝林《最优化理论与算法》（第 2 版）第 3.1.1、3.1.2、3.1.4 节中的基本可行解、判别数及主元消去记号（第 37、40、44--46 页）。记目标为 $f=cx$，$c$、$c_B$ 和 $c_N$ 为行向量。教材以极小化说明计算步骤，下面也列出制造模型中用到的极大化规则。
 
-\noindent\textbf{为什么只看顶点？} 对任意可行点，如果它不是顶点，通常可以写为两个不同可行点的凸组合；线性目标在这两个点上的值的加权平均等于原值，因此至少有一个端点不差于原点。不断沿此方向移动，最终可以找到顶点最优解。若最优值沿一条边相同，可能有多个最优解。
-\EN{If a feasible point is not a vertex, it can be represented as a convex combination of two different feasible points. The linear objective is the same convex combination of their objective values, so one endpoint is at least as good. Repeating this argument leads to an optimal vertex. An entire edge may be optimal when the objective is parallel to that edge.}
-
-\section{单纯形法：换基的逻辑 | The simplex method}
-\noindent 单纯形法从一个基可行解开始，先计算当前基的对偶价格 $y^{\mathsf T}=c_B^{\mathsf T}B^{-1}$，再计算非基变量 $x_j$ 的检验数（约化成本）
-\FORMULA{单纯形法的对偶价格与约化成本}{simplex dual prices and reduced costs}
+\subsection{先构造单纯形表 | Constructing the tableau}
+\begin{enumerate}[label=\arabic*.]
+\item \textbf{写标准形式。} 将约束化成 $Ax=b,\ x\ge0$。若某行右端为负，先将整行乘 $-1$，不等号反向。$\le$ 约束加非负松弛变量，$\ge$ 约束减非负剩余变量，等式保留。原目标中新增的松弛或剩余变量系数为零。
+\item \textbf{确定初始基本可行解。} 设 $A=(B,N)$，基矩阵 $B$ 由 $A$ 的 $m$ 个线性无关列组成，$N$ 由其余列组成。对应变量为 $x_B,x_N$。令 $x_N=0$，有 $x_B=B^{-1}b=\bar b$。若 $\bar b\ge0$，就得到基本可行解。已有单位列且右端非负时，可直接用这些列作基。没有找到可行基时，先用两阶段法。
+\item \textbf{填写表身和目标行。} 对约束作行变换，使基变量列为单位阵。设 $p_j$ 是 $A$ 的第 $j$ 列，表内该列是 $y_j=B^{-1}p_j$，第 $i$ 行第 $j$ 格为 $y_{ij}$。设单纯形乘子 $w=c_B B^{-1}$。按教材记号，变量 $x_j$ 的判别数为
 \[
-\bar c_j=c_j-y^{\mathsf T}a_j=c_j-c_B^{\mathsf T}B^{-1}a_j.
+d_j=z_j-c_j=wp_j-c_j=\sum_i c_{B_i}y_{ij}-c_j .
 \]
-对最大化问题，若所有 $\bar c_j\le0$，当前基可行解已经最优；若某个 $\bar c_j>0$，增加 $x_j$ 会提高目标值，选择它入基，再用最小比值检验选择出基变量，以保持可行性。
-\EN{Starting from a basic feasible solution, the simplex method computes the dual prices $y^{\mathsf T}=c_B^{\mathsf T}B^{-1}$ and reduced costs $\bar c_j=c_j-y^{\mathsf T}a_j$. For a maximization problem, if every reduced cost is nonpositive, the current solution is optimal. A positive reduced cost identifies an entering variable; the minimum-ratio test chooses the leaving variable and preserves feasibility.}
-\READ{“c bar j equals c j minus c B transpose B inverse a j.” “All reduced costs are nonpositive, so the current basic feasible solution is optimal.”}
-\EX{在工厂模型的初始点 $(0,0)$，固定 $x_2=0$ 并增加 $x_1=t$。两个资源约束分别要求 $t\le2$ 与 $t\le4$，所以最大可行步长为 $2$，第一项资源先用尽。这就是最小比值检验；它沿当前字典确定的方向移动。}{From the factory model's initial point $(0,0)$, keep $x_2=0$ and increase $x_1=t$. The constraints give $t\le2$ and $t\le4$, so the maximum feasible step is two and the first resource becomes binding. The ratio test follows a direction specified by the current dictionary.}
-
-\noindent\textbf{停止与异常。} 若进入变量的方向列在所有约束中都不能限制其增加，目标可以无限提高，问题无界。若初始没有可行基，需用两阶段法或大 $M$ 法寻找可行解。若某一步出现多个相同最小比值，可能发生退化；若目标值不增加而基改变，可能循环，通常用 Bland 规则避免循环。
-\EN{An unrestricted entering direction with positive reduced cost certifies unboundedness. If no feasible basis is known, Phase I or Big-M seeks one and may instead certify infeasibility. Ties in the minimum-ratio test produce a degenerate new basis; degeneracy can also occur without a tie when the minimum ratio is zero. A pivot may change the basis without improving the objective, and Bland's rule prevents cycling.}
-\EX{约束 $x_1-x_2\le1$、$x_1,x_2\ge0$ 下最大化 $x_1+x_2$ 是无界的：取 $x_1=t+1,x_2=t$，目标为 $2t+1\to\infty$。}{Maximizing $x_1+x_2$ subject to $x_1-x_2\le1$ and nonnegativity is unbounded: $x_1=t+1,x_2=t$ is feasible and the objective tends to infinity.}
-
-\noindent \textbf{最小比值检验为什么这样做。} 假设某个非基变量 $x_j$ 入基，字典中基变量写成 $x_B=\beta-\bar a_jt$，其中 $t$ 表示增加 $x_j$ 的数量。为了保持 $x_B\ge0$，每个 $\bar a_{ij}>0$ 的行给出上界
-\FORMULA{单纯形法最小比值检验的可行步长界}{feasible step bound in the simplex minimum-ratio test}
-\[
-t\le\frac{\beta_i}{\bar a_{ij}}.
-\]
-取最小的上界，最先降到零的基变量出基。若没有正的 $\bar a_{ij}$，就没有约束阻止 $t$ 增大，若约化成本为正则目标无界。
-\EN{If a nonbasic variable enters, write the basic variables as $x_B=\beta-\bar a_jt$. Every positive coefficient gives an upper bound on $t$. The smallest ratio is reached first and determines the leaving variable. If no positive coefficient restricts $t$ and the reduced cost is positive, the objective is unbounded.}
-
-
-\subsection{逐步算例：工厂资源分配的单纯形计算 | Worked simplex calculation for factory production}
-\noindent 对生产模型加入松弛变量：
-\FORMULA{工厂模型的松弛变量等式形式}{slack-variable equations for the factory model}
-\[
-2x_1+x_2+s_1=4,\qquad x_1+2x_2+s_2=4,
-\qquad z=3x_1+2x_2.
-\]
-初始令非基变量 $x_1=x_2=0$，得到基变量 $s_1=s_2=4$，目标值 $z=0$。初始约化成本中 $x_1$ 的系数为 $3>0$，所以先令 $x_1$ 入基。比值为 $4/2=2$ 和 $4/1=4$，故 $s_1$ 出基；换基后得到
-\FORMULA{第一次换基后的单纯形字典}{simplex dictionary after the first pivot}
-\[
-x_1=2-\tfrac12x_2-\tfrac12s_1,
-\quad s_2=2-\tfrac32x_2+\tfrac12s_1,
-\quad z=6+\tfrac12x_2-\tfrac32s_1.
-\]
-现在基变量为 $x_1,s_2$，非基变量为 $x_2,s_1$。目标式中 $x_2$ 的约化成本为正，所以 $x_2$ 入基。一般地，若基变量写成 $x_B=\beta-\bar a_jt$，为保持 $x_B\ge0$，每个 $\bar a_{ij}>0$ 都给出一个步长上界：
-\FORMULA{单纯形法最小比值检验的可行步长界}{feasible step bound in the simplex minimum-ratio test}
-\[
-t\le\frac{\beta_i}{\bar a_{ij}}.
-\]
-本例由 $x_1\ge0$ 得步长上界 $4$，由 $s_2\ge0$ 得上界 $4/3$，故 $s_2$ 出基。
-\EN{After adding slacks, the initial basis is $s_1,s_2$. The positive reduced cost of $x_1$ makes it enter first. The ratio test gives $4/2=2$ and $4/1=4$, so $s_1$ leaves. In the resulting dictionary, $x_2$ has a positive reduced cost and enters next. The bounds are four and four thirds, so $s_2$ leaves.}
-\noindent 解出离基行中的 $x_2$ 并代回，得到最终字典：
-\FORMULA{第二次换基后的基变量表示}{basic-variable expressions after the second pivot}
-\[
-\begin{aligned}
-x_1&=\frac43-\frac23s_1+\frac13s_2,\\
-x_2&=\frac43+\frac13s_1-\frac23s_2,\\
-z&=\frac{20}{3}-\frac43s_1-\frac13s_2.
-\end{aligned}
-\]
-\READ{“x one equals four thirds minus two thirds s one plus one third s two; x two equals four thirds plus one third s one minus two thirds s two; z equals twenty thirds minus four thirds s one minus one third s two.”}
-此时 $s_1,s_2$ 是非基变量；它们沿可行方向增加都不会改善目标，所以令二者为零，得到
-\FORMULA{工厂例题两次换基得到的最优解}{optimal solution after the two factory-example pivots}
-\[
-x_1=x_2=\frac43,\qquad z^*=\frac{20}{3}.
-\]
-\READ{“x one and x two both equal four thirds; the optimal value is twenty over three.”}
-这两次换基依次展示了选入基变量、最小比值检验、换基和检验数最优性判据。
-\EN{Solving for the leaving variable and substituting gives the final dictionary above. The nonbasic slacks $s_1,s_2$ have nonpositive reduced costs, so setting them to zero gives $x_1=x_2=4/3$ and $z^*=20/3$. The two pivots show how to choose entering and leaving variables and verify optimality.}
-
-\section{单纯形表：结构与计算 | The simplex tableau: structure and computation}
-
-\APS{上一节用字典写基变量，每换一次基都要重新解方程、再代回目标式，清楚但手算易错。单纯形表把同一个方程组按“基变量列是单位列”排成表，换基只需三步行变换，检验数作为最后一行同步更新。表与字典信息相同，只是表把“已解出的字典”还原成“未解出的方程组”，更适合考试中快速、可核对地计算。}{A dictionary is clear for proofs but error-prone by hand. A tableau arranges the same equations so that the basic columns are unit columns; a pivot becomes three row operations and the reduced-cost row updates with the table. Both carry the same information, but the tableau keeps the equations unsolved, which is faster and easier to check.}
-
-\subsection{单纯形表的结构与读法 | How to build and read a simplex tableau}
-
-\noindent 先化标准形：每个 $\le$ 约束加松弛变量 $s_i\ge0$，右端项保持非负，初始基取松弛变量，于是 $s_i=b_i$、$z=0$。表固定分四块：顶端写目标系数 $c_j$；左侧两列写基变量的目标系数 $c_B$ 与基变量名；中间是约束系数与右端项 $b$；底端写检验数
-\FORMULA{表内检验数与当前目标值}{reduced costs and the current objective value in a tableau}
-\[
-z_j=\sum_{i}c_{B_i}a_{ij}=c_B^{\mathsf T}B^{-1}a_j,
-\qquad
-\sigma_j=c_j-z_j,
-\qquad
-z=\sum_{i}c_{B_i}b_i=c_B^{\mathsf T}B^{-1}b.
-\]
-最大化时 $\sigma_j>0$ 表示增加 $x_j$ 能提高 $z$，故 $\sigma_j$ 也叫\textbf{约化成本}（reduced cost），是 $x_j$ 相对当前基的“净收益”。
-\EN{Add a slack to every $\le$ constraint and take the slacks as the initial basis, so $s_i=b_i$ and $z=0$. The blocks are the $c_j$ row, the $c_B$ column, the coefficients with $b$, and the reduced-cost row; a positive $\sigma_j$ means increasing $x_j$ raises $z$.}
-
-\noindent 工厂模型 $2x_1+x_2+s_1=4$、$x_1+2x_2+s_2=4$、$\max z=3x_1+2x_2$ 的初始表如表 1：$c_B$ 列的两个 0 是松弛变量的目标系数，$b$ 列 $(4,4)$ 是当前基解，$x_1$ 列的 $(2,1)$ 表示每单位产品 1 的资源消耗；检验数按 $\sigma_j=c_j-z_j$ 算，得 $(3,2,0,0)$。
-\EN{For the factory model, Table 1 is the initial tableau: the zeros in $c_B$ are the slack coefficients, $b=(4,4)$ is the current solution, and $\sigma_j=c_j-z_j$ gives $(3,2,0,0)$.}
-
-\noindent\textbf{表 1．工厂模型的初始单纯形表 / Table 1: the initial tableau of the factory model.}
-{\small\renewcommand{\arraystretch}{1.05}
-\begin{center}
-\begin{tabular}{c|c|c|cccc|c}
-\hline
- & & $c_j$ & 3 & 2 & 0 & 0 & \\
-\hline
-$c_B$ & 基变量 & $b$ & $x_1$ & $x_2$ & $s_1$ & $s_2$ & $z$ \\
-\hline
-0 & $s_1$ & 4 & 2 & 1 & 1 & 0 & \\
-0 & $s_2$ & 4 & 1 & 2 & 0 & 1 & \\
-\hline
- & & $\sigma_j$ & 3 & 2 & 0 & 0 & 0 \\
-\hline
-\end{tabular}
-\end{center}
-}
-\noindent \textbf{这一行/这一列在算什么。}$\sigma_1=3>0$ 说明产品 1 的净收益为正，表 1 尚未最优；$b$ 列是两种资源的剩余量；$z=0$ 表示尚未生产。
-\EN{\textbf{Reading it.} The positive $\sigma_1=3$ says product 1 is worth producing, so the table is not optimal; $b$ gives unused resources and $z=0$.}
-
-\noindent\textbf{入基与比值检验。}入基取检验数最大的正列（Dantzig 规则），也可用 Bland 规则取正检验数中\textbf{下标最小}者；本例 $\sigma_1=3>\sigma_2=2$，$x_1$ 入基。入基列 $k$ 定后用\textbf{最小比值检验}选离基行，主元（pivot element）取二者交点：$\theta=\min_{i:\,a_{ik}>0}b_i/a_{ik}$。$x_1$ 列 $\theta_1=4/2=2$（$s_1$ 行）、$\theta_2=4/1=4$（$s_2$ 行），最小者为 2，所以 $s_1$ 出基、主元为 2。只对 $a_{ik}>0$ 的行求比值：$a_{ik}\le0$ 时增加 $x_k$ 不会让该基变量下降，不能限制步长。
-\EN{\textbf{Entering variable and ratio test.} Enter the largest positive reduced cost (Dantzig) or the smallest positive index (Bland); here $x_1$ enters. The ratio test $\theta=\min b_i/a_{ik}$ over $a_{ik}>0$ gives $4/2=2$ and $4/1=4$, so $s_1$ leaves with pivot 2. Only rows with $a_{ik}>0$ bound the step.}
-
-\noindent\textbf{行变换三步。}(1) 主元行除以主元：$(2,1,1,0\mid4)/2=(1,\tfrac12,\tfrac12,0\mid2)$。(2) 其余行减去“该行主元列系数 $\times$ 新主元行”：$s_2$ 行系数为 1，$(1,2,0,1\mid4)-(1,\tfrac12,\tfrac12,0\mid2)=(0,\tfrac32,-\tfrac12,1\mid2)$。(3) 检验数行：$\sigma_j\leftarrow\sigma_j-\sigma_k(\text{new pivot row})_j$、$z\leftarrow z+\sigma_k(\text{new pivot RHS})$；$\sigma_k=3$ 时 $(3,2,0,0)-3(1,\tfrac12,\tfrac12,0)=(0,\tfrac12,-\tfrac32,0)$，$z=0+3\cdot2=6$。也可以用新的 $c_B$ 重算 $\sigma_j$，作为检查。
-\EN{\textbf{Three row operations.} Divide the pivot row by the pivot; subtract from every other row its pivot-column coefficient times the new pivot row; update the reduced-cost row by $\sigma_j\leftarrow\sigma_j-\sigma_k(\text{new pivot row})_j$ and $z\leftarrow z+\sigma_k(\text{new pivot RHS})$. Here they produce $(0,\tfrac12,-\tfrac32,0)$ and $z=6$; recomputing from the new $c_B$ is a good check.}
-
-\noindent\textbf{表 2．第一次换基后的单纯形表 / Table 2: the tableau after the first pivot.}
-{\small\renewcommand{\arraystretch}{1.05}
-\begin{center}
-\begin{tabular}{c|c|c|cccc|c}
-\hline
- & & $c_j$ & 3 & 2 & 0 & 0 & \\
-\hline
-$c_B$ & 基变量 & $b$ & $x_1$ & $x_2$ & $s_1$ & $s_2$ & $z$ \\
-\hline
-3 & $x_1$ & 2 & 1 & $\tfrac12$ & $\tfrac12$ & 0 & \\
-0 & $s_2$ & 2 & 0 & $\tfrac32$ & $-\tfrac12$ & 1 & \\
-\hline
- & & $\sigma_j$ & 0 & $\tfrac12$ & $-\tfrac32$ & 0 & 6 \\
-\hline
-\end{tabular}
-\end{center}
-}
-\noindent \textbf{这一行/这一列在算什么。}$c_B$ 列变成 $(3,0)$；$x_1$ 列与 $s_2$ 列成为单位列 $(1,0)$、$(0,1)$，这是换基成功的标志；$b$ 列 $(2,2)$ 读出 $x_1=2$、$x_2=0$、$z=6$；$\sigma_2=\tfrac12>0$，$x_2$ 仍值得生产。
-\EN{\textbf{Reading it.} $x_1$ and $s_2$ are unit columns, so the pivot worked; $b=(2,2)$ gives $x_1=2$, $z=6$, and $\sigma_2=\tfrac12>0$.}
-
-\noindent 第二轮：$x_2$ 入基，$\theta=\min\{2/\tfrac12=4,\ 2/\tfrac32=\tfrac43\}=\tfrac43$，$s_2$ 出基，主元 $\tfrac32$。主元行除以 $\tfrac32$ 得 $(0,1,-\tfrac13,\tfrac23\mid\tfrac43)$；$x_1$ 行减 $\tfrac12$ 倍新主元行得 $(1,0,\tfrac23,-\tfrac13\mid\tfrac43)$；$\sigma_k=\tfrac12$ 时 $(0,\tfrac12,-\tfrac32,0)-\tfrac12(0,1,-\tfrac13,\tfrac23)=(0,0,-\tfrac43,-\tfrac13)$，$z=6+\tfrac12\cdot\tfrac43=\tfrac{20}{3}$，得到表 3。
-\EN{In the second round $x_2$ enters with $\theta=\tfrac43$, so $s_2$ leaves with pivot $\tfrac32$. The row operations give the new rows and reduced-cost row $(0,0,-\tfrac43,-\tfrac13)$ with $z=\tfrac{20}{3}$, which is Table 3.}
-
-\noindent\textbf{表 3．第二次换基后的最终单纯形表 / Table 3: the final tableau after the second pivot.}
-{\small\renewcommand{\arraystretch}{1.05}
-\begin{center}
-\begin{tabular}{c|c|c|cccc|c}
-\hline
- & & $c_j$ & 3 & 2 & 0 & 0 & \\
-\hline
-$c_B$ & 基变量 & $b$ & $x_1$ & $x_2$ & $s_1$ & $s_2$ & $z$ \\
-\hline
-3 & $x_1$ & $\tfrac43$ & 1 & 0 & $\tfrac23$ & $-\tfrac13$ & \\
-2 & $x_2$ & $\tfrac43$ & 0 & 1 & $-\tfrac13$ & $\tfrac23$ & \\
-\hline
- & & $\sigma_j$ & 0 & 0 & $-\tfrac43$ & $-\tfrac13$ & $\tfrac{20}{3}$ \\
-\hline
-\end{tabular}
-\end{center}
-}
-\noindent \textbf{这一行/这一列在算什么。}全部 $\sigma_j\le0$，当前基可行解最优；$b$ 列给 $x_1=x_2=\tfrac43$、$s_1=s_2=0$、$z=\tfrac{20}{3}$。$s_1,s_2$ 列的系数就是 $B^{-1}=\tfrac13\begin{pmatrix}2&-1\\-1&2\end{pmatrix}$，其检验数 $\sigma_{s_1}=-\tfrac43$、$\sigma_{s_2}=-\tfrac13$ 是影子价格的相反数：松弛列是 $e_i$，$\sigma_{s_i}=0-c_B^{\mathsf T}B^{-1}e_i=-y_i$，故 $y=(\tfrac43,\tfrac13)$，与“对偶问题与经济解释”一节的 $B^{-1}$ 计算一致。
-\EN{\textbf{Reading it.} All reduced costs are nonpositive, so the basis is optimal: $x_1=x_2=\tfrac43$, $z=\tfrac{20}{3}$. The slack columns contain $B^{-1}$ and $\sigma_{s_i}=-y_i$, so $y=(\tfrac43,\tfrac13)$, matching the duality section.}
-
-\noindent\textbf{单纯形表法步骤清单 / A checklist for the tableau method.}
-\begin{enumerate}[label=\arabic*,leftmargin=2.2em]
-\item 化标准形（$\le$ 加松弛、$\ge$ 减剩余再加人工变量，初始基取松弛或人工变量），写出 $c_j$ 行与 $c_B$ 列，并按 $z_j=\sum_i c_{B_i}a_{ij}$、$\sigma_j=c_j-z_j$、$z=\sum_i c_{B_i}b_i$ 填检验数。
-\item 判最优：最大化时全部 $\sigma_j\le0$ 即停；否则选入基列（最大正检验数，或 Bland 规则的最左正检验数）。
-\item 比值检验：只对 $a_{ik}>0$ 的行算 $\theta_i=b_i/a_{ik}$，取最小者定出基行；该列没有正元素则无界。
-\item 主元行整体除以主元 $a_{rk}$。
-\item 其余各行（含检验数行）减去“该行主元列系数 $\times$ 新主元行”，并按 $\sigma$ 行规则更新 $z$。
-\item 更新 $c_B$ 与基变量名，回到第 2 步；用“基变量列是否仍为单位列”检查算术。
-\item 读结果：$b$ 列给基变量值，非基变量取 0；松弛列检验数给影子价格；核对 $z=c^{\mathsf T}x$。
+基变量的判别数为零。目标行右端为 $f_0=c_B\bar b$，即当前基本可行解的目标值。
 \end{enumerate}
-\EN{\textbf{Checklist.} Standard form; fill reduced costs and $z$; stop when all are nonpositive, otherwise enter the largest (Bland: smallest index); ratio test only on $a_{ik}>0$, else unbounded; divide the pivot row; eliminate the pivot column from all rows including the cost row; update $c_B$; read the solution and shadow prices; verify $z=c^{\mathsf T}x$.}
+\[
+\begin{array}{c|ccc|c}
+ & f & x_B & x_N & \text{右端}\\\hline
+ x_B & 0 & I_m & B^{-1}N & B^{-1}b\\
+ f & 1 & 0 & c_B B^{-1}N-c_N & c_B B^{-1}b
+\end{array}
+\]
+表身来自 $x_B+B^{-1}Nx_N=\bar b$。将它代入 $f=c_Bx_B+c_Nx_N$，得到 $f+\sum_{j\in J_N}d_jx_j=f_0$，就是目标行。$J_N$ 是非基变量的下标集。手填时可以省略 $f$ 列，并在基变量旁加一列 $c_B$，方便计算判别数。
+\EN{A basic feasible solution has $x_N=0$ and $x_B=B^{-1}b\ge0$. Each tableau column is $B^{-1}p_j$. The objective row records the textbook's criterion numbers $z_j-c_j$ and the current objective value $c_BB^{-1}b$.}
 
-\noindent\textbf{常见错误 / Common errors.}
-\begin{enumerate}[label=\arabic*,leftmargin=2.2em]
-\item \textbf{比值取错行}：只对 $a_{ik}>0$ 的行求比值；负系数行不限制步长。
-\item \textbf{忘记同步更新检验数行或 $c_B$ 列}：检验数、$c_B$、基变量名必须一起改，否则会拿旧表判断最优。
-\item \textbf{退化时误以为算错}：最小比值为 0 或多个比值并列时，换基可能不改变目标；按并列取下标小者或 Bland 规则继续。
-\item \textbf{最小化问题的符号}：$\sigma_j=c_j-z_j$ 的定义不变，但判据相反——入基取\textbf{最负}的 $\sigma_j$，全部 $\sigma_j\ge0$ 才最优。
-\item \textbf{无界判断错误}：入基列所有 $a_{ik}\le0$ 时是问题无界，不是“没有换基对象”。
-\item \textbf{主元列没消干净}：换基后基变量列必须是单位列，否则说明漏算。
+\subsection{每轮怎样选主列、主行和主元 | Selecting and performing a pivot}
+\begin{enumerate}[label=\arabic*.]
+\item \textbf{看目标行，选进基变量。} 极小化时，若所有 $d_j\le0$，则 $f=f_0-\sum d_jx_j\ge f_0$，当前基本可行解最优。否则选最大的正判别数 $d_k$，变量 $x_k$ 进基。极大化时，若所有 $d_j\ge0$，当前基本可行解最优。否则选最小的负判别数 $d_k$。$x_k$ 对应的列叫主列。
+\item \textbf{看主列，选离基变量。} 保持其余非基变量为零，令 $x_k=\theta$，那么第 $i$ 个基变量变为 $\bar b_i-y_{ik}\theta$。只有 $y_{ik}>0$ 的行给出步长上界。逐行填写 $\bar b_i/y_{ik}$，保留零比值，跳过 $y_{ik}\le0$ 的行。取最小比值 $\theta^*=\bar b_r/y_{rk}$，第 $r$ 行叫主行，其基变量离基。主行和主列的交点 $y_{rk}$ 叫主元。若改善方向的主列没有正元素，$\theta$ 可任意增大，目标无界。
+\item \textbf{做主元消去。} 主行整行除以主元，得到 $R_r^{\rm new}$。其余约束行及目标行都减去各自旧主列元素乘 $R_r^{\rm new}$，右端一起更新。把主行标签改成进基变量，再更新旁边的 $c_B$。目标行右端因此变为 $f_0-d_k\theta^*$。
+\item \textbf{核对后继续。} 新基变量列仍构成单位阵，约束行右端仍非负，基变量判别数仍为零。可用新 $c_B$ 重新算一列判别数和目标值。回到第 1 步，满足最优判据时将非基变量置零，按右端读基变量和目标值。
 \end{enumerate}
-\EN{\textbf{Common errors.} Nonpositive coefficients or negative ratios in the ratio test; forgetting the cost row or $c_B$; treating a zero ratio as an error; mixing up the minimization criterion; calling an all-nonpositive entering column a failed pivot; leaving a nonzero entry in the pivot column.}
+若有基变量为零，当前基本可行解退化。最小比值为零时，此轮换了基但目标值不变。退化可能导致循环，可按 Bland 规则在合格的进基变量中取下标最小者，在最小比值并列的离基变量中也取下标最小者。
+\EN{For minimization choose the largest positive criterion number. For maximization choose the most negative one. Only positive entries in the pivot column give ratio bounds. Divide the pivot row by the pivot and eliminate the pivot column from every other row, including the objective row.}
 
-\subsection{完整算例：三变量、含“至少”约束的两阶段计算 | A full worked example with an at-least constraint}
-
-\noindent 下面的例子有三个变量，第二条约束是“至少”型，必须先做第一阶段（Phase I）才能得到可行基，共三次换基、四张表。化标准形时第一、三条加松弛变量 $s_1,s_3\ge0$，第二条减剩余变量 $s_2\ge0$ 并加人工变量 $a_2\ge0$：
-\FORMULA{两阶段法算例的标准形}{standard form for the two-phase worked example}
+\subsection{用工厂模型走完两轮 | Two pivots with the factory model}
+求 $\max f=3x_1+2x_2$，约束为 $2x_1+x_2\le4,\ x_1+2x_2\le4,\ x_1,x_2\ge0$。各加一个松弛变量 $s_1,s_2$。它们的列构成单位阵，所以初始基为 $(s_1,s_2)$。按 $x_1,x_2,s_1,s_2$ 固定列顺序，$c=(3,2,0,0)$。两项 $c_B$ 都为零，故初始判别数为 $-c_j$。
 \[
-\begin{gathered}
-\max z=4x_1+2x_2+5x_3,\\
-3x_1+x_2+x_3+s_1=7,\quad
-3x_1+2x_2+x_3-s_2+a_2=9,\quad
-x_1+x_2+x_3+s_3=5,\\
-x_1,x_2,x_3,s_1,s_2,s_3,a_2\ge0.
-\end{gathered}
+\begin{array}{c|c|rrrr|r|c}
+\text{基变量}&c_B&x_1&x_2&s_1&s_2&\text{右端}&\bar b_i/y_{i1}\\\hline
+s_1&0&\boxed{2}&1&1&0&4&4/2=2\\
+s_2&0&1&2&0&1&4&4/1=4\\\hline
+f&&-3&-2&0&0&0&-
+\end{array}
 \]
-第一阶段最小化 $w=a_2$，检验数记作 $\sigma^I_j=c^I_j-z^I_j$，$c^I$ 是 $w$ 的系数（人工变量取 1，其余取 0）。\textbf{第一阶段是最小化，判据方向与最大化相反}：$\sigma^I_j<0$ 表示增加 $x_j$ 能降低 $w$，入基取\textbf{最负}者；全部 $\sigma^I_j\ge0$ 时 $w$ 不能再降。$w>0$ 说明不可行；$w=0$ 时人工变量全为零，擦掉人工变量列进入第二阶段。
-\EN{This example has three variables and an at-least constraint, so Phase I is required; it needs three pivots and four tableaux. Phase I minimizes $w=a_2$; since it is a minimization, a negative $\sigma^I_j$ lowers $w$ and the most negative enters, while all nonnegative means Phase I is optimal. A positive optimum is infeasible; $w=0$ allows dropping the artificial columns.}
-
-\noindent\textbf{表 4．第一阶段初始表（含 $w$ 行）/ Table 4: Phase I initial tableau (with the $w$ row).}
-{\footnotesize\renewcommand{\arraystretch}{1.04}\setlength{\tabcolsep}{3.5pt}
-\begin{center}
-\begin{tabular}{c|c|c|ccccccc|c}
-\hline
- & & $c^I_j$ & 0 & 0 & 0 & 0 & 0 & 0 & 1 & \\
-\hline
-$c^I_B$ & 基变量 & $b$ & $x_1$ & $x_2$ & $x_3$ & $s_1$ & $s_2$ & $s_3$ & $a_2$ & $w$ \\
-\hline
-0 & $s_1$ & 7 & 3 & 1 & 1 & 1 & 0 & 0 & 0 & \\
-1 & $a_2$ & 9 & 3 & 2 & 1 & 0 & $-1$ & 0 & 1 & \\
-0 & $s_3$ & 5 & 1 & 1 & 1 & 0 & 0 & 1 & 0 & \\
-\hline
- & & $\sigma^I_j$ & $-3$ & $-2$ & $-1$ & 0 & 1 & 0 & 0 & 9 \\
-\hline
-\end{tabular}
-\end{center}
-}
-\noindent \textbf{这一行/这一列在算什么。}$w$ 列是 $c^I_B$ 与 $b$ 列的内积，$1\cdot9=9$ 表示没有生产时人工变量还差 9 单位。$\sigma^I_j=c^I_j-\sum_i c^I_{B_i}a_{ij}$：$x_1$ 列 $0-(1\cdot3)=-3$，$s_2$ 列 $0-(1\cdot(-1))=1$；负检验数给出降低 $w$ 的方向，$x_1$ 最负，入基。
-\EN{\textbf{Reading it.} The $w$ entry $9$ says the artificial variable is nine units from feasibility; the most negative reduced cost, $x_1$ with $-3$, enters.}\noindent 入基 $x_1$：其列系数全为正，$\theta=\min\{7/3,3,5\}=7/3$，故 $s_1$ 出基、主元为 3；行变换后得表 5。
-\EN{Enter $x_1$: all coefficients in its column are positive and $\theta=\min\{7/3,3,5\}=7/3$, so $s_1$ leaves with pivot 3, giving Table 5.}
-
-\noindent\textbf{表 5．第一阶段第一次换基后 / Table 5: after the first Phase I pivot.}
-{\footnotesize\renewcommand{\arraystretch}{1.04}\setlength{\tabcolsep}{3.5pt}
-\begin{center}
-\begin{tabular}{c|c|c|ccccccc|c}
-\hline
- & & $c^I_j$ & 0 & 0 & 0 & 0 & 0 & 0 & 1 & \\
-\hline
-$c^I_B$ & 基变量 & $b$ & $x_1$ & $x_2$ & $x_3$ & $s_1$ & $s_2$ & $s_3$ & $a_2$ & $w$ \\
-\hline
-0 & $x_1$ & $\tfrac73$ & 1 & $\tfrac13$ & $\tfrac13$ & $\tfrac13$ & 0 & 0 & 0 & \\
-1 & $a_2$ & 2 & 0 & 1 & 0 & $-1$ & $-1$ & 0 & 1 & \\
-0 & $s_3$ & $\tfrac83$ & 0 & $\tfrac23$ & $\tfrac23$ & $-\tfrac13$ & 0 & 1 & 0 & \\
-\hline
- & & $\sigma^I_j$ & 0 & $-1$ & 0 & 1 & 1 & 0 & 0 & 2 \\
-\hline
-\end{tabular}
-\end{center}
-}
-\noindent \textbf{这一行/这一列在算什么。}$b$ 列变为 $(7/3,2,8/3)$，$w$ 从 9 降到 2；$x_1$ 列成为单位列。只有 $x_2$ 的 $\sigma^I_2=-1<0$，故 $x_2$ 入基；$x_2$ 列 $\theta=\min\{7,2,4\}=2$，$a_2$ 出基，主元为 1。
-\EN{\textbf{Reading it.} $w$ drops to 2 and the $x_1$ column is a unit column; the only negative reduced cost is $\sigma^I_2=-1$, so $x_2$ enters and its ratio $2$ in the artificial row makes $a_2$ leave.}
-
-\noindent 主元为 1 时主元行不变：$x_1$ 行减 $\tfrac13$ 倍 $a_2$ 行，$s_3$ 行减 $\tfrac23$ 倍 $a_2$ 行，检验数行加 1 倍 $a_2$ 行（$\sigma^I_2=-1$），得表 6。
-\EN{With a unit pivot the pivot row is unchanged: subtract $\tfrac13$ times the $a_2$ row from the $x_1$ row, $\tfrac23$ times it from the $s_3$ row, and add one copy of it to the reduced-cost row, giving Table 6.}
-
-\noindent\textbf{表 6．第一阶段结束（$w=0$）/ Table 6: end of Phase I, where $w=0$.}
-{\footnotesize\renewcommand{\arraystretch}{1.04}\setlength{\tabcolsep}{3.5pt}
-\begin{center}
-\begin{tabular}{c|c|c|ccccccc|c}
-\hline
- & & $c^I_j$ & 0 & 0 & 0 & 0 & 0 & 0 & 1 & \\
-\hline
-$c^I_B$ & 基变量 & $b$ & $x_1$ & $x_2$ & $x_3$ & $s_1$ & $s_2$ & $s_3$ & $a_2$ & $w$ \\
-\hline
-0 & $x_1$ & $\tfrac53$ & 1 & 0 & $\tfrac13$ & $\tfrac23$ & $\tfrac13$ & 0 & $-\tfrac13$ & \\
-0 & $x_2$ & 2 & 0 & 1 & 0 & $-1$ & $-1$ & 0 & 1 & \\
-0 & $s_3$ & $\tfrac43$ & 0 & 0 & $\tfrac23$ & $\tfrac13$ & $\tfrac23$ & 1 & $-\tfrac23$ & \\
-\hline
- & & $\sigma^I_j$ & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\
-\hline
-\end{tabular}
-\end{center}
-}
-\noindent \textbf{这一行/这一列在算什么。}$w=0$ 且人工变量已出基，原问题可行；$\sigma^I$ 行全部非负，第一阶段停止，$b$ 列给出基可行解 $(x_1,x_2,s_3)=(5/3,2,4/3)$。若人工变量仍留在基中但值为 0，用它所在行的非人工非零系数换出；若没有这种系数，该约束冗余，删去整行。
-\EN{\textbf{Reading it.} $w=0$ and the artificial variable is out, so the problem is feasible and $(x_1,x_2,s_3)=(5/3,2,4/3)$. If an artificial stayed basic at zero, pivot it out or delete the redundant row.}
-
-\noindent 第二阶段：删去人工变量列，目标换回 $c=(4,2,5,0,0,0)$ 并重算检验数。基为 $x_1,x_2,s_3$、$c_B=(4,2,0)$，故 $\sigma_3=5-\tfrac43=\tfrac{11}{3}$、$z=4\cdot\tfrac53+2\cdot2+0\cdot\tfrac43=\tfrac{32}{3}$，检验数行为 $(0,0,\tfrac{11}{3},-\tfrac23,\tfrac23,0)$（$s_1,s_3$ 属 $\le$ 行；$s_2$ 属 $\ge$ 行，列为 $-e_2$）。$x_3$ 检验数最大，入基；$\theta=\min\{5,2\}=2$（第二行系数为 0，跳过），$s_3$ 出基、主元为 $\tfrac23$。主元行除以 $\tfrac23$ 得 $(0,0,1,\tfrac12,1,\tfrac32\mid2)$，$x_1$ 行减 $\tfrac13$ 倍新主元行得 $(1,0,0,\tfrac12,0,-\tfrac12\mid1)$，$x_2$ 行不变，检验数行按 $\sigma_k=\tfrac{11}{3}$ 消去后得表 7。
-\EN{Phase II drops the artificial column, restores $c=(4,2,5,0,0,0)$, and recomputes: the reduced-cost row is $(0,0,\tfrac{11}{3},-\tfrac23,\tfrac23,0)$ with $z=\tfrac{32}{3}$. $x_3$ enters with ratio $2$, $s_3$ leaves with pivot $\tfrac23$, and the row operations give Table 7.}
-
-\noindent\textbf{表 7．最终单纯形表 / Table 7: the final tableau.}
-{\small\renewcommand{\arraystretch}{1.05}
-\begin{center}
-\begin{tabular}{c|c|c|cccccc|c}
-\hline
- & & $c_j$ & 4 & 2 & 5 & 0 & 0 & 0 & \\
-\hline
-$c_B$ & 基变量 & $b$ & $x_1$ & $x_2$ & $x_3$ & $s_1$ & $s_2$ & $s_3$ & $z$ \\
-\hline
-4 & $x_1$ & 1 & 1 & 0 & 0 & $\tfrac12$ & 0 & $-\tfrac12$ & \\
-2 & $x_2$ & 2 & 0 & 1 & 0 & $-1$ & $-1$ & 0 & \\
-5 & $x_3$ & 2 & 0 & 0 & 1 & $\tfrac12$ & 1 & $\tfrac32$ & \\
-\hline
- & & $\sigma_j$ & 0 & 0 & 0 & $-\tfrac52$ & $-3$ & $-\tfrac{11}{2}$ & 18 \\
-\hline
-\end{tabular}
-\end{center}
-}
-\noindent \textbf{这一行/这一列在算什么。}全部 $\sigma_j\le0$，第二阶段结束；$b$ 列给 $(x_1,x_2,x_3)=(1,2,2)$、$z=18$，三条约束都取等号，$4\cdot1+2\cdot2+5\cdot2=18$ 一致。松弛列检验数给出影子价格：$s_1,s_3$ 属 $\le$ 行，$\sigma_{s_1}=-\tfrac52=-y_1$、$\sigma_{s_3}=-\tfrac{11}{2}=-y_3$；$s_2$ 属 $\ge$ 行，列为 $-e_2$，$\sigma_{s_2}=y_2=-3$。对偶解 $y=(\tfrac52,-3,\tfrac{11}{2})$ 满足符号条件，对偶目标也是 18；$y_2<0$ 正说明“至少”型约束的影子价格为负。
-\EN{\textbf{Reading it.} All reduced costs are nonpositive, so $(x_1,x_2,x_3)=(1,2,2)$ and $z=18$. The slack reduced costs give $y_1=\tfrac52$, $y_3=\tfrac{11}{2}$ and $y_2=-3$, and the dual objective is also 18; a negative $y_2$ means an at-least constraint has a negative shadow price.}
-
-\subsection{表格与字典的对应 | How tableaux correspond to dictionaries}
-
-\noindent 对 $Ax=b,\ x\ge0$ 取基 $B$（其余列为 $N$），字典是 $x_B=B^{-1}b-B^{-1}Nx_N$、$z=c_B^{\mathsf T}B^{-1}b+(c_N^{\mathsf T}-c_B^{\mathsf T}B^{-1}N)x_N$。把 $Ax=b$ 左乘 $B^{-1}$ 得 $x_B+B^{-1}Nx_N=B^{-1}b$，这就是表中的方程组：基变量列是单位矩阵，非基列是 $B^{-1}a_j$，右端是 $B^{-1}b$，检验数是 $c_j-c_B^{\mathsf T}B^{-1}a_j$，常数是 $c_B^{\mathsf T}B^{-1}b$。字典把这组方程对 $x_B$ 解出，表保持未解出的形式，两者只差“有没有把基变量移到等号左边”；表 2 的两行正是工厂字典 $x_1=2-\tfrac12x_2-\tfrac12s_1$、$s_2=2-\tfrac32x_2+\tfrac12s_1$。
-\EN{With basis $B$, multiplying $Ax=b$ by $B^{-1}$ gives $x_B+B^{-1}Nx_N=B^{-1}b$, which is the tableau: basic columns form the identity, nonbasic columns are $B^{-1}a_j$, the right-hand side is $B^{-1}b$, and the reduced costs are $c_j-c_B^{\mathsf T}B^{-1}a_j$. The dictionary solves for $x_B$, the tableau does not; the two rows of Table 2 are exactly the factory dictionary.}
-
-\noindent \textbf{为什么手算与考试用表。}表格法机械、可核对：换基只是三步行变换，不必重写表达式；比值所需数字就在入基列；基变量列是否为单位列可立即检查算术；最终表的松弛列还直接给出 $B^{-1}$ 与影子价格。字典法概念清楚，适合写证明：$z$ 写成非基变量的显式函数，$\sigma_j$ 的意义、退化与目标不变都容易解释。面试可以这样说：表格法是字典的紧凑记账方式，信息相同，一个便于算，一个便于讲。
-\EN{\textbf{Why use tables in exams.} A pivot is three row operations, the ratio-test numbers sit in the entering column, the unit-column property checks the arithmetic, and the final slack columns give $B^{-1}$ and the shadow prices. The dictionary is clearer for proofs; in an oral answer, the tableau is a compact bookkeeping form of it.}
-
-\subsection{退化、循环与无界在表上的表现 | Degeneracy, cycling and unboundedness in the tableau}
-
-\noindent \textbf{退化。}某个基变量等于零时，$b$ 列出现 0，该行比值也为 0，最小比值可能为 0 或与别的行并列；换基后目标不增加、基变了但解点没变，这就是退化。应对：比值并列时取离基变量下标最小者；Bland 规则要求入基变量取正检验数中\textbf{下标最小}者、离基变量取并列比值中\textbf{基变量下标最小}者，可保证有限步终止、不循环。
-\EN{\textbf{Degeneracy.} A zero basic variable gives a zero in the $b$ column and a zero ratio, so the minimum may be zero or tied; a pivot may change the basis without changing the objective or the solution point. Break ties by the smallest index; Bland's rule guarantees termination.}
-
-\noindent \textbf{无界。}若入基列 $k$ 的所有 $a_{ik}\le0$，列中没有正元素，比值检验无定义；增大 $x_k$ 不会让任何基变量降到零，目标可无限增大，问题无界。例如 $\max z=2x_2$、$x_1-x_2\le1$、$x\ge0$ 的表只有一行 $(x_1,x_2,s_1\mid b)=(1,-1,1\mid1)$、$\sigma=(0,2,0)$：$x_2$ 检验数为正而列中无正元素，故无界。不可行则是“根本没有可行解”，由第一阶段 $w>0$ 判定。
-\EN{\textbf{Unboundedness.} If every $a_{ik}$ in the entering column is nonpositive, the ratio test is undefined; increasing $x_k$ never drives a basic variable to zero and the objective grows without bound. For $\max z=2x_2$ with $x_1-x_2\le1$ and nonnegativity, the row is $(1,-1,1\mid1)$ with $\sigma=(0,2,0)$: $x_2$ has positive reduced cost but no positive entry, so the problem is unbounded. Infeasibility instead means no feasible point and is detected by $w>0$.}
-
-\section{单纯形最优性判据 | The simplex optimality criterion}
-\noindent 对最大化问题 $Ax\le b,x\ge0$，先加入松弛变量得到 $Ax+s=b$。取扩充矩阵 $[A\ I]$ 的一个\textbf{可行基} $B$，即 $B^{-1}b\ge0$，松弛变量目标系数为零。令 $y^{\mathsf T}=c_B^{\mathsf T}B^{-1}$。若所有非基变量（包括非基松弛变量）的检验数均满足 $\bar c_j\le0$，则产品列给出 $A^{\mathsf T}y\ge c$，松弛列给出 $y\ge0$；基列检验数为零。因此 $y$ 对偶可行。对任意原问题可行解 $x$，弱对偶给出
-\FORMULA{单纯形最优性判据的对偶界证明}{duality bound proving the simplex optimality criterion}
+\textbf{第一轮。} 极大化选 $-3$ 所在列，$x_1$ 进基。比值 2 最小，$s_1$ 离基。令 $R_1'=R_1/2=(1,\tfrac12,\tfrac12,0\mid 2)$，第二行做 $R_2-R_1'$，目标行做 $R_f+3R_1'$。例如目标行的 $x_2$ 格为 $-2+3/2=-1/2$，右端变成 $0+3\cdot 2=6$。
 \[
-c^{\mathsf T}x\le y^{\mathsf T}Ax\le y^{\mathsf T}b
-=c_B^{\mathsf T}B^{-1}b=c^{\mathsf T}x^B.
+\begin{array}{c|c|rrrr|r|c}
+\text{基变量}&c_B&x_1&x_2&s_1&s_2&\text{右端}&\bar b_i/y_{i2}\\\hline
+x_1&3&1&1/2&1/2&0&2&2/(1/2)=4\\
+s_2&0&0&\boxed{3/2}&-1/2&1&2&2/(3/2)=4/3\\\hline
+f&&0&-1/2&3/2&0&6&-
+\end{array}
 \]
-\READ{“The primal objective at x is at most y transpose A x, which is at most y transpose b; this equals the objective value at the current basic solution.”}
-所以当前基解 $x^B$ 的目标值不低于任何可行解；检验数判据是弱对偶的直接结果。
-\EN{Add nonnegative slacks to obtain $Ax+s=b$, then choose a feasible basis of $[A\ I]$, so $B^{-1}b\ge0$. Slack objective coefficients are zero. If every nonbasic reduced cost, including slack reduced costs, is nonpositive, the original columns imply $A^{\mathsf T}y\ge c$ and slack columns imply $y\ge0$; basic reduced costs are zero. Weak duality then proves optimality of the feasible basic solution. Reduced costs alone do not establish primal feasibility.}
-
-\noindent 基可行解退化，是指某个基变量等于零。退化时换基可能不改变当前点和目标值；连续退化可能导致循环，Bland 规则可排除循环。在最优基下，非基变量的检验数为零仅表示沿该方向目标不变；还须有正的可行步长才能由此得到不同的最优点。若最大可行步长为零，换基可能只表示同一个退化顶点，不能仅凭零检验数断定最优解不唯一。
-\EN{A basic feasible solution is degenerate if a basic variable is zero. Pivots may then leave the point and objective unchanged; Bland's rule prevents cycling. At an optimal basis, a zero reduced cost gives another optimal point only if a positive feasible step is possible in that direction. A zero-length pivot may merely give another basis for the same vertex, so a zero reduced cost alone does not prove nonuniqueness.}
-\EX{最大化 $z=x_1+x_2$，约束 $x_1+x_2\le1$、$x_1,x_2\ge0$。线段 $x_1+x_2=1$ 上每个点的目标值都为 $1$，所以最优解不唯一，两个端点只是其中两个基可行最优解。}{For $z=x_1+x_2$ subject to $x_1+x_2\le1$ and nonnegativity, every point on the segment $x_1+x_2=1$ has value one. The optimum is not unique; the endpoints are only two basic optimal solutions.}
-\noindent 若入基变量可无限增加而不使任何基变量降到零，且其检验数为正，则问题无界。若第一阶段最小化人工变量之和的最优值大于零，则原问题不可行。无界表示目标可无限改善；不可行表示没有满足约束的点。
-\EN{If an entering variable can increase without forcing any basic variable to zero and has positive reduced cost, the objective is unbounded. If Phase I has a positive optimum, the original problem is infeasible. Unboundedness means the objective can improve indefinitely; infeasibility means no feasible point exists.}
+\textbf{第二轮。} $x_2$ 进基，$s_2$ 离基。令 $R_2'=R_2/(3/2)=(0,1,-1/3,2/3\mid4/3)$，第一行做 $R_1-\tfrac12 R_2'$，目标行做 $R_f+\tfrac12 R_2'$。第一行 $s_1$ 格为 $1/2-(1/2)(-1/3)=2/3$。目标行右端为 $6+(1/2)(4/3)=20/3$。
+\[
+\begin{array}{c|c|rrrr|r}
+\text{基变量}&c_B&x_1&x_2&s_1&s_2&\text{右端}\\\hline
+x_1&3&1&0&2/3&-1/3&4/3\\
+x_2&2&0&1&-1/3&2/3&4/3\\\hline
+f&&0&0&4/3&1/3&20/3
+\end{array}
+\]
+\textbf{验算。} 判别数都非负，达到极大化最优判据。目标行表示 $f+\tfrac43s_1+\tfrac13s_2=\tfrac{20}{3}$。令 $s_1=s_2=0$ 得 $x_1=x_2=4/3$，代回两条资源约束都取等号。
+\EN{The first pivot brings $x_1$ into the basis, and the second brings in $x_2$. The final row gives an upper bound of $20/3$, attained at $x_1=x_2=4/3$.}
 
 \section{两阶段法与大 M 法 | Phase I and the Big-M method}
-\noindent 对 $\ge$ 约束先减剩余变量；若尚无可行初始基，可加入人工变量。两阶段法第一阶段最小化人工变量之和 $w=\sum a_i$。最优值大于零表示原问题不可行；为零表示所有人工变量的值为零，但不保证它们已离基。若零值人工变量仍在基中，用非人工的非零系数换出它；若相应行已无此系数，则该行冗余，可删除。清理后删去人工变量列，恢复原目标进入第二阶段。大 $M$ 法在最大化目标中加入 $-M\sum a_i$ 惩罚；实践中两阶段法通常更便于控制数值误差。
-\EN{Subtract a surplus variable for a greater-than constraint and add artificial variables if an initial feasible basis is still needed. Phase I minimizes their sum. A positive optimum certifies infeasibility; a zero optimum makes every artificial value zero, but some may remain basic. Pivot those out using a nonzero nonartificial coefficient, or remove the redundant row if no such coefficient exists. Then remove artificial columns and restore the original objective for Phase II. Big-M instead penalizes artificial variables in the objective.}
-\EX{若约束为 $x_1+x_2\ge2$，写成 $x_1+x_2-s+a=2$，其中 $s,a\ge0$。第一阶段会尽量使 $a=0$；如果无论如何都不能让 $a$ 为零，就不存在满足原约束的解。}{For $x_1+x_2\ge2$, write $x_1+x_2-s+a=2$ with $s,a\ge0$. Phase I tries to make $a=0$. If this is impossible, the original constraints are infeasible.}
+\subsection{没有现成的初始基本可行解 | Finding an initial feasible basis}
+\noindent 依据教材第 3.2.1 节（第 50--52 页），当手头缺少初始基本可行解时，用人工变量补出单位列。教材先展示给每个方程加人工变量的构造。已能用原变量或松弛变量填入初始基的行可直接使用这些列，只给缺列的行补人工变量。
+\begin{enumerate}[label=\arabic*.]
+\item \textbf{第一阶段。} 以人工变量的和为辅助目标 $\min W=\sum a_i$。非人工变量的辅助目标系数为零，人工变量系数为 1。按极小化规则计算，直到所有判别数非正。
+\item \textbf{判定原问题可行性。} 若最优值 $W^*>0$，原问题无可行解。因为任意原问题可行解都可配上 $a=0$ 成为辅助问题中目标为零的可行解。若 $W^*=0$，人工变量的值全为零。若还有零值人工变量留在基中，可用该行任一非人工非基变量的非零系数作主元将其换出。该行右端为零，因此这次消去保持右端非负。若该行没有这样的系数，删去人工列后它只剩 $0=0$，可删去该行。
+\item \textbf{第二阶段。} 删掉人工变量列，保留得到的可行基及约束行，恢复原目标并重算整条目标行，然后用原目标的极大化或极小化规则继续。
+\end{enumerate}
+大 $M$ 法是在原目标中对人工变量加惩罚，极小化用 $+M\sum a_i$，极大化用 $-M\sum a_i$。两阶段法把找可行基和求原目标最优解依次完成。
+\EN{Phase I minimizes the sum of the artificial variables. A positive minimum proves infeasibility. A zero minimum makes all artificial values zero. Pivot any remaining basic artificials out at zero, remove their columns, and rebuild the objective row for Phase II.}
+
+\subsection{一条“至少”约束怎样进表 | A tableau with an at-least constraint}
+原问题为 $\max f=4x_1+2x_2+5x_3$，三个约束化为
+\[
+\begin{aligned}
+ 3x_1+x_2+x_3+s_1&=7,\\
+ 3x_1+2x_2+x_3-s_2+a_2&=9,\\
+ x_1+x_2+x_3+s_3&=5.
+\end{aligned}
+\]
+各变量均非负。第二行原为 $\ge$ 约束，减去的 $s_2$ 对应 $-1$，用 $a_2$ 的 $+1$ 补初始基。第一阶段用 $\min W=a_2$。初始基为 $(s_1,a_2,s_3)$，$c_B=(0,1,0)$，所以 $x_1$ 的判别数为 $1\cdot3-0=3$，$a_2$ 的判别数为 $1\cdot1-1=0$。
+\[
+\begin{array}{c|rrrrrrr|r|c}
+&x_1&x_2&x_3&s_1&s_2&s_3&a_2&\text{右端}&\text{比值}\\\hline
+s_1&\boxed{3}&1&1&1&0&0&0&7&7/3\\
+a_2&3&2&1&0&-1&0&1&9&9/3\\
+s_3&1&1&1&0&0&1&0&5&5/1\\\hline
+W&3&2&1&0&-1&0&0&9&-
+\end{array}
+\]
+\textbf{第一阶段，第 1 轮。} 选最大正判别数 3，$x_1$ 进基。$7/3$ 最小，$s_1$ 离基。记 $P=R_1/3$，第二行做 $R_2-3P$，第三行做 $R_3-P$，目标行做 $R_W-3P$。第二行右端成为 $9-3(7/3)=2$，而 $s_1$ 格成为 $0-3(1/3)=-1$。目标值为 $9-3(7/3)=2$。
+\[
+\begin{array}{c|rrrrrrr|r|c}
+&x_1&x_2&x_3&s_1&s_2&s_3&a_2&\text{右端}&\text{比值}\\\hline
+x_1&1&1/3&1/3&1/3&0&0&0&7/3&(7/3)/(1/3)=7\\
+a_2&0&\boxed{1}&0&-1&-1&0&1&2&2/1=2\\
+s_3&0&2/3&2/3&-1/3&0&1&0&8/3&(8/3)/(2/3)=4\\\hline
+W&0&1&0&-1&-1&0&0&2&-
+\end{array}
+\]
+\textbf{第一阶段，第 2 轮。} $x_2$ 的判别数为 1，进基。最小比值 2 在 $a_2$ 行，主元为 1。令 $P=R_2$，第一行做 $R_1-\tfrac13 P$，第三行做 $R_3-\tfrac23 P$，目标行做 $R_W-P$。例如第三行的 $s_2$ 格为 $0-(2/3)(-1)=2/3$。
+\[
+\begin{array}{c|rrrrrrr|r}
+&x_1&x_2&x_3&s_1&s_2&s_3&a_2&\text{右端}\\\hline
+x_1&1&0&1/3&2/3&1/3&0&-1/3&5/3\\
+x_2&0&1&0&-1&-1&0&1&2\\
+s_3&0&0&2/3&1/3&2/3&1&-2/3&4/3\\\hline
+W&0&0&0&0&0&0&-1&0
+\end{array}
+\]
+判别数全非正，$W^*=0$，$a_2$ 已离基。此时可行解的三个基变量为 $(x_1,x_2,s_3)=(5/3,2,4/3)$。
+
+\textbf{第二阶段，先重填目标行。} 删 $a_2$ 列。恢复 $c=(4,2,5,0,0,0)$，新 $c_B=(4,2,0)$。例如
+\[
+d_{x_3}=4(1/3)+2(0)+0(2/3)-5=-11/3,\qquad
+f_0=4(5/3)+2(2)+0(4/3)=32/3 .
+\]
+\[
+\begin{array}{c|rrrrrr|r|c}
+&x_1&x_2&x_3&s_1&s_2&s_3&\text{右端}&\text{比值}\\\hline
+x_1&1&0&1/3&2/3&1/3&0&5/3&(5/3)/(1/3)=5\\
+x_2&0&1&0&-1&-1&0&2&\text{跳过}\\
+s_3&0&0&\boxed{2/3}&1/3&2/3&1&4/3&(4/3)/(2/3)=2\\\hline
+f&0&0&-11/3&2/3&-2/3&0&32/3&-
+\end{array}
+\]
+\textbf{第二阶段，换基并验算。} 极大化选最负判别数 $-11/3$，$x_3$ 进基。比值 2 最小，$s_3$ 离基。令 $P=R_3/(2/3)=(0,0,1,1/2,1,3/2\mid2)$。第一行减 $\tfrac13 P$，第二行主列系数为零，目标行加 $\tfrac{11}3 P$。例如目标行 $s_2$ 格为 $-2/3+(11/3)\cdot1=3$。
+\[
+\begin{array}{c|rrrrrr|r}
+&x_1&x_2&x_3&s_1&s_2&s_3&\text{右端}\\\hline
+x_1&1&0&0&1/2&0&-1/2&1\\
+x_2&0&1&0&-1&-1&0&2\\
+x_3&0&0&1&1/2&1&3/2&2\\\hline
+f&0&0&0&5/2&3&11/2&18
+\end{array}
+\]
+目标行右端为 $32/3+(11/3)\cdot 2=18$。判别数全非负，令 $s_1=s_2=s_3=0$，得到最优解 $(1,2,2)$。代回三条原约束，左端分别是 $7,9,5$，目标值为 $4+4+10=18$。
+\EN{Phase I takes two pivots to reduce the artificial objective from 9 to 2 to 0. Phase II restores the original objective, rebuilds the objective row and takes one maximization pivot to reach $(1,2,2)$ with value 18.}
+
+\subsection{最优表与对偶可行性 | An optimal tableau and dual feasibility}
+对 $\max cx,\ Ax\le b,\ x\ge0$ 加松弛变量后，设 $w=c_BB^{-1}$。产品列的判别数为 $wp_j-c_j$，松弛列的判别数为 $we_i=w_i$。最优表的非负判别数给出 $wA\ge c,\ w\ge0$，且 $wb=c_BB^{-1}b$ 恰为当前目标值。因此对偶可行解 $w$ 给出的上界由当前基本可行解达到。在混合约束算例中，$s_2$ 的原列为 $-e_2$，其判别数是 $-w_2=3$，所以读出的对偶解为 $(5/2,-3,11/2)$。
+\EN{The optimal tableau gives the dual feasible multiplier $w=c_BB^{-1}$. Its objective $wb$ equals the primal basic value. A surplus column $-e_i$ has criterion number $-w_i$.}
 
 \section{对偶问题与经济解释 | The dual problem}
+\noindent 参照教材第 4.1 节，以下用生产模型的极大化方向写对称形式的对偶，仍记对偶行向量为 $w$。
 \noindent 原问题
 \FORMULA{原始线性规划的最大化形式}{primal linear program in maximization form}
 \[
-\max\{c^{\mathsf T}x:Ax\le b,\ x\ge0\}
+\max\{cx:Ax\le b,\ x\ge0\}
 \]
 的对偶为
 \FORMULA{与原问题对应的对偶线性规划}{dual linear program associated with the primal problem}
 \[
-\min\{b^{\mathsf T}y:A^{\mathsf T}y\ge c,\ y\ge0\}.
+\min\{wb:wA\ge c,\ w\ge0\}.
 \]
-原变量 $x_j$ 对应对偶约束，原约束对应对偶变量 $y_i$。$y_i$ 可以理解为第 $i$ 项资源的单位估价；对偶约束要求每种产品的资源估价至少覆盖其单位利润。
+原变量 $x_j$ 对应对偶约束，原约束对应对偶变量 $w_i$。$w_i$ 可以理解为第 $i$ 项资源的单位估价；对偶约束要求每种产品的资源估价至少覆盖其单位利润。
 \EN{The dual of the displayed primal maximization problem is the displayed minimization problem. Each primal constraint corresponds to a dual variable, and each primal variable corresponds to a dual constraint. A dual variable is a unit price for a resource. The dual constraints require the resource value of a product to cover its profit.}
 \EX{工厂模型的对偶为
 \FORMULA{工厂生产模型的具体对偶问题}{dual of the factory-production example}
 \[
-\min w=4y_1+4y_2,\quad 2y_1+y_2\ge3,\quad y_1+2y_2\ge2,\quad y_1,y_2\ge0.
+\min\;4w_1+4w_2,\quad 2w_1+w_2\ge3,\quad w_1+2w_2\ge2,\quad w_1,w_2\ge0.
 \]
-取 $y_1=4/3,y_2=1/3$，两项约束取等号，且 $w=20/3$，与原问题交点的利润相同。}{The dual of the factory model is shown above. The choice $y_1=4/3,y_2=1/3$ satisfies both dual constraints at equality and gives $w=20/3$, the same value as the primal optimum.}
-\noindent 还可以直接从最优基计算影子价格。产品变量对应的基矩阵与目标系数为 $B=\begin{pmatrix}2&1\\1&2\end{pmatrix}$、$c_B=(3,2)^{\mathsf T}$，因此
+取 $w_1=4/3,w_2=1/3$，两项约束取等号，且 $wb=20/3$，与原问题交点的利润相同。}{The dual of the factory model is shown above. The choice $w_1=4/3,w_2=1/3$ satisfies both dual constraints at equality and gives $wb=20/3$, the same value as the primal optimum.}
+\noindent 还可以直接从最优基计算影子价格。产品变量对应的基矩阵与目标系数为 $B=\begin{pmatrix}2&1\\1&2\end{pmatrix}$、$c_B=(3,2)$，因此
 \FORMULA{工厂最优基的影子价格计算}{shadow-price calculation for the optimal factory basis}
 \[
 B^{-1}=\frac13\begin{pmatrix}2&-1\\-1&2\end{pmatrix},\qquad
-y^{\mathsf T}=c_B^{\mathsf T}B^{-1}=\left(\frac43,\frac13\right).
+w=c_BB^{-1}=\left(\frac43,\frac13\right).
 \]
 所以第一、第二种资源的单位影子价格分别为 $4/3$ 和 $1/3$。两种产品都生产，互补松弛要求对应的对偶约束取等号。
 
-\noindent\textbf{弱对偶定理。} 若 $x$ 是原问题可行解、$y$ 是对偶可行解，则
+\noindent\textbf{弱对偶定理。} 若 $x$ 是原问题可行解、$w$ 是对偶可行解，则
 \FORMULA{弱对偶不等式}{weak-duality inequality}
 \[
-c^{\mathsf T}x\le y^{\mathsf T}Ax\le y^{\mathsf T}b=b^{\mathsf T}y.
+cx\le wAx\le wb.
 \]
-因此任意对偶可行解都给原问题目标值一个上界。证明只用 $A^{\mathsf T}y\ge c$、$x\ge0$、$Ax\le b$ 和 $y\ge0$。
-\EN{If $x$ is primal feasible and $y$ is dual feasible, then $c^{\mathsf T}x\le b^{\mathsf T}y$. Thus every dual feasible point is an upper bound on every primal feasible profit. The proof follows directly from the sign conditions and matrix inequalities.}
+因此任意对偶可行解都给原问题目标值一个上界。证明只用 $wA\ge c$、$x\ge0$、$Ax\le b$ 和 $w\ge0$。
+\EN{If $x$ is primal feasible and $w$ is dual feasible, then $cx\le wb$. Thus every dual feasible point is an upper bound on every primal feasible profit. The proof follows directly from the sign conditions and matrix inequalities.}
 \READ{“The primal objective is less than or equal to the dual objective.”}
 
 \noindent\textbf{强对偶定理。} 若线性规划有有限最优解，则对偶也有最优解，并且
 \FORMULA{线性规划强对偶定理}{strong-duality theorem for linear programming}
 \[
-\max c^{\mathsf T}x=\min b^{\mathsf T}y.
+\max cx=\min wb.
 \]
-这解释了单纯形法表中的最优检验数与资源价格：最优时原、对偶两种评价完全一致。
+这解释了单纯形法表中的最优判别数与资源价格：最优时原、对偶两种评价完全一致。
 \EN{The strong duality theorem says that if a linear program has a finite optimum, the dual also has an optimum and the two optimal objective values are equal. This explains why the simplex tableau contains both a primal solution and resource prices.}
 
 \subsubsection{对偶约束的代数推导 | Algebraic derivation of the dual constraints}
-\noindent 对原问题 $Ax\le b,x\ge0$，取非负向量 $y\ge0$ 左乘约束：$y^{\mathsf T}Ax\le y^{\mathsf T}b$。为了使左侧一定大于等于原目标 $c^{\mathsf T}x$，需要
+\noindent 对原问题 $Ax\le b,x\ge0$，取非负向量 $w\ge0$ 左乘约束：$wAx\le wb$。为了使左侧一定大于等于原目标 $cx$，需要
 \FORMULA{对偶可行性的矩阵不等式条件}{matrix inequality for dual feasibility}
 \[
- y^{\mathsf T}A\ge c^{\mathsf T},\quad\text{即 }A^{\mathsf T}y\ge c.
+ wA\ge c.
 \]
-于是所有这样的 $y$ 都给原目标一个上界；在所有上界中寻找最小者，就得到对偶问题 $\min b^{\mathsf T}y$。这解释了对偶目标和约束的方向，而不是死记矩阵转置。
-\EN{Multiply each primal resource inequality by a nonnegative price vector $y$. To make the resulting left side dominate the primal profit for every $x\ge0$, require $A^{\mathsf T}y\ge c$. Minimizing the resulting upper bound gives the dual. This derives the transpose and inequality direction.}
-\EX{在工厂模型中，若给两项资源价格 $y_1,y_2$，产品 $1$ 的资源成本是 $2y_1+y_2$，必须至少为利润 $3$；产品 $2$ 的资源成本是 $y_1+2y_2$，必须至少为利润 $2$。}{With resource prices $y_1,y_2$, product one consumes resources worth $2y_1+y_2$ and this must cover profit three. Product two requires $y_1+2y_2\ge2$. These are exactly the dual constraints.}
+于是所有这样的 $w$ 都给原目标一个上界；在所有上界中寻找最小者，就得到对偶问题 $\min wb$。由此得到对偶目标与约束的方向。
+\EN{Multiply each primal resource inequality by a nonnegative price vector $w$. To make the resulting left side dominate the primal profit for every $x\ge0$, require $wA\ge c$. Minimizing the resulting upper bound gives the dual. This gives the direction of the dual inequalities.}
+\EX{在工厂模型中，若给两项资源价格 $w_1,w_2$，产品 $1$ 的资源成本是 $2w_1+w_2$，必须至少为利润 $3$；产品 $2$ 的资源成本是 $w_1+2w_2$，必须至少为利润 $2$。}{With resource prices $w_1,w_2$, product one consumes resources worth $2w_1+w_2$ and this must cover profit three. Product two requires $w_1+2w_2\ge2$. These are exactly the dual constraints.}
 
 
 \section{互补松弛与最优性判别 | Complementary slackness}
-\noindent 原问题和对偶问题的可行解 $x,y$ 同时最优，当且仅当
+\noindent 原问题和对偶问题的可行解 $x,w$ 同时最优，当且仅当
 \FORMULA{线性规划互补松弛条件}{complementary-slackness conditions for linear programming}
 \[
-y_i\bigl(b_i-a_i^{\mathsf T}x\bigr)=0\quad\text{for every }i,
+w_i\bigl(b_i-a_i^{\mathsf T}x\bigr)=0\quad\text{for every }i,
 \qquad
-x_j\bigl((A^{\mathsf T}y)_j-c_j\bigr)=0\quad\text{for every }j.
+x_j\bigl((wA)_j-c_j\bigr)=0\quad\text{for every }j.
 \]
 第一组说明资源有剩余时其影子价格为零；第二组说明产品有正产量时其资源估价恰好等于利润。它是验证候选解最优和解释哪些约束重要的快捷方法。
 \EN{Complementary slackness says that feasible primal and dual solutions are both optimal exactly when the two products in the displayed formula are zero. A resource with positive slack has zero shadow price. A product with positive output has a dual constraint that is tight.}
-\EX{工厂最优解 $x_1=x_2=4/3$ 使两项资源松弛量为零；对偶解 $y_1=4/3,y_2=1/3$ 都为正，所以两个资源约束必须紧。若某资源有剩余，则互补松弛会迫使对应 $y_i=0$。}{At the factory optimum, both resource slacks are zero and both dual prices are positive, so both constraints are binding. If a resource has positive slack, complementary slackness forces its dual price to be zero.}
+\EX{工厂最优解 $x_1=x_2=4/3$ 使两项资源松弛量为零；对偶解 $w_1=4/3,w_2=1/3$ 都为正，所以两个资源约束必须紧。若某资源有剩余，则互补松弛会迫使对应 $w_i=0$。}{At the factory optimum, both resource slacks are zero and both dual prices are positive, so both constraints are binding. If a resource has positive slack, complementary slackness forces its dual price to be zero.}
 
 \subsubsection{互补松弛的逐项解释 | Interpreting complementary slackness}
 \noindent 弱对偶的差值可以写成
 \FORMULA{线性规划对偶间隙分解}{decomposition of the linear-programming duality gap}
 \[
-b^{\mathsf T}y-c^{\mathsf T}x
-=y^{\mathsf T}(b-Ax)+x^{\mathsf T}(A^{\mathsf T}y-c).
+wb-cx
+=w(b-Ax)+(wA-c)x.
 \]
-对可行的 $x,y$，右侧每一项都非负。两者达到相同目标值，当且仅当每一项都为零，于是得到互补松弛条件。第一项对应原约束的松弛量，第二项对应对偶约束的松弛量。
+对可行的 $x,w$，右侧每一项都非负。两者达到相同目标值，当且仅当每一项都为零，于是得到互补松弛条件。第一项对应原约束的松弛量，第二项对应对偶约束的松弛量。
 \EN{The duality gap decomposes into the two nonnegative sums shown above. The gap is zero exactly when every complementary product is zero. The first products pair resource slack with resource price; the second pair primal output with dual constraint slack.}
-\EX{若某资源没有用完，即 $b_i-a_i^{\mathsf T}x>0$，则必须有 $y_i=0$。若某产品产量 $x_j>0$，则其对偶约束必须等号成立，不能有额外的资源估价。}{If a resource is not fully used, its shadow price must be zero. If a product has positive output, its dual constraint must be tight; otherwise its resource valuation would exceed its profit.}
+\EX{若某资源没有用完，即 $b_i-a_i^{\mathsf T}x>0$，则必须有 $w_i=0$。若某产品产量 $x_j>0$，则其对偶约束必须等号成立，不能有额外的资源估价。}{If a resource is not fully used, its shadow price must be zero. If a product has positive output, its dual constraint must be tight; otherwise its resource valuation would exceed its profit.}
 
 \subsection{Farkas 引理与不可行性证书 | Farkas' lemma and infeasibility certificates}
 \noindent 一个常见形式的 Farkas 引理是：对给定矩阵 $A$ 和向量 $b$，恰有一个系统有解：
@@ -490,9 +309,12 @@ A^{\mathsf T}y\ge0,\ b^{\mathsf T}y<0.
 
 
 \section{灵敏度分析 | Sensitivity analysis}
-\noindent 对偶最优变量 $y_i^*$ 是右端资源 $b_i$ 的影子价格：在当前最优基保持不变的范围内，$b_i$ 增加一个小量 $\Delta b_i$ 时最优目标值近似改变 $y_i^*\Delta b_i$。这个结论是局部的，超过允许范围后最优基可能改变，不能无限外推。非基变量的约化成本表示其目标系数要改善多少才可能入基。
-\EN{The optimal dual variable $y_i^*$ is the shadow price of resource $b_i$. While the current basis remains optimal, a small change $\Delta b_i$ changes the optimal value approximately by $y_i^*\Delta b_i$. This is local; a larger change may alter the optimal basis. The reduced cost of a nonbasic variable measures how much its objective coefficient must improve before it can enter.}
-\EX{在工厂模型中，最优对偶价格为 $y_1=4/3,y_2=1/3$。在允许范围内，第一项资源增加 $0.1$ 单位，利润约增加 $(4/3)(0.1)=0.1333$；这不是重新求解后的全球保证。}{The shadow prices are $4/3$ and $1/3$. Within the allowable range, adding $0.1$ unit of the first resource increases profit by approximately $0.1333$. This is a local sensitivity statement, not a global guarantee.}
+\noindent 设 $B$ 是标准形式的一个最优基，按教材第 4.4 节，数据变化后分别检查新基本解和新判别数。
+\begin{itemize}
+\item \textbf{改变右端 $b$。} 判别数 $z_j-c_j$ 保持原值。若 $B^{-1}(b+\Delta b)\ge0$，原基仍最优。由 $w=c_BB^{-1}$，最优值的改变量恰为 $w\Delta b$。只改变第 $i$ 个右端分量时，$w_i$ 是该最优基有效区间内的影子价格。
+\item \textbf{改变目标系数 $c$。} 基解 $B^{-1}b$ 保持原值。若改变的是非基变量 $x_k$ 的系数，只有它的判别数变成 $d_k-\Delta c_k$。若改变基变量的系数，要用新的 $c_B$ 重算单纯形乘子和各个判别数。对极大化问题，新判别数全非负时原基仍最优。
+\end{itemize}
+\EN{For a right-hand-side change, check basic feasibility. If the basis stays optimal, its value changes exactly by $w\Delta b$. For an objective change, recompute the affected criterion numbers and apply the optimality test.}
 
 \subsection{逐步算例：资源量与利润变化 | Worked example: resource and profit changes}
 在工厂模型最优基 $B=\begin{pmatrix}2&1\\1&2\end{pmatrix}$ 下，若第一项资源从 $4$ 变为 $4+\Delta$，第二项仍为 $4$，则
@@ -510,19 +332,19 @@ z^*(\Delta)=\frac{20}{3}+\frac43\Delta.
 斜率 $4/3$ 是第一项资源的影子价格；超出此范围后，原基不再保证可行，必须重新检查或求解。
 \EN{With the factory model's optimal basis, changing the first resource from four to $4+\Delta$ gives the basic variables shown above. Feasibility requires $-2\le\Delta\le4$, so the resource can vary from two to eight while this basis remains feasible. Within that interval, the optimal value is $20/3+(4/3)\Delta$, whose slope is the first shadow price. Beyond it, the basis is no longer guaranteed to be feasible and must be checked or recomputed.}
 
-再把第一种产品的单位利润从 $3$ 改为 $3+\delta$。保持同一基最优要求对偶变量非负：
+另考虑第一种产品的单位利润从 $3$ 改为 $3+\delta$。保持同一基最优要求对偶变量非负：
 \FORMULA{目标系数变化时的对偶可行区间}{dual-feasibility interval under a change in an objective coefficient}
 \[
-y_1=\frac{4+2\delta}{3}\ge0,\qquad y_2=\frac{1-\delta}{3}\ge0.
+w_1=\frac{4+2\delta}{3}\ge0,\qquad w_2=\frac{1-\delta}{3}\ge0.
 \]
 因此 $-2\le\delta\le1$ 是保持该基对偶可行的区间。完整的敏感性判断同时检查基解可行性和对偶可行性。
-\EN{If the first product's profit changes to $3+\delta$, the same basis remains dual feasible when $y_1=(4+2\delta)/3\ge0$ and $y_2=(1-\delta)/3\ge0$, giving $-2\le\delta\le1$. Sensitivity analysis checks both primal feasibility of the basic solution and dual feasibility.}
+\EN{If the first product's profit changes to $3+\delta$, the same basis remains dual feasible when $w_1=(4+2\delta)/3\ge0$ and $w_2=(1-\delta)/3\ge0$, giving $-2\le\delta\le1$. Sensitivity analysis checks both primal feasibility of the basic solution and dual feasibility.}
 
 \noindent\textbf{常见结论。} 右端项改变会影响可行性和基解；目标系数改变会影响最优性；增加约束可能缩小可行域，减少约束可能扩大可行域。若原问题不可行，对偶可能无界；若原问题无界，对偶不可行，这是线性规划对偶的异常情形之一。实际回答时必须先说明是在“当前基不变”的敏感性范围内。
 \EN{Changing the right-hand side can affect feasibility and the basic solution. Changing objective coefficients can affect optimality. Adding a constraint can shrink the feasible region, while removing one can enlarge it. Infeasibility and unboundedness are related through duality. Sensitivity statements must specify the range in which the current basis remains unchanged.}
 \subsection{灵敏度分析的具体读法 | Reading sensitivity results}
-\noindent 右端 $b$ 改变时，先用 $x_B=B^{-1}b$ 检查基解是否仍非负；目标系数 $c$ 改变时，先检查 $y^{\mathsf T}=c_B^{\mathsf T}B^{-1}$ 是否仍满足对偶可行性。前者决定“当前方案还能不能用”，后者决定“当前方案还是不是最优”。这两个检查不能混为一谈。
-\EN{When the right-hand side changes, use $x_B=B^{-1}b$ to check primal feasibility. When objective coefficients change, use $y^{\mathsf T}=c_B^{\mathsf T}B^{-1}$ or the reduced costs to check dual feasibility. One check asks whether the current plan is feasible; the other asks whether it is still optimal.}
+\noindent 右端 $b$ 改变时，先用 $x_B=B^{-1}b$ 检查基解是否仍非负；目标系数 $c$ 改变时，先检查 $w=c_BB^{-1}$ 是否仍满足对偶可行性。前者决定“当前方案还能不能用”，后者决定“当前方案还是不是最优”。这两个检查不能混为一谈。
+\EN{When the right-hand side changes, use $x_B=B^{-1}b$ to check primal feasibility. When objective coefficients change, use $w=c_BB^{-1}$ or the criterion numbers to check dual feasibility. One check asks whether the current plan is feasible; the other asks whether it is still optimal.}
 
 \EX{若工厂第一项资源减少 $1$，即 $\Delta=-1$，则
 \FORMULA{工厂资源减少时的基解与目标值}{basic solution and objective after reducing a factory resource}
@@ -530,7 +352,7 @@ y_1=\frac{4+2\delta}{3}\ge0,\qquad y_2=\frac{1-\delta}{3}\ge0.
 x_1=\frac{4+2(-1)}3=\frac23,\qquad x_2=\frac{4-(-1)}3=\frac53,
 \quad z=\frac{20}3-\frac43=\frac{16}3.
 \]
-这仍在 $-2\le\Delta\le4$ 的允许范围内，所以原基仍可用。若 $\Delta=5$，则 $x_2=(4-5)/3<0$，原基失去可行性，必须重新换基。}{If the first resource decreases by one, the same basis remains feasible and gives the displayed solution and profit. If the change is five, the second basic variable becomes negative, so the old basis is no longer feasible and a new pivot is required.}
+这仍在 $-2\le\Delta\le4$ 的允许范围内，所以原基仍可用。若 $\Delta=5$，则 $x_2=(4-5)/3<0$，原基失去可行性，需要重新求解。}{If the first resource decreases by one, the same basis remains feasible and gives the displayed solution and profit. If the change is five, the second basic variable becomes negative, so the old basis is no longer feasible and the modified problem needs to be solved again.}
 
 \section{口试作答结构 | Oral response structure}
 \subsection{优化问题的口述模板 | A reliable oral structure}
@@ -540,15 +362,14 @@ x_1=\frac{4+2(-1)}3=\frac23,\qquad x_2=\frac{4-(-1)}3=\frac53,
 
 
 \section{本章最容易被追问的判断 | Questions that require conditions}
-\ASK{为什么单纯形法不等于“把所有顶点都算一遍”？}{Why is the simplex method not simply checking every vertex?}{线性目标在可行多面体上有顶点最优解，但顶点可能很多。单纯形法从一个基可行解出发，用约化成本选择能改善目标的相邻方向，用比值检验保持可行，因此通常只访问其中一部分顶点。}{A linear objective has an optimal vertex when the optimum is finite, but there may be many vertices. The simplex method follows improving adjacent directions and uses the ratio test to keep feasibility, so it usually visits only a subset of vertices.}
-\ASK{改变资源数量和改变利润系数有什么区别？}{What is the difference between changing a resource and changing a profit coefficient?}{改变右端项 $b$ 首先影响基解的可行性；改变目标系数 $c$ 首先影响约化成本和对偶可行性。一个变化可能只改变最优值，也可能迫使最优基改变。}{Changing the right-hand side first affects primal feasibility. Changing an objective coefficient first affects reduced costs and dual feasibility. Either change may eventually require a new optimal basis.}
+\ASK{为什么单纯形法不等于“把所有顶点都算一遍”？}{Why is the simplex method not simply checking every vertex?}{线性目标在可行多面体上有顶点最优解，但顶点可能很多。单纯形法从一个基可行解出发，用判别数选择改善方向，用最小比值保持可行，因此通常只访问其中一部分顶点。}{A linear objective has an optimal vertex when the optimum is finite, but there may be many vertices. The simplex method follows improving adjacent directions and uses the minimum ratio to preserve feasibility, so it usually visits only a subset of vertices.}
+\ASK{改变资源数量和改变利润系数有什么区别？}{What is the difference between changing a resource and changing a profit coefficient?}{改变右端项 $b$ 首先影响基解的可行性；改变目标系数 $c$ 首先影响判别数和对偶可行性。一个变化可能只改变最优值，也可能迫使最优基改变。}{Changing the right-hand side first affects primal feasibility. Changing an objective coefficient first affects reduced costs and dual feasibility. Either change may eventually require a new optimal basis.}
 \ASK{如何用一句话解释对偶？}{How would you explain duality in one sentence?}{原问题直接选择方案获得利润，对偶问题给资源定价并寻找所有利润的最小上界；在线性规划满足有限最优条件时，这个上界正好等于最大利润。}{The primal chooses activities to obtain profit, while the dual prices resources and finds the smallest valid upper bound on that profit; under finite optimality, the bound equals the maximum profit.}
 
 \section*{来源与范围 | Source and scope}
-本稿主要参考陈宝林《最优化理论与算法》（第 2 版）目录中第 3 章“单纯形方法”和第 4 章“对偶原理及灵敏度分析”，并参考“最优化方法”文件夹中的课程讲义、单纯形法材料、凸规划和 Farkas 引理资料。扫描教材文字提取有限，因此本稿按章节主题整理核心理论，不声称逐页转录；线性规划符号以本稿显示的最大化标准形式为准，其他教材的符号约定可能相反。
-\EN{This review is mainly based on Chapters 3 and 4 of Bao-Lin Chen's Optimization Theory and Algorithms, supplemented by the course materials on simplex methods, convex programming, and Farkas' lemma. The scanned book has limited text extraction, so this is a structured review of the main results rather than a page-by-page transcription. The displayed maximization convention fixes the signs; other textbooks may use different conventions.}
+单纯形表依据陈宝林《最优化理论与算法》（第 2 版）第 3.1.1、3.1.2、3.1.4 节，沿用判别数 $z_j-c_j$ 和主元消去的写法。两阶段法依据第 3.2.1 节。两道手算保留讲义原模型，用教材的表格规则重算。对偶及灵敏度分析参照第 4 章与课程讲义。
+\EN{The tableau uses the notation of Chen, Sections 3.1.1, 3.1.2 and 3.1.4. The two-phase method follows Section 3.2.1. The two worked models from the review are recalculated using the textbook's tableau convention.}
 \section*{参考文献 | References}
-\noindent 与前面“来源与范围”一节相同：本稿只依据其章节范围与课程材料，不声称逐页引用或页码级对应。\textit{Same sources as the Source and scope note; no page-level correspondence is claimed.}
 \begin{enumerate}[label={[\arabic*]},leftmargin=2.4em]
 \item 陈宝林. \textit{最优化理论与算法}（第 2 版）. 北京: 清华大学出版社. 第 3 章“单纯形方法”、第 4 章“对偶原理及灵敏度分析”. [Chen Bao-Lin, \textit{Optimization Theory and Algorithms}, 2nd ed., Tsinghua University Press, Chapters 3--4.]
 \item 《最优化方法》课程讲义与课件（2025 年秋季学期），线性规划、单纯形法、对偶与 Farkas 引理部分. [Course notes and slides, autumn 2025.]
