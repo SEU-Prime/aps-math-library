@@ -1,5 +1,6 @@
 \documentclass[UTF8,11pt,a4paper]{ctexart}
-\usepackage{amsmath,amssymb,geometry,enumitem,booktabs,hyperref}
+\usepackage{amsmath,amssymb,geometry,enumitem,booktabs,hyperref,tikz}
+\usetikzlibrary{arrows.meta,positioning}
 \geometry{margin=2.1cm}\setlist{itemsep=2pt,topsep=3pt}
 \hypersetup{colorlinks=true,linkcolor=blue}
 \pagestyle{plain}
@@ -8,19 +9,423 @@
 \newcommand{\FORMULA}[2]{\par\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
 \newcommand{\EX}[2]{\par\noindent \textbf{例子 / Example.} #1\par\EN{#2}}
 \newcommand{\ASK}[4]{\par\noindent \textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent \textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
-\title{最优化理论与算法 APS 面试准备\\[4pt]\large 主要范围：陈宝林《最优化理论与算法》第 3--4 章}
+\title{最优化理论与算法 APS 面试准备\\[4pt]\large 单纯形表详解、对偶与凸优化基础}
 \author{Optimization Theory and Algorithms: Bilingual Review}
 \date{}
 \newcommand{\APS}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par\smallskip}
 \begin{document}\maketitle
 
 \section*{课程概述 | Course overview}
-\APS{这份范围以线性规划为主，顺序是决策变量与标准形式、可行多面体与基可行解、单纯形表和判别数、进基离基与最小比值、退化与两阶段法，然后进入对偶、弱/强对偶、互补松弛、Farkas 不可行性证书及灵敏度分析。单纯形法维持原问题可行性并改善目标，对偶提供可验证的上界，两者在最优解处相遇；灵敏度分析还要给出当前基保持有效的参数范围。}{The scope is mainly linear programming: decision variables and standard form, feasible polyhedra and basic feasible solutions, simplex tableaux and criterion numbers, entering and leaving variables and the ratio test, degeneracy and Phase I, followed by duality, complementary slackness, Farkas certificates and sensitivity analysis. Simplex preserves primal feasibility while improving the objective; the dual provides verifiable bounds. They meet at optimality, and sensitivity statements require a range over which the current basis remains valid.}
-\subsection*{例一：可行方案加对偶证书 | A feasible plan with an optimality certificate}
-\APS{工厂最大化 $3x_1+2x_2$，约束为 $2x_1+x_2\le4$、$x_1+2x_2\le4$、$x\ge0$。两条边界交于 $(4/3,4/3)$，利润为 $20/3$。资源价格取 $w=(4/3,1/3)$，满足 $2w_1+w_2=3$、$w_1+2w_2=2$ 且非负，所以对任何可行产量，利润不超过 $4w_1+4w_2=20/3$。产量达到该上界，因此最优；这比只报告一个交点更完整，因为给出了全局最优的证明。}{A factory maximizes $3x_1+2x_2$ subject to $2x_1+x_2\le4$, $x_1+2x_2\le4$, and $x\ge0$. The boundary intersection $(4/3,4/3)$ gives profit $20/3$. Prices $w=(4/3,1/3)$ are nonnegative and satisfy $2w_1+w_2=3$ and $w_1+2w_2=2$. Thus every feasible production plan has profit at most $4w_1+4w_2=20/3$. The plan attains the bound and is optimal. A feasible point plus a matching dual bound is a complete certificate.}
-\subsection*{例二：影子价格的有效范围 | The range of a shadow price}
-\APS{只将第一资源量改为 $4+\Delta$，保持同一基时，解为 $x_1=(4+2\Delta)/3$、$x_2=(4-\Delta)/3$。非负性要求 $-2\le\Delta\le4$；目标变成 $20/3+(4/3)\Delta$，所以在此范围第一资源的边际价值为 $4/3$。例如增加一单位，利润增加 $4/3$。若 $\Delta>4$，原基给 $x_2<0$，该公式就不能继续代表可行最优方案，必须重新求解或换基。}{Change only the first resource to $4+\Delta$. With the same basis, $x_1=(4+2\Delta)/3$ and $x_2=(4-\Delta)/3$. Nonnegativity requires $-2\le\Delta\le4$. Profit is $20/3+(4/3)\Delta$, so the first resource has marginal value $4/3$ over that range. Increasing it by one raises profit by $4/3$. For $\Delta>4$, this basis produces a negative second output and can no longer describe a feasible optimum; a new basis is needed.}
+\APS{这份范围以线性规划为主，顺序是决策变量与标准形式、可行多面体与基可行解、单纯形表和判别数、进基离基与最小比值、退化与两阶段法，然后进入对偶、弱/强对偶、互补松弛、Farkas 不可行性证书及灵敏度分析。原始单纯形法维持原问题可行性，退化换基时目标可以不变，对偶提供可验证的上界，两者在最优解处相遇；灵敏度分析还要给出当前基保持有效的参数范围。}{The scope is mainly linear programming: decision variables and standard form, feasible polyhedra and basic feasible solutions, simplex tableaux and criterion numbers, entering and leaving variables and the ratio test, degeneracy and Phase I, followed by duality, complementary slackness, Farkas certificates and sensitivity analysis. Primal simplex preserves primal feasibility, with possible unchanged objective values at degenerate pivots; the dual provides verifiable bounds. They meet at optimality, and sensitivity statements require a range over which the current basis remains valid.}
+\medskip\noindent\textbf{复习路线}\par
+\begin{enumerate}
+\item \hyperref[opt:graphs]{理论与方法图解（第 \pageref*{opt:graphs} 页起）}：先看可行域、换基的几何意义、算法流程及梯度方向。
+\item \hyperref[opt:tableau]{单纯形表手算专章（第 \pageref*{opt:tableau} 页起）}：对照课本填表、算比值、消元，独立完成三轮例题。
+\item \hyperref[opt:theory]{对偶、灵敏度与非线性补充（第 \pageref*{opt:theory} 页起）}：核对最优性证书，区分必要条件和充分条件，再用自测题复习。
+\end{enumerate}
+\noindent\textbf{记号说明：}除原讲义明确写作极大化的例题外，本版统一用教材极小化标准形式和判别数 $z_j-c_j$。每道新增练习都按同一符号系统核算。\par
 
+\clearpage
+\section*{图解一：为什么单纯形法沿边换基？}
+\label{opt:graphs}
+\pdfbookmark[0]{理论与算法图解}{opt-graphs}
+\noindent\textit{教材第 2.1、2.2 节及第 3.1 节；第二讲《凸规划》PPT 幻灯片 17--21。图按讲义工厂模型重绘。}
+考虑 $\max g=3x_1+2x_2$，约束 $2x_1+x_2\le4$、$x_1+2x_2\le4$、$x\ge0$。蓝色多边形是四条不等式所确定的可行域。绿色箭头是用教材判别数和最小比值法实际计算得到的两次移动。
+\begin{center}
+\begin{tikzpicture}[x=2.4cm,y=2.0cm,>=Latex]
+\fill[blue!12] (0,0)--(2,0)--({4/3},{4/3})--(0,2)--cycle;
+\draw[->,thick] (-.14,0)--(3.53,0) node[right]{$x_1$};
+\draw[->,thick] (0,-.11)--(0,2.78) node[above]{$x_2$};
+\draw[blue!75!black,thick] (.67,2.66)--(2,0);
+\node[blue!75!black,anchor=west] at (1.45,2.47){$2x_1+x_2=4$};
+\draw[blue!55!black,thick] (0,2)--(3.45,.275);
+\node[blue!55!black,anchor=west] at (2.5,.84){$x_1+2x_2=4$};
+\draw[orange!80!black,dashed,thick] (.45,2.325)--(2,0);
+\draw[red!75!black,dashed,thick] (.55,{(20/3-3*.55)/2})--({20/9},0);
+\node[red!75!black,anchor=west,fill=white,inner sep=1pt] at (1.68,1.07){$g=20/3$};
+\draw[->,green!45!black,line width=1.4pt] (.12,0)--(1.83,0);
+\draw[->,green!45!black,line width=1.4pt] (1.95,.10)--(1.43,1.14);
+\fill (0,0) circle(1.5pt) node[below left]{$O$};
+\fill (2,0) circle(1.5pt) node[below]{$(2,0)$};
+\fill (0,2) circle(1.5pt) node[left]{$(0,2)$};
+\fill ({4/3},{4/3}) circle(1.7pt) node[above right,fill=white,inner sep=1pt]{$(4/3,4/3)$};
+\node[blue!45!black] at (.49,.62){可行域};
+\end{tikzpicture}
+
+\small 图 1：可行多边形、目标等值线以及实际的主元路径。
+\end{center}
+\begin{enumerate}
+\item \textbf{第一条边。} 起点 $O$ 取两个松弛变量作基。$x_1$ 进基时，$x_2$ 固定为零。第一条资源约束在 $x_1=2$ 先变成等式，对应第一个松弛变量离基。
+\item \textbf{第二条边。} $x_2$ 进基后沿 $2x_1+x_2=4$ 移动，第一个松弛变量依然为零。第二条约束在 $(4/3,4/3)$ 也取等，对应另一松弛变量离基。
+\item \textbf{为何能停。} 虚线表示固定目标值。向右上平移增大利润，最后一条可达到的等值线经过 $(4/3,4/3)$。代数上，相应判别数满足停表条件；对偶上界为 $20/3$。若出现退化换基，几何点可能不动，因此不能把每一步都说成“走到另一个顶点”。
+\end{enumerate}
+\EN{An entering variable specifies a candidate direction. The ratio test identifies the first basic variable to reach zero. The final objective line supports the feasible polygon.}
+
+\clearpage
+\section*{图解二：什么时候用原始、两阶段或对偶单纯形？}
+\noindent\textit{教材第 3.1、3.2.1、4.2 节。下图和手算专章统一采用 $d=z-c$ 的极小化记号。}
+\begin{center}
+\begin{tikzpicture}[>=Latex,
+node distance=6mm and 9mm, every node/.style={font=\small},
+box/.style={draw=blue!55!black,rounded corners=2pt,align=center,inner sep=5pt,text width=4.45cm,fill=blue!6},
+endbox/.style={box,draw=green!45!black,fill=green!7}]
+\node[box,text width=5.7cm] (root) at (0,0) {读已化成基列为单位阵的表\\记 $\bar b=B^{-1}b$, $d=c_BB^{-1}A-c$};
+\node[box] (p) at (-2.68,-1.43) {$\bar b\ge0,\ d$ 有正项\\原始单纯形：先选主列};
+\node[box] (d) at (2.68,-1.43) {$\bar b$ 有负项，$d\le0$\\对偶单纯形：先选主行};
+\node[box] (pr) at (-2.68,-2.97) {主列正元素行参与比值\\没有正元素：目标无界};
+\node[box] (dr) at (2.68,-2.97) {主行负元素列参与比值\\没有负元素：原约束不可行};
+\node[endbox,text width=5.7cm] (fin) at (0,-4.65) {成功换基后重查\\若 $\bar b\ge0,\ d\le0$，便可读出最优解};
+\draw[->] (root.south west) -| (p.north);
+\draw[->] (root.south east) -| (d.north);
+\draw[->] (p)--(pr); \draw[->] (d)--(dr);
+\draw[->] (pr.south) -- ([xshift=-1.85cm]fin.north);
+\draw[->] (dr.south) -- ([xshift=1.85cm]fin.north);
+\end{tikzpicture}
+
+\small 图 2：已有基时的两种换基顺序。未找到共同可行的基时，不能仅凭当前表就判断无解。
+\end{center}
+若 $\bar b$ 有负项，而且 $d$ 也有正项，当前表不能直接套用上述两种起步条件。一般可先从原约束重建第一阶段问题，先解决原问题是否可行。若初表已同时满足两边的符号条件，直接停止。
+\begin{center}
+\begin{tikzpicture}[>=Latex,node distance=5.5mm and 11mm,every node/.style={font=\small},
+box/.style={draw=blue!55!black,rounded corners=2pt,align=center,inner sep=5pt,text width=5.0cm,fill=blue!6}]
+\node[box] (a) {没有原问题初始基本可行解\\加入必要的人工变量};
+\node[box,below=of a] (b) {第一阶段：求 $\min W=\sum_i a_i$};
+\node[box,below left=5.5mm and 7mm of b,draw=red!65!black,fill=red!5,text width=4.0cm] (c) {$W_{\min}>0$：原约束不可行};
+\node[box,below right=5.5mm and 7mm of b,text width=5.0cm] (e) {$W_{\min}=0$：清理零值人工基变量\\必要时删冗余行};
+\node[box,below=of e] (f) {删人工列、恢复原目标成本\\重算目标行，进第二阶段};
+\draw[->] (a)--(b);
+\draw[->] (b.south west)--(c.north east);
+\draw[->] (b.south east)--(e.north west);
+\draw[->] (e)--(f);
+\end{tikzpicture}
+
+\small 图 3：两阶段法切换时，约束行承接第一阶段，目标行必须重新建立。
+\end{center}
+\textbf{口试对照。} 原始法先问“哪个变量进入有利”，才问“走到多远会撞到可行边界”。对偶法先修一条负右端，从允许修复该行的列里挑一个还能保住对偶可行的主元。第一阶段则只问能不能找到原问题的可行点。
+
+\clearpage
+\section*{图解三：方向导数、梯度与乘子怎么读？}
+\noindent\textit{教材第 7.2 节和第 10.1--10.2 节。图中的模型和数值见后文“非线性最优性补充”。}
+\begin{center}
+\begin{tikzpicture}[>=Latex,x=2.25cm,y=1.75cm,every node/.style={font=\small}]
+\fill[blue!12] (0,0)--(2,0)--(0,2)--cycle;
+\draw[->] (-.12,0)--(3.0,0) node[right]{$x_1$};
+\draw[->] (0,-.15)--(0,2.32) node[above]{$x_2$};
+\draw[blue!65!black,thick] (0,2)--(2,0);
+\node[blue!65!black,anchor=west] at (.8,1.59){$x_1+x_2=2$};
+\draw[red!70!black,dashed,thick] (2,1) ellipse [x radius=.7071,y radius=.7071];
+\fill (2,1) circle(1.5pt) node[above right] {$(2,1)$};
+\fill (1.5,.5) circle(1.6pt) node[below right,fill=white,inner sep=1pt] {$x^*$};
+\draw[->,green!45!black,line width=1.3pt] (1.5,.5)--(1.18,.18);
+\node[green!40!black] at (.85,.12){$\nabla f(x^*)=w_3\nabla g_3(x^*)$};
+\draw[->,orange!80!black,line width=1.2pt] (1.5,.5)--(1.86,.86);
+\node[orange!80!black,anchor=west] at (2.66,.76){$-\nabla f(x^*)$};
+\end{tikzpicture}
+
+\small 图 4：K--T 的边界最优点。蓝色区域可行，虚线为首次接触该可行域的目标等值线。
+\end{center}
+本图采用 $g_3=2-x_1-x_2\ge0$。在接触点 $x^*=(3/2,1/2)$，$\nabla f=(-1,-1)^{\mathsf T}$ 与 $\nabla g_3$ 相同，所以驻点方程给出 $w_3=1$。无约束下降方向 $-\nabla f$ 指向可行域外。沿约束边界的两个切向方向都与梯度垂直，给出零的一阶变化。这个边界点的目标梯度不必等于零。
+\begin{center}
+\begin{tikzpicture}[>=Latex,x=1.35cm,y=1.58cm,every node/.style={font=\small}]
+\draw[->] (-2.95,0)--(3.07,0) node[right]{$x_1$};
+\draw[->] (0,-1.5)--(0,1.62) node[above]{$x_2$};
+\foreach \ra/\rb in {2.828/1.414,2/1,1.4552/.7276,.707/.354}
+  \draw[blue!46] (0,0) ellipse [x radius=\ra,y radius=\rb];
+\draw[->,red!75!black,line width=1.25pt] (2,1)--({24/17},{-3/17});
+\draw[->,green!45!black,line width=1.25pt,dashed] (2,1)--(.03,.015);
+\fill (2,1) circle(1.5pt) node[above right] {$x^{(0)}=(2,1)$};
+\fill ({24/17},{-3/17}) circle(1.5pt) node[below right] {$x_G=(24/17,-3/17)$};
+\fill (0,0) circle(1.4pt) node[below left] {$x_N=(0,0)$};
+\node[green!44!black] at (.73,.68) {牛顿方向};
+\node[red!75!black,anchor=west] at (1.99,.47) {最速下降方向};
+\end{tikzpicture}
+
+\small 图 5：同一正定二次型上的两种方向。红色为一次准确线搜索，绿色为一次牛顿更新。
+\end{center}
+椭圆对应 $f(x)=\tfrac12(x_1^2+4x_2^2)$ 的水平线。红线方向只用当前梯度，最优步长取沿红线的切点；绿线方向解 $Qd=-\nabla f$，把两个坐标方向的曲率区别考虑进去。这里一步到极小点是二次模型刚好等于原函数，并非一般非线性问题的结论。
+\clearpage
+\section*{单纯形表手算专章}
+\label{opt:tableau}
+\pdfbookmark[0]{单纯形表手算专章}{opt-tableau}
+\noindent\textit{本专章以陈宝林《最优化理论与算法》（第 2 版）第 2.1、2.2 节和第 3.1--3.4 节为依据。页码按教材印刷页码。除另有说明，一律采用教材的极小化标准形式及判别数 $z_j-c_j$。数字题用来演练同一套规则。}
+
+\subsection*{一、标准形式与基：从原题到第一张表}
+\noindent\textit{教材第 26--35、37--40 页。}
+\[
+  \min f=cx,\qquad Ax=b,\quad x\ge0.
+\]
+设约束独立，$\operatorname{rank}A=m$；$p_j$ 为 $A$ 的第 $j$ 列。先固定变量的列顺序，再选 $m$ 个独立列组成有序基 $B$。用 $N$ 记其余的列。将非基变量设为 $0$ 得基本解 $(x_B,x_N)=(B^{-1}b,0)$。只有 $B^{-1}b\ge0$ 时它才是\textbf{基本可行解}。若有基变量为零，称为退化。基是列的选择，基本可行解是一个点。不同的基在退化时可能表示同一点。
+
+\begin{enumerate}
+\item \textbf{化成教材的目标方向。} 求 $\max g(x)$ 可改成 $\min f(x)=-g(x)$，最后把最优值换回 $g=-f$。若原目标有常数项，可单列，求出最优变量后再加回。
+\item \textbf{处理变量符号。} 自由变量 $u=u^+-u^-$，$u^+,u^-\ge0$。若有下界 $x_j\ge\ell_j$，置 $x_j=\ell_j+t_j$，$t_j\ge0$，代入所有约束和目标。上界 $t_j\le U_j-\ell_j$ 可以单列为约束。
+\item \textbf{处理约束类型。} 如右端为负，可先整行乘 $-1$ 并反向不等号。对 $\le$ 加非负松弛变量，对 $\ge$ 减非负剩余变量，等式不加松弛变量。松弛和剩余变量在\emph{原目标}中的系数为零。
+\item \textbf{检查初始基。} 单位列配合非负右端最方便。$b\ge0$ 时，$+e_i$ 可直接作为第 $i$ 行基列，$-e_i$ 不自动给出可行基。没有现成可行基就用两阶段法。若约束行相关，需先区分冗余方程和矛盾方程，或让第一阶段揭示这一点。
+\end{enumerate}
+
+\paragraph{标准化演练。}
+将 $\max(3u+2v)$，$u+v\ge1$，$-u+v\le3$，$v\ge2$，$u$ 自由，化为标准形式：置 $v=2+t$、$u=u^+-u^-$，则
+\[
+\begin{aligned}
+ &\min f=-3u^++3u^--2t-4,\\
+ &-u^++u^--t+s_1=1,\\
+ &-u^++u^-+t+s_2=1,\qquad u^+,u^-,t,s_1,s_2\ge0 .
+\end{aligned}
+\]
+第一条原约束移项后得到右端 $-1$，整行乘 $-1$ 后成为 $\le$ 型。两条松弛列为单位阵。初始基本可行解 $(u^+,u^-,t,s_1,s_2)=(0,0,0,1,1)$ 对应 $(u,v)=(0,2)$，原目标值 $4$。这一步只构造了起点。
+\EN{A basis is a choice of independent columns. It gives a basic feasible solution only when $B^{-1}b$ is componentwise nonnegative.}
+
+\clearpage
+\subsection*{二、每一格从哪里来：先推公式，再填表}
+\noindent\textit{教材第 3.1.1--3.1.4 节，尤其是第 44--46 页表 3.1.1、表 3.1.2。}
+约束变为
+\[
+  x_B+B^{-1}Nx_N=\bar b,qquad \bar b=B^{-1}b.
+\]
+记 $y_j=B^{-1}p_j$。表身第 $i$ 行第 $j$ 列填 $y_{ij}$。第 $i$ 行右端是 $\bar b_i$，行名为这行所对应的基变量。$B^{-1}B=I$，所以基列是单位列。若 $B\ne I$，可用高斯消去把原系数表的基列化成单位阵，同时更新全部列和右端。
+\[
+ f=c_B\bar b+(c_N-c_BB^{-1}N)x_N
+ \quad\Longrightarrow\quad
+ f+\sum_{j\in J_N}d_jx_j=f_0,
+ \qquad d_j=z_j-c_j=c_By_j-c_j.
+\]
+这里 $f_0=c_B\bar b$ 是当前点目标值。$c_j$ 来自原目标，$c_B$ 按\emph{当前基的行顺序}读取。若在表上省略 $f$ 列，底行仍然代表上面这个等式，不能改成 $f=f_0+\sum d_jx_j$。
+
+\paragraph{非单位基也能直接计算。}
+设
+\[
+ B=\begin{pmatrix}1&1\\2&1\end{pmatrix},\quad
+ b=\binom{5}{7},\quad p_3=\binom{1}{0},\quad c=(-2,-3,-1).
+\]
+令基为 $(x_1,x_2)$。解 $Bx_B=b$ 得 $x_B=(2,3)^{\mathsf T}$，再解 $By_3=p_3$ 得 $y_3=(-1,2)^{\mathsf T}$。于是 $d_3=(-2)(-1)+(-3)\cdot2-(-1)=-3$，$f_0=-13$。第一张表如下：
+\[
+\begin{array}{c|r|rrr|r}
+\text{基变量}&c_B&x_1&x_2&x_3&\bar b\\\hline
+x_1&-2&1&0&-1&2\\
+x_2&-3&0&1&2&3\\\hline
+f&&0&0&-3&-13
+\end{array}
+\]
+对所有可行解，$f=-13+3x_3\ge-13$；当前点的 $x_3=0$，故它已经最优。两种填法应一致：用 $d_3=c_By_3-c_3$ 单独算一格，或者从 $f-cx=0$ 出发，把基变量在目标行中消成零。
+
+\paragraph{为什么判别数能决定方向？}
+只让非基变量 $x_k$ 从零增加到 $\theta$，其他非基变量不变，则
+\[
+ x_B(\theta)=\bar b-y_k\theta,\qquad f(\theta)=f_0-d_k\theta.
+\]
+极小化时 $d_k>0$ 才是改善方向，且要有正步长才真的下降。若所有判别数非正，则上述目标行对\emph{所有可行点}给出 $f\ge f_0$，所以是全局最优。若习惯用 $c_j-z_j$，判定符号相反。本讲义的底行始终用 $z_j-c_j$。
+\EN{The objective row reads $f+\sum_j d_jx_j=f_0$. Under this sign convention, a positive criterion number identifies a candidate for improving a minimization objective.}
+
+\clearpage
+\subsection*{三、每轮统一做五步：一张纸上怎么写}
+\noindent\textit{教材第 3.1.2--3.1.4 节。}
+\begin{enumerate}
+\item \textbf{看判别数。} 先确认约束右端全非负。对极小化，若所有非基判别数 $d_j\le0$，停止。否则常按教材表算选最大正判别数 $d_k$，把 $x_k$ 的列框出来。
+\item \textbf{写比值。} 在主列右侧留一列。第 $i$ 行只有 $y_{ik}>0$ 才填 $\bar b_i/y_{ik}$；$y_{ik}=0$ 或 $y_{ik}<0$ 写横线，\emph{不要}写成 0。若分子为 0 而分母为正，这个合法比值就是 0，不能跳过。
+\item \textbf{定主元。} 最小合法比值是 $\theta^*$，它决定第 $r$ 行的基变量先降到零。$y_{rk}$ 为主元。若没有合法比值，当前的改善方向可以一直走下去，极小化无有限最优值。
+\item \textbf{整行消元。} 先写 $R'_r=R_r/y_{rk}$。对每一行 $i\ne r$ 写 $R'_i=R_i-y_{ik}R'_r$。目标行写 $R'_f=R_f-d_k R'_r$。右端和普通列一起更新，乘数都取\emph{旧}表的主列元素。将行名改为进基变量，$c_B$ 一起改，列名位置不改。
+\item \textbf{核对。} 基列是否为单位列？右端是否仍非负？基变量判别数是否全部为零？目标是否等于 $f_0-d_k\theta^*$？至少再用 $c_B$ 对一个非基列独立重算判别数。通过后才选下一个主元。
+\end{enumerate}
+
+\paragraph{为什么只在主列正元素处求比值？}
+从 $\bar b_i-y_{ik}\theta\ge0$ 与 $\theta\ge0$ 出发：
+\[
+\begin{array}{c|l}
+ y_{ik}>0 & \theta\le \bar b_i/y_{ik}\\
+ y_{ik}=0 & \text{该基变量保持原值}\\
+ y_{ik}<0 & \text{该基变量随 }\theta\text{ 增加}
+\end{array}
+\]
+所以要同时满足全部上界，必须取最小的一个。比值并列表示这一步有不止一个基变量达到零，最终只能选一个变量离基。若 $\theta^*=0$，换基不换点，目标值不变。正判别数在退化表里并不保证\emph{这一轮}就能降低目标。
+
+\paragraph{抄到草稿纸上的空白表。}
+\[
+\begin{array}{c|r|cccc|r|c}
+\text{基变量}&c_B&x_1&x_2&\cdots&x_n&\bar b&\theta_i\\\hline
+x_{B_1}&c_{B_1}&y_{11}&y_{12}&\cdots&y_{1n}&\bar b_1&\\
+x_{B_2}&c_{B_2}&y_{21}&y_{22}&\cdots&y_{2n}&\bar b_2&\\
+\vdots&\vdots&\vdots&\vdots&&\vdots&\vdots&\\\hline
+f&&d_1&d_2&\cdots&d_n&f_0&
+\end{array}
+\]
+做完后先写完整标准形式解：非基变量等于零，基变量按行读右端。再还原自由变量替换和目标符号，代回原约束。保留分数便于检查零判别数和比值并列。
+\EN{Choose the entering column, write the valid ratios, normalize the pivot row, eliminate the entering column, and check the new basic solution.}
+
+\clearpage
+\subsection*{四、三轮手算（上）：从建表到第一次换基}
+\noindent 练习模型：$\max g=15x_1+7x_2+3x_3$，满足
+\[
+x_1\le4,\qquad 2x_1+x_2\le12,\qquad 2x_1+2x_2+x_3\le20,\qquad x\ge0.
+\]
+加松弛变量后，按教材改成 $\min f=-g$，列序见表。目标系数为 $-15,-7,-3,0,0,0$。初始基由三个松弛变量组成，$c_B=0$，所以初始判别数为 $d_j=-c_j$。
+\[
+\begin{array}{c|r|rrrrrr|r}
+\text{基变量}&c_B&x_1&x_2&x_3&s_1&s_2&s_3&\bar b\\\hline
+s_1&0&1&0&0&1&0&0&4\\
+s_2&0&2&1&0&0&1&0&12\\
+s_3&0&2&2&1&0&0&1&20\\
+\hline
+f&&15&7&3&0&0&0&0
+\end{array}
+\]
+\paragraph{第一轮：$x_1$ 进基，$s_1$ 离基。}
+最大正判别数为 $15$。主列 $x_1$ 的三个比值为 $4/1=4$、$12/2=6$、$20/2=10$。最小值 $4$，主元为第 1 行的 $1$。以下 $R_1,R_2,R_3,R_f$ 分别为旧表三条约束行和目标行。
+\[
+ R'_1=R_1,\quad R'_2=R_2-2R'_1,\quad R'_3=R_3-2R'_1,\quad R'_f=R_f-15R'_1.
+\]
+例如第 3 行 $s_1$ 格从 $0$ 变为 $0-2\cdot1=-2$，右端从 $20$ 变为 $20-2\cdot4=12$。底行右端 $0-15\cdot4=-60$。把第 1 行的行名改为 $x_1$，同时记录 $c_{B_1}=-15$。
+\[
+\begin{array}{c|r|rrrrrr|r}
+\text{基变量}&c_B&x_1&x_2&x_3&s_1&s_2&s_3&\bar b\\\hline
+x_1&-15&1&0&0&1&0&0&4\\
+s_2&0&0&1&0&-2&1&0&4\\
+s_3&0&0&2&1&-2&0&1&12\\
+\hline
+f&&0&7&3&-15&0&0&-60
+\end{array}
+\]
+\paragraph{停一下，按三项复核。}
+\begin{enumerate}
+\item 新基 $(x_1,s_2,s_3)$ 的列仍为单位阵，右端 $(4,4,12)$ 非负。
+\item 直接算 $d_{s_1}=(-15)\cdot1+0\cdot(-2)+0\cdot(-2)-0=-15$，与底行相符。
+\item 令非基 $x_2=x_3=s_1=0$，原变量为 $(4,0,0)$，代回原目标得 $g=60$，因此 $f=-60$。
+\end{enumerate}
+
+\clearpage
+\subsection*{五、三轮手算（下）：完成迭代并做独立核验}
+\paragraph{第二轮：$x_2$ 进基，$s_2$ 离基。}
+上一表底行 $d_{x_2}=7$。 $x_2$ 列为 $(0,1,2)^{\mathsf T}$，比值写成“跳过、$4/1=4$、$12/2=6$”。主元为第 2 行的 $1$：
+\[
+R'_2=R_2,\quad R'_1=R_1,\quad R'_3=R_3-2R'_2,\quad R'_f=R_f-7R'_2.
+\]
+例如新第 3 行 $s_1$ 格为 $-2-2(-2)=2$，右端为 $12-2\cdot4=4$。新目标值 $-60-7\cdot4=-88$。
+\[
+\begin{array}{c|r|rrrrrr|r}
+\text{基变量}&c_B&x_1&x_2&x_3&s_1&s_2&s_3&\bar b\\\hline
+x_1&-15&1&0&0&1&0&0&4\\
+x_2&-7&0&1&0&-2&1&0&4\\
+s_3&0&0&0&1&2&-2&1&4\\
+\hline
+f&&0&0&3&-1&-7&0&-88
+\end{array}
+\]
+\paragraph{第三轮：$x_3$ 进基，$s_3$ 离基。}
+底行只剩 $d_{x_3}=3$ 为正。该列为 $(0,0,1)^{\mathsf T}$，只有第 3 行能求比值，等于 $4/1=4$。主行不变，第 1、2 行不变，底行减去主行的 3 倍。新目标值 $-88-3\cdot4=-100$：
+\[
+\begin{array}{c|r|rrrrrr|r}
+\text{基变量}&c_B&x_1&x_2&x_3&s_1&s_2&s_3&\bar b\\\hline
+x_1&-15&1&0&0&1&0&0&4\\
+x_2&-7&0&1&0&-2&1&0&4\\
+x_3&-3&0&0&1&2&-2&1&4\\
+\hline
+f&&0&0&0&-7&-1&-3&-100
+\end{array}
+\]
+\paragraph{何时停，怎么验？}
+三个非基判别数为 $-7,-1,-3$，均非正，所以极小化已最优。令 $s_1=s_2=s_3=0$，得 $x=(4,4,4)$、$f=-100$，换回原目标 $g=100$。三条原约束左端分别是 $4,12,20$。
+把原极大化模型的三条约束分别乘 $7,1,3$ 后相加，得到 $g=15x_1+7x_2+3x_3\le7\cdot4+12+3\cdot20=100$。该上界由所得方案达到。这也解释了最终表中三个松弛判别数的含义：对转化后的极小化，它们分别是 $-7,-1,-3$。
+\EN{At the last tableau, every nonbasic criterion number is nonpositive. The basic solution attains an independent upper bound of $100$ for the original maximization problem.}
+
+\clearpage
+\subsection*{六、终点判读：无界、其他最优解、退化和反循环}
+\noindent\textit{教材第 2.2 节、第 3.1.4 节、第 3.3 节（第 66--73 页）。}
+\paragraph{无界：写出射线作为证据。}
+对当前可行基，若 $d_k>0$ 且 $y_k\le0$，取 $x_k=\theta\ge0$、其余非基变量为零。方向 $q$ 的基分量为 $-y_k$，第 $k$ 个分量为 $1$，其余为 $0$。于是 $Aq=0$、$q\ge0$、$cq=-d_k<0$。例如 $\min(-x_2)$，$x_1-x_2=1$，$x\ge0$：令 $(x_1,x_2)=(1,0)+\theta(1,1)$ 就使目标趋于 $-\infty$。对照 $\min x_2$ 使用同一可行域：目标有限，最优值为 $0$。可行域无界和目标无界必须分别判断。
+
+\paragraph{零判别数：先查有没有正长度的可行移动。}
+在最优表中，如果非基 $d_k=0$ 且 $\theta^*>0$，把 $x_k$ 从零升到 $\theta^*$ 会得到另一个最优点。若这一列没有正元素，可沿零代价射线得到多个最优点。例：$\min(-x_1-x_2)$，$x_1+x_2=2$，$x\ge0$。以 $x_1$ 作基，$d_2=0$、合法比值为 $2$，故 $(2-\theta,\theta)$ 在 $0\le\theta\le2$ 上全都最优。若最小比值恰为零，沿该列只能立即换基，不能据此宣称找到了不同最优点。若一个最优表的所有非基判别数都严格为负，则任何含正非基分量的可行解目标严格更大，当前最优解唯一。
+
+\paragraph{退化：换基、换点、改目标值是三件事。}
+例 $\min(-x_1)$，$x_1+s_1=0$，$x_1+s_2=1$，所有变量非负。以 $s_1,s_2$ 为基，$d_{x_1}=1$，两合法比值 $0,1$。$x_1$ 进基、$s_1$ 离基后，标准形式的解仍是 $(0,0,1)$（列序 $x_1,s_1,s_2$），目标仍是 $0$，但基改为 $(x_1,s_2)$。任意打破并列可能反复回到旧基，教材在第 3.3 节用循环例和扰动法说明如何处理。
+
+\paragraph{教材的扰动法：用字典序比较比值。}
+从初始基本可行表出发，教材将初始基本变量列排在前面，考虑符号扰动 $\bar b_i(\varepsilon)=\bar b_i+\sum_{j=1}^n y_{ij}\varepsilon^j$，$\varepsilon>0$ 充分小。实算中不必选 $\varepsilon$ 的数值。对主列 $k$ 中 $y_{ik}>0$ 的行，按以下向量从左到右比较，遇到首个不等项时取较小者：
+\[
+\left(\bar b_i/y_{ik},\ y_{i1}/y_{ik},\ldots,y_{in}/y_{ik}\right).
+\]
+第一项是通常比值，只有打平才读后面各项。比如两个候选为 $(2,1,0,\ldots)$ 与 $(2,0,1,\ldots)$，第二个更小。教材用符号扰动排除最小比值的并列，使扰动问题的进步能区分原问题中目标值相同的换基。
+\EN{Unboundedness requires an improving feasible ray. A zero criterion number can yield another optimum if a positive feasible move exists. Degeneracy alone does not imply multiple optima.}
+
+\clearpage
+\subsection*{七、两阶段法：人为造基，怎样切回原目标}
+\noindent\textit{教材第 3.2.1 节，第 50--52 页。后面原讲义保留了带混合约束的两阶段完整算例。}
+先使等式右端非负。原列中找不到合适的单位基列时，在相应行加入人工变量 $a_i\ge0$，最小化 $W=\sum a_i$。用人工列与已可用的原列组成第一阶段的基。目标行用 $W$ 的系数和第一阶段的 $c_B$ 计算，不能搬用原问题的判别数。
+\begin{itemize}
+\item $W_{\min}>0$：任何辅助问题可行解至少有一个人工变量大于零，原约束不可行。
+\item $W_{\min}=0$：因为人工变量非负，各人工变量必全部等于零。反过来，有原可行解时把所有人工变量取零就能产生 $W=0$，因此这是判断可行性的充要条件。
+\item 若某个人工变量仍在基中且右端为零，不能直接删掉该列就开第二阶段。先找这一行中有非零系数的\emph{非人工非基列}换进来。主元可以为负，因为此行右端是零，消去不改变其他行的右端。若没有这种列，令人工变量全为零后该行只剩 $0=0$，删掉冗余行。
+\item 清理后删去人工列，保留其余变换过的约束行。恢复原 $c_j$，用 $d_j=c_By_j-c_j$ 和 $f_0=c_B\bar b$ 重算目标行，再按原始单纯形法继续。
+\end{itemize}
+\paragraph{一个负主元清理。}
+原约束 $x_1=1$、$x_1-x_2=1$。加人工变量得 $x_1+a_1=1$、$x_1-x_2+a_2=1$。最小化 $W=a_1+a_2$，第一步 $x_1$ 进基，两个比值都是 1，此处选 $a_1$ 离基，得到：
+\[
+\begin{array}{c|rrrr|r}
+ &x_1&x_2&a_1&a_2&\bar b\\\hline
+ x_1&1&0&1&0&1\\
+ a_2&0&-1&-1&1&0\\\hline
+ W&0&-1&-2&0&0
+\end{array}
+\]
+$W=0$，但 $a_2$ 在基中。用第二行 $x_2$ 处的 $-1$ 作主元，得到 $x_2+a_1-a_2=0$。删人工列得 $x_1=1,x_2=0$，原问题的基为 $(x_1,x_2)$。如果原第二行改成 $2x_1=2$，第一轮相消得到 $a_2-2a_1=0$，删人工列时删掉这条冗余行。
+\paragraph{什么情况第一阶段会停在正值？}
+$x=2$ 与 $x+s=1$ 不可能同时成立。加 $a$ 后有 $x+a=2$ 以及 $x+s=1$，初始基 $(a,s)$。令 $x$ 进基时比值是 $2,1$，所以 $s$ 离基，得 $x=1,a=1$。此后 $a=1+s\ge1$，即 $W_{\min}=1$；结论是原约束不可行，没有第二阶段。
+\EN{A zero Phase I optimum proves feasibility. Remove zero-valued basic artificial variables by pivoting or by deleting redundant rows before rebuilding the original objective row.}
+
+\clearpage
+\subsection*{八、对偶单纯形法：旧最优表右端变负时怎样算}
+\noindent\textit{教材第 4.2 节，第 133--136 页。仍用 $\min f=cx$ 和底行 $d=z-c$。}
+普通单纯形法从 $\bar b\ge0$ 出发，逐轮寻求 $d\le0$。对偶单纯形法从 $d\le0$ 出发，逐轮保持这个符号，直到右端也非负。
+\begin{enumerate}
+\item 若所有 $\bar b_i\ge0$，已有最优基本可行解。否则选一条 $\bar b_r<0$ 的行，让这行基变量离基。
+\item 只对这一行 $y_{rj}<0$ 的非基列计算 $d_j/y_{rj}$，取最小比值的列 $k$ 进基。若该行没有负元素，则行方程的左端是非负变量的非负组合，却等于负数，原问题不可行。
+\item 在 $y_{rk}<0$ 上主元消去，照常更新所有行。第 $r$ 行的新右端 $\bar b_r/y_{rk}>0$；其他行右端仍需重新检查。
+\end{enumerate}
+\paragraph{为什么这个比值保住对偶可行？}
+新底行 $d'_j=d_j-(d_k/y_{rk})y_{rj}$。因 $d_k/y_{rk}\ge0$，当 $y_{rj}\ge0$ 时 $d'_j\le d_j\le0$。若 $y_{rj}<0$，由最小比值 $d_k/y_{rk}\le d_j/y_{rj}$，乘负数得到 $(d_k/y_{rk})y_{rj}\ge d_j$，仍有 $d'_j\le0$。
+
+\paragraph{旧工厂模型：把第一种资源从 $4$ 改为 $1$。}
+将原利润 $3x_1+2x_2$ 取负，旧最优基为 $(x_1,x_2)$。改 $b$ 只变右端和 $f_0$，不变判别数。新表及消元后表为：
+\[
+\begin{array}{c|r|rrrr|r}
+\text{基变量}&c_B&x_1&x_2&s_1&s_2&\bar b\\\hline
+x_1&-3&1&0&\frac{2}{3}&-\frac{1}{3}&-\frac{2}{3}\\
+x_2&-2&0&1&-\frac{1}{3}&\frac{2}{3}&\frac{7}{3}\\
+\hline
+f&&0&0&-\frac{4}{3}&-\frac{1}{3}&-\frac{8}{3}
+\end{array}
+\]
+第一行右端为负。该行只有 $s_2$ 列系数为负。于是 $x_1$ 离基，$s_2$ 进基，主元为 $-1/3$。比值是 $1$。把第一行乘 $-3$，第二行减去新第一行的 $2/3$，底行加上新第一行的 $1/3$：
+\[
+\begin{array}{c|r|rrrr|r}
+\text{基变量}&c_B&x_1&x_2&s_1&s_2&\bar b\\\hline
+s_2&0&-3&0&-2&1&2\\
+x_2&-2&2&1&1&0&1\\
+\hline
+f&&-1&0&-2&0&-2
+\end{array}
+\]
+令非基 $x_1=s_1=0$，得 $x_2=1,s_2=2$，故原利润为 $2$。直接检验：$3x_1+2x_2\le2(2x_1+x_2)\le2$，所以 $2$ 确为最优值。
+\EN{Dual simplex keeps dual feasibility and repairs primal feasibility. Choose a row with negative right-hand side before choosing the entering column.}
+\clearpage
+\subsection*{两种进一步的表法：大 $M$ 法与修正单纯形法}
+\noindent\textit{教材第 3.2.2、3.4.1 节。两者解决的问题不同：前者处理人工变量，后者改变每轮计算和存储的方式。}
+\paragraph{大 $M$ 法怎样填表？}
+在极小化中，把原目标和人工变量惩罚写在同一行，$F=cx+M\sum_i a_i$。$M$ 是形式上的充分大的正量。先把每个目标系数写成 $\alpha M+\beta$，按表身 $d_j=c_By_j-c_j$ 计算底行。比较两项时先比 $M$ 的系数 $\alpha$，相同才比常数 $\beta$。主列、比值和行消去照原始单纯形法做，比值仍由约束行计算。实际手算用系数对，避免随意取一个巨大浮点数。
+在标准人为问题 $x_1+a_1=1,\ x_1-x_2+a_2=1$ 中，若原目标为 $\min(2x_1+x_2)$，初始人工基成本为 $(M,M)$。于是
+\[
+ d_{x_1}=2M-2,\qquad d_{x_2}=-M-1,\qquad F_0=2M.
+\]
+$2M-2$ 的首项为正，故 $x_1$ 进基；两个最小比值均为 $1$，取第一行离基。更新目标后 $F_0=2$，人工量为零。此时零值人工变量占基的处理仍按前文用非人工列换出或删冗余行。若完成优化时人工变量仍有正值，则原约束不可行。形式上先最小化人工变量和，再在人工和为零时比较原目标，这正是与两阶段法的联系。
+\paragraph{修正单纯形法怎样做同一次迭代？}
+教材用现行基的逆及原数据，而不必存储整张变换表。给定基 $B$ 和其成本 $c_B$：
+\begin{enumerate}
+\item 求 $B\bar b=b$ 与 $wB=c_B$，用 $d_j=wp_j-c_j$ 筛选主列 $k$。
+\item 只对选中的主列解 $By_k=p_k$。对 $y_{ik}>0$ 求比值，确定第 $r$ 行离基。
+\item 用 $p_k$ 替换 $B$ 的第 $r$ 列。若 $E$ 是将 $I$ 的第 $r$ 列替换为 $y_k$ 所得矩阵，则 $B_{\rm new}=BE$，所以 $B_{\rm new}^{-1}=E^{-1}B^{-1}$。$E^{-1}$ 的作用就是把主元化一，再把主列其他元素消成零。下一次用新基重算。
+\end{enumerate}
+在三轮例的第二轮，$B=(p_{x_1},p_{s_2},p_{s_3})$。解基方程得到 $\bar b=(4,4,12)^{\mathsf T}$，$w=(-15,0,0)$，于是 $d_{x_2}=7$。只解 $By_{x_2}=p_{x_2}$ 得 $y_{x_2}=(0,1,2)^{\mathsf T}$。比值写“跳过、4、6”，与完整表完全一致。计算机中可维护基的分解来解这些系统，不需要每轮显式计算逆矩阵。
+\EN{Big-M changes the artificial-variable objective. Revised simplex performs the same basis selection as tableau simplex but computes the data it needs from the current basis.}
+\clearpage
 
 \section{线性规划模型与约束 | Linear-programming models and constraints}
 \noindent 教材第 2.1 节用 $\min cx,\ Ax=b,\ x\ge0$ 作为标准形式。生产模型常写成以下极大化不等式形式。
@@ -99,7 +504,7 @@ d_j=z_j-c_j=wp_j-c_j=\sum_i c_{B_i}y_{ij}-c_j .
 \item \textbf{做主元消去。} 主行整行除以主元，得到 $R_r^{\rm new}$。其余约束行及目标行都减去各自旧主列元素乘 $R_r^{\rm new}$，右端一起更新。把主行标签改成进基变量，再更新旁边的 $c_B$。目标行右端因此变为 $f_0-d_k\theta^*$。
 \item \textbf{核对后继续。} 新基变量列仍构成单位阵，约束行右端仍非负，基变量判别数仍为零。可用新 $c_B$ 重新算一列判别数和目标值。回到第 1 步，满足最优判据时将非基变量置零，按右端读基变量和目标值。
 \end{enumerate}
-若有基变量为零，当前基本可行解退化。最小比值为零时，此轮换了基但目标值不变。退化可能导致循环，可按 Bland 规则在合格的进基变量中取下标最小者，在最小比值并列的离基变量中也取下标最小者。
+若有基变量为零，当前基本可行解退化。最小比值为零时，此轮换了基但目标值不变。退化可能导致循环。教材的扰动法与字典序比值见手算专章。Bland 规则是另一种反循环规则：在合格的进基变量中取下标最小者，在最小比值并列的离基变量中也取下标最小者。
 \EN{For minimization choose the largest positive criterion number. For maximization choose the most negative one. Only positive entries in the pivot column give ratio bounds. Divide the pivot row by the pivot and eliminate the pivot column from every other row, including the objective row.}
 
 \subsection{用工厂模型走完两轮 | Two pivots with the factory model}
@@ -354,6 +759,7 @@ x_1=\frac{4+2(-1)}3=\frac23,\qquad x_2=\frac{4-(-1)}3=\frac53,
 \]
 这仍在 $-2\le\Delta\le4$ 的允许范围内，所以原基仍可用。若 $\Delta=5$，则 $x_2=(4-5)/3<0$，原基失去可行性，需要重新求解。}{If the first resource decreases by one, the same basis remains feasible and gives the displayed solution and profit. If the change is five, the second basic variable becomes negative, so the old basis is no longer feasible and the modified problem needs to be solved again.}
 
+\clearpage
 \section{口试作答结构 | Oral response structure}
 \subsection{优化问题的口述模板 | A reliable oral structure}
 \noindent 面试时可以按五步说：第一，说明决策变量和实际含义；第二，写目标函数并解释最大化还是最小化；第三，说明每条约束和非负条件；第四，指出可行域、顶点或基可行解；第五，再选择单纯形法、对偶或灵敏度分析，并明确假设。若考官追问公式，先说符号含义，再写式子，最后解释式子如何用于当前例子。
@@ -366,9 +772,191 @@ x_1=\frac{4+2(-1)}3=\frac23,\qquad x_2=\frac{4-(-1)}3=\frac53,
 \ASK{改变资源数量和改变利润系数有什么区别？}{What is the difference between changing a resource and changing a profit coefficient?}{改变右端项 $b$ 首先影响基解的可行性；改变目标系数 $c$ 首先影响判别数和对偶可行性。一个变化可能只改变最优值，也可能迫使最优基改变。}{Changing the right-hand side first affects primal feasibility. Changing an objective coefficient first affects reduced costs and dual feasibility. Either change may eventually require a new optimal basis.}
 \ASK{如何用一句话解释对偶？}{How would you explain duality in one sentence?}{原问题直接选择方案获得利润，对偶问题给资源定价并寻找所有利润的最小上界；在线性规划满足有限最优条件时，这个上界正好等于最大利润。}{The primal chooses activities to obtain profit, while the dual prices resources and finds the smallest valid upper bound on that profit; under finite optimality, the bound equals the maximum profit.}
 
+\clearpage
+\section*{对偶、灵敏度与非线性最优性补充}
+\label{opt:theory}
+\pdfbookmark[0]{对偶、灵敏度与非线性最优性补充}{opt-theory}
+\subsection*{九、对偶是怎样从标准形式推出的？}
+\noindent\textit{教材第 4.1 节，第 122--132 页。统一用极小化方向。}
+对 $\min cx$，$Ax=b$、$x\ge0$，任取行向量 $w$ 满足 $wA\le c$。因为 $x\ge0$，
+\[
+ wb=wAx\le cx.
+\]
+所以对偶在所有这类下界里求最大值：
+\[
+ \max wb,\qquad wA\le c,\quad w\text{ 的各分量不限定符号}.
+\]
+右端来自等式，乘等式的权重可正可负。如果极小化的约束直接写成 $Ax\ge b$，那么 $w\ge0$ 才能保证 $wAx\ge wb$，同理可推出下界。这个推导同时说明了不等号与变量符号的来源。
+
+\paragraph{弱对偶、强对偶和互补松弛。}
+弱对偶只需一对可行解，便有 $cx\ge wb$。若一对可行解满足等号，两者都最优，这是可手算核验的证书。强对偶说明线性规划若有有限最优解，对偶也有最优解且最优值相等。对该标准形式，
+\[
+ cx-wb=(c-wA)x=\sum_j(c_j-wp_j)x_j .
+\]
+每一项非负。因此在双方可行的前提下，差为零等价于每项乘积为零。由此读出：若 $x_j>0$，对应的对偶约束必等号成立；若 $c_j-wp_j>0$，则 $x_j=0$。反向不能机械推出：等号可以与 $x_j=0$ 同时成立。
+
+\paragraph{最优单纯形表为什么已经含有对偶解？}
+若 $B^{-1}b\ge0$ 且 $d\le0$，取 $w=c_BB^{-1}$。因 $d_j=wp_j-c_j$，有 $wA\le c$。当前 $x_N=0$ 且 $cx=c_BB^{-1}b=wb$。这正是一对原、对偶的最优性证书。对无界情形，原问题若存在改善可行射线，弱对偶立即排除对偶可行；但只知对偶不可行，还不够断定原问题无界，因为原问题也可能不可行。
+
+\paragraph{用 Farkas 证书说明“可行域为空”。}
+对 $x_1+x_2=1$、$x_1+x_2+x_3=0$、$x\ge0$，取行向量 $y=(-1,1)$，则 $yA=(0,0,1)\ge0$，但 $yb=-1$。若有可行解，左乘后会得到 $x_3=-1$，矛盾。这类证书核验的是约束本身，不涉及原目标值。
+\EN{For the minimization standard form, $wA\le c$ gives the lower bound $wb$. The objective gap is a sum of nonnegative products. At an optimal basis, $w=c_BB^{-1}$ makes the gap zero.}
+
+\clearpage
+\subsection*{十、灵敏度：哪些数据变，表上哪一块要重算？}
+\noindent\textit{教材第 4.4 节，第 149--156 页。以下均按极小化。}
+\[
+\text{当前基仍最优的检查：}\qquad B^{-1}b\ge0,qquad c_BB^{-1}p_j-c_j\le0\quad (j\in J_N).
+\]
+\begin{enumerate}
+\item \textbf{只变右端 $b$。} 列与成本不变，判别数保持原值。逐行解 $B^{-1}(b+\Delta b)\ge0$ 得允许区间。区间内精确有 $\Delta f=w\Delta b$；越界后仍可保持对偶可行，适合从旧表做对偶单纯形。边界上可能出现零基本变量。
+\item \textbf{只变非基成本 $c_j$。} $B^{-1}b$、$w$ 不变，只更新 $d_j-\Delta c_j$。它变成正数时，当前表不再满足极小化最优判据，但若发生退化，不能只据此断言当前点已经不是最优点。
+\item \textbf{只变基成本 $c_{B_i}$。} 表身与右端不变。若增量为 $t$，则 $d'_j=d_j+t\,y_{ij}$，$f'_0=f_0+t\bar b_i$。对所有非基列列出 $d'_j\le0$ 并求交集。
+\item \textbf{新增一个变量或替换非基列。} 若基不变，对新列 $p$ 与成本 $c_{\rm new}$ 只算 $y=B^{-1}p$ 及 $d=c_By-c_{\rm new}=wp-c_{\rm new}$。若 $d\le0$，令新变量为零，原最优基仍最优。若改的是基列，原来的 $B^{-1}$ 不再适用，需要验新基非奇异，并重算可行性与判别数。
+\end{enumerate}
+\paragraph{三轮例题：改变第三个产品的原利润。}
+令原利润系数由 $3$ 变为 $3+t$。在极小化表中基成本 $c_{x_3}$ 改了 $-t$。最终表的第三行在 $(s_1,s_2,s_3)$ 上是 $(2,-2,1)$，所以新判别数为
+\[
+ -7-2t,\qquad -1+2t,\qquad -3-t .
+\]
+同时非正要求 $t\ge-7/2$、$t\le 1/2$、$t\ge-3$，交集为 $[-3,1/2]$。区间内产量仍可取 $(4,4,4)$，利润变为 $100+4t$。两端都应代入检查，至少有一个不等式取等。
+
+\paragraph{同一例题：增加一种产品。}
+若新产品消耗资源列 $p=(1,0,1)^{\mathsf T}$，利润为 $\pi$，原极大化的影子价格为 $(7,1,3)$，原资源价格给该列的估价为 $10$。转成极小化后 $w=(-7,-1,-3)$、成本 $-\pi$，故 $d_{\rm new}=\pi-10$。若 $\pi\le10$，把新变量置零仍有最优基。若 $\pi>10$，还需看主列并确定可行步长，再进行优化。
+\EN{Changing the right-hand side tests primal feasibility. Changing costs tests the criterion numbers. A new column can be priced without rebuilding the basis.}
+
+\clearpage
+\subsection*{十一、凸性与最优性条件：从线性规划过渡到凸规划}
+\noindent\textit{教材第 1.4、7.1--7.2 节；对照第二讲主理队 1《凸规划》PPT，幻灯片 3、9--17。}
+\paragraph{定义与判别。}
+集合 $S$ 为凸集，是指任取 $x,y\in S$、$0\le\lambda\le1$，凸组合 $(1-\lambda)x+\lambda y$ 都属于 $S$。定义在凸集上的函数 $f$ 为凸函数，是指
+\[
+f((1-\lambda)x+\lambda y)\le(1-\lambda)f(x)+\lambda f(y).
+\]
+若对 $x\ne y$、$0<\lambda<1$ 总为严格不等式，称为严格凸。若 $f$ 在开凸集可微，等价的一阶判别是
+\[
+ f(y)\ge f(x)+\nabla f(x)^{\mathsf T}(y-x)\quad\text{对所有 }x,y.
+\]
+可由凸函数定义对 $\lambda\downarrow0$ 取极限得到必要性；反向把这个不等式分别用于从凸组合点到两端点，再按原权重相加。若 $f$ 二阶连续可微，凸性等价于处处 $\nabla^2 f\succeq0$。处处正定足以推出严格凸，严格凸并不要求处处正定，例如 $x^4$ 在 $0$ 的二阶导数为零。
+
+\paragraph{为什么凸规划的局部最优就是全局最优？}
+在凸可行集 $S$ 上最小化凸函数。若局部最优点 $\bar x$ 外另有可行点 $y$ 满足 $f(y)<f(\bar x)$，它们线段上任意靠近 $\bar x$ 的点 $\bar x+\lambda(y-\bar x)$ 也可行，且由凸性目标更小，矛盾。若 $f$ 严格凸，有最优解时必唯一，否则两个不同最优点的中点更优。凸性本身不保证最优解存在。
+
+\paragraph{无约束极值的一阶、二阶条件。}
+对内点 $\bar x$，可微函数的局部极小要求 $\nabla f(\bar x)=0$。若梯度非零，$-\nabla f(\bar x)$ 是下降方向。若函数二阶连续可微，局部极小还要求 $\nabla^2f(\bar x)\succeq0$。反过来，平稳点加正定 Hessian 给出严格局部极小；仅在平稳点 Hessian 半正定不能单独作结论，例如 $x^3$ 在 $0$ 的一、二阶导数都为零，但 $0$ 不是极值。若已知 $f$ 为凸函数，则平稳点由一阶凸性不等式即可判为全局极小。
+
+\paragraph{可行方向与最优性的读法。}
+在凸可行集上，已知 $f$ 可微且凸时，检验
+\[
+\nabla f(\bar x)^{\mathsf T}(x-\bar x)\ge0\quad\text{对任意 }x\in S
+\]
+就可证明全局最优。它也是可微函数在凸集上局部最优的必要条件：从 $\bar x$ 向任意可行点沿线段走，单侧方向导数不能为负。在线性规划中，目标的方向导数就是 $cq$，单纯形法的判别数正是对某些候选可行方向的这个量的相反数。
+\EN{For a convex minimization problem, every local optimum is global. Strict convexity implies uniqueness if an optimum exists. At a constrained optimum, the gradient need not vanish.}
+
+\clearpage
+\subsection*{十二、约束最优性：按教材符号写 K--T 条件}
+\noindent\textit{教材第 7.2 节，尤其是第 216、220--222 页。K--T 条件也称 KKT 条件。}
+教材写成 $\min f(x)$，$g_i(x)\ge0$，$h_j(x)=0$。在可行点 $\bar x$，满足 $g_i(\bar x)=0$ 的是不等式\textbf{起作用约束}，其余不等式不在该点限制局部的一阶移动。若起作用的不等式约束梯度与所有等式约束梯度线性无关，则该点是教材所称的正则点。在相应可微性条件下，正则局部最优点必须满足以下条件。取
+\[
+ L(x,w,v)=f(x)-\sum_i w_i g_i(x)-\sum_j v_j h_j(x).
+\]
+\begin{enumerate}
+\item \textbf{原可行性：}$g_i(\bar x)\ge0$，$h_j(\bar x)=0$。
+\item \textbf{乘子符号：}$w_i\ge0$；等式乘子 $v_j$ 不限符号。
+\item \textbf{驻点方程：}$\nabla_x L(\bar x,w,v)=0$。
+\item \textbf{互补松弛：}$w_i g_i(\bar x)=0$。不起作用约束的乘子为零；起作用约束的乘子也可能为零。
+\end{enumerate}
+
+\paragraph{什么时候可以从“满足 K--T”推出“全局最优”？}
+若 $f$ 凸、各 $g_i$ 凹、各 $h_j$ 仿射，则在 $w\ge0$ 时 $L(\cdot,w,v)$ 为凸函数。驻点方程给出 $L(x,w,v)\ge L(\bar x,w,v)$。对可行 $x$，有 $f(x)\ge L(x,w,v)$；在 $\bar x$ 处，由互补松弛与等式可行性有 $L(\bar x,w,v)=f(\bar x)$。因此 $f(x)\ge f(\bar x)$。非凸时不能照搬这个充分性结论。
+
+\paragraph{例题：怎样写起作用约束并解乘子？}
+求 $\min (x_1-2)^2+(x_2-1)^2$，约束 $g_1=x_1\ge0$、$g_2=x_2\ge0$、$g_3=2-x_1-x_2\ge0$。无约束极小点 $(2,1)$ 不可行。试 $g_3=0$ 且 $x_1,x_2>0$，由互补松弛先置 $w_1=w_2=0$。驻点方程为
+\[
+2(x_1-2)+w_3=0,\qquad 2(x_2-1)+w_3=0.
+\]
+两式相加并用 $x_1+x_2=2$ 得 $w_3=1$、$(x_1,x_2)=(3/2,1/2)$。核验它可行，$w_3\ge0$ 且 $w_3g_3=0$。目标严格凸，约束仿射，由上述充分条件得唯一全局最优解，目标值 $1/2$。
+\EN{With inequalities written as $g_i\ge0$, the textbook subtracts $w_i g_i$ in the Lagrangian and requires $w_i\ge0$. Convexity makes these conditions sufficient for global optimality.}
+
+\clearpage
+\subsection*{十三、无约束算法：最速下降法与牛顿法}
+\noindent\textit{教材第 9.1 节及第 10.1--10.2 节，第 254--255、281--288 页。}
+\paragraph{一般迭代格式。}
+给定当前点 $x^{(k)}$，先找下降方向 $d_k$（满足 $\nabla f(x^{(k)})^{\mathsf T}d_k<0$），再沿该方向确定步长 $\alpha_k>0$，更新 $x^{(k+1)}=x^{(k)}+\alpha_k d_k$。准确一维搜索是在半直线上选使 $f(x^{(k)}+\alpha d_k)$ 最小的步长；实际也可只要求适当下降。方向与步长是两个不同的选择。
+
+\paragraph{最速下降法。}
+在欧氏范数下，在 $\|d\|\le1$ 里最小化一阶变化量 $\nabla f(x)^{\mathsf T}d$，由 Cauchy--Schwarz 不等式，梯度非零时取 $d=-\nabla f(x)/\|\nabla f(x)\|$。把缩放吸收到步长中，通常直接用 $d_k=-\nabla f(x^{(k)})$。对正定二次函数 $f(x)=\tfrac12x^{\mathsf T}Qx-b^{\mathsf T}x$，$g=Qx-b$，沿 $-g$ 的目标为 $f(x)-\alpha g^{\mathsf T}g+\tfrac12\alpha^2 g^{\mathsf T}Qg$，故准确步长
+\[
+ \alpha=\frac{g^{\mathsf T}g}{g^{\mathsf T}Qg}\quad(g\ne0).
+\]
+\paragraph{牛顿法。}
+对当前点的二阶近似取驻点，得 $H_k d_k=-g_k$，其中 $H_k=\nabla^2f(x^{(k)})$。经典更新取 $\alpha_k=1$。若 $H_k\succ0$ 且 $g_k\ne0$，则 $g_k^{\mathsf T}d_k=-g_k^{\mathsf T}H_k^{-1}g_k<0$。Hessian 不正定时，解得的方向未必下降；非二次函数的单位步也未必合适。牛顿法的局部快速收敛有正则性和初值邻近等前提。
+
+\paragraph{同一个二次函数，手算两种方法的第一步。}
+设 $f(x)=\tfrac12(x_1^2+4x_2^2)$，$x^{(0)}=(2,1)^{\mathsf T}$。则 $g=(2,4)^{\mathsf T}$，$Q=\operatorname{diag}(1,4)$。
+\begin{itemize}
+\item 最速下降：$g^{\mathsf T}g=20$，$g^{\mathsf T}Qg=68$，故 $\alpha=5/17$，$x^{(1)}=(24/17,-3/17)^{\mathsf T}$。核验新梯度 $g_1=(24/17,-12/17)^{\mathsf T}$ 与旧梯度内积为零，这是该次一维精确搜索的驻点条件。
+\item 牛顿：解 $Qd=-g$，得 $d=(-2,-1)^{\mathsf T}$，一步到 $x^{(1)}=(0,0)^{\mathsf T}$。因为这里目标本身就是正定二次型，二阶近似恰等于原函数。
+\end{itemize}
+\EN{Steepest descent uses the negative gradient in the Euclidean norm. Newton's direction is computed from a linear system involving the Hessian.}
+
+\clearpage
+\subsection*{进阶方法：一维搜索、共轭梯度与拟牛顿}
+\noindent\textit{教材第 9.2.1、10.3、10.4.1 节。下列方法分别处理步长、搜索方向、曲率近似。}
+\paragraph{黄金分割法（0.618 法）：已知含极小点的单峰区间。}
+令 $\tau=(\sqrt5-1)/2$，在 $[a,b]$ 中取 $u=b-\tau(b-a)$、$v=a+\tau(b-a)$。若 $\phi(u)>\phi(v)$，丢掉 $[a,u)$；若 $\phi(u)<\phi(v)$，丢掉 $(v,b]$。严格单峰时两值相等可保留 $[u,v]$。通常删除一侧后区间长度缩成原来的 $\tau$，旧试点之一按同一比例留在新区间，只需新算一个值。迭代到区间长度小于给定容差，再用中点作为近似步长。它不需要导数，但需要合适的单峰包围区间。
+取 $\phi(\alpha)=(\alpha-1)^2$ 和 $[0,3]$，第一对试点约为 $1.146,1.854$。前者函数值小，保留 $[0,1.854]$，其中旧左试点 $1.146$ 成为新右试点。极小点 $1$ 仍在区间里。
+
+\paragraph{共轭梯度法：二次型上保持方向的共轭性。}
+对 $f=\tfrac12x^{\mathsf T}Qx-b^{\mathsf T}x$，$Q$ 对称正定，称不同方向 $d_i,d_j$ 关于 $Q$ 共轭，若 $d_i^{\mathsf T}Qd_j=0$。它不是通常的欧氏正交。取 $g_k=Qx_k-b$、$d_0=-g_0$，每轮先用准确线搜索
+\[
+  \alpha_k=-\frac{g_k^{\mathsf T}d_k}{d_k^{\mathsf T}Qd_k},\qquad x_{k+1}=x_k+\alpha_kd_k .
+\]
+若新梯度非零，令 $d_{k+1}=-g_{k+1}+\beta_kd_k$，使 $d_{k+1}^{\mathsf T}Qd_k=0$，即
+$\beta_k=d_k^{\mathsf T}Qg_{k+1}/(d_k^{\mathsf T}Qd_k)$。在标准正定二次问题以及准确线搜索下，FR 形式可用 $\beta_k=\|g_{k+1}\|^2/\|g_k\|^2$。有了非零共轭方向，一次沿新方向移动不会破坏以前方向上的驻点条件。准确算术中最多 $n$ 步完成，非二次或浮点条件下不能直接引用这个步数结论。
+
+\paragraph{拟牛顿法：不用每轮求真实 Hessian。}
+以 $G_k$ 近似 Hessian 的逆，用 $d_k=-G_k g_k$ 选方向，做线搜索，令 $s_k=x_{k+1}-x_k$、$y_k=g_{k+1}-g_k$。拟牛顿条件为 $G_{k+1}y_k=s_k$，来源是局部关系 $y_k\approx\nabla^2 f(x_{k+1})s_k$。例如 $s_k^{\mathsf T}y_k>0$ 时取 $\rho=1/(s_k^{\mathsf T}y_k)$，逆 BFGS 更新为
+\[
+ G_{k+1}=(I-\rho s_k y_k^{\mathsf T})G_k(I-\rho y_k s_k^{\mathsf T})
+              +\rho s_k s_k^{\mathsf T}.
+\]
+把 $y_k$ 代入可直接核对拟牛顿条件。若 $G_k$ 正定且曲率条件成立，新矩阵也正定，下一轮仍可产生下降方向。它保存的是由过去步长和梯度差积累的曲率信息，和只用当前梯度的最速下降不同。
+\EN{Golden-section search reduces a unimodal interval. Conjugate gradient controls the relation between directions. Quasi-Newton methods update an approximate inverse Hessian.}
+\clearpage
+\subsection*{十四、APS 自测与自测答案}
+\noindent 先遮住下半页。每道题写出判断依据，不能只报答案。
+\begin{enumerate}
+\item \textbf{极小化表。} $\min(-3x_1-2x_2)$，$x_1+x_2+s_1=3$，$2x_1+x_2+s_2=4$，所有变量非负。以 $(s_1,s_2)$ 为基，写初表，做第一轮，再继续到最优。
+\item \textbf{比值与无界。} 当前基可行，某非基列为 $(0,-2)^{\mathsf T}$，它的判别数是 $1$。是否需要换基？若同一列的判别数改为 $0$，可以得到什么结论？
+\item \textbf{第一阶段。} 为什么 $W=0$ 后有时要用负主元？为什么不带原目标行直接从第一阶段继续做？
+\item \textbf{凸性。} 求 $\min x^2$，$x\ge1$。用教材 $g(x)\ge0$ 的 K--T 记号写出乘子，说明是否全局最优。
+\item \textbf{口试。} 用英文解释正的判别数与最小比值的分工。再说明退化时哪一句必须加上条件。
+\end{enumerate}
+
+\subsubsection*{自测答案}
+\begin{enumerate}
+\item 以 $(x_1,x_2,s_1,s_2\mid\bar b)$ 排列，约束行初始为 $(1,1,1,0\mid3)$、$(2,1,0,1\mid4)$，目标行 $(3,2,0,0\mid0)$。$x_1$ 进基，比值 $3,2$，$s_2$ 离基。消元得
+\[
+\begin{array}{c|r|rrrr|r}
+\text{基变量}&c_B&x_1&x_2&s_1&s_2&\bar b\\\hline
+s_1&0&0&\frac{1}{2}&1&-\frac{1}{2}&1\\
+x_1&-3&1&\frac{1}{2}&0&\frac{1}{2}&2\\
+\hline
+f&&0&\frac{1}{2}&0&-\frac{3}{2}&-6
+\end{array}
+\]
+现在 $x_2$ 进基，比值 $1/(1/2)=2$ 与 $2/(1/2)=4$，$s_1$ 离基。最终两行右端分别是 $x_2=2$、$x_1=1$；底行在 $(s_1,s_2)$ 上为 $(-1,-1)$，故目标最小值 $-7$。代回原约束，两条都取等。
+\item 对 $d=1$，无一个合法主行，而且目标沿射线严格下降，因此是目标无界，不必也不能靠此列换基。对 $d=0$ 有一条零代价可行射线；只有当前点已最优，才能说射线上的点也是最优。
+\item 零值人工变量可能仍占基列，其行右端为零，允许用非零原列换入，主元为负仍保持所有右端不变。第一阶段目标是人工变量和，第二阶段必须恢复原成本并以当前基重填目标行。
+\item $g(x)=x-1$，$L(x,w)=x^2-w(x-1)$，解得 $x=1,w=2$，满足可行性、驻点、符号与互补松弛。目标严格凸，约束仿射，得到唯一全局最优，值为 $1$。
+\item \textit{In a minimization tableau, a positive criterion number selects a candidate entering variable. The minimum ratio determines the largest step that preserves nonnegativity. The objective strictly decreases only when that step is positive.}
+\end{enumerate}
+\clearpage
+
 \section*{来源与范围 | Source and scope}
-单纯形表依据陈宝林《最优化理论与算法》（第 2 版）第 3.1.1、3.1.2、3.1.4 节，沿用判别数 $z_j-c_j$ 和主元消去的写法。两阶段法依据第 3.2.1 节。两道手算保留讲义原模型，用教材的表格规则重算。对偶及灵敏度分析参照第 4 章与课程讲义。
-\EN{The tableau uses the notation of Chen, Sections 3.1.1, 3.1.2 and 3.1.4. The two-phase method follows Section 3.2.1. The two worked models from the review are recalculated using the textbook's tableau convention.}
+单纯形表依据陈宝林《最优化理论与算法》（第 2 版）第 3.1.1、3.1.2、3.1.4 节，沿用判别数 $z_j-c_j$ 和主元消去的写法。两阶段法依据第 3.2.1 节。原有两道手算保留，新加三轮表法、退化、第一阶段清理和对偶单纯形演练。对偶及灵敏度分析参照第 4 章。凸性参照第 1.4 节及第二讲《凸规划》课件，非线性最优性条件和算法参照第 7、9、10 章。
+\EN{The tableau uses the notation of Chen, Sections 3.1.1, 3.1.2 and 3.1.4. The two-phase method follows Section 3.2.1. The original worked problems are retained. The expanded notes add tableau practice, dual simplex, sensitivity analysis, convexity, KKT conditions, and elementary unconstrained methods.}
 \section*{参考文献 | References}
 \begin{enumerate}[label={[\arabic*]},leftmargin=2.4em]
 \item 陈宝林. \textit{最优化理论与算法}（第 2 版）. 北京: 清华大学出版社. 第 3 章“单纯形方法”、第 4 章“对偶原理及灵敏度分析”. [Chen Bao-Lin, \textit{Optimization Theory and Algorithms}, 2nd ed., Tsinghua University Press, Chapters 3--4.]
