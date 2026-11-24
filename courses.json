@@ -132,7 +132,7 @@
     "group": "analysis",
     "groupLabel": "分析",
     "scope": "Evans《Partial Differential Equations》第 2–4 章",
-    "pages": 47,
+    "pages": 46,
     "summary": "按 Evans 第 2–4 章的框架整理：先讲二阶方程分类与 Hadamard 适定性；再依次展开输运、位势（基本解、平均值公式、极值原理、Green 函数与 Poisson 公式）、热（热核、极值原理、能量法、向后唯一性）、波动（d'Alembert、球面平均、Kirchhoff 与 Poisson 公式、Huygens 原理）；随后讲一阶非线性方程（完全积分与包络、特征方法、Hopf–Lax、守恒律与熵条件、Burgers 激波）；最后讲解的表示（分离变量、相似解、Fourier/Laplace 变换、Hopf–Cole 与图变换、渐近方法、幂级数法与 Cauchy–Kovalevskaya）。每个对象都有完整定义，配算例、应用与口试问答。",
     "pdf": "materials/partial-differential-equations/partial-differential-equations-aps.pdf",
     "tex": "materials/partial-differential-equations/source.tex",
