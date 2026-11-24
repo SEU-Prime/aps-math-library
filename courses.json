@@ -14,32 +14,18 @@
     "keywords": "群 环 模 子群 拉格朗日定理 同态 理想 商环 自由模"
   },
   {
-    "id": "higher-algebra-1",
-    "title": "高等代数（一）",
-    "subtitle": "Higher Algebra I",
+    "id": "higher-algebra",
+    "title": "高等代数",
+    "subtitle": "Advanced Algebra",
     "group": "algebra",
     "groupLabel": "代数与拓扑",
-    "scope": "第 1–5 章",
-    "pages": 27,
-    "summary": "第 1–5 章：多项式（带余除法、Euclid 算法、Bézout 等式、不可约与重因式）、行列式与 Cramer 法则、线性方程组与秩、矩阵与初等变换、二次型与惯性定理；配完整算例、应用与中英术语表。",
-    "pdf": "materials/higher-algebra-1/higher-algebra-1-aps.pdf",
-    "tex": "materials/higher-algebra-1/source.tex",
-    "cover": "materials/higher-algebra-1/cover.png",
-    "keywords": "多项式 带余除法 Euclid 算法 Bézout 等式 不可约多项式 行列式 逆序数 Cramer 法则 线性方程组 秩 基础解系 矩阵 初等变换 二次型 合同变换 惯性定理 正定"
-  },
-  {
-    "id": "higher-algebra-2",
-    "title": "高等代数（二）",
-    "subtitle": "Higher Algebra II",
-    "group": "algebra",
-    "groupLabel": "代数与拓扑",
-    "scope": "第 6–10 章",
-    "pages": 27,
-    "summary": "第 6–10 章：线性空间与基/坐标、线性变换与核像/秩零度、特征值与可对角化、最小多项式与 Jordan 标准形、$λ$-矩阵与不变因子、欧几里得空间与最小二乘/谱定理、双线性型与辛空间；配完整矩阵算例、应用与中英术语表。",
-    "pdf": "materials/higher-algebra-2/higher-algebra-2-aps.pdf",
-    "tex": "materials/higher-algebra-2/source.tex",
-    "cover": "materials/higher-algebra-2/cover.png",
-    "keywords": "线性空间 基 维数 坐标 过渡矩阵 直和 线性变换 核 像 秩零度 矩阵表示 相似 特征值 特征向量 可对角化 最小多项式 Jordan 标准形 不变因子 初等因子 欧几里得空间 正交投影 最小二乘 Gram-Schmidt 谱定理 双线性函数 辛空间"
+    "scope": "北京大学《高等代数》第五版第 1–10 章（第一、二册合并）",
+    "pages": 40,
+    "summary": "把高等代数（一）（二）合并为一本完整讲义：多项式与整除（带余除法、Euclid 算法、Bézout 等式、不可约与重因式）、行列式与 Cramer 法则、线性方程组与秩、矩阵与可逆性、二次型与合同变换及惯性定理、线性空间与线性变换、λ-矩阵与 Jordan 标准形、欧几里得空间与正交变换、双线性函数与辛空间；每章按“定义—定理—证明思路—算例”展开，附口试问答与中英术语表。",
+    "pdf": "materials/higher-algebra/higher-algebra-aps.pdf",
+    "tex": "materials/higher-algebra/source.tex",
+    "cover": "materials/higher-algebra/cover.png",
+    "keywords": "高等代数 多项式 带余除法 最大公因式 Euclid 算法 Bezout 等式 行列式 Cramer 法则 线性方程组 秩 矩阵 逆矩阵 二次型 合同变换 惯性定理 线性空间 基 维数 线性变换 特征值 可对角化 最小多项式 Jordan 标准形 不变因子 欧几里得空间 正交 投影 最小二乘 双线性函数 辛空间"
   },
   {
     "id": "algebraic-topology",

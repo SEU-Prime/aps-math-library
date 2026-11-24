@@ -1,0 +1,782 @@
+\documentclass[UTF8,11pt,a4paper]{ctexart}
+\usepackage{amsmath,amssymb,geometry,enumitem,booktabs,array,longtable,hyperref}
+\geometry{margin=2cm}\setlist{itemsep=2pt,topsep=3pt}
+\renewcommand{\arraystretch}{1.08}
+\setlength{\tabcolsep}{3pt}
+\setlength{\abovedisplayskip}{3pt}
+\setlength{\belowdisplayskip}{3pt}
+\setlength{\abovedisplayshortskip}{1pt}
+\setlength{\belowdisplayshortskip}{2pt}
+\setlength{\emergencystretch}{2.5em}
+\tolerance=1200
+\hypersetup{colorlinks=true,linkcolor=blue}
+\newcommand{\EN}[1]{\par\noindent\textbf{English.} #1\par}
+\newcommand{\BOTH}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par}
+\newcommand{\READ}[1]{\par\noindent\textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\FORMULA}[2]{\par\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
+\newcommand{\EX}[2]{\par\noindent\textbf{例子 / Example.} #1\par\EN{#2}}
+\newcommand{\ASK}[4]{\par\noindent\textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent\textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
+\newcommand{\APS}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par\smallskip}
+\renewcommand{\thesection}{第\,\arabic{section}\,章}
+\renewcommand{\thesubsection}{\arabic{section}.\arabic{subsection}}
+\title{高等代数（合并·完整）APS 面试准备\\[4pt]\large 第 1--10 章：多项式、行列式、线性方程组、矩阵、二次型、\\ 线性空间、线性变换、$\lambda$-矩阵与 Jordan 标准形、欧几里得空间、双线性函数与辛空间}
+\author{Advanced Algebra (Merged, Complete): Bilingual Oral Review}
+\date{}
+\begin{document}\maketitle
+
+{\footnotesize\noindent\textbf{来源与范围 / Source and scope.} 本稿把《高等代数（一）（二）》两册合并为一本完整讲义，按北京大学数学系前代数小组《高等代数》第五版（王萼芳、石生明修订，高等教育出版社）第 1--10 章的标准内容组织：多项式、行列式、线性方程组、矩阵、二次型、线性空间、线性变换、$\lambda$-矩阵与 Jordan 标准形、欧几里得空间、双线性函数与辛空间。每个小节按“严格定义—定理（完整假设与结论）—证明思路”展开，辅以每章 1--2 个精简例子与面试问答，应用性内容压缩为 remark。 Based on the fifth edition of \emph{Advanced Algebra} by Peking University's Frontline Algebra Group (revised by Wang Efang and Shi Shengming), this merged volume follows the standard content of Chapters 1--10. Each subsection proceeds from strict definitions to theorems with complete hypotheses and conclusions, then to proof ideas; each chapter keeps one or two concise examples and interview Q\&A, with applications compressed into remarks.\par}
+
+\section*{课程概述 | Course overview}
+\APS{高等代数有十条主线，分成两组。第一组（第 1--5 章）以数域上的多项式与矩阵为对象：带余除法产生最大公因式、Bézout 等式与唯一分解；行列式把“方阵可逆”变成一个数是否为零；秩是消元后主元的个数，把“有没有解、有多少解”变成比较两个秩；矩阵是线性变换的坐标表示；二次型的合同变换是换坐标，惯性定理说明正负平方项个数不变。第二组（第 6--10 章）进入抽象结构：线性空间的语言（基、维数、坐标）统一了前面的例子；线性变换的核、像、特征值与最小多项式回答“一个算子在什么基下最简单”，Jordan 标准形给出答案；$\lambda$-矩阵把相似分类化为多项式因子的整除问题；内积引入长度、角度与正交，从而有正交基、投影、谱定理与最小二乘；双线性函数推广内积，辛空间给出非退化但非正定的另一种几何。}{Higher Algebra has ten connected strands in two groups. The first (Chapters 1--5) studies polynomials and matrices over a field: division with remainder yields gcds, Bézout identities and unique factorization; the determinant turns invertibility into checking one number; rank turns existence and multiplicity of solutions into comparing two ranks; matrices are coordinate representations of linear maps; for quadratic forms, congruence is a change of coordinates and inertia is invariant. The second (Chapters 6--10) enters abstract structure: the language of vector spaces (basis, dimension, coordinates) unifies the earlier examples; kernels, images, eigenvalues and minimal polynomials answer which basis makes an operator simplest, and Jordan form is that answer; $\lambda$-matrices turn similarity into divisibility of polynomial factors; an inner product gives length, angle and orthogonality, hence orthonormal bases, projections, the spectral theorem and least squares; bilinear forms generalize the inner product, and symplectic spaces exhibit a nondegenerate but indefinite geometry.}
+\APS{各章的连接方式：带余除法贯穿第 1 章，并作为第 8 章 $\lambda$-矩阵 Smith 标准形的工具；行列式、秩、可逆性在第 2--4 章反复互证；第 5 章的合同（$C^{\mathsf T}AC$）与第 7 章的相似（$P^{-1}AP$）在第 9 章由正交矩阵（$Q^{-1}=Q^{\mathsf T}$）统一；第 6 章的“空间—基—坐标”语言是第 7--8 章的地基；第 10 章把第 9 章的内积推广为一般双线性型。面试时按“定义与条件—关键定理—一个小例子”三步回答，每个断言都说清数域与维数假设。}{The strands connect as follows: division with remainder runs through Chapter 1 and reappears as the tool behind the Smith normal form in Chapter 8; determinant, rank and invertibility repeatedly confirm each other in Chapters 2--4; the congruence rule ($C^{\mathsf T}AC$) of Chapter 5 and the similarity rule ($P^{-1}AP$) of Chapter 7 are unified by orthogonal matrices ($Q^{-1}=Q^{\mathsf T}$) in Chapter 9; the language of space, basis and coordinates in Chapter 6 grounds Chapters 7--8; and Chapter 10 generalizes the inner product of Chapter 9 to arbitrary bilinear forms. In an oral exam, answer in three steps---definition and hypotheses, key theorem, one small example---and state the field and dimension assumptions every time.}
+
+\section{多项式与整除 | Polynomials and divisibility}
+\subsection{数域与一元多项式环 | Scalar fields and the polynomial ring}
+\noindent\textbf{数域.} 数域 $F$ 是含 $0,1$ 且对加、减、乘、除（除数非零）封闭的数集，等价地 $F\subseteq\mathbb C$ 且非零元的倒数仍在 $F$ 中。$\mathbb Q,\mathbb R,\mathbb C$ 是数域，$\mathbb Z$ 不是（$1/2\notin\mathbb Z$）。要求 $F$ 是数域，是为了让带余除法中“除以首项系数”总能进行，并保证 $F[x]$ 无零因子：$f,g\ne0\Rightarrow fg\ne0$。
+\EN{A field $F$ is a set of numbers containing $0,1$ and closed under addition, subtraction, multiplication, and division by nonzero elements; equivalently $F\subseteq\mathbb C$ and reciprocals of nonzero elements stay in $F$. The rationals, reals and complex numbers are fields, while $\mathbb Z$ is not, since $1/2\notin\mathbb Z$. Working over a field guarantees that division by a leading coefficient is possible and that $F[x]$ has no zero divisors.}
+\noindent\textbf{多项式环 $F[x]$.} $F[x]$ 的元素是形式和 $f=a_nx^n+\cdots+a_1x+a_0$，$a_i\in F$。相等指同次项系数全相等；加法对齐次数，乘法用分配律并合并同类项。最高非零项的次数称 $\deg f$，其系数称首项系数；零多项式不定义次数，但约定 $\deg0=-\infty$ 可使公式统一。首项系数为 $1$ 时称首一。$F[x]$ 是整环但不是域：$x$ 没有乘法逆元。
+\EN{An element of $F[x]$ is a formal sum with coefficients in $F$. Equality means equal coefficients at every power; addition aligns powers and multiplication collects like terms. The degree is the largest exponent with nonzero coefficient and its coefficient is the leading coefficient; the zero polynomial has no degree, but $\deg0=-\infty$ unifies formulas. A polynomial with leading coefficient one is monic. $F[x]$ is an integral domain but not a field: $x$ has no inverse.}
+\FORMULA{次数公式}{degree formulas}
+\[
+\deg(fg)=\deg f+\deg g,\qquad \deg(f+g)\le\max\{\deg f,\deg g\}.
+\]
+\EN{The first formula uses that a field has no zero divisors, so the two leading coefficients cannot cancel. The second is strict exactly when the leading terms have equal degree and opposite coefficients. These rules explain why division with remainder terminates: each step lowers the degree.}
+
+\subsection{带余除法与整除 | Division with remainder and divisibility}
+\noindent\textbf{带余除法.} 设 $f,g\in F[x]$，$g\ne0$，则存在唯一的 $q,r\in F[x]$ 使
+\FORMULA{带余除法定理}{division algorithm for polynomials}
+\[
+f=qg+r,\qquad r=0\ \text{或}\ \deg r<\deg g.
+\]
+存在性由长除法给出：每次用首项相除、相减，余式次数严格下降，直到低于 $\deg g$ 或为零。唯一性：若 $f=q_1g+r_1=q_2g+r_2$，则 $(q_1-q_2)g=r_2-r_1$，右端次数小于 $\deg g$，故左端为零，于是 $q_1=q_2,r_1=r_2$。这一定理是多项式理论的“除法引擎”，下面所有结论都由它推出。
+\EN{Let $f,g\in F[x]$ with $g\ne0$. There exist unique $q,r$ with $f=qg+r$ and $r$ zero or of degree below $\deg g$. Existence comes from long division: divide leading terms, subtract, and the remainder's degree strictly drops until it is below $\deg g$ or zero. For uniqueness, the difference of two identities gives $(q_1-q_2)g=r_2-r_1$; the right side has degree below $\deg g$, so the left side is zero and $q_1=q_2$, $r_1=r_2$. This is the division engine behind all later results.}
+\READ{``F equals q times g plus r, where r is zero or has degree less than g.''}
+\noindent\textbf{整除及其性质.} 若 $f=gh$，称 $g$ 整除 $f$，记 $g\mid f$。性质：传递性；若 $g\mid f,h$，则 $g\mid(uf+vh)$；若 $g\mid f$ 且 $f\ne0$，则 $\deg g\le\deg f$；非零常数整除一切；互相整除当且仅当只差非零常数倍。带余除法给出判据：$g\mid f$ 当且仅当余式为零。
+\EN{If $f=gh$, then $g$ divides $f$. Divisibility is transitive; if $g$ divides $f$ and $h$, it divides every combination $uf+vh$; if $g\mid f$ and $f\ne0$, then $\deg g\le\deg f$; nonzero constants divide everything; mutual divisibility means differing by a nonzero constant. Division with remainder gives the test: $g\mid f$ exactly when the remainder is zero.}
+\noindent\textbf{因式定理与根.} 对 $a\in F$，$f(a)=0$ 当且仅当 $x-a\mid f(x)$。若 $(x-a)^m\mid f$ 而 $(x-a)^{m+1}\nmid f$，称 $a$ 是 $m$ 重根。不同数域上分解不同：复系数多项式可分解为一次因式之积；实系数多项式分解为一次因式与判别式为负的二次因式之积（详见 1.6 节）。
+\EN{For $a\in F$, $f(a)=0$ exactly when $x-a$ divides $f$. If $(x-a)^m\mid f$ but $(x-a)^{m+1}\nmid f$, then $a$ is a root of multiplicity $m$. Factorization depends on the field: complex polynomials split into linear factors, while real polynomials split into linear and negative-discriminant quadratic factors (see Section 1.6).}
+
+\subsection{最大公因式、Euclid 算法与 Bézout 等式 | GCD, Euclidean algorithm, Bézout}
+\noindent\textbf{最大公因式.} 设 $f,g$ 不全为零。若 $d\mid f,g$ 且每个公因式都整除 $d$，称 $d$ 为最大公因式；它只差非零常数倍，首一化后唯一，记为 $\gcd(f,g)$。约定 $\gcd(f,0)$ 为 $f$ 的首一化。注意“最大”是整除意义下的极大，不是次数最大。
+\EN{For $f,g$ not both zero, a greatest common divisor is a common divisor divisible by every common divisor. It is unique up to a nonzero constant and unique once made monic; we write $\gcd(f,g)$. We set $\gcd(f,0)$ to be the monic normalization of $f$. ``Greatest'' refers to the divisibility order, not to the largest degree.}
+\noindent\textbf{Euclid 算法.} 反复作带余除法：
+\FORMULA{多项式 Euclid 算法}{Euclidean algorithm for polynomials}
+\[
+r_0=f,\quad r_1=g,\qquad r_{i-1}=q_ir_i+r_{i+1}\ (i\ge1).
+\]
+由于 $\deg r_{i+1}<\deg r_i$，算法在某个 $r_{k+1}=0$ 处停止，$r_k$ 的首一化即为 $\gcd(f,g)$。正确性来自 $\gcd(r_{i-1},r_i)=\gcd(r_i,r_{i+1})$：任何公因式整除两者就整除余式，反之亦然；每一步公因式集合不变。
+\EN{Apply division repeatedly as displayed. Since the degrees strictly decrease, the process stops at some zero remainder, and the monic normalization of the last nonzero remainder is the gcd. Correctness follows from $\gcd(r_{i-1},r_i)=\gcd(r_i,r_{i+1})$: any common divisor of two consecutive remainders divides the next remainder, and conversely; the set of common divisors never changes.}
+\noindent\textbf{Bézout 等式.} 最大公因式可由 $f,g$ 的线性组合构造：
+\FORMULA{多项式 Bézout 恒等式}{Bézout identity for polynomials}
+\[
+d(x)=u(x)f(x)+v(x)g(x),\qquad d=\gcd(f,g).
+\]
+证明有两条思路：把 Euclid 算法的余式逐步回代；或取集合 $\{uf+vg\}$ 中次数最低的非零元，用带余除法证明它整除 $f,g$。推论：$f,g$ 互素（$\gcd=1$）当且仅当存在 $u,v$ 使 $uf+vg=1$。这把“公共因式”的乘法概念转成“线性组合”的加法概念，可用消元实际计算。
+\EN{A greatest common divisor is a linear combination of $f$ and $g$: $d=uf+vg$. One proof back-substitutes through the Euclidean algorithm; another takes a nonzero element of minimal degree in the set $\{uf+vg\}$ and uses division with remainder to show it divides both. Consequently $f,g$ are coprime exactly when $uf+vg=1$ for some $u,v$. This converts the multiplicative notion of a common factor into an additive linear combination that can be computed by elimination.}
+\READ{``D equals u times f plus v times g; this is the Bezout identity.''}
+\EX{求 $f=x^3+2x^2+x=x(x+1)^2$ 与 $g=x^2+3x+2=(x+1)(x+2)$ 的最大公因式，并写出 Bézout 等式。第一步 $f=(x-1)g+(2x+2)$；第二步 $g=(\tfrac{x}{2}+1)(2x+2)+0$。最后非零余式为 $2x+2$，首一化得 $\gcd=x+1$。回代得
+\[
+x+1=\tfrac12 f-\tfrac{x-1}{2}g,
+\]
+即 $u=\tfrac12$、$v=-\tfrac{x-1}{2}$；代回可验证恒等式。}{Find the gcd of $f=x^3+2x^2+x=x(x+1)^2$ and $g=x^2+3x+2=(x+1)(x+2)$, and write the Bézout identity. First $f=(x-1)g+(2x+2)$, then $g=(\tfrac{x}{2}+1)(2x+2)+0$. The last nonzero remainder is $2x+2$, whose monic normalization is $x+1$. Back-substitution gives $x+1=\tfrac12 f-\tfrac{x-1}{2}g$, so $u=\tfrac12$ and $v=-\tfrac{x-1}{2}$; substitution verifies the identity.}
+\ASK{如何求两个多项式的最大公因式？}{How do you find the greatest common divisor of two polynomials?}{用带余除法反复相除，直到余式为零；最后一个非零余式的首一化就是最大公因式。若要 Bézout 等式，再把这个余式逐步回代成 $f,g$ 的组合。关键条件是系数在数域中，保证每步除法可行；余式次数严格下降保证算法终止。}{Apply division with remainder until a zero remainder appears; the monic normalization of the last nonzero remainder is the gcd. For the Bézout identity, back-substitute that remainder as a combination of $f$ and $g$. The field hypothesis makes every division possible, and strictly decreasing degrees guarantee termination.}
+\ASK{多项式的 Bézout 定理说的是什么？}{What does Bézout's theorem for polynomials say?}{对不全为零的 $f,g\in F[x]$，存在 $u,v$ 使 $\gcd(f,g)=uf+vg$；特别地，$f,g$ 互素当且仅当 $uf+vg=1$。它把公共因式问题转成线性组合问题，可用 Euclid 算法计算，也是证明唯一分解定理的关键工具。}{For $f,g\in F[x]$ not both zero there exist $u,v$ with $\gcd(f,g)=uf+vg$; in particular they are coprime exactly when $uf+vg=1$. It converts common factors into linear combinations computable by the Euclidean algorithm and is the key tool in proving unique factorization.}
+
+\subsection{互素、不可约与唯一分解；有理根与 Eisenstein | Coprimality, irreducibility, rational roots}
+\noindent\textbf{互素的性质.} 若 $\gcd(f,g)=1$，称 $f,g$ 互素。由 Bézout 等式可得：若 $f\mid gh$ 且 $\gcd(f,g)=1$，则 $f\mid h$；若 $f$ 与 $g,h$ 都互素，则与 $gh$ 互素；若 $f,g$ 互素且都整除 $h$，则 $fg\mid h$。第一条是“不可约因式整除乘积则整除某个因子”的基础。
+\EN{If $\gcd(f,g)=1$, the polynomials are coprime. Bézout gives: if $f\mid gh$ and $f$ is coprime to $g$, then $f\mid h$; if $f$ is coprime to both $g$ and $h$, it is coprime to $gh$; if coprime $f,g$ both divide $h$, then $fg\mid h$. The first is the basis of the prime property for irreducible factors.}
+\noindent\textbf{不可约多项式与唯一分解.} 非常数 $p\in F[x]$ 称为在 $F$ 上不可约，若 $p=fg$ 必有一个因式为非零常数；否则可约。不可约性依赖数域：$x^2+1$ 在 $\mathbb R$ 上不可约、在 $\mathbb C$ 上可约；$x^2-2$ 在 $\mathbb Q$ 上不可约、在 $\mathbb R$ 上可约。不可约多项式有素性：$p\mid fg\Rightarrow p\mid f$ 或 $p\mid g$（若 $p\nmid f$，则 $\gcd(p,f)=1$，由互素性质得 $p\mid g$）。由此得到唯一分解定理：每个非常数多项式都可分解为不可约因式之积，且在次序与非零常数倍意义下唯一：
+\FORMULA{标准分解式}{standard factorization}
+\[
+f=c\,p_1^{e_1}p_2^{e_2}\cdots p_s^{e_s},\qquad c\in F^\times,
+\]
+其中 $p_i$ 为互不相同的首一不可约多项式。存在性对次数归纳；唯一性用素性约去公共因式归纳。故 $F[x]$ 与 $\mathbb Z$ 一样是唯一分解整环。
+\EN{A nonconstant $p\in F[x]$ is irreducible over $F$ if every factorization $p=fg$ has a constant factor. Irreducibility depends on the field: $x^2+1$ is irreducible over $\mathbb R$ but reducible over $\mathbb C$, while $x^2-2$ is irreducible over $\mathbb Q$ but reducible over $\mathbb R$. Irreducibles are prime: $p\mid fg$ implies $p\mid f$ or $p\mid g$, since $p\nmid f$ gives $\gcd(p,f)=1$ and the coprimality property applies. Hence unique factorization holds: every nonconstant polynomial is a product of irreducibles, unique up to order and constants, giving the displayed standard form with distinct monic irreducibles. Existence is by induction on degree, and uniqueness cancels common factors using primality. Thus $F[x]$, like $\mathbb Z$, is a unique factorization domain.}
+\noindent\textbf{有理根定理.} 设 $f=a_nx^n+\cdots+a_0\in\mathbb Z[x]$。若有理数 $p/q$（互素，$q>0$）是根，则 $p\mid a_0$，$q\mid a_n$。证明：代入并乘 $q^n$，模 $p$ 得 $a_0q^n\equiv0$，故 $p\mid a_0$；模 $q$ 得 $a_np^n\equiv0$，故 $q\mid a_n$。于是只需检验有限个候选值。
+\EN{Let $f=a_nx^n+\cdots+a_0\in\mathbb Z[x]$. If the rational number $p/q$ in lowest terms with $q>0$ is a root, then $p\mid a_0$ and $q\mid a_n$. Substituting and multiplying by $q^n$, reduction modulo $p$ gives $a_0q^n\equiv0$, so $p\mid a_0$; reduction modulo $q$ gives $q\mid a_n$. Only finitely many candidates need to be tested.}
+\noindent\textbf{本原多项式与 Eisenstein 判别法.} 整系数多项式各项系数的最大公因式为 $1$ 时称本原。Gauss 引理：两个本原多项式之积仍本原；因此整系数多项式在 $\mathbb Q$ 上可约当且仅当在 $\mathbb Z$ 上可分解，判断不可约性可化到整数整除性。若存在素数 $p$ 使
+\FORMULA{Eisenstein 判别法}{Eisenstein's criterion}
+\[
+p\nmid a_n,\qquad p\mid a_{n-1},\dots,a_0,\qquad p^2\nmid a_0,
+\]
+则 $f$ 在 $\mathbb Q$ 上不可约。证明思路：若 $f=gh$ 在 $\mathbb Z[x]$ 中分解，模 $p$ 后 $f\equiv a_nx^n$，故 $g,h$ 都只剩首项，常数项都被 $p$ 整除，与 $p^2\nmid a_0$ 矛盾。
+\EN{An integer polynomial is primitive if the gcd of its coefficients is one. Gauss's lemma says the product of primitive polynomials is primitive, so reducibility over $\mathbb Q$ is equivalent to factorization over $\mathbb Z$. If a prime $p$ satisfies the displayed conditions, then $f$ is irreducible over $\mathbb Q$. Proof idea: a factorization over $\mathbb Z$ would reduce modulo $p$ to $f\equiv a_nx^n$, forcing both factors to have a single leading term and both constant terms divisible by $p$, contradicting $p^2\nmid a_0$.}
+
+\subsection{重因式与导数判定 | Repeated factors and the derivative test}
+\noindent\textbf{重因式.} 设 $p$ 是首一不可约多项式，若 $p^m\mid f$ 而 $p^{m+1}\nmid f$，称 $p$ 是 $f$ 的 $m$ 重因式；$p=x-a$ 时 $a$ 是 $m$ 重根。$m\ge2$ 时称重因式；没有重因式称平方自由。
+\EN{Let $p$ be a monic irreducible polynomial. If $p^m\mid f$ but $p^{m+1}\nmid f$, then $p$ is an $m$-fold factor; for $p=x-a$, $a$ is a root of multiplicity $m$. Factors with $m\ge2$ are repeated, and $f$ is square-free if it has none.}
+\noindent\textbf{导数判定.} 定义形式导数 $f'=na_nx^{n-1}+\cdots+a_1$，它满足线性性与乘积法则，不依赖极限。设 $\operatorname{char}F=0$，$f=p^mg$，则
+\[
+f'=p^{m-1}(mp'g+pg').
+\]
+因为 $\deg p'<\deg p$ 且 $p$ 不可约，$p\nmid p'$，括号不被 $p$ 整除，所以 $p^{m-1}$ 恰是 $f'$ 中 $p$ 的重数。于是
+\FORMULA{重因式判别}{repeated-factor criterion}
+\[
+\gcd(f,f')=\prod_i p_i^{e_i-1},\qquad
+f\ \text{平方自由}\iff \gcd(f,f')=1.
+\]
+这里特征 $0$ 不可去掉：特征 $p$ 的域中 $x^p$ 的导数为零。数域都含 $\mathbb Q$，故本课程总适用。
+\EN{Define the formal derivative $f'=na_nx^{n-1}+\cdots+a_1$; it is linear and satisfies the product rule, with no limit involved. Assume characteristic zero and write $f=p^mg$. Differentiating gives $f'=p^{m-1}(mp'g+pg')$. Since $\deg p'<\deg p$ and $p$ is irreducible, $p\nmid p'$, so the bracket is not divisible by $p$ and $p^{m-1}$ is exactly the multiplicity of $p$ in $f'$. Hence the gcd of $f$ and $f'$ is the product of the irreducible factors with exponents decreased by one, and $f$ is square-free exactly when this gcd is one. Characteristic zero is essential: over characteristic $p$ the derivative of $x^p$ vanishes. Number fields contain $\mathbb Q$, so the criterion always applies here.}
+
+\subsection{根与系数、复域与实域上的分解 | Vieta, and factorization over \texorpdfstring{$\mathbb C$}{C} and \texorpdfstring{$\mathbb R$}{R}}
+\noindent\textbf{Vieta 定理.} 设 $f=a_nx^n+\cdots+a_0$ 在 $\mathbb C$ 上的根（按重数计）为 $\alpha_1,\dots,\alpha_n$，则
+\FORMULA{Vieta 定理}{Vieta's formulas}
+\[
+\sum_i\alpha_i=-\frac{a_{n-1}}{a_n},\qquad
+\sum_{i<j}\alpha_i\alpha_j=\frac{a_{n-2}}{a_n},\qquad\ldots,\qquad
+\prod_i\alpha_i=(-1)^n\frac{a_0}{a_n}.
+\]
+只需展开 $f=a_n\prod_i(x-\alpha_i)$ 并比较系数。二次情形最常用：$\alpha_1+\alpha_2=-b/a$，$\alpha_1\alpha_2=c/a$。
+\EN{If $f=a_nx^n+\cdots+a_0$ has roots $\alpha_1,\dots,\alpha_n$ over $\mathbb C$ counted with multiplicity, the displayed symmetric relations hold; expanding $f=a_n\prod_i(x-\alpha_i)$ and comparing coefficients proves them. The quadratic case is most used: the sum is $-b/a$ and the product is $c/a$.}
+\noindent\textbf{对称多项式.} 交换变量不变的多项式称对称多项式。$n$ 元基本对称多项式 $e_1=\sum x_i$，$e_2=\sum_{i<j}x_ix_j$，$\dots$，$e_n=x_1\cdots x_n$。对称多项式基本定理：每个对称多项式都可唯一写成 $e_1,\dots,e_n$ 的多项式。用于根时，$e_k(\alpha)$ 由 Vieta 定理等于系数之比（差符号），故根的对称表达式都可用系数表示；Newton 恒等式进一步联系 $e_k$ 与幂和 $p_k=\sum\alpha_i^k$。
+\EN{A polynomial unchanged by permuting variables is symmetric. The elementary symmetric polynomials are $e_1=\sum x_i$, $e_2=\sum_{i<j}x_ix_j$, and so on up to $e_n=x_1\cdots x_n$. The fundamental theorem of symmetric polynomials says every symmetric polynomial is uniquely a polynomial in the $e_k$. For roots, Vieta expresses $e_k(\alpha)$ through coefficient ratios, so symmetric expressions in the roots can be computed from coefficients; Newton's identities further relate the $e_k$ to the power sums $p_k=\sum\alpha_i^k$.}
+\noindent\textbf{复数域与实数域.} 代数基本定理：每个非常数复系数多项式在 $\mathbb C$ 中至少有一个根。反复除以一次因式得：$n$ 次多项式恰有 $n$ 个根（按重数计），并分解为 $a_n\prod(x-\alpha_i)$；所以 $\mathbb C[x]$ 中不可约多项式恰为一次多项式。对实系数多项式，若 $z$ 是根，则 $\bar z$ 也是根且重数相同；非实根成对出现，对应实二次不可约因式 $(x-z)(x-\bar z)=x^2-2\operatorname{Re}(z)x+|z|^2$。故实系数多项式分解为一次因式与判别式为负的二次因式之积。
+\EN{The fundamental theorem of algebra: every nonconstant complex polynomial has a root in $\mathbb C$. Dividing by linear factors shows that a degree $n$ polynomial has exactly $n$ roots counted with multiplicity and factors as $a_n\prod(x-\alpha_i)$; hence the irreducibles in $\mathbb C[x]$ are precisely the linear polynomials. For real coefficients, if $z$ is a root then so is $\bar z$ with the same multiplicity; nonreal roots occur in conjugate pairs, giving a real irreducible quadratic $(x-z)(x-\bar z)=x^2-2\operatorname{Re}(z)x+|z|^2$. Thus real polynomials factor into linear factors and quadratics of negative discriminant.}
+
+\subsection{应用（remark）| Applications (remark)}
+\APS{多项式不只是求根的对象：给定 $n+1$ 个互异节点与函数值，存在唯一的次数不超过 $n$ 的插值多项式，其唯一性等价于 Vandermonde 行列式非零（第 2 章）；通信中的循环冗余校验与 BCH 码把数据看成 $\mathbb F_2$ 上多项式的系数，用带余除法与不可约多项式构造校验位；计算机代数系统靠 Euclid 算法、因式分解与结式做精确计算，避免浮点误差。}{Polynomials are not only objects to be solved: given $n+1$ distinct nodes and values there is a unique interpolating polynomial of degree at most $n$, whose uniqueness is equivalent to a nonzero Vandermonde determinant (Chapter 2); cyclic redundancy checks and BCH codes treat data as coefficients of polynomials over $\mathbb F_2$ and use division with remainder and irreducible polynomials to build check symbols; computer algebra systems rely on the Euclidean algorithm, factorization and resultants for exact computation without floating-point error.}
+
+\section{行列式 | Determinants}
+\subsection{定义：排列、逆序数与符号 | Permutations, inversions, and the definition}
+\noindent\textbf{排列与符号.} $n$ 元排列是 $1,\dots,n$ 的重排 $\sigma=(\sigma(1),\dots,\sigma(n))$，全体组成 $S_n$，有 $n!$ 个元素。若 $i<j$ 而 $\sigma(i)>\sigma(j)$，称构成一个逆序，逆序总数记 $N(\sigma)$；符号定义为 $\operatorname{sgn}(\sigma)=(-1)^{N(\sigma)}$。交换排列中两个元素改变奇偶性，这是“换行变号”的根源。
+\EN{A permutation of $n$ elements is a rearrangement $\sigma=(\sigma(1),\dots,\sigma(n))$ of $1,\dots,n$; all form $S_n$ with $n!$ elements. If $i<j$ but $\sigma(i)>\sigma(j)$, the pair is an inversion, and $N(\sigma)$ counts them; the sign is $\operatorname{sgn}(\sigma)=(-1)^{N(\sigma)}$. Swapping two entries changes the parity, which produces the sign change under a row swap.}
+\noindent\textbf{行列式的定义.} 对 $n\times n$ 矩阵 $A=(a_{ij})$，定义
+\FORMULA{$n$ 阶行列式}{the $n\times n$ determinant}
+\[
+\det A=\sum_{\sigma\in S_n}\operatorname{sgn}(\sigma)\,a_{1,\sigma(1)}a_{2,\sigma(2)}\cdots a_{n,\sigma(n)}.
+\]
+每项从每一行、每一列各取一个元素相乘，再乘该排列的符号，共 $n!$ 项；因此 $n\ge4$ 时不能按定义硬算，必须用性质化简。$n=2$ 给出 $ad-bc$；$n=3$ 的六项就是 Sarrus 规则；恒等排列符号为 $+1$，故 $\det I=1$。
+\EN{For an $n\times n$ matrix, the determinant is the signed sum over all permutations of the products selecting one entry per row and column. There are $n!$ terms, so for $n\ge4$ direct evaluation is impractical and the properties must be used. For $n=2$ this gives $ad-bc$; for $n=3$ the six terms form Sarrus's rule; the identity permutation has sign $+1$, so $\det I=1$.}
+\noindent\textbf{与归纳定义等价.} 另一个定义是：$n=1$ 时 $\det(a)=a$，$n\ge2$ 时按第一行用代数余子式展开。两种定义给出同一个数：按第一行展开的函数对每行线性、交换两行变号、在 $I$ 处取 $1$，而满足这三条的函数唯一，正是排列和。这个“多重线性 + 交错 + 归一”的刻画是理解行列式性质的统一视角。
+\EN{An equivalent inductive definition takes $\det(a)=a$ for $n=1$ and expands along the first row for $n\ge2$. Both definitions agree: the first-row expansion is linear in each row, changes sign under a row swap, and equals one on $I$, and a function with these three properties is unique---it is the permutation sum. The characterization ``multilinear, alternating, normalized'' is the unifying viewpoint.}
+
+\subsection{性质与消元计算 | Properties and elimination}
+\noindent\textbf{基本性质.} 由定义可推出：转置不变 $\det(A^{\mathsf T})=\det A$（转置把 $\sigma$ 换成 $\sigma^{-1}$，符号与乘积不变），故行的性质对列同样成立；交换两行变号，两行相同则行列式为零；某行乘 $c$ 则行列式乘 $c$，某行加另一行的倍数则不变；乘法公式 $\det(AB)=\det A\det B$；数乘整个矩阵 $\det(cA)=c^n\det A$；以及 $\det(A^{-1})=1/\det A$。
+\EN{The definition yields: invariance under transpose, since transposition replaces a permutation by its inverse and preserves sign and product, so row properties also hold for columns; sign reversal under a row swap, so equal rows give zero; scaling one row scales the determinant, while adding a multiple of a row leaves it unchanged; the product formula; the scaling rule for the whole matrix; and the inverse formula.}
+\FORMULA{行列式的基本恒等式}{basic determinant identities}
+\[
+\det(A^{\mathsf T})=\det A,\qquad \det(AB)=\det A\,\det B,\qquad \det(cA)=c^n\det A,\qquad \det(A^{-1})=\frac{1}{\det A}.
+\]
+\READ{``The determinant of A transpose equals the determinant of A; the determinant of A B equals the product of the determinants; scaling the whole matrix by c scales the determinant by c to the n.''}
+\noindent\textbf{用消元计算.} 用初等行变换把 $A$ 化为上三角矩阵 $U$：交换行记录符号，行倍加不改变行列式，行倍乘把因子提出。于是 $\det A=(-1)^s\prod_i u_{ii}$，$u_{ii}$ 为主元。若消元出现全零行，则行列式为零。这比按定义展开快得多，也是判断可逆性的标准方法。
+\EN{Eliminate to an upper triangular matrix $U$: record the sign of each row swap, adding a multiple changes nothing, and scaling a row extracts a factor. Then the determinant is $(-1)^s$ times the product of the pivots. A zero row during elimination means determinant zero. This is much faster than expanding by definition and is the standard invertibility test.}
+
+\subsection{按行展开、Laplace 定理与 Vandermonde 行列式 | Expansion, Laplace, Vandermonde}
+\noindent\textbf{余子式与代数余子式.} 删除第 $i$ 行第 $j$ 列后所得 $(n-1)$ 阶行列式称余子式 $M_{ij}$，$C_{ij}=(-1)^{i+j}M_{ij}$ 称代数余子式。行列式可按任意一行或一列展开：
+\FORMULA{按行（列）展开}{cofactor expansion}
+\[
+\det A=\sum_{j=1}^n a_{ij}C_{ij},\qquad
+\sum_{j=1}^n a_{kj}C_{ij}=\delta_{ik}\det A.
+\]
+第二式是“异乘”公式：用一行乘另一行的代数余子式得零，它给出伴随矩阵恒等式。展开的价值在于把 $n$ 阶降为 $n-1$ 阶，零元多的行或列尤其方便。
+\EN{Deleting row $i$ and column $j$ leaves an $(n-1)$-order minor $M_{ij}$; the signed quantity $C_{ij}=(-1)^{i+j}M_{ij}$ is the cofactor. The determinant expands along any row or column as displayed. The second identity, the alien-cofactor formula, says that one row multiplied by the cofactors of another gives zero, and it yields the adjugate identity. Expansion reduces order by one and is especially useful for rows or columns with many zeros.}
+\noindent\textbf{Laplace 定理.} 取定 $k$ 行，把这 $k$ 行中所有 $k$ 阶子式与相应的代数余子式相乘再求和，结果等于 $\det A$；$k=1$ 时即按行展开。常用推论是分块三角公式
+\[
+\det\begin{pmatrix}A&B\\0&D\end{pmatrix}=\det A\,\det D.
+\]
+证明思路：对上三角分块矩阵按前若干行作 Laplace 展开，只有用满 $A$ 的列的子式非零，再归纳。
+\EN{Laplace's theorem: fix $k$ rows, multiply every $k\times k$ minor formed from them by its complementary signed minor, and sum over the choices of $k$ columns; the result is the determinant. For $k=1$ this is row expansion. The standard consequence is the block-triangular formula $\det\begin{pmatrix}A&B\\0&D\end{pmatrix}=\det A\det D$; expanding along the first block of rows, only minors using all columns of $A$ survive.}
+\noindent\textbf{Vandermonde 行列式.} 对 $a_1,\dots,a_n$，
+\FORMULA{Vandermonde 行列式}{Vandermonde determinant}
+\[
+V_n=\begin{vmatrix}
+1&1&\cdots&1\\
+a_1&a_2&\cdots&a_n\\
+\vdots&\vdots&&\vdots\\
+a_1^{n-1}&a_2^{n-1}&\cdots&a_n^{n-1}
+\end{vmatrix}=\prod_{1\le i<j\le n}(a_j-a_i).
+\]
+推导：$V_n$ 是 $a_1,\dots,a_n$ 的多项式，交换两个 $a_i$ 相当于交换两列，行列式变号，故为交错多项式；当 $a_i=a_j$ 时两列相同、行列式为零，故每个 $(a_j-a_i)$ 都整除 $V_n$。这些因子两两互素，共 $\binom n2$ 个，乘积次数 $n(n-1)/2$ 与 $V_n$ 相同；比较最高次项系数（为 $1$）即得等式。$V_n\ne0$ 当且仅当节点互异，这正是插值问题有唯一解的代数表达。
+\EN{The Vandermonde determinant equals the product of all differences $a_j-a_i$ with $i<j$. The proof views it as a polynomial in the $a_i$: swapping two variables swaps two columns and changes the sign, so it is alternating; when $a_i=a_j$ two columns coincide and the determinant vanishes, so every difference divides it. These factors are pairwise coprime, there are $\binom n2$ of them, and their product has the same degree $n(n-1)/2$; comparing the leading coefficient, which is one, completes the proof. It is nonzero exactly when the nodes are distinct, which is precisely when interpolation has a unique solution.}
+\EX{取 $a_1=1,a_2=2,a_3=4$，则 $V_3=(2-1)(4-1)(4-2)=6$；直接计算 $\begin{vmatrix}1&1&1\\1&2&4\\1&4&16\end{vmatrix}=6$，两种算法一致。若两个节点相等，行列式为零，插值无唯一解。}{Taking $a_1=1,a_2=2,a_3=4$ gives $V_3=6$, and direct computation of the displayed determinant also gives $6$. If two nodes coincide, the determinant vanishes and interpolation has no unique solution.}
+
+\subsection{伴随矩阵、逆矩阵与 Cramer 法则 | Adjugate, inverse, Cramer's rule}
+\noindent\textbf{伴随矩阵.} 令 $\operatorname{adj}(A)=(C_{ji})$，即代数余子式矩阵的转置。异乘公式给出
+\FORMULA{伴随矩阵与逆矩阵}{adjugate and inverse}
+\[
+A\operatorname{adj}(A)=\operatorname{adj}(A)A=(\det A)I,\qquad
+A^{-1}=\frac{1}{\det A}\operatorname{adj}(A)\ (\det A\ne0).
+\]
+二阶时 $A^{-1}=\frac{1}{ad-bc}\begin{pmatrix}d&-b\\-c&a\end{pmatrix}$。公式主要用于理论推导和小矩阵；$n$ 较大时计算 $n^2$ 个 $n-1$ 阶行列式代价高，实际用消元求逆（第 4 章）。
+\EN{Let the adjugate be the transpose of the cofactor matrix. The alien-cofactor formula gives $A\operatorname{adj}(A)=\operatorname{adj}(A)A=(\det A)I$, hence the inverse formula when the determinant is nonzero. For $2\times2$ matrices this gives the displayed formula. It is mainly for theory and small matrices; for large $n$ it requires $n^2$ minors, and elimination is used instead (Chapter 4).}
+\noindent\textbf{Cramer 法则.} 设 $Ax=b$ 是 $n$ 个方程、$n$ 个未知量的方程组且 $\det A\ne0$，把 $A$ 的第 $i$ 列换成 $b$ 得 $A_i$，则唯一解为
+\FORMULA{Cramer 法则}{Cramer's rule}
+\[
+x_i=\frac{\det A_i}{\det A},\qquad i=1,\dots,n.
+\]
+证明：由 $Ax=b$ 与 $A\operatorname{adj}(A)=(\det A)I$ 得 $x=(\det A)^{-1}\operatorname{adj}(A)b$，其第 $i$ 个分量正是把第 $i$ 列换成 $b$ 后的行列式（按该列展开）。它只适用于方阵且行列式非零的“唯一解”情形，适合理论和小例子，不适合大型数值计算。
+\EN{Cramer's rule: for a square system $Ax=b$ with $\det A\ne0$, replace column $i$ of $A$ by $b$ to get $A_i$; then the unique solution is $x_i=\det A_i/\det A$. The proof writes $x=(\det A)^{-1}\operatorname{adj}(A)b$; the $i$-th component of the adjugate times $b$ is exactly the determinant with column $i$ replaced. The rule applies only to square systems with nonzero determinant, i.e. the unique-solution case, and suits theory and small examples rather than large numerical problems.}
+
+\subsection{行列式与秩、可逆性；几何意义 | Determinants, rank, invertibility, and volume}
+\noindent\textbf{判定可逆.} 对 $n$ 阶方阵 $A$，下列命题等价：$A$ 可逆；$\det A\ne0$；$\operatorname{rank}A=n$；行（列）向量线性无关；$Ax=0$ 只有零解；$Ax=b$ 对每个 $b$ 有唯一解。若 $\det A\ne0$，伴随矩阵公式直接给出逆；若 $A$ 可逆，由 $\det A\det A^{-1}=1$ 得 $\det A\ne0$；$\det A=0$ 意味着消元出现零行，行向量线性相关。注意 $\det A=0$ 只说明不满秩，秩仍可能是 $n-1$：秩等于最大非零子式的阶数。
+\EN{For an $n\times n$ matrix, the following are equivalent: invertibility; nonzero determinant; full rank; linearly independent rows or columns; trivial null space; a unique solution for every right-hand side. The adjugate gives the inverse when the determinant is nonzero, and invertibility implies $\det A\det A^{-1}=1$. A zero determinant means elimination produces a zero row and the rows are dependent, but the rank may still be $n-1$: rank equals the largest order of a nonzero minor.}
+\noindent\textbf{面积、体积与定向.} $|\det A|$ 是以 $A$ 的列为边的平行多面体的体积：二阶时是平行四边形面积，三阶时是平行六面体体积；一般地，$x\mapsto Ax$ 把单位立方体映成该平行多面体，体积缩放因子为 $|\det A|$。符号表示定向：$\det A>0$ 保持定向，$\det A<0$ 反转定向，$\det A=0$ 把空间压到更低维、体积为零。由 $\det(AB)=\det A\det B$，连续变换的体积因子相乘。
+\EN{$|\det A|$ is the volume of the parallelepiped spanned by the columns: area in dimension two, volume in dimension three, and in general the factor by which the linear map $x\mapsto Ax$ scales $n$-dimensional volume. The sign records orientation: positive preserves it, negative reverses it, and zero collapses space to lower dimension. Since the determinant is multiplicative, composing maps multiplies the volume factors.}
+\APS{行列式把“线性映射是否压扁空间”变成一个数，由此判断可逆性、给出换元积分中的 Jacobian 因子 $dx\,dy=|\det J|\,du\,dv$、支撑 Cramer 法则的理论消元，并在特征多项式 $\det(\lambda I-A)$ 中编码谱。体积解释还说明整系数矩阵对应整体积的格点平行多面体。}{The determinant turns the question of whether a linear map collapses space into a single number, giving invertibility tests, the Jacobian factor $dx\,dy=|\det J|\,du\,dv$ in change of variables, the theoretical elimination behind Cramer's rule, and the characteristic polynomial $\det(\lambda I-A)$ encoding the spectrum. The volume interpretation also shows that an integer matrix defines a lattice parallelepiped of integer volume.}
+\ASK{行列式有哪些基本性质？}{What are the basic properties of determinants?}{核心三条：对每一行线性（某行乘数则行列式乘该数，某行可拆成两项之和）；交换两行变号（故两行相同则为零）；单位矩阵行列式为 $1$。由此推出转置不变、某行加另一行倍数不变、乘法公式 $\det(AB)=\det A\det B$ 以及按行展开。消元计算就是把这些性质用在行变换上。}{The core is three properties: linearity in each row, sign reversal under a row swap (so equal rows give zero), and determinant one for the identity. From these follow invariance under transpose, invariance under adding a multiple of a row to another, the product formula, and cofactor expansion. Elimination computation applies exactly these properties to row operations.}
+\ASK{行列式和秩有什么区别？}{What is the difference between the determinant and the rank?}{行列式只对方阵定义，是一个数，非零等价于满秩、可逆、齐次方程只有零解。秩对任意 $m\times n$ 矩阵都有定义，等于独立行（列）的个数、消元后主元的个数、最大非零子式的阶数，用来判断任意方程组是否相容以及自由变量个数。零行列式只说明秩小于 $n$，秩仍可能是 $n-1$。}{The determinant is defined only for square matrices and is one number; nonzero means full rank, invertibility, and a trivial null space. Rank is defined for any $m\times n$ matrix and equals the number of independent rows or columns, the number of pivots, or the largest order of a nonzero minor; it decides consistency of general systems and the number of free variables. A zero determinant only says the rank is below $n$; it may still be $n-1$.}
+
+\section{线性方程组与秩 | Linear systems and rank}
+\subsection{矩阵形式、消元与行阶梯形 | Matrix form, elimination, and echelon form}
+\noindent\textbf{矩阵形式.} $m$ 个方程、$n$ 个未知量的线性方程组写成 $Ax=b$：$A$ 是 $m\times n$ 系数矩阵，$x$ 是未知列向量，$b$ 是常数列；把 $b$ 并到 $A$ 右边得增广矩阵 $[A\mid b]$。按列看 $Ax=x_1\alpha_1+\cdots+x_n\alpha_n$，故 $Ax=b$ 有解当且仅当 $b$ 是 $A$ 的列向量的线性组合；按行看，每个方程是一个超平面，解集是它们的交。
+\EN{An $m\times n$ system is written $Ax=b$, with coefficient matrix $A$, unknown vector $x$, and constant column $b$; appending $b$ gives the augmented matrix $[A\mid b]$. Column by column, $Ax=x_1\alpha_1+\cdots+x_n\alpha_n$, so the system is solvable exactly when $b$ is a linear combination of the columns of $A$. Row by row, each equation is a hyperplane and the solution set is their intersection.}
+\noindent\textbf{初等行变换与 Gauss 消元.} 三类初等行变换——交换两行、某行乘非零常数、某行加另一行的倍数——都可逆，故不改变解集。用它们把增广矩阵化为行阶梯形：每个非零行的首非零元（主元）在上一行主元右边，全零行在底部；再把主元化为 $1$、主元列其余元素消为零，得简化行阶梯形。主元个数即秩，主元列对应受约束变量，其余列为自由变量。Gauss 消元就是“向下消元、再回代”，复杂度 $O(n^3)$。
+\EN{Three elementary row operations---swap two rows, multiply a row by a nonzero constant, add a multiple of one row to another---are reversible and preserve the solution set. They reduce the augmented matrix to row echelon form, where the first nonzero entry (pivot) of each nonzero row lies to the right of the pivot above and zero rows are at the bottom; clearing the pivot columns further gives reduced row echelon form. The number of pivots is the rank, pivot columns correspond to constrained variables, and the other columns to free variables. Gaussian elimination eliminates downward and back-substitutes in $O(n^3)$ time.}
+
+\subsection{秩判别定理与解的结构 | Rank criterion and structure of solutions}
+\noindent\textbf{秩.} 矩阵的行秩是行向量组的极大无关组大小，列秩类似；行秩等于列秩，统称秩，它等于行阶梯形中主元的个数，也等于最大非零子式的阶数。初等行变换不改变秩。秩是判断相容性与自由度的核心不变量。
+\EN{The row rank of a matrix is the size of a maximal independent set of rows, and the column rank is defined similarly; they are equal and called the rank. It equals the number of pivots in row echelon form and the largest order of a nonzero minor, and is unchanged by elementary row operations. Rank is the key invariant for consistency and degrees of freedom.}
+\noindent\textbf{相容性判别.} 线性方程组 $Ax=b$ 有解当且仅当
+\FORMULA{秩判据}{rank criterion for consistency}
+\[
+\operatorname{rank}(A)=\operatorname{rank}([A\mid b]).
+\]
+证明思路：对增广矩阵消元。若出现 $(0,\dots,0\mid c)$ 且 $c\ne0$ 的行，则 $0=c$ 矛盾，$b$ 不在列空间中，增广秩比系数秩大 $1$；若没有这种行，所有主元都在 $A$ 的部分，回代即得解。共同秩为 $r$ 时解集是 $n-r$ 维仿射空间：$r=n$ 唯一解，$r<n$ 且相容时无穷多解、恰有 $n-r$ 个自由变量。注意零行列式不能直接推出无解：方阵情形下 $\det A=0$ 只说明 $r<n$，相容性仍要比较两个秩。
+\EN{The system is consistent exactly when the coefficient and augmented matrices have equal rank. Eliminate on the augmented matrix: a row $(0,\dots,0\mid c)$ with $c\ne0$ gives the contradiction $0=c$, so $b$ is not in the column space and the augmented rank exceeds the coefficient rank; otherwise all pivots lie in the $A$-part and back-substitution solves the system. If the common rank is $r$, the solution set is an affine space of dimension $n-r$: full column rank gives a unique solution, while $r<n$ gives infinitely many solutions with $n-r$ free variables. A zero determinant does not by itself imply inconsistency: it only says $r<n$, and consistency still requires comparing the two ranks.}
+\noindent\textbf{解的结构.} 设 $Ax=b$ 相容，$x_p$ 是一个特解，则全部解恰为 $x=x_p+z$，$z\in\ker A$。理由：两解之差满足 $A(x-x')=0$；反之加任意核向量仍是解。故非齐次解集是齐次解空间的平移，特解不唯一，但“一个特解 + 全部齐次解”覆盖整个解集。
+\EN{If $Ax=b$ is consistent and $x_p$ is a particular solution, the full solution set is $x=x_p+z$ with $z$ in the kernel. The difference of two solutions lies in the kernel, and adding any kernel vector preserves the equation; hence the solution set is a translate of the homogeneous space, and one particular solution plus all homogeneous solutions covers it.}
+
+\subsection{齐次方程组与基础解系 | Homogeneous systems and fundamental solutions}
+\noindent\textbf{基础解系.} 齐次方程组 $Ax=0$ 总有零解，解集是 $F^n$ 的子空间，维数为 $n-\operatorname{rank}A$。取它的一组基 $\eta_1,\dots,\eta_{n-r}$，称基础解系，全部解为
+\FORMULA{齐次方程组的通解}{general solution of a homogeneous system}
+\[
+x=c_1\eta_1+\cdots+c_{n-r}\eta_{n-r},\qquad c_i\in F.
+\]
+求法：化 $A$ 为简化行阶梯形，主元变量用自由变量表示；依次令一个自由变量为 $1$、其余为 $0$，解出主元变量，得到 $n-r$ 个线性无关的解。维数公式 $\dim\ker A=n-\operatorname{rank}A$ 就是秩--零度定理。非齐次通解为 $x=x_p+c_1\eta_1+\cdots+c_{n-r}\eta_{n-r}$。
+\EN{The homogeneous system $Ax=0$ always has the zero solution, and its solution set is a subspace of dimension $n-\operatorname{rank}A$. A basis $\eta_1,\dots,\eta_{n-r}$ is a fundamental system of solutions, and every solution is the displayed combination. To find it, reduce $A$ to reduced row echelon form, express pivot variables in terms of free variables, and set one free variable to one and the rest to zero; this produces $n-r$ independent solutions. The dimension formula is the rank--nullity theorem. The general solution of an inhomogeneous system is $x_p$ plus a linear combination of a fundamental system.}
+\EX{解齐次方程组 $x_1+x_2-x_3=0$、$x_2+x_3-x_4=0$。秩为 $2$，维数 $4-2=2$。由第二式 $x_4=x_2+x_3$，由第一式 $x_1=x_3-x_2$；取 $(x_2,x_3)=(1,0)$ 得 $\eta_1=(-1,1,0,1)$，取 $(0,1)$ 得 $\eta_2=(1,0,1,1)$，二者不成比例，构成基础解系，通解 $x=s\eta_1+t\eta_2$。}{Solve the displayed homogeneous system. The rank is two, so the solution space has dimension $4-2=2$. From the second equation $x_4=x_2+x_3$ and from the first $x_1=x_3-x_2$; taking $(x_2,x_3)=(1,0)$ gives $\eta_1=(-1,1,0,1)$ and $(0,1)$ gives $\eta_2=(1,0,1,1)$, which are independent and form a fundamental system, with general solution $x=s\eta_1+t\eta_2$.}
+\ASK{如何利用系数矩阵和增广矩阵判断线性方程组是否有解？}{How can the coefficient and augmented matrices decide whether a system has solutions?}{分别求秩：若 $\operatorname{rank}(A)<\operatorname{rank}([A\mid b])$，无解；若相等，有解。若有解且共同秩 $r<n$，有无穷多解，自由度为 $n-r$；若 $r=n$，解唯一。实践中把增广矩阵化为行阶梯形，看是否出现 $(0,\dots,0\mid c)$（$c\ne0$）的矛盾行，并数主元个数。}{Compute the two ranks: if the coefficient rank is smaller than the augmented rank, there is no solution; if they are equal, the system is consistent. If consistent with common rank $r<n$, there are infinitely many solutions with $n-r$ degrees of freedom; if $r=n$, the solution is unique. In practice, reduce the augmented matrix to row echelon form, look for a contradictory row and count the pivots.}
+\ASK{什么是基础解系？为什么恰有 $n-r$ 个解向量？}{What is a fundamental system of solutions, and why are there exactly $n-r$ vectors?}{基础解系是齐次方程组 $Ax=0$ 解空间的一组基，通解是它的任意线性组合。化 $A$ 为简化行阶梯形后有 $r$ 个主元变量、$n-r$ 个自由变量；每个自由变量可独立取值，其余变量被主元方程唯一确定，故解空间维数恰为 $n-r$。令自由变量取标准单位向量即得一组基。}{A fundamental system is a basis of the solution space of $Ax=0$, and the general solution is its arbitrary linear combination. After reduction there are $r$ pivot variables and $n-r$ free variables; each free variable can be chosen independently and the others are determined, so the solution space has dimension exactly $n-r$. Choosing standard unit vectors for the free variables gives a basis.}
+
+\subsection{应用（remark）| Applications (remark)}
+\APS{线性方程组是工程与经济学中最常见的模型：电路分析中基尔霍夫定律对每个节点与回路给出线性方程，解的存在唯一性由秩决定；经济学中 Leontief 投入产出模型为 $(I-A)x=d$，$I-A$ 可逆时均衡产量 $x$ 唯一，$(I-A)^{-1}$ 称 Leontief 逆矩阵；插值问题以 Vandermonde 矩阵为系数矩阵，节点互异保证可逆。}{Linear systems are among the most common models in engineering and economics: Kirchhoff's laws give linear equations at each node and loop, with existence and uniqueness decided by the rank; the Leontief input--output model reads $(I-A)x=d$, with a unique equilibrium output when $I-A$ is invertible, and $(I-A)^{-1}$ is the Leontief inverse; interpolation uses the Vandermonde matrix, which is invertible when the nodes are distinct.}
+
+\section{矩阵、逆矩阵与秩 | Matrices, inverses, and rank}
+\subsection{矩阵运算与不交换性 | Matrix operations and noncommutativity}
+\noindent\textbf{运算.} $m\times n$ 矩阵是数域 $F$ 上 $m$ 行 $n$ 列的数表 $A=(a_{ij})$。加法与数乘按元素进行；乘积 $AB$ 要求 $A$ 的列数等于 $B$ 的行数，若 $A$ 是 $m\times n$、$B$ 是 $n\times p$，则 $AB$ 是 $m\times p$，其第 $(i,j)$ 元素为 $\sum_{k=1}^n a_{ik}b_{kj}$，即 $A$ 第 $i$ 行与 $B$ 第 $j$ 列的内积。乘法满足结合律与分配律，$(AB)^{\mathsf T}=B^{\mathsf T}A^{\mathsf T}$，但一般不交换：$AB\ne BA$。单位矩阵 $I$ 满足 $IA=AI=A$；方阵的幂 $A^k$ 表示连续相乘，且 $A^kA^l=A^{k+l}$。
+\EN{An $m\times n$ matrix is an array of field elements. Addition and scalar multiplication act entrywise. The product $AB$ requires the number of columns of $A$ to equal the number of rows of $B$; for $A$ of size $m\times n$ and $B$ of size $n\times p$, the product is $m\times p$ and its $(i,j)$ entry is the dot product of row $i$ of $A$ with column $j$ of $B$. Multiplication is associative and distributive, transposition reverses the order, but multiplication is not commutative in general. The identity matrix satisfies $IA=AI=A$, and powers of a square matrix satisfy $A^kA^l=A^{k+l}$.}
+\EX{取 $A=\begin{pmatrix}1&1\\0&1\end{pmatrix}$、$B=\begin{pmatrix}1&0\\1&1\end{pmatrix}$，则 $AB=\begin{pmatrix}2&1\\1&1\end{pmatrix}$，而 $BA=\begin{pmatrix}1&1\\1&2\end{pmatrix}$，两者不同：先作哪个变换结果不同。另一个易错点：$A=\begin{pmatrix}1&0\\0&0\end{pmatrix}$、$B=\begin{pmatrix}0&0\\1&0\end{pmatrix}$ 都非零，但 $AB=0$，所以矩阵乘法没有消去律，$AB=AC$ 不能推出 $B=C$。}{For the displayed matrices, $AB$ and $BA$ differ, reflecting the order of the two transformations. A second pitfall: the two nonzero matrices shown multiply to zero, so matrix multiplication has no cancellation law and $AB=AC$ does not imply $B=C$.}
+
+\subsection{逆矩阵、伴随矩阵与分块矩阵 | Inverses, adjugates, and block matrices}
+\noindent\textbf{逆矩阵.} 方阵 $A$ 可逆指存在 $A^{-1}$ 使 $AA^{-1}=A^{-1}A=I$；逆若存在必唯一。一般由第 2 章的伴随公式 $A^{-1}=\operatorname{adj}(A)/\det A$ 给出，等价条件为 $\det A\ne0$、$\operatorname{rank}A=n$、$Ax=0$ 只有零解。逆的运算规则：$(AB)^{-1}=B^{-1}A^{-1}$（顺序反转），$(A^{\mathsf T})^{-1}=(A^{-1})^{\mathsf T}$，$(A^{-1})^{-1}=A$。实际求逆用 Gauss--Jordan 消元：对 $[A\mid I]$ 作行变换化为 $[I\mid A^{-1}]$。
+\EN{A square matrix is invertible if there is $A^{-1}$ with $AA^{-1}=A^{-1}A=I$; the inverse is unique if it exists. In general the adjugate formula gives the inverse, and equivalent conditions are nonzero determinant, full rank, and a trivial null space. The rules are: the inverse of a product reverses the order, inverse commutes with transpose, and the inverse of the inverse is the original. In practice one computes the inverse by Gauss--Jordan elimination on $[A\mid I]$.}
+\noindent\textbf{分块矩阵.} 把矩阵按行列分成小块后，加法按块相加，乘法按块相乘，但要求内部分块尺寸匹配。分块对角矩阵的逆为各块逆的分块对角矩阵；分块上三角矩阵满足
+\FORMULA{分块三角矩阵的逆}{inverse of a block triangular matrix}
+\[
+\begin{pmatrix}A&B\\0&D\end{pmatrix}^{-1}=
+\begin{pmatrix}A^{-1}&-A^{-1}BD^{-1}\\0&D^{-1}\end{pmatrix},
+\]
+其中 $A,D$ 可逆；直接相乘即可验证。分块三角的行列式公式 $\det\begin{pmatrix}A&B\\0&D\end{pmatrix}=\det A\det D$ 已在第 2 章由 Laplace 定理给出。分块运算把高阶问题化成低阶问题，是数值计算中的基本技巧。
+\EN{Partitioning matrices into blocks, addition and multiplication act blockwise, provided the inner block sizes match. The inverse of a block diagonal matrix is the block diagonal matrix of inverses, and the displayed formula gives the inverse of a block upper triangular matrix when the diagonal blocks are invertible; multiplication verifies it. The determinant of a block triangular matrix is the product of the diagonal determinants, as shown by Laplace expansion in Chapter 2. Block computation reduces large problems to smaller ones and is a basic numerical technique.}
+
+\subsection{初等矩阵与初等变换 | Elementary matrices and operations}
+\noindent\textbf{初等矩阵.} 对单位矩阵作一次初等行变换得到初等矩阵：交换第 $i,j$ 行得 $E_{ij}$；第 $i$ 行乘非零常数 $c$ 得 $E_i(c)$；第 $i$ 行加第 $j$ 行的 $k$ 倍得 $E_{ij}(k)$。它们都可逆：$E_{ij}^{-1}=E_{ij}$，$E_i(c)^{-1}=E_i(1/c)$，$E_{ij}(k)^{-1}=E_{ij}(-k)$。左乘一个初等矩阵等于作相应的行变换，右乘等于作相应的列变换；因此消元过程就是左乘一串初等矩阵。方阵 $A$ 可逆当且仅当它可写成有限个初等矩阵之积，这也说明初等行变换不改变可逆性。
+\EN{Elementary matrices are obtained by applying one elementary row operation to the identity: swapping rows $i,j$, scaling row $i$ by a nonzero constant, or adding a multiple of row $j$ to row $i$. All are invertible, with inverses of the same type. Left multiplication by an elementary matrix performs the corresponding row operation, while right multiplication performs a column operation; elimination is therefore left multiplication by a product of elementary matrices. A square matrix is invertible exactly when it is a product of elementary matrices, which also shows that elementary row operations preserve invertibility.}
+
+\subsection{乘积的行列式与秩 | Determinants and ranks of products}
+\noindent\textbf{行列式与秩的乘积规则.} 由第 2 章 $\det(AB)=\det A\det B$ 可得：$\det(A^k)=(\det A)^k$；对方阵 $\det(AB)=\det(BA)$；$A,B$ 都可逆当且仅当 $AB$ 可逆。秩方面有
+\FORMULA{乘积的秩}{rank of a product}
+\[
+\operatorname{rank}(AB)\le\min\{\operatorname{rank}A,\operatorname{rank}B\},\qquad
+\operatorname{rank}(AB)\ge \operatorname{rank}A+\operatorname{rank}B-n,
+\]
+其中 $A$ 是 $m\times n$、$B$ 是 $n\times p$。第一条因为 $AB$ 的列是 $A$ 的列的线性组合，行是 $B$ 的行的组合；第二条称 Sylvester 秩不等式，可由限制映射到核上证明。特别地，若 $A$ 可逆，则 $\operatorname{rank}(AB)=\operatorname{rank}B$：可逆矩阵不改变秩。
+\EN{From the product formula for determinants, powers, products of square matrices, and invertibility of products follow. For ranks, the product rank is at most the minimum of the two ranks, since the columns of $AB$ are combinations of columns of $A$ and its rows are combinations of rows of $B$; the second inequality is Sylvester's rank inequality. In particular, multiplying by an invertible matrix preserves rank.}
+
+\subsection{矩阵等价标准形 | Equivalence canonical form}
+\noindent\textbf{等价与标准形.} 若 $A$ 经有限次初等行变换和列变换化为 $B$，称 $A,B$ 等价；等价当且仅当存在可逆矩阵 $P,Q$ 使 $B=PAQ$。任何 $m\times n$ 矩阵 $A$ 都等价于
+\FORMULA{矩阵等价标准形}{equivalence canonical form}
+\[
+A=P\begin{pmatrix}I_r&0\\0&0\end{pmatrix}Q,\qquad r=\operatorname{rank}A,
+\]
+其中 $P,Q$ 可逆。证明：用行变换把主元移到前 $r$ 行，用列变换把主元列化为标准单位向量，再把其余元素消为零。因此秩是矩阵在等价意义下的完全不变量：同尺寸矩阵等价当且仅当秩相同。
+\EN{Matrices $A$ and $B$ are equivalent if one can be transformed into the other by elementary row and column operations, equivalently $B=PAQ$ for invertible $P,Q$. Every $m\times n$ matrix is equivalent to the displayed block form with $r=\operatorname{rank}A$: row operations move the pivots into the first $r$ rows, column operations turn the pivot columns into standard unit vectors and clear the other entries. Hence rank is a complete invariant of equivalence for matrices of the same size.}
+
+\subsection{易错点与实际意义 | Pitfalls and applications}
+\noindent\textbf{易错点.} (1) 乘法不可交换，$(AB)^k\ne A^kB^k$ 一般不成立；(2) 没有消去律，$AB=0$ 不意味着 $A=0$ 或 $B=0$；(3) $(A+B)^{-1}\ne A^{-1}+B^{-1}$，只有 $(AB)^{-1}=B^{-1}A^{-1}$；(4) 只有方阵才有逆和行列式，$AB$ 可逆不意味着 $A,B$ 都可逆（非方阵不谈逆）；(5) $\operatorname{rank}(AB)$ 可以严格小于两个秩的最小值。
+\EN{Pitfalls: multiplication is not commutative and $(AB)^k\ne A^kB^k$ in general; there is no cancellation law, so $AB=0$ need not make $A$ or $B$ zero; the inverse of a sum is not the sum of inverses, only the inverse of a product reverses order; only square matrices have inverses and determinants; and the rank of a product can be strictly smaller than both factors' ranks.}
+\APS{矩阵是线性变换的坐标表示，也是数据与网络的通用语言：图像处理用 $2\times2$、$3\times3$ 矩阵作旋转、缩放、剪切；网络用邻接矩阵表示连接，用矩阵幂统计路径数；最小二乘用 $A^{\mathsf T}A$ 求解超定方程组。矩阵分解（如 $LU$、$QR$、奇异值分解）把复杂变换拆成简单变换的复合，是数值线性代数的核心。}{Matrices are coordinate representations of linear maps and a universal language for data and networks: image processing uses $2\times2$ and $3\times3$ matrices for rotation, scaling and shear; networks use adjacency matrices and matrix powers to count paths; least squares solves overdetermined systems through $A^{\mathsf T}A$. Matrix factorizations such as $LU$, $QR$ and singular value decomposition split a complicated transformation into simple ones and form the core of numerical linear algebra.}
+\ASK{方阵可逆有哪些等价条件？}{What are the equivalent conditions for a square matrix to be invertible?}{$A$ 可逆；$\det A\ne0$；$\operatorname{rank}A=n$；行（列）向量线性无关；$Ax=0$ 只有零解；$Ax=b$ 对每个 $b$ 有唯一解；$A$ 可写成有限个初等矩阵之积；$A$ 等价于单位矩阵。这些条件从不同角度描述同一件事：$A$ 不把非零向量压到零，也不把空间压到更低维。}{The matrix is invertible; its determinant is nonzero; its rank is $n$; its rows (or columns) are linearly independent; $Ax=0$ has only the zero solution; $Ax=b$ has a unique solution for every $b$; it is a product of elementary matrices; it is equivalent to the identity. These describe the same fact from different angles: $A$ does not send a nonzero vector to zero and does not collapse space to lower dimension.}
+\ASK{$(AB)^{-1}$ 与 $A^{-1}B^{-1}$ 有什么关系？}{How is $(AB)^{-1}$ related to $A^{-1}B^{-1}$?}{若 $A,B$ 可逆，则 $(AB)^{-1}=B^{-1}A^{-1}$，顺序必须反转，因为先作 $B$ 再作 $A$，逆过程要先撤销 $A$ 再撤销 $B$。一般 $A^{-1}B^{-1}\ne B^{-1}A^{-1}$，除非 $A,B$ 可交换；而 $A^{-1}+B^{-1}$ 与 $(A+B)^{-1}$ 没有简单关系。}{If $A$ and $B$ are invertible, then $(AB)^{-1}=B^{-1}A^{-1}$, with the order reversed: applying $B$ then $A$ is undone by first undoing $A$ then $B$. In general $A^{-1}B^{-1}\ne B^{-1}A^{-1}$ unless the matrices commute, and there is no simple relation between $A^{-1}+B^{-1}$ and $(A+B)^{-1}$.}
+
+\section{二次型 | Quadratic forms}
+\subsection{二次型的矩阵表示 | Matrix representation}
+\noindent\textbf{定义.} 数域 $F$ 上的二次型是齐次二次多项式 $Q(x_1,\dots,x_n)=\sum_{i\le j}b_{ij}x_ix_j$。它可写成
+\FORMULA{二次型的矩阵表示}{matrix representation of a quadratic form}
+\[
+Q(x)=x^{\mathsf T}Ax,\qquad A=A^{\mathsf T},
+\]
+其中 $A$ 是对称矩阵：平方项 $a_{ii}x_i^2$ 的系数就是 $a_{ii}$，交叉项 $b_{ij}x_ix_j$（$i\ne j$）在 $a_{ij}=a_{ji}$ 各放一半，即 $a_{ij}=b_{ij}/2$。若原矩阵不对称，其反对称部分对 $x^{\mathsf T}Ax$ 无贡献，故总可用 $(A+A^{\mathsf T})/2$ 对称化。二次型的秩定义为矩阵 $A$ 的秩。
+\EN{A quadratic form over a field is a homogeneous polynomial of degree two. It can be written $x^{\mathsf T}Ax$ with a symmetric matrix $A$: diagonal entries are the coefficients of the squares, and a cross term is split equally between the two symmetric off-diagonal positions. Any skew-symmetric part contributes nothing, so the matrix can always be symmetrized. The rank of the form is the rank of $A$.}
+\READ{``Q of x equals x transpose A x, with A symmetric.''}
+
+\subsection{合同变换与标准形 | Congruence and standard forms}
+\noindent\textbf{合同变换.} 作可逆线性替换 $x=Cy$（$C$ 可逆），则
+\FORMULA{合同变换}{congruence transformation}
+\[
+Q(x)=y^{\mathsf T}(C^{\mathsf T}AC)y,
+\]
+矩阵由 $A$ 变为 $C^{\mathsf T}AC$，称 $A$ 与 $C^{\mathsf T}AC$ 合同。二次型的化简是换变量，变换律是 $C^{\mathsf T}AC$；而线性算子换基的矩阵变换律是 $C^{-1}AC$（相似），两者对象不同，不能混用。合同变换保持对称性与秩。若经合同变换化为对角形 $d_1y_1^2+\cdots+d_ny_n^2$，称标准形；进一步把正系数化为 $1$、负系数化为 $-1$、零保留，称为规范形。
+\EN{Under an invertible change of variables $x=Cy$, the matrix becomes $C^{\mathsf T}AC$; this is congruence. Reducing a quadratic form is a change of variables with this rule, whereas a basis change for a linear operator follows the similarity rule $C^{-1}AC$; the two objects differ. Congruence preserves symmetry and rank. A diagonal form is a standard form, and normalizing positive coefficients to one and negative ones to minus one gives the normal form.}
+
+\subsection{配方法与初等变换化标准形 | Completing squares and congruence elimination}
+\noindent\textbf{配方法.} 若 $a_{11}\ne0$，把含 $x_1$ 的项配成完全平方，再对剩余变量归纳；若 $a_{11}=0$ 但某个 $a_{ij}\ne0$（$i\ne j$），先用可逆替换 $x_i=y_i+y_j$、$x_j=y_i-y_j$ 制造平方项。每一步替换都可逆，所以配方不改变正负惯性。初等变换法的做法是：对 $A$ 作一次初等行变换后立刻作同样的列变换（即左乘 $E^{\mathsf T}$、右乘 $E$），记录所有列变换的乘积 $C$，则 $C^{\mathsf T}AC$ 为对角形。
+\EN{If $a_{11}\ne0$, complete the square in $x_1$ and recurse on the remaining variables. If $a_{11}=0$ but some off-diagonal $a_{ij}\ne0$, first use the invertible substitution $x_i=y_i+y_j$, $x_j=y_i-y_j$ to create square terms. Every step is invertible, so inertia is unchanged. The elementary-operation method applies a row operation to $A$ and immediately the same column operation, recording the accumulated column transformation $C$; then $C^{\mathsf T}AC$ is diagonal.}
+
+\subsection{惯性定理 | Sylvester's law of inertia}
+\noindent\textbf{惯性定理.} 实二次型经可逆合同变换总可化为
+\FORMULA{惯性定理}{Sylvester's law of inertia}
+\[
+Q\cong y_1^2+\cdots+y_p^2-y_{p+1}^2-\cdots-y_{p+q}^2,
+\]
+其中 $p$ 是正平方项个数（正惯性指数），$q$ 是负平方项个数（负惯性指数），$p+q=\operatorname{rank}A$，$p-q$ 称符号差。惯性定理断言：$p,q$ 不随可逆替换改变，是二次型在合同下的完全不变量。证明思路：若有两种对角化给出不同的正项个数，取相应的两组线性无关向量构造非零向量 $z$ 使 $Q(z)>0$ 且 $Q(z)\le0$，矛盾。由惯性定理，$p$ 等于 $A$ 的正特征值个数、$q$ 等于负特征值个数（特征值预告见第 7 章）。
+\EN{Every real quadratic form is congruent to the displayed normal form with $p$ positive squares and $q$ negative squares; $p+q$ is the rank and $p-q$ the signature. The inertia theorem says that $p$ and $q$ do not change under invertible substitutions, so they are complete invariants of the form under congruence. Proof idea: two diagonalizations with different numbers of positive terms would produce a nonzero vector on which the form is simultaneously positive and nonpositive, a contradiction. Consequently $p$ and $q$ equal the numbers of positive and negative eigenvalues of $A$ (eigenvalues are treated in Chapter 7).}
+\EX{对 $Q(x,y)=x^2+4xy+y^2$，矩阵 $A=\begin{pmatrix}1&2\\2&1\end{pmatrix}$ 的特征值为 $3,-1$，故 $p=q=1$，规范形为 $y_1^2-y_2^2$，是不定型。对 $Q=x^2+2xy+3y^2=(x+y)^2+2y^2$，配方得两个正平方项，$p=2,q=0$，正定。}{For $Q(x,y)=x^2+4xy+y^2$, the matrix has eigenvalues $3$ and $-1$, so $p=q=1$ and its normal form is $y_1^2-y_2^2$; it is indefinite. For $Q=x^2+2xy+3y^2=(x+y)^2+2y^2$, completing the square gives two positive squares, so $p=2$ and $q=0$, and it is positive definite.}
+
+\subsection{正定、负定与半正定判别 | Definiteness criteria}
+\noindent\textbf{定义与判据.} 若对一切 $x\ne0$ 有 $Q(x)>0$，称正定；$Q(x)<0$ 恒成立称负定；可正可负称不定；$Q(x)\ge0$ 恒成立称半正定。Sylvester 判据：
+\FORMULA{Sylvester 判据}{Sylvester's criterion}
+\[
+A\ \text{正定}\iff D_1>0,\ D_2>0,\ \dots,\ D_n>0,
+\]
+其中 $D_k$ 是 $A$ 的 $k$ 阶顺序主子式。负定等价于 $-A$ 正定，即 $D_k$ 的符号依次为 $-1,+1,-1,\dots$。半正定的充要条件是所有主子式（不只是顺序主子式）都 $\ge0$，且 $\operatorname{rank}A<n$ 时必奇异。正定还等价于：$A$ 合同于 $I$；$A$ 的特征值全为正（预告）；存在可逆 $B$ 使 $A=B^{\mathsf T}B$。
+\EN{The form is positive definite if it is positive at every nonzero vector, negative definite if always negative, indefinite if it takes both signs, and positive semidefinite if always nonnegative. Sylvester's criterion says that positive definiteness is equivalent to all leading principal minors being positive. Negative definiteness is positive definiteness of $-A$, so the leading minors alternate in sign. Positive semidefiniteness is equivalent to all principal minors being nonnegative, and such a matrix is singular when its rank is below $n$. Positive definiteness is also equivalent to congruence with $I$, to all eigenvalues being positive (preview), and to the existence of an invertible $B$ with $A=B^{\mathsf T}B$.}
+\noindent\textbf{几何与应用.} 正定二次型的等值线 $Q(x)=c>0$ 是椭圆（三维为椭球）；不定型的等值线是双曲线（三维为马鞍面）；半正定型退化。最优化中，目标函数在驻点处的 Hessian 矩阵正定是严格局部极小的充分条件，负定对应局部极大，不定对应鞍点。统计中协方差矩阵总是半正定的，正定当且仅当不存在变量的非平凡线性组合为常数；马氏距离依赖 $\Sigma$ 正定。物理中，系统在平衡点的势能二阶近似若是正定二次型，则平衡稳定。
+\EN{Positive definite forms have ellipses (ellipsoids) as level sets; indefinite forms have hyperbolas (saddles); semidefinite forms are degenerate. In optimization, a positive definite Hessian at a stationary point is sufficient for a strict local minimum, a negative definite Hessian for a local maximum, and an indefinite one indicates a saddle. In statistics the covariance matrix is always positive semidefinite and is positive definite exactly when no nontrivial linear combination of the variables is constant; the Mahalanobis distance requires positive definiteness. In physics, a positive definite second-order potential at equilibrium means stability.}
+\ASK{二次型化标准形时，为什么用合同变换而不是相似变换？}{Why do we use congruence rather than similarity to reduce a quadratic form?}{二次型在换坐标 $x=Cy$ 后成为 $y^{\mathsf T}(C^{\mathsf T}AC)y$，故矩阵变换律是 $C^{\mathsf T}AC$；相似变换 $C^{-1}AC$ 描述线性算子在换基下的矩阵。二次型的等值面与正负性只依赖合同类，惯性定理由此而来；相似类则保留特征值。二者研究对象不同，不能互换。}{A change of variables in a quadratic form gives $C^{\mathsf T}AC$, while similarity $C^{-1}AC$ describes the matrix of a linear operator under a basis change. Level sets and signs of a quadratic form depend only on the congruence class, which is why inertia is invariant, whereas similarity preserves eigenvalues. The two describe different objects and cannot be interchanged.}
+\ASK{如何判断一个实二次型是否正定？}{How do you decide whether a real quadratic form is positive definite?}{首选 Sylvester 判据：计算所有顺序主子式 $D_k$，全部为正则正定；有负则不正定（若 $D_k$ 符号交替且非零则负定）。也可配方：标准形中正平方项个数等于 $n$ 则正定；等价地，矩阵合同于 $I$、特征值全为正。半正定则需所有主子式非负，只看顺序主子式会出错。}{The first choice is Sylvester's criterion: compute all leading principal minors; positive definiteness holds exactly when all are positive, while alternating nonzero signs give negative definiteness. Completing squares also works: the form is positive definite when the standard form has $n$ positive squares. Equivalently the matrix is congruent to $I$ and all eigenvalues are positive. For semidefiniteness all principal minors must be nonnegative; checking only the leading ones can fail.}
+
+\section{线性空间 | Vector spaces}
+\subsection{定义与八条公理 | Definition and the eight axioms}
+\noindent\textbf{定义.} 设 $F$ 是数域，$V$ 是非空集合。若在 $V$ 上定义了加法 $\alpha+\beta$ 与数乘 $k\alpha$（$k\in F$），且满足以下八条公理，则称 $V$ 为 $F$ 上的线性空间（向量空间），$V$ 的元素称向量：
+\begin{enumerate}[label=(\arabic*),leftmargin=2.4em,itemsep=1pt]
+\item $\alpha+\beta=\beta+\alpha$（加法交换律）；
+\item $(\alpha+\beta)+\gamma=\alpha+(\beta+\gamma)$（加法结合律）；
+\item 存在零元 $0\in V$，使 $\alpha+0=\alpha$；
+\item 对每个 $\alpha$ 存在负元 $-\alpha$，使 $\alpha+(-\alpha)=0$；
+\item $1\alpha=\alpha$；
+\item $k(l\alpha)=(kl)\alpha$；
+\item $(k+l)\alpha=k\alpha+l\alpha$；
+\item $k(\alpha+\beta)=k\alpha+k\beta$。
+\end{enumerate}
+公理 (1)--(4) 说明 $(V,+)$ 是交换群，公理 (5)--(8) 把数乘与两种加法协调起来。前四条描述“平移”，后四条描述“伸缩”。由此可推出 $0\alpha=0$、$k0=0$、$(-1)\alpha=-\alpha$、$k\alpha=0\Rightarrow k=0$ 或 $\alpha=0$。
+\EN{Let $F$ be a field and $V$ a nonempty set with an addition $\alpha+\beta$ and a scalar multiplication $k\alpha$ satisfying the eight axioms listed above. Then $V$ is a vector space over $F$. Axioms (1)--(4) say $(V,+)$ is an abelian group, and (5)--(8) coordinate scalar multiplication with the two additions. The first four describe translations and the last four scalings. From them one derives $0\alpha=0$, $k0=0$, $(-1)\alpha=-\alpha$, and that $k\alpha=0$ forces $k=0$ or $\alpha=0$.}
+\noindent\textbf{例子.} $F^n$（$n$ 元列向量，按分量运算）、$F[x]$ 与次数小于 $n$ 的多项式全体 $F[x]_{<n}$、$m\times n$ 矩阵全体 $M_{m\times n}(F)$、区间上的连续函数空间 $C[a,b]$、以及 $F$ 自身（视作 $F$ 上的一维空间）都是线性空间。检验只需逐一验证八条公理，运算都取自然的逐点或逐分量定义。
+\EN{Examples are $F^n$ with componentwise operations, the polynomial ring $F[x]$ and the space of polynomials of degree below $n$, the $m\times n$ matrices, the continuous functions $C[a,b]$, and $F$ itself as a one-dimensional space over $F$. Verifying them means checking the eight axioms pointwise or componentwise.}
+
+\subsection{子空间 | Subspaces}
+\noindent\textbf{定义与判别.} 若 $V$ 的非空子集 $W$ 对加法与数乘封闭，即 $\alpha,\beta\in W,\ k\in F\Rightarrow \alpha+\beta\in W,\ k\alpha\in W$，则称 $W$ 是 $V$ 的子空间。$W$ 在继承的运算下自身成为线性空间。一个充要判别是：$\alpha,\beta\in W,\ k,l\in F\Rightarrow k\alpha+l\beta\in W$。零子空间 $\{0\}$ 与全空间 $V$ 是平凡子空间。齐次方程组 $Ax=0$ 的解集是 $F^n$ 的子空间（第 3 章），这正是一般子空间的原型。
+\EN{A nonempty subset $W$ closed under addition and scalar multiplication is a subspace; it is itself a vector space under the inherited operations. An equivalent test is that every linear combination $k\alpha+l\beta$ of two elements stays in $W$. The zero subspace and $V$ itself are the trivial subspaces. The solution set of a homogeneous system $Ax=0$ is a subspace of $F^n$, the prototype of all subspaces.}
+\noindent\textbf{子空间的交与和.} 一族子空间的交仍是子空间；但并一般不是子空间。定义和 $V_1+V_2=\{\alpha_1+\alpha_2:\alpha_i\in V_i\}$，它仍是子空间，且是含 $V_1\cup V_2$ 的最小子空间。生成子空间 $L(\alpha_1,\dots,\alpha_s)$ 是 $\alpha_i$ 的全体线性组合，它是包含这些向量的最小（含于每个含它们的子空间的）子空间。
+\EN{The intersection of any family of subspaces is a subspace, but the union is generally not. The sum $V_1+V_2$ of all pairwise sums is a subspace and the smallest subspace containing $V_1\cup V_2$. The span $L(\alpha_1,\dots,\alpha_s)$ of a set of vectors is all their linear combinations; it is the smallest subspace containing them.}
+
+\subsection{线性相关与线性无关 | Linear dependence and independence}
+\noindent\textbf{定义.} 设 $\alpha_1,\dots,\alpha_s\in V$。若存在不全为零的 $k_1,\dots,k_s\in F$ 使
+\FORMULA{线性相关}{linear dependence}
+\[
+k_1\alpha_1+\cdots+k_s\alpha_s=0,
+\]
+则称 $\alpha_1,\dots,\alpha_s$ 线性相关；否则（即上式只在 $k_1=\cdots=k_s=0$ 时成立）称线性无关。单个向量线性相关当且仅当它是零向量。
+\EN{Vectors are linearly dependent if some nontrivial combination vanishes, and linearly independent otherwise. A single vector is dependent exactly when it is zero.}
+\noindent\textbf{判定定理.} $s\ge2$ 时，$\alpha_1,\dots,\alpha_s$ 线性相关当且仅当其中某个向量可被其余向量线性表示。基本性质：整体无关则任意部分无关；部分相关则整体相关；若 $\beta$ 能由 $\alpha_1,\dots,\alpha_s$ 线性表示，则表示唯一当且仅当 $\alpha_i$ 线性无关。坐标意义下，$F^n$ 中 $s$ 个列向量线性无关当且仅当以它们为列的矩阵秩为 $s$；$s>n$ 时必相关。
+\EN{For $s\ge2$, dependence is equivalent to one vector being a combination of the others. A subset of an independent set is independent, and a superset of a dependent set is dependent. A vector expressed through independent vectors has a unique expression. In $F^n$, $s$ columns are independent exactly when their matrix has rank $s$, so $s>n$ forces dependence.}
+
+\subsection{基与维数 | Bases and dimension}
+\noindent\textbf{定义.} 若 $\alpha_1,\dots,\alpha_n$ 线性无关且能生成整个 $V$（即 $V=L(\alpha_1,\dots,\alpha_n)$），则称它是 $V$ 的一组基。$V$ 若有有限基，称有限维；否则无限维。本课程只讨论有限维。
+\EN{A basis is a linearly independent spanning set. A space with a finite basis is finite-dimensional; we only treat that case here.}
+\noindent\textbf{基的扩充定理与维数.}
+\FORMULA{维数的良定义}{well-definedness of dimension}
+\[
+\dim V:=\text{任意一组基所含向量的个数}.
+\]
+\noindent\textbf{定理（基的扩充 / 替换）.} 设 $\alpha_1,\dots,\alpha_r$ 线性无关、$\beta_1,\dots,\beta_s$ 生成 $V$，则 $r\le s$，且可从 $\beta_1,\dots,\beta_s$ 中取出 $s-r$ 个向量补到 $\alpha_1,\dots,\alpha_r$ 之后仍成一组基。证明思路：对 $r$ 归纳，把 $\alpha_r$ 用 $\beta$ 表出后替换掉某个 $\beta_i$（表出系数必有一个非零，否则 $\alpha$ 不能被生成，与它们生成 $V$ 矛盾）。由该定理立即得：任意两组基个数相同，故维数良定义；任何线性无关组可扩充成基，任何生成组可缩减成基。
+\EN{Theorem (extension/replacement): if $\alpha_1,\dots,\alpha_r$ are independent and $\beta_1,\dots,\beta_s$ span $V$, then $r\le s$, and $s-r$ of the $\beta_i$ can be adjoined to the $\alpha_i$ to form a basis. Proof idea: induct on $r$, expressing $\alpha_r$ through the $\beta_i$ and replacing some $\beta_i$ (some coefficient must be nonzero). Hence all bases have the same cardinality, so dimension is well-defined; every independent set extends to a basis and every spanning set contains one.}
+\noindent\textbf{基本维数.} $\dim F^n=n$，$\dim F[x]_{<n}=n$（基 $1,x,\dots,x^{n-1}$），$\dim M_{m\times n}(F)=mn$（基为矩阵单位 $E_{ij}$）。维数是线性空间在同构意义下的完全不变量（同构概念见 6.5 后的注记）。
+\EN{The standard spaces have $\dim F^n=n$, $\dim F[x]_{<n}=n$ with basis $1,x,\dots,x^{n-1}$, and $\dim M_{m\times n}=mn$ with the matrix units $E_{ij}$. Dimension is a complete isomorphism invariant.}
+
+\subsection{坐标与过渡矩阵 | Coordinates and transition matrices}
+\noindent\textbf{坐标.} 取定基 $\varepsilon_1,\dots,\varepsilon_n$，每个 $\alpha$ 有唯一表示 $\alpha=x_1\varepsilon_1+\cdots+x_n\varepsilon_n$，称 $(x_1,\dots,x_n)^{\mathsf T}$ 为 $\alpha$ 在该基下的坐标。$\alpha\mapsto(x_1,\dots,x_n)^{\mathsf T}$ 给出 $V\cong F^n$ 的同构：它保持加法与数乘，故“抽象空间”都等同于坐标空间 $F^n$。
+\EN{Fixing a basis, every vector has a unique coordinate column $(x_1,\dots,x_n)^{\mathsf T}$. The map sending a vector to its coordinates is a linear isomorphism $V\cong F^n$, so an abstract space is identified with $F^n$ through coordinates.}
+\noindent\textbf{过渡矩阵.} 设 $(\eta_1,\dots,\eta_n)=(\varepsilon_1,\dots,\varepsilon_n)A$，即 $\eta_j=\sum_i a_{ij}\varepsilon_i$，则 $A$ 称从旧基 $\varepsilon$ 到新基 $\eta$ 的过渡矩阵，$A$ 可逆。若 $\alpha$ 在两基下坐标分别为 $X$ 与 $Y$，则
+\FORMULA{坐标变换公式}{coordinate change formula}
+\[
+X=AY,\qquad Y=A^{-1}X.
+\]
+\EN{If the new basis is obtained from the old by an invertible transition matrix $A$, then coordinates transform by $X=AY$ (old coordinates equal $A$ times new coordinates). The transition matrix is always invertible.}
+\READ{``The old coordinates equal the transition matrix times the new coordinates.''}
+
+\subsection{交与和、直和与维数公式 | Sums, direct sums, and the dimension formula}
+\noindent\textbf{维数公式.} 设 $V_1,V_2$ 是 $V$ 的有限维子空间，则
+\FORMULA{维数公式}{dimension formula for subspaces}
+\[
+\dim(V_1+V_2)=\dim V_1+\dim V_2-\dim(V_1\cap V_2).
+\]
+\noindent\textbf{证明思路.} 取交空间的一组基 $\gamma_1,\dots,\gamma_t$，把它分别扩充为 $V_1$ 的基 $\gamma_1,\dots,\gamma_t,\alpha_1,\dots,\alpha_p$ 与 $V_2$ 的基 $\gamma_1,\dots,\gamma_t,\beta_1,\dots,\beta_q$，再验证 $\{\gamma_i,\alpha_j,\beta_k\}$ 是 $V_1+V_2$ 的基：生成显然（$V_1+V_2$ 的元都可写成这些向量的组合）；线性无关则把组合式整理成 $V_1\cap V_2$ 的元，再用交基与 $V_2$ 基的唯一表示推出系数全零。于是 $\dim(V_1+V_2)=t+p+q=(t+p)+(t+q)-t$。
+\EN{Proof idea: extend a basis of the intersection to bases of $V_1$ and $V_2$ separately, and check that the union forms a basis of the sum; spanning is clear and independence follows by pushing a relation into the intersection and using unique representation. The displayed count follows immediately.}
+\noindent\textbf{直和.} 若 $V_1\cap V_2=\{0\}$，称 $V_1+V_2$ 为直和，记 $V_1\oplus V_2$。下列条件等价：$V_1\cap V_2=\{0\}$；每个 $\alpha\in V_1+V_2$ 的分解 $\alpha=\alpha_1+\alpha_2$（$\alpha_i\in V_i$）唯一；$\dim(V_1+V_2)=\dim V_1+\dim V_2$。更一般地，多个子空间的和为直和当且仅当零向量的表示唯一。若 $V=V_1\oplus V_2$，则 $V_2$ 称 $V_1$ 的补子空间（补空间不唯一）。
+\EN{The sum is direct, written $V_1\oplus V_2$, when the intersection is zero; equivalently every vector decomposes uniquely, or the dimensions add. For several subspaces the sum is direct exactly when zero has a unique decomposition. If $V=V_1\oplus V_2$, then $V_2$ is a complement of $V_1$, which need not be unique.}
+\noindent\textbf{同构与维数不变.} 保持加法与数乘的双射称同构。有限维空间 $V\cong W$ 当且仅当 $\dim V=\dim W$；维数是线性空间在同构下的唯一不变量。推论：线性空间的定义公理不依赖具体对象，只有“维数”这一个结构量。
+\EN{A bijection preserving addition and scalar multiplication is an isomorphism. Two finite-dimensional spaces are isomorphic exactly when they have the same dimension, so dimension is the only isomorphism invariant of a vector space.}
+\ASK{线性空间的八条公理为什么分两组？}{Why do the eight vector space axioms split into two groups?}{前四条（加法交换、结合、零元、负元）说明 $(V,+)$ 是交换群，给出“平移”结构；后四条（$1\alpha=\alpha$、数乘结合、两个分配律）把数乘与加法协调起来，给出“伸缩”结构。只有两组配合才能推出 $0\alpha=0$、$(-1)\alpha=-\alpha$、$k\alpha=0\Rightarrow k=0$ 或 $\alpha=0$ 等基本性质，并保证坐标运算与消元不依赖具体对象。}{The first four axioms make $(V,+)$ an abelian group, the translation structure; the last four coordinate scalar multiplication with both additions, the scaling structure. Together they yield $0\alpha=0$, $(-1)\alpha=-\alpha$, and the zero-product property, and make coordinate computation independent of the concrete object.}
+\ASK{维数公式和直和有什么关系？}{How is the dimension formula related to direct sums?}{维数公式 $\dim(V_1+V_2)=\dim V_1+\dim V_2-\dim(V_1\cap V_2)$ 一般成立；当 $V_1\cap V_2=\{0\}$ 时交的维数为零，退化为 $\dim(V_1\oplus V_2)=\dim V_1+\dim V_2$，这恰是直和的判定条件之一。所以直和是“维数可加”的情形，等价于每个向量分解唯一。}{The dimension formula holds generally; when the intersection is zero it specializes to $\dim(V_1\oplus V_2)=\dim V_1+\dim V_2$, one of the equivalent characterizations of a direct sum. Thus a direct sum is precisely the case where dimensions add, equivalently where every vector decomposes uniquely.}
+
+\section{线性变换 | Linear transformations}
+\subsection{定义与运算 | Definition and operations}
+\noindent\textbf{定义.} 设 $V,W$ 是 $F$ 上的线性空间，映射 $\mathcal A:V\to W$ 若满足
+\FORMULA{线性映射的线性性}{linearity of a linear map}
+\[
+\mathcal A(\alpha+\beta)=\mathcal A\alpha+\mathcal A\beta,\qquad \mathcal A(k\alpha)=k\,\mathcal A\alpha,
+\]
+则称 $\mathcal A$ 为线性变换（线性映射）。等价地，$\mathcal A(k\alpha+l\beta)=k\mathcal A\alpha+l\mathcal A\beta$。$V$ 到自身的线性变换称 $V$ 上的线性变换；全体记 $L(V)$。线性变换把零向量映为零向量，把线性组合映成相应组合（系数不变），故完全由基上的作用决定。
+\EN{A map $\mathcal A:V\to W$ is linear if it preserves addition and scalar multiplication; equivalently it preserves arbitrary linear combinations. A linear map from $V$ to itself is a linear operator, and the set of all is $L(V)$. A linear map sends zero to zero and is completely determined by its action on a basis.}
+\noindent\textbf{运算.} 线性变换可相加 $(\mathcal A+\mathcal B)\alpha=\mathcal A\alpha+\mathcal B\alpha$、数乘 $(k\mathcal A)\alpha=k\mathcal A\alpha$，以及复合（乘法）$(\mathcal A\mathcal B)\alpha=\mathcal A(\mathcal B\alpha)$。这些结果仍是线性变换，$L(V)$ 关于它们构成含幺环，且 $k(\mathcal A\mathcal B)=(k\mathcal A)\mathcal B=\mathcal A(k\mathcal B)$。$L(V)$ 是 $F$ 上的代数，但乘法一般不可交换（与矩阵乘法对应）。
+\EN{Linear maps admit addition, scalar multiplication, and composition, and these operations again produce linear maps. $L(V)$ is a unital ring and an algebra over $F$, with multiplication generally noncommutative, mirroring matrix multiplication.}
+
+\subsection{矩阵表示与相似 | Matrix representation and similarity}
+\noindent\textbf{线性变换的矩阵.} 设 $V$ 有基 $\varepsilon_1,\dots,\varepsilon_n$、$W$ 有基 $\eta_1,\dots,\eta_m$。若
+\[
+\mathcal A(\varepsilon_1,\dots,\varepsilon_n)=(\eta_1,\dots,\eta_m)A,
+\]
+即 $\mathcal A\varepsilon_j=\sum_i a_{ij}\eta_i$（$A$ 的第 $j$ 列是 $\mathcal A\varepsilon_j$ 在 $\eta$ 基下的坐标），则称 $m\times n$ 矩阵 $A$ 为 $\mathcal A$ 在这两组基下的矩阵。它把坐标关系写成 $\mathcal A\alpha$ 的坐标 $=A\cdot(\alpha$ 的坐标$)$。线性变换与其矩阵一一对应，且加法、数乘、复合分别对应矩阵的加法、数乘、乘法，故 $L(V)\cong M_n(F)$。
+\EN{Fix bases of $V$ and $W$. The matrix of $\mathcal A$ has as its $j$-th column the coordinates of $\mathcal A\varepsilon_j$ in the target basis. It relates coordinates by ``coordinates of $\mathcal A\alpha$ equal $A$ times coordinates of $\alpha$.'' Linear maps correspond bijectively to matrices, with the three operations matching, so $L(V)\cong M_n(F)$.}
+\noindent\textbf{相似.} 对 $V$ 上的线性变换 $\mathcal A$，若在基 $\varepsilon$ 与 $\eta$ 下的矩阵分别为 $A$ 与 $B$，过渡矩阵为 $P$（$(\eta)=(\varepsilon)P$），则
+\FORMULA{相似关系}{similarity relation}
+\[
+B=P^{-1}AP.
+\]
+称 $B$ 与 $A$ 相似。于是研究一个线性变换就是研究一个相似类；第 7--8 章的目标是在相似类中找“最简”矩阵（对角形或 Jordan 形）。相似保持迹、行列式、秩与特征多项式。
+\EN{Under a basis change with transition matrix $P$, the matrix of an operator changes by $B=P^{-1}AP$; this is similarity. Studying an operator is studying a similarity class, and Chapters 7--8 seek the simplest representative, diagonal or Jordan form. Similarity preserves trace, determinant, rank and characteristic polynomial.}
+\READ{``B equals P inverse A P; this is the similarity relation.''}
+
+\subsection{核与像、秩零度定理 | Kernel, image, and the rank--nullity theorem}
+\noindent\textbf{核与像.} 线性变换 $\mathcal A:V\to W$ 的核是 $\ker\mathcal A=\{\alpha\in V:\mathcal A\alpha=0\}$，像（值域）是 $\operatorname{Im}\mathcal A=\{\mathcal A\alpha:\alpha\in V\}$。$\ker\mathcal A$ 是 $V$ 的子空间，$\operatorname{Im}\mathcal A$ 是 $W$ 的子空间。$\mathcal A$ 是单射当且仅当 $\ker\mathcal A=\{0\}$；$\mathcal A$ 是满射当且仅当 $\operatorname{Im}\mathcal A=W$。像的维数称 $\mathcal A$ 的秩。
+\EN{The kernel is the preimage of zero and the image is the set of values; the kernel is a subspace of the domain and the image a subspace of the codomain. Injectivity is equivalent to a zero kernel and surjectivity to image equal to the whole codomain. The dimension of the image is the rank.}
+\noindent\textbf{秩零度定理.} 设 $\dim V=n$ 有限，则
+\FORMULA{秩零度定理}{rank--nullity theorem}
+\[
+\dim V=\dim\ker\mathcal A+\dim\operatorname{Im}\mathcal A.
+\]
+\noindent\textbf{证明思路.} 取 $\ker\mathcal A$ 的一组基 $\alpha_1,\dots,\alpha_s$，扩充为 $V$ 的基 $\alpha_1,\dots,\alpha_s,\beta_1,\dots,\beta_{n-s}$；验证 $\mathcal A\beta_1,\dots,\mathcal A\beta_{n-s}$ 是 $\operatorname{Im}\mathcal A$ 的基：生成因像中每个元都由 $\beta$ 部分贡献（$\alpha$ 部分被映成零），线性无关则把 $\sum c_i\mathcal A\beta_i=0$ 写回 $\sum c_i\beta_i\in\ker\mathcal A$，再用交为零导出 $c_i=0$。于是 $\dim\operatorname{Im}\mathcal A=n-s$。这一定理推广了第 3 章的 $\dim\ker A=n-\operatorname{rank}A$。
+\EN{Proof idea: extend a basis of the kernel to a basis of $V$; the images of the added vectors form a basis of the image, giving $\dim\operatorname{Im}\mathcal A=n-s$. This generalizes the earlier dimension of the null space of a matrix.}
+\noindent\textbf{维数推论.} 若 $\dim V=\dim W=n$，则 $\mathcal A$ 单射 $\iff$ 满射 $\iff$ 双射（可逆）。对方阵 $A$ 即：$A$ 可逆 $\iff$ $Ax=0$ 只有零解 $\iff$ $Ax=b$ 对每个 $b$ 有解（第 2--4 章的等价条件在此统一）。
+\EN{If the domain and codomain have the same finite dimension, injectivity, surjectivity and bijectivity coincide. This unifies the earlier equivalent invertibility conditions for square matrices.}
+
+\subsection{不变子空间 | Invariant subspaces}
+\noindent\textbf{定义.} 设 $\mathcal A\in L(V)$，$W\le V$。若 $\mathcal A(W)\subseteq W$（即 $\alpha\in W\Rightarrow\mathcal A\alpha\in W$），称 $W$ 是 $\mathcal A$ 的不变子空间。零空间与全空间总是不变的；$\ker\mathcal A$ 与 $\operatorname{Im}\mathcal A$ 都是不变子空间；一个非零特征向量张成的一维子空间是不变的。把 $\mathcal A$ 限制到不变子空间 $W$ 上得 $\mathcal A|_W\in L(W)$。
+\EN{A subspace $W$ is invariant under $\mathcal A$ if it is mapped into itself. The zero space, the whole space, the kernel and the image are always invariant; the span of a nonzero eigenvector is a one-dimensional invariant subspace. Restricting to an invariant subspace gives an operator on it.}
+\noindent\textbf{分块意义.} 若 $V=W_1\oplus W_2$ 且 $W_i$ 都是不变的，则在相应基下 $\mathcal A$ 的矩阵为分块对角 $\operatorname{diag}(A_1,A_2)$。一般地，把一个算子“分解成不变子空间的直和”就是把它的矩阵分块对角化；第 7.8 节的 Jordan 分解就是这一思想的最精细形式。
+\EN{If $V$ splits into a direct sum of invariant subspaces, the matrix becomes block diagonal in a compatible basis. Decomposing an operator into invariant subspaces is block-diagonalizing it; the Jordan decomposition is the finest such decomposition.}
+
+\subsection{特征值与特征多项式 | Eigenvalues and the characteristic polynomial}
+\noindent\textbf{特征值.} 若存在 $\alpha\ne0$ 与 $\lambda\in F$ 使 $\mathcal A\alpha=\lambda\alpha$，称 $\lambda$ 是 $\mathcal A$ 的特征值，$\alpha$ 是对应的特征向量。固定 $\lambda$ 时，全部特征向量连同零向量构成特征子空间 $V_\lambda=\ker(\lambda I-\mathcal A)$，维数称 $\lambda$ 的几何重数。
+\EN{If $\mathcal A\alpha=\lambda\alpha$ for a nonzero $\alpha$, then $\lambda$ is an eigenvalue and $\alpha$ an eigenvector. For fixed $\lambda$, the eigenvectors together with zero form the eigenspace $V_\lambda=\ker(\lambda I-\mathcal A)$, whose dimension is the geometric multiplicity.}
+\noindent\textbf{特征多项式.} 设 $\mathcal A$ 在基下的矩阵为 $A$，定义特征多项式
+\FORMULA{特征多项式}{characteristic polynomial}
+\[
+f_{\mathcal A}(\lambda)=\det(\lambda I-A).
+\]
+它不依赖基的选取（相似保持行列式）。$\lambda_0$ 是特征值当且仅当 $f_{\mathcal A}(\lambda_0)=0$；此时几何重数 $=n-\operatorname{rank}(\lambda_0I-A)$。$n$ 次特征多项式在 $\mathbb C$ 上恰有 $n$ 个根（按重数计），根 $\lambda_0$ 的重数称代数重数。
+\EN{The characteristic polynomial $f_{\mathcal A}(\lambda)=\det(\lambda I-A)$ is independent of the basis. A scalar is an eigenvalue exactly when it is a root of the characteristic polynomial, and its geometric multiplicity is $n-\operatorname{rank}(\lambda_0I-A)$. Over $\mathbb C$ the degree $n$ polynomial has $n$ roots counted with multiplicity; the multiplicity of a root is its algebraic multiplicity.}
+\noindent\textbf{基本定理.} 属于不同特征值的特征向量线性无关。证明思路：对个数归纳，取组合式并用 $\mathcal A$ 作用一次再乘以 $\lambda_k$，两式相减消去末项，再由归纳假设得其余系数为零。因此 $n$ 个两两不同的特征值对应 $n$ 个线性无关的特征向量，必构成基。
+\EN{Eigenvectors belonging to distinct eigenvalues are linearly independent. Proof idea: induct, act by $\mathcal A$ on a relation and multiply by $\lambda_k$, subtract to eliminate the last term, then use the induction hypothesis. Hence $n$ distinct eigenvalues give $n$ independent eigenvectors, a basis.}
+
+\subsection{可对角化 | Diagonalizability}
+\noindent\textbf{定义.} 若存在基使 $\mathcal A$ 的矩阵为对角形，即存在可逆 $P$ 使 $P^{-1}AP=\operatorname{diag}(\lambda_1,\dots,\lambda_n)$，称 $\mathcal A$（或 $A$）可对角化。
+\FORMULA{对角化判据}{diagonalizability criterion}
+\[
+\mathcal A\ \text{可对角化}\iff V=\bigoplus_{\lambda}V_\lambda \iff \sum_{\lambda}\dim V_\lambda=n.
+\]
+\noindent\textbf{定理.} $A$ 可对角化当且仅当其特征多项式在 $F$ 上可分解为一次因式之积，且每个特征值的几何重数等于代数重数。充分条件：$A$ 有 $n$ 个两两不同的特征值（特征多项式无重根）。证明思路：必要性由“各特征子空间的和为直和、其维数之和不超过 $n$”得；充分性把各特征子空间的基并起来，总数恰为 $n$ 且线性无关，构成 $V$ 的基。
+\EN{$A$ is diagonalizable exactly when its characteristic polynomial splits into linear factors and every eigenvalue has geometric multiplicity equal to its algebraic multiplicity. A sufficient condition is $n$ distinct eigenvalues. Proof: the eigenspaces form a direct sum and their dimensions add to $n$; concatenating their bases gives a basis of $V$ consisting of eigenvectors.}
+\EX{判别 $A=\begin{pmatrix}0&1\\0&0\end{pmatrix}$。其特征多项式为 $\lambda^2$，唯一特征值 $0$ 的几何重数为 $2-\operatorname{rank}A=2-1=1$，小于代数重数 $2$，故不可对角化。这个矩阵是一个 $2\times2$ Jordan 块 $J_2(0)$，本质上是幂零变换。}{Consider $A=\begin{pmatrix}0&1\\0&0\end{pmatrix}$. Its characteristic polynomial is $\lambda^2$; the only eigenvalue $0$ has geometric multiplicity $2-\operatorname{rank}A=1$, smaller than the algebraic multiplicity $2$, so $A$ is not diagonalizable. It is the $2\times2$ Jordan block $J_2(0)$, essentially a nilpotent map.}
+
+\subsection{最小多项式 | The minimal polynomial}
+\noindent\textbf{定义.} 使 $\mu(A)=0$ 的次数最低的首一多项式称 $A$ 的最小多项式 $\mu_A(\lambda)$。由带余除法，任何使 $\varphi(A)=0$ 的多项式都被 $\mu_A$ 整除；故 $\mu_A$ 存在唯一，且整除特征多项式。
+\EN{The monic polynomial of least degree annihilating $A$ is its minimal polynomial. By division with remainder, every annihilating polynomial is divisible by it, so it is unique and divides the characteristic polynomial.}
+\noindent\textbf{Cayley--Hamilton 定理.} 每个方阵 $A$ 都满足自己的特征多项式：
+\FORMULA{Cayley--Hamilton 定理}{Cayley--Hamilton theorem}
+\[
+f_A(A)=0,\qquad \text{故}\ \mu_A\mid f_A.
+\]
+\noindent\textbf{证明思路.} 把 $\lambda I-A$ 的伴随矩阵写为 $\operatorname{adj}(\lambda I-A)=B_0+B_1\lambda+\cdots+B_{n-1}\lambda^{n-1}$（$B_i$ 为常数矩阵），由 $(\lambda I-A)\operatorname{adj}(\lambda I-A)=f_A(\lambda)I$ 比较各次系数，再右乘 $I,A,A^2,\dots$ 逐列相消，得 $f_A(A)=0$。Cayley--Hamilton 把“特征值满足的方程”提升为“矩阵本身满足的方程”。
+\EN{Proof idea: write the adjugate of $\lambda I-A$ as a polynomial in $\lambda$ with matrix coefficients, use the identity $(\lambda I-A)\operatorname{adj}(\lambda I-A)=f_A(\lambda)I$, compare coefficients, and telescope to obtain $f_A(A)=0$.}
+\noindent\textbf{可对角化与最小多项式.} $A$ 可对角化当且仅当 $\mu_A(\lambda)$ 可分解为互不相同的一次因式之积（无重根）。这给出一个纯多项式的判据：不必先求特征向量，只需看最小多项式是否平方自由。若特征多项式无重根（$n$ 个不同特征值），则最小多项式无重根，必可对角化。
+\EN{$A$ is diagonalizable exactly when its minimal polynomial splits into distinct linear factors (square-free). This gives a polynomial criterion independent of computing eigenvectors. If the characteristic polynomial has distinct roots, the minimal polynomial is square-free and diagonalizability follows.}
+\ASK{相似不变量有哪些？}{What are the invariants of similarity?}{迹、行列式、秩、特征多项式、最小多项式、各特征值的代数重数与几何重数、可对角化性都是相似不变量。它们刻画相似类的“共性”；其中特征多项式与最小多项式是判断 Jordan 形与可对角化的关键，但特征多项式（连同几何重数）尚不足以完全分类相似，需要第 8 章的不变因子。}{Trace, determinant, rank, characteristic polynomial, minimal polynomial, algebraic and geometric multiplicities, and diagonalizability are all similarity invariants. Among them the characteristic and minimal polynomials are key for diagonalizability, but they do not yet classify similarity completely; Chapter 8's invariant factors do.}
+\ASK{可对角化与有 $n$ 个不同特征值有什么区别？}{What is the difference between diagonalizable and having $n$ distinct eigenvalues?}{有 $n$ 个不同特征值是充分条件，不是必要条件。可对角化的充要条件是特征多项式分裂、且每个特征值的几何重数等于代数重数；单位矩阵 $I_n$ 只有一个特征值 $1$，但几何重数为 $n$，故可对角化。所以重特征值不排斥可对角化，关键是重数相等。}{Having $n$ distinct eigenvalues is sufficient but not necessary. The necessary and sufficient condition is that the characteristic polynomial splits and each geometric multiplicity equals its algebraic multiplicity; the identity matrix has a single eigenvalue $1$ with geometric multiplicity $n$ and is diagonalizable. Repeated eigenvalues do not preclude diagonalizability; matching multiplicities is the point.}
+
+\subsection{Jordan 标准形 | The Jordan normal form}
+\noindent\textbf{条件与存在性.} 设特征多项式 $f_A(\lambda)$ 在 $F$ 上可分解为一次因式之积（例如 $F=\mathbb C$，或实矩阵但特征值全实）。此时 $A$ 相似于一个 Jordan 标准形：分块对角矩阵，每块为
+\FORMULA{Jordan 块}{Jordan block}
+\[
+J_k(\lambda)=\begin{pmatrix}
+\lambda&1&&\\[-2pt]
+&\lambda&\ddots&\\[-2pt]
+&&\ddots&1\\
+&&&\lambda
+\end{pmatrix}_{k\times k},
+\]
+即对角元全为 $\lambda$、上（或下）次对角元全为 $1$、其余为 $0$。Jordan 形由各特征值对应 Jordan 块的大小与个数唯一决定（块顺序不计）。
+\EN{Assume the characteristic polynomial splits into linear factors, e.g. over $\mathbb C$. Then $A$ is similar to a Jordan normal form: a block diagonal matrix whose blocks are the Jordan blocks above, with $\lambda$ on the diagonal and ones on the superdiagonal. The form is unique up to the order of blocks.}
+\noindent\textbf{块结构与幂零部分.} 对特征值 $\lambda$，设 $\operatorname{rank}(\lambda I-A)^j$ 逐次下降，则大小为 $k$ 的 Jordan 块个数为
+\[
+n_k=\operatorname{rank}(\lambda I-A)^{k-1}-2\operatorname{rank}(\lambda I-A)^k+\operatorname{rank}(\lambda I-A)^{k+1}.
+\]
+把 $A-\lambda I$ 限制到广义特征子空间 $V^{(\lambda)}=\ker(\lambda I-A)^{m}$（$m$ 为代数重数）上得到幂零变换 $N=A-\lambda I|_{V^{(\lambda)}}$，其 Jordan 块全是对角元为 $0$ 的幂零块 $J_k(0)$；于是 $A$ 在每个广义特征子空间上等于 $\lambda I+N$，即“伸缩 $\lambda I$ + 幂零 $N$”之和。这是 Jordan 分解的实质：一个算子分解为半单部分（对角）与幂零部分。
+\EN{The number of blocks of size $k$ for eigenvalue $\lambda$ is given by the displayed rank-difference formula. On the generalized eigenspace $V^{(\lambda)}=\ker(\lambda I-A)^m$, the operator is $\lambda I+N$ with $N$ nilpotent, whose blocks are $J_k(0)$. Thus the Jordan decomposition splits an operator into a diagonal (semisimple) part and a nilpotent part, the essence of the theorem.}
+\noindent\textbf{证明思路（概）.} 先把 $V$ 分解为广义特征子空间的直和 $V=\bigoplus_\lambda V^{(\lambda)}$（用各 $(\lambda I-A)^{m}$ 的核空间与 Bézout 恒等式分解恒等映射），再把每个幂零算子 $N$ 用其循环子空间分解：取幂零指数递减的循环向量，每个循环子空间给一个 Jordan 块，块数由 $\ker N^k$ 的维数增长决定，即上面的秩差公式。完整的 Jordan 形与第 8 章初等因子一一对应。
+\EN{Proof sketch: first decompose $V$ into a direct sum of generalized eigenspaces via the kernels of $(\lambda I-A)^m$ and a Bézout partition of unity; then decompose each nilpotent operator into cyclic subspaces, one Jordan block per cyclic subspace, counted by the growth of $\ker N^k$, i.e. the rank-difference formula. The Jordan form corresponds one-to-one to the elementary divisors of Chapter 8.}
+\ASK{Jordan 标准形在什么条件下存在？块结构由什么决定？}{When does the Jordan form exist, and what determines its blocks?}{条件是特征多项式在 $F$ 上分裂为一次因式之积（复数域上总成立；实域上要求特征值全实）。每个特征值 $\lambda$ 的 Jordan 块的大小与个数由 $\operatorname{rank}(\lambda I-A)^k$ 的序列决定：大小 $k$ 的块数等于 $\operatorname{rank}(\lambda I-A)^{k-1}-2\operatorname{rank}(\lambda I-A)^k+\operatorname{rank}(\lambda I-A)^{k+1}$；块数等于几何重数，总阶数等于代数重数。}{The condition is that the characteristic polynomial splits into linear factors, always true over $\mathbb C$ and requiring real eigenvalues over $\mathbb R$. The sizes and numbers of the blocks for $\lambda$ are determined by the ranks of $(\lambda I-A)^k$: the number of blocks of size $k$ equals the displayed rank-difference, the total number of blocks is the geometric multiplicity, and their total order is the algebraic multiplicity.}
+
+\section{\texorpdfstring{$\lambda$}{λ}-矩阵与 Jordan 标准形 | \texorpdfstring{$\lambda$}{λ}-matrices and the Jordan form}
+\subsection{初等变换与等价 | Elementary operations and equivalence}
+\noindent\textbf{定义.} 元素为 $F[\lambda]$ 中多项式的矩阵称 $\lambda$-矩阵。可逆 $\lambda$-矩阵指存在 $\lambda$-矩阵 $B$ 使 $AB=BA=I$；$A(\lambda)$ 可逆当且仅当 $\det A(\lambda)$ 是非零常数。三类初等变换：交换两行（列）；某行（列）乘非零常数；某行（列）加另一行（列）的 $\varphi(\lambda)$ 倍（$\varphi\in F[\lambda]$，注意不能除以多项式）。$A,B$ 等价指 $A$ 经有限次初等变换化为 $B$，等价于存在可逆 $\lambda$-矩阵 $P,Q$ 使 $B=PAQ$。
+\EN{A $\lambda$-matrix has polynomial entries. It is invertible exactly when its determinant is a nonzero constant. The three elementary operations swap two rows or columns, multiply one by a nonzero constant, or add a polynomial multiple of one to another; division by a polynomial is not allowed. Equivalence means one is carried to the other by such operations, equivalently $B=PAQ$ with invertible $\lambda$-matrices.}
+
+\subsection{Smith 标准形 | The Smith normal form}
+\noindent\textbf{定理.} 任何 $m\times n$ 的 $\lambda$-矩阵 $A(\lambda)$ 都等价于
+\FORMULA{Smith 标准形}{Smith normal form}
+\[
+\operatorname{diag}\big(d_1(\lambda),d_2(\lambda),\dots,d_r(\lambda),0,\dots,0\big),
+\]
+其中 $r=\operatorname{rank}A(\lambda)$，每个 $d_i(\lambda)$ 是首一多项式，且 $d_i\mid d_{i+1}$（$i=1,\dots,r-1$）。这个对角形由 $A$ 唯一确定，称 Smith 标准形，$d_i$ 称不变因子。
+\EN{Every $\lambda$-matrix is equivalent to the displayed diagonal matrix, with each $d_i$ monic and dividing the next; this form is unique and is the Smith normal form, and the $d_i$ are the invariant factors.}
+\noindent\textbf{证明思路（存在性）.} 在初等变换下取所有元素中次数最低的非零元 $\varphi$，把它移到 $(1,1)$ 位置；若某元素不被 $\varphi$ 整除，用带余除法把余式（次数更低）移入，与最小性矛盾，故 $\varphi$ 整除同行同列一切元素；再消去第一行第一列其余元素。对角线上方重复，可得对角形。最后用“$d_i$ 不整除 $d_j$ 时可用行加列变换把两者替换为 $\gcd$ 与 $\operatorname{lcm}$”调整出整除链，再首一化。
+\EN{Existence: choose an entry of minimal degree, move it to the top-left, and use division with remainder to show it divides every other entry (a smaller remainder would contradict minimality); clear the first row and column, then recurse. Adjusting pairs that fail to divide each other by replacing them with their gcd and lcm produces the divisibility chain, and monic normalization finishes.}
+
+\subsection{行列式因子、不变因子与初等因子 | Determinant divisors, invariant factors, elementary divisors}
+\noindent\textbf{行列式因子.} 设 $A(\lambda)$ 的秩为 $r$，令 $D_k(\lambda)$ 为所有 $k$ 阶子式的最大公因式（首一，$k=1,\dots,r$），称第 $k$ 个行列式因子，约定 $D_0=1$。初等变换不改变各 $D_k$（每个 $k$ 阶子式在新矩阵中都是旧子式的组合，且变换可逆），故 $D_k$ 是等价不变量。
+\EN{The $k$-th determinant divisor $D_k(\lambda)$ is the monic gcd of all $k\times k$ minors; elementary operations preserve every $D_k$, so they are equivalence invariants.}
+\noindent\textbf{不变因子与初等因子.} 由 Smith 标准形可读出
+\FORMULA{行列式因子与不变因子}{determinant divisors and invariant factors}
+\[
+d_k(\lambda)=\frac{D_k(\lambda)}{D_{k-1}(\lambda)},\qquad D_k=d_1d_2\cdots d_k.
+\]
+把每个不变因子 $d_i$ 分解为不可约因式的幂 $d_i=\prod_j p_j(\lambda)^{e_{ij}}$，所有 $e_{ij}\ge1$ 的幂 $p_j(\lambda)^{e_{ij}}$ 称 $A$ 的初等因子（可重复）。不变因子组、行列式因子组、初等因子组（连同秩）三者相互唯一确定。
+\EN{The invariant factors are the quotients $d_k=D_k/D_{k-1}$, and $D_k$ is the product of the first $k$ invariant factors. Factoring each invariant factor into powers of irreducibles yields the elementary divisors. Determinant divisors, invariant factors and elementary divisors determine each other, together with the rank.}
+
+\subsection{矩阵相似判据 | The similarity criterion}
+\noindent\textbf{定理.} 设 $A,B$ 是 $F$ 上的 $n$ 阶方阵，则下列等价：
+\begin{enumerate}[label=(\arabic*),leftmargin=2.4em,itemsep=1pt]
+\item $A$ 与 $B$ 相似（$B=P^{-1}AP$）；
+\item $\lambda I-A$ 与 $\lambda I-B$ 作为 $\lambda$-矩阵等价；
+\item $\lambda I-A$ 与 $\lambda I-B$ 有相同的行列式因子；
+\item 有相同的不变因子；
+\item 有相同的初等因子。
+\end{enumerate}
+\FORMULA{相似判据}{similarity criterion}
+\[
+A\sim B\iff \lambda I-A\sim \lambda I-B.
+\]
+\noindent\textbf{证明思路.} (2)$\Rightarrow$(1)：若 $\lambda I-B=P(\lambda)(\lambda I-A)Q(\lambda)$，把 $P,Q$ 分别写成 $\lambda$ 的多项式，利用 $\lambda I-A$ 的“次数为 1”结构，比较系数可得常数可逆矩阵 $P_0,Q_0$ 使 $\lambda I-B=P_0(\lambda I-A)Q_0$，再比较 $\lambda$ 的一次与零次项得 $B=P_0^{-1}AP_0$（$P_0=Q_0^{-1}$）。反之若相似，$\lambda I-B=P^{-1}(\lambda I-A)P$ 直接给出等价。等价类由不变因子唯一刻画，故 (2)--(5) 两两等价。
+\EN{Proof idea: for (2)$\Rightarrow$(1), reduce the polynomial matrices $P,Q$ modulo the degree-one structure of $\lambda I-A$ to constant invertible matrices $P_0,Q_0$, then compare coefficients to get $B=P_0^{-1}AP_0$. The converse is immediate. Since equivalence classes are determined by invariant factors, (2)--(5) are pairwise equivalent.}
+
+\subsection{Jordan 形与初等因子的对应 | Jordan form and elementary divisors}
+\noindent\textbf{定理.} 设 $A$ 的特征多项式在 $F$ 上分裂。若 $\lambda I-A$ 的初等因子为
+\[
+(\lambda-\lambda_1)^{k_1},\,(\lambda-\lambda_2)^{k_2},\,\dots,\,(\lambda-\lambda_s)^{k_s},
+\]
+则 $A$ 的 Jordan 标准形为分块对角矩阵，其中每个初等因子 $(\lambda-\lambda_i)^{k_i}$ 对应一个 $k_i\times k_i$ 的 Jordan 块 $J_{k_i}(\lambda_i)$。即“初等因子 $\leftrightarrow$ Jordan 块”一一对应，故相似分类完全由初等因子（或不变因子）决定。
+\EN{If the elementary divisors of $\lambda I-A$ are the displayed powers, the Jordan form is block diagonal with one block $J_{k_i}(\lambda_i)$ per elementary divisor. Thus elementary divisors correspond one-to-one with Jordan blocks, and similarity is completely classified by them.}
+\EX{求 $A=\begin{pmatrix}2&1&0\\0&2&1\\0&0&2\end{pmatrix}$ 的 Jordan 形。计算 $\lambda I-A$ 的行列式因子：$D_3=\det(\lambda I-A)=(\lambda-2)^3$；一阶子式含 $-1$，故 $D_1=1$；二阶子式含 $1$（例如 $\begin{vmatrix}-1&0\\\lambda-2&-1\end{vmatrix}=1$），故 $D_2=1$。于是不变因子 $d_1=1,\ d_2=1,\ d_3=(\lambda-2)^3$，初等因子为 $(\lambda-2)^3$，对应 Jordan 块 $J_3(2)$。故 $A\sim J_3(2)$，且 $A$ 本身已是最简形。}{Find the Jordan form of the displayed matrix. Compute the determinant divisors of $\lambda I-A$: $D_3=\det(\lambda I-A)=(\lambda-2)^3$; the $1\times1$ minors contain $-1$, so $D_1=1$; the $2\times2$ minors contain $1$, so $D_2=1$. Hence the invariant factors are $d_1=1$, $d_2=1$, $d_3=(\lambda-2)^3$, and the elementary divisor is $(\lambda-2)^3$, giving the single block $J_3(2)$. Thus $A\sim J_3(2)$, and $A$ is already in Jordan form.}
+\ASK{如何用 $\lambda$-矩阵判断两个矩阵是否相似？}{How do you use $\lambda$-matrices to decide whether two matrices are similar?}{把两矩阵分别写成 $\lambda I-A$ 与 $\lambda I-B$，用初等变换化到 Smith 标准形；两者相似当且仅当 Smith 标准形相同，等价于不变因子（或行列式因子、或初等因子）相同。步骤是先求各阶行列式因子 $D_k$（$k$ 阶子式的最大公因式），再由 $d_k=D_k/D_{k-1}$ 得不变因子，最后分解出初等因子。}{Write the two characteristic matrices $\lambda I-A$ and $\lambda I-B$, and reduce each to Smith normal form by elementary operations. They are similar exactly when the Smith forms agree, equivalently when the invariant factors (or determinant divisors or elementary divisors) agree. The routine computes the determinant divisors $D_k$, then $d_k=D_k/D_{k-1}$, and finally factors out the elementary divisors.}
+
+\section{欧几里得空间 | Euclidean spaces}
+\subsection{内积与 Cauchy--Schwarz 不等式 | Inner products and the Cauchy--Schwarz inequality}
+\noindent\textbf{定义.} 实数域 $\mathbb R$ 上的线性空间 $V$ 若定义了内积 $(\cdot,\cdot):V\times V\to\mathbb R$ 满足：
+\begin{enumerate}[label=(\arabic*),leftmargin=2.4em,itemsep=1pt]
+\item 对称：$(\alpha,\beta)=(\beta,\alpha)$；
+\item 线性：$(k\alpha+l\beta,\gamma)=k(\alpha,\gamma)+l(\beta,\gamma)$；
+\item 正定：$(\alpha,\alpha)\ge0$，且 $(\alpha,\alpha)=0\iff\alpha=0$，
+\end{enumerate}
+则称 $V$ 为欧几里得空间（实内积空间）。标准例子是 $\mathbb R^n$ 配标准内积 $(\alpha,\beta)=\sum x_iy_i$。定义长度 $\|\alpha\|=\sqrt{(\alpha,\alpha)}$，夹角由 $\cos\theta=\dfrac{(\alpha,\beta)}{\|\alpha\|\,\|\beta\|}$ 确定。
+\EN{A real vector space with a symmetric, bilinear, positive definite inner product is a Euclidean space, the standard example being $\mathbb R^n$ with the dot product. The norm is $\|\alpha\|=\sqrt{(\alpha,\alpha)}$, and angles are defined via the cosine formula.}
+\noindent\textbf{Cauchy--Schwarz 不等式.} 对任意 $\alpha,\beta$，
+\FORMULA{Cauchy--Schwarz 不等式}{Cauchy--Schwarz inequality}
+\[
+|(\alpha,\beta)|\le\|\alpha\|\,\|\beta\|,
+\]
+等号成立当且仅当 $\alpha,\beta$ 线性相关。\noindent\textbf{证明思路.} 对实数 $t$，展开 $(\alpha-t\beta,\alpha-t\beta)=\|\alpha\|^2-2t(\alpha,\beta)+t^2\|\beta\|^2\ge0$，这是 $t$ 的非负二次函数，判别式 $\le0$ 即得；等号对应判别式为零、存在 $t$ 使 $\alpha=t\beta$。由此推出三角不等式 $\|\alpha+\beta\|\le\|\alpha\|+\|\beta\|$，故 $\|\cdot\|$ 是范数。
+\EN{The Cauchy--Schwarz inequality holds with equality exactly when the vectors are dependent. Proof: the quadratic $\|\alpha-t\beta\|^2\ge0$ in $t$ has nonpositive discriminant. It implies the triangle inequality, so the norm is a genuine norm.}
+\READ{``The absolute value of the inner product is at most the product of the norms.''}
+
+\subsection{正交基与 Gram--Schmidt 正交化 | Orthogonal bases and Gram--Schmidt}
+\noindent\textbf{正交与标准正交基.} 若 $(\alpha,\beta)=0$，称 $\alpha\perp\beta$。两两正交的非零向量必线性无关（取组合式与 $\alpha_i$ 作内积即得系数为零）。由 $n$ 个两两正交的单位向量构成的基称标准正交基；此时坐标 $x_i=(\alpha,\varepsilon_i)$。
+\EN{Orthogonal nonzero vectors are linearly independent, since taking inner products with each vector in a relation isolates its coefficient. An orthonormal basis consists of pairwise orthogonal unit vectors, and coordinates are then inner products $x_i=(\alpha,\varepsilon_i)$.}
+\noindent\textbf{Gram--Schmidt 正交化.} 设 $\alpha_1,\dots,\alpha_n$ 线性无关，令
+\FORMULA{Gram--Schmidt 正交化}{Gram--Schmidt orthogonalization}
+\[
+\beta_1=\alpha_1,\qquad \beta_k=\alpha_k-\sum_{i=1}^{k-1}\frac{(\alpha_k,\beta_i)}{(\beta_i,\beta_i)}\beta_i,\qquad k=2,\dots,n.
+\]
+则 $\beta_1,\dots,\beta_n$ 两两正交；再令 $e_i=\beta_i/\|\beta_i\|$ 得标准正交基。几何上，$\beta_k$ 是 $\alpha_k$ 减去它在前面各 $\beta_i$ 上的投影，即“去掉已得子空间的分量”。故每个有限维欧氏空间都有标准正交基。
+\EN{The Gram--Schmidt process subtracts from each $\alpha_k$ its projections onto the previously built orthogonal vectors, producing an orthogonal basis; normalizing gives an orthonormal basis. Every finite-dimensional Euclidean space thus has an orthonormal basis.}
+
+\subsection{正交补、正交投影与 Riesz 表示定理 | Orthogonal complements, projections, and Riesz}
+\noindent\textbf{正交补.} 子空间 $W$ 的正交补 $W^\perp=\{\alpha\in V:(\alpha,\beta)=0\ \forall\beta\in W\}$ 是子空间。对有限维 $V$，
+\FORMULA{正交分解}{orthogonal decomposition}
+\[
+V=W\oplus W^\perp,\qquad \dim W^\perp=\dim V-\dim W.
+\]
+\noindent\textbf{证明思路.} 取 $W$ 的标准正交基 $e_1,\dots,e_r$，对任意 $\alpha$ 令 $\alpha_1=\sum_i(\alpha,e_i)e_i\in W$、$\alpha_2=\alpha-\alpha_1$，则 $(\alpha_2,e_i)=0$ 对每个 $i$ 成立，故 $\alpha_2\in W^\perp$，且 $W\cap W^\perp=\{0\}$。$\alpha_1$ 是 $\alpha$ 在 $W$ 上的正交投影 $P_W\alpha$，它是 $W$ 中与 $\alpha$ 距离最近的点。
+\EN{Proof: with an orthonormal basis of $W$, write $\alpha$ as the sum of its projection $\alpha_1$ onto $W$ and a residual $\alpha_2$ orthogonal to $W$; the intersection is zero. The projection $P_W\alpha$ is the point of $W$ closest to $\alpha$.}
+\noindent\textbf{Riesz 表示定理.} 设 $f:V\to\mathbb R$ 是有限维欧氏空间 $V$ 上的线性函数（线性泛函），则存在唯一的 $\alpha\in V$ 使
+\FORMULA{Riesz 表示定理}{Riesz representation theorem}
+\[
+f(\beta)=(\beta,\alpha),\qquad \forall\beta\in V.
+\]
+\noindent\textbf{证明思路.} 若 $f=0$ 取 $\alpha=0$。否则 $\ker f$ 是 $V$ 的 $n-1$ 维子空间，取其正交补中的单位向量 $e$，令 $\alpha=f(e)e$，验证 $f$ 与 $(\cdot,\alpha)$ 在 $e$ 与 $\ker f$ 上取值一致，从而在 $V$ 上一致；唯一性由正定性给出。该定理把“泛函”与“向量”等同起来，是伴随算子与梯度的基础。
+\EN{Every linear functional on a finite-dimensional Euclidean space is of the form $f(\beta)=(\beta,\alpha)$ for a unique $\alpha$. Proof: for $f\ne0$, choose a unit vector $e$ orthogonal to $\ker f$ and set $\alpha=f(e)e$; the two functionals agree on $e$ and on the kernel, hence everywhere. This identifies functionals with vectors.}
+
+\subsection{最小二乘与正规方程 | Least squares and the normal equations}
+\noindent\textbf{问题与正规方程.} 对超定方程组 $Ax=b$（$A$ 为 $m\times n$，$m>n$，通常无精确解），求 $x$ 使残差范数 $\|Ax-b\|$ 最小，即求 $b$ 在列空间 $\operatorname{col}A$ 上的正交投影。该投影满足 $b-Ax\perp\operatorname{col}A$，等价于
+\FORMULA{正规方程}{normal equations}
+\[
+A^{\mathsf T}A\,x=A^{\mathsf T}b.
+\]
+\noindent\textbf{定理.} 正规方程总是有解；若 $\operatorname{rank}A=n$（列满秩），则 $A^{\mathsf T}A$ 可逆，最小二乘解唯一为 $x=(A^{\mathsf T}A)^{-1}A^{\mathsf T}b$，误差向量 $b-Ax$ 与列空间正交。证明思路：由正交分解 $b=P_{\operatorname{col}A}b+(b-P_{\operatorname{col}A}b)$，$\|Ax-b\|$ 在 $Ax=P_{\operatorname{col}A}b$ 时最小；正交条件写成 $A^{\mathsf T}(b-Ax)=0$ 即正规方程；列满秩时 $A^{\mathsf T}A$ 正定故可逆。
+\EN{The least-squares solution minimizes $\|Ax-b\|$, i.e. projects $b$ onto the column space of $A$; orthogonality $b-Ax\perp\operatorname{col}A$ is exactly the normal equations $A^{\mathsf T}Ax=A^{\mathsf T}b$. They are always consistent, and with full column rank $A^{\mathsf T}A$ is positive definite, giving the unique solution.}
+
+\subsection{正交变换 | Orthogonal transformations}
+\noindent\textbf{定义与等价刻画.} 欧氏空间 $V$ 上的线性变换 $\mathcal A$ 称为正交变换，若保持内积：$(\mathcal A\alpha,\mathcal A\beta)=(\alpha,\beta)$。在标准正交基下的矩阵 $Q$ 满足
+\FORMULA{正交矩阵}{orthogonal matrix}
+\[
+Q^{\mathsf T}Q=I,\qquad Q^{-1}=Q^{\mathsf T},\qquad \det Q=\pm1.
+\]
+下列条件等价：$\mathcal A$ 保持内积；保持长度 $\|\mathcal A\alpha\|=\|\alpha\|$；把标准正交基映为标准正交基；在任一标准正交基下矩阵为正交矩阵（行、列向量都是两两正交的单位向量）。证明思路：用极化恒等式 $(\alpha,\beta)=\tfrac14(\|\alpha+\beta\|^2-\|\alpha-\beta\|^2)$ 把“保长度”还原为“保内积”。
+\EN{An orthogonal transformation preserves inner products; its matrix in an orthonormal basis is orthogonal, satisfying $Q^{\mathsf T}Q=I$ and $\det Q=\pm1$. Preserving inner products, preserving norms, and sending orthonormal bases to orthonormal bases are equivalent; the polarization identity recovers inner products from norms.}
+\noindent\textbf{几何.} 二维正交矩阵只有两类：旋转 $\begin{pmatrix}\cos\theta&-\sin\theta\\\sin\theta&\cos\theta\end{pmatrix}$（$\det=1$）与反射 $\begin{pmatrix}\cos\theta&\sin\theta\\\sin\theta&-\cos\theta\end{pmatrix}$（$\det=-1$）。正交变换保持长度与夹角，是“刚体运动”的线性部分。
+\EN{In dimension two, orthogonal matrices are rotations ($\det=1$) or reflections ($\det=-1$). Orthogonal transformations preserve lengths and angles and are the linear parts of rigid motions.}
+
+\subsection{实对称矩阵的谱定理 | The spectral theorem for real symmetric matrices}
+\noindent\textbf{定理.} 设 $A$ 是 $n$ 阶实对称矩阵，则 $A$ 的特征值全为实数，且存在正交矩阵 $Q$ 使
+\FORMULA{谱定理}{spectral theorem}
+\[
+Q^{\mathsf T}AQ=Q^{-1}AQ=\operatorname{diag}(\lambda_1,\dots,\lambda_n),
+\]
+即 $A$ 可正交对角化。等价地说，$\mathbb R^n$ 存在由 $A$ 的特征向量构成的标准正交基。
+\EN{A real symmetric matrix has real eigenvalues and is orthogonally diagonalizable: there is an orthogonal $Q$ with $Q^{\mathsf T}AQ$ diagonal. Equivalently $\mathbb R^n$ has an orthonormal basis of eigenvectors of $A$.}
+\noindent\textbf{证明思路.} 先证实对称矩阵的特征值全实：若 $A\alpha=\lambda\alpha$，取复共轭得 $\bar\lambda(\alpha,\alpha)=(\alpha,A\alpha)=(\bar\lambda\alpha,\alpha)$，比较得 $\lambda=\bar\lambda$。再对维数归纳：任取一个实特征值 $\lambda_1$ 及其单位特征向量 $e_1$，其正交补 $e_1^\perp$ 在 $A$ 下不变（因 $A$ 对称，$(A\beta,e_1)=(\beta,Ae_1)=\lambda_1(\beta,e_1)=0$），由归纳假设在 $e_1^\perp$ 上正交对角化，拼上 $e_1$ 即得。这给出比一般可对角化更强的结论：对角化矩阵可取为正交矩阵。
+\EN{Proof: eigenvalues are real since $A\alpha=\lambda\alpha$ implies $\bar\lambda=\lambda$ by comparing the inner products $(\alpha,A\alpha)=(A\alpha,\alpha)$. Then induct: a real eigenvalue gives a unit eigenvector $e_1$ whose orthogonal complement is invariant under $A$; diagonalize there by induction and append $e_1$. This yields the stronger conclusion that the diagonalizing matrix may be chosen orthogonal.}
+\noindent\textbf{推论.} 实对称矩阵的不同特征值的特征向量彼此正交；$A$ 半正定 $\iff$ 特征值全 $\ge0$，正定 $\iff$ 特征值全 $>0$。这补全了第 5 章惯性定理中的预告：正惯性指数 $p$ 等于正特征值个数、负惯性指数 $q$ 等于负特征值个数。
+\EN{Eigenvectors of distinct eigenvalues of a real symmetric matrix are orthogonal; $A$ is positive semidefinite exactly when all eigenvalues are nonnegative, and positive definite when all are positive. This completes the preview in Chapter 5: the indices $p,q$ count the positive and negative eigenvalues.}
+\ASK{为什么实对称矩阵一定可以正交对角化？}{Why is a real symmetric matrix orthogonally diagonalizable?}{关键两步：一是实对称矩阵的特征值全为实数（否则特征向量与特征值不能取实）；二是每个特征向量的正交补在 $A$ 下不变，因为 $(A\beta,e_1)=(\beta,Ae_1)=\lambda_1(\beta,e_1)=0$。于是可归纳地在正交补上继续对角化，最终得到正交矩阵 $Q$ 使 $Q^{\mathsf T}AQ$ 为对角形，且对角线是实特征值。}{Two key steps: a real symmetric matrix has only real eigenvalues, and the orthogonal complement of an eigenvector is invariant because $(A\beta,e_1)=(\beta,Ae_1)=\lambda_1(\beta,e_1)=0$. One then diagonalizes on the complement inductively, obtaining an orthogonal $Q$ with $Q^{\mathsf T}AQ$ diagonal and real diagonal entries.}
+\ASK{最小二乘解为什么由正规方程给出？}{Why does the least-squares solution come from the normal equations?}{最小二乘求的是 $b$ 在列空间上的正交投影 $Ax$，误差 $b-Ax$ 必须与列空间正交，即与 $A$ 的每一列正交，写成 $A^{\mathsf T}(b-Ax)=0$，就是正规方程 $A^{\mathsf T}Ax=A^{\mathsf T}b$。列满秩时 $A^{\mathsf T}A$ 正定可逆，解唯一。}{Least squares projects $b$ onto the column space; the residual $b-Ax$ must be orthogonal to every column of $A$, i.e. $A^{\mathsf T}(b-Ax)=0$, the normal equations. With full column rank, $A^{\mathsf T}A$ is positive definite and the solution is unique.}
+
+\section{双线性函数与辛空间 | Bilinear forms and symplectic spaces}
+\subsection{双线性型与矩阵 | Bilinear forms and their matrices}
+\noindent\textbf{定义.} 数域 $F$ 上线性空间 $V$ 的映射 $f:V\times V\to F$ 称为双线性函数（双线性型），若对每个分量分别线性：$f(k\alpha+l\beta,\gamma)=kf(\alpha,\gamma)+lf(\beta,\gamma)$，$f(\alpha,k\beta+l\gamma)=kf(\alpha,\beta)+lf(\alpha,\gamma)$。取基 $\varepsilon_1,\dots,\varepsilon_n$，令 $a_{ij}=f(\varepsilon_i,\varepsilon_j)$，则
+\FORMULA{双线性型的矩阵}{matrix of a bilinear form}
+\[
+f(\alpha,\beta)=X^{\mathsf T}AY,\qquad A=(a_{ij})_{n\times n},
+\]
+其中 $X,Y$ 是 $\alpha,\beta$ 的坐标列。矩阵 $A$ 称为 $f$ 在该基下的矩阵。基变换下（过渡矩阵 $C$）$A$ 变为 $C^{\mathsf T}AC$，即“合同”；故双线性型的分类就是矩阵的合同分类。
+\EN{A bilinear form is linear in each argument separately. In a basis it is given by $f(\alpha,\beta)=X^{\mathsf T}AY$ with matrix $A=(f(\varepsilon_i,\varepsilon_j))$. Under a basis change the matrix transforms by congruence $C^{\mathsf T}AC$, so classifying bilinear forms is classifying matrices up to congruence.}
+
+\subsection{对称、反对称与交错 | Symmetric, skew-symmetric, and alternating}
+\noindent\textbf{定义.} 若 $f(\alpha,\beta)=f(\beta,\alpha)$，称对称；若 $f(\alpha,\beta)=-f(\beta,\alpha)$，称反对称（斜对称）；若 $f(\alpha,\alpha)=0$ 对一切 $\alpha$，称交错。矩阵意义下分别对应 $A=A^{\mathsf T}$、$A=-A^{\mathsf T}$、以及（交错等价于）$A$ 反对称且对角元为零。当 $\operatorname{char}F\ne2$ 时，交错 $\iff$ 反对称：一方面 $f(\alpha,\alpha)=-f(\alpha,\alpha)\Rightarrow f(\alpha,\alpha)=0$；另一方面由 $f(\alpha+\beta,\alpha+\beta)=0$ 展开得 $f(\alpha,\beta)=-f(\beta,\alpha)$。特征 $2$ 时二者不同。
+\EN{Symmetric, skew-symmetric, and alternating forms are defined by $f(\alpha,\beta)=f(\beta,\alpha)$, $f(\alpha,\beta)=-f(\beta,\alpha)$, and $f(\alpha,\alpha)=0$ respectively. Over a field of characteristic not two, alternating is equivalent to skew-symmetric, but the two notions differ in characteristic two.}
+
+\subsection{二次型与对称双线性型的极化 | Quadratic forms and polarization}
+\noindent\textbf{对应关系.} 每个对称双线性型 $f$ 都给出二次型 $Q(\alpha)=f(\alpha,\alpha)$；反之，当 $\operatorname{char}F\ne2$ 时，二次型 $Q$ 通过极化恒等式唯一还原出对称双线性型：
+\FORMULA{极化恒等式}{polarization identity}
+\[
+f(\alpha,\beta)=\frac{Q(\alpha+\beta)-Q(\alpha)-Q(\beta)}{2},\qquad Q(\alpha)=f(\alpha,\alpha).
+\]
+这建立了“二次型 $\leftrightarrow$ 对称双线性型 $\leftrightarrow$ 对称矩阵”的一一对应（特征 $\ne2$）。第 5 章的二次型理论因此可放在双线性型的框架下理解；欧氏空间的内积就是正定的对称双线性型（第 9 章）。
+\EN{Every symmetric bilinear form yields a quadratic form $Q(\alpha)=f(\alpha,\alpha)$, and over a field of characteristic not two the polarization identity recovers $f$ from $Q$ uniquely. This gives the correspondence quadratic forms $\leftrightarrow$ symmetric bilinear forms $\leftrightarrow$ symmetric matrices. The inner product is a positive definite symmetric bilinear form.}
+
+\subsection{非退化与同构 | Nondegeneracy and isometries}
+\noindent\textbf{非退化.} 双线性型 $f$ 的左（右）根定义为
+\[
+V^\perp=\{\alpha\in V:f(\alpha,\beta)=0\ \forall\beta\in V\},
+\]
+它等于右根（因 $A$ 与 $A^{\mathsf T}$ 同秩）。若根为 $\{0\}$，称 $f$ 非退化。矩阵意义下，$f$ 非退化当且仅当 $A$ 可逆（$\det A\ne0$），当且仅当 $f$ 诱导的线性映射 $\alpha\mapsto f(\alpha,\cdot)$ 是 $V$ 到对偶空间 $V^*$ 的同构。
+\EN{The radical is the set of vectors orthogonal to everything; the form is nondegenerate when the radical is zero, equivalently when its matrix is invertible, equivalently when the map $\alpha\mapsto f(\alpha,\cdot)$ is an isomorphism onto the dual space.}
+\noindent\textbf{合同分类.} 特征 $\ne2$ 时，对称双线性型可合同对角化（配方法），实数域上由惯性定理给出正负惯性指数完全分类；反对称（交错）型的合同标准形见下一小节。非退化性在合同下保持不变。
+\EN{In characteristic not two, symmetric forms are congruent to diagonal ones and, over $\mathbb R$, classified by inertia; skew-symmetric (alternating) forms are treated next. Nondegeneracy is a congruence invariant.}
+
+\subsection{辛空间与标准形 | Symplectic spaces and the standard form}
+\noindent\textbf{定义.} 非退化的交错双线性型称辛结构（辛型），配以辛型的空间称辛空间。交错性蕴含 $f(\alpha,\alpha)=0$（每个向量都“与自己正交”），故辛空间没有正定性，与欧氏空间相反。
+\EN{A nondegenerate alternating form is a symplectic form, and a space carrying one is a symplectic space. Alternation forces $f(\alpha,\alpha)=0$, so every vector is orthogonal to itself and there is no positive definiteness, in contrast to Euclidean spaces.}
+\noindent\textbf{标准形定理.} 设 $V$ 是 $F$ 上带交错双线性型 $f$ 的有限维空间。则存在一组基使 $f$ 的矩阵为
+\FORMULA{辛标准形}{symplectic standard form}
+\[
+J=\begin{pmatrix}0&I_m\\-I_m&0\end{pmatrix},\qquad \dim V=2m.
+\]
+\noindent\textbf{证明思路（归纳）.} 若 $f\ne0$，取 $\alpha,\beta$ 使 $f(\alpha,\beta)=c\ne0$，用 $\beta'=\beta/c$ 归一化使 $f(\alpha,\beta')=1$（交错性保证 $f(\alpha,\alpha)=f(\beta',\beta')=0$，故它们给出的 $2\times2$ 块为 $\begin{pmatrix}0&1\\-1&0\end{pmatrix}$）；取 $\{\alpha,\beta'\}$ 张成的二维子空间 $W$，验证 $W\cap W^\perp=\{0\}$ 且 $V=W\oplus W^\perp$，再在 $W^\perp$ 上归纳。于是
+\FORMULA{辛空间的维数}{dimension of a symplectic space}
+\[
+\dim V=2m\ \text{为偶数},\qquad \text{辛结构在合同下唯一}.
+\]
+\EN{Proof: pick $\alpha,\beta$ with $f(\alpha,\beta)=c\ne0$ and normalize to get a two-dimensional block $\begin{pmatrix}0&1\\-1&0\end{pmatrix}$; its span $W$ splits as $V=W\oplus W^\perp$, and induction on $W^\perp$ produces the standard form. Hence the dimension is even and the symplectic structure is unique up to congruence.}
+\noindent\textbf{与内积的对照.} 内积是“正定对称”，辛型是“非退化交错”：前者给出长度与角度，后者给出面积与 Hamilton 力学中的相空间结构。辛空间的维数必为偶数，而欧氏空间任意维数都存在；两者分别代表对称双线性型与交错双线性型在非退化情形下的标准形。
+\EN{The inner product is positive definite and symmetric, the symplectic form nondegenerate and alternating: one gives lengths and angles, the other areas and the phase-space structure of Hamiltonian mechanics. Symplectic spaces are even-dimensional, whereas Euclidean spaces exist in every dimension.}
+\ASK{辛空间为什么一定是偶数维？}{Why is a symplectic space even-dimensional?}{因为非退化交错型的标准形是 $\begin{pmatrix}0&I_m\\-I_m&0\end{pmatrix}$（或等价地，$I_m$ 配 $-I_m$），每对基向量贡献一个 $2\times2$ 块，故维数 $2m$ 必为偶数。也可从交错矩阵的性质看：非退化交错矩阵必为偶数阶，因为奇数阶反对称矩阵的行列式为零（$\det A=\det A^{\mathsf T}=\det(-A)=(-1)^n\det A$，$n$ 奇时 $\det A=0$）。}{The standard form of a nondegenerate alternating form is $\begin{pmatrix}0&I_m\\-I_m&0\end{pmatrix}$, each pair of basis vectors contributing a $2\times2$ block, so the dimension $2m$ is even. Equivalently, a nonsingular skew-symmetric matrix must have even order, since an odd-order skew-symmetric matrix has $\det A=(-1)^n\det A$ and thus zero determinant when $n$ is odd.}
+\ASK{内积和辛型都是双线性型，本质区别是什么？}{Both inner products and symplectic forms are bilinear; what is the essential difference?}{内积对称且正定：$(\alpha,\alpha)>0$ 对一切非零向量，故有长度、夹角、正交补与谱定理；辛型交错且非退化：$f(\alpha,\alpha)=0$ 恒成立，每个向量都“与自己正交”，没有长度概念，取而代之的是偶数维与唯一的合同标准形。前者刻画欧氏几何，后者刻画 Hamilton 相空间几何。}{An inner product is symmetric and positive definite, with $(\alpha,\alpha)>0$ for all nonzero vectors, giving lengths, angles, orthogonal complements and the spectral theorem. A symplectic form is alternating and nondegenerate, with $f(\alpha,\alpha)=0$ always, so every vector is orthogonal to itself and there is no length; instead one has even dimension and a unique canonical form. The former describes Euclidean geometry and the latter Hamiltonian phase-space geometry.}
+
+\section*{中英术语表 | Glossary}
+\begingroup
+\setlength{\tabcolsep}{6pt}
+\begin{longtable}{@{}p{0.46\textwidth}p{0.46\textwidth}@{}}
+\toprule
+\textbf{English term} & \textbf{中文术语}\\
+\midrule
+\endfirsthead
+\toprule
+\textbf{English term} & \textbf{中文术语}\\
+\midrule
+\endhead
+vector space & 线性空间\\
+subspace & 子空间\\
+linear combination & 线性组合\\
+linear (in)dependence & 线性（无）相关\\
+basis & 基\\
+dimension & 维数\\
+coordinates & 坐标\\
+transition matrix & 过渡矩阵\\
+direct sum & 直和\\
+dimension formula & 维数公式\\
+linear transformation (map) & 线性变换（映射）\\
+kernel / image & 核 / 像\\
+rank--nullity theorem & 秩零度定理\\
+invariant subspace & 不变子空间\\
+eigenvalue / eigenvector & 特征值 / 特征向量\\
+characteristic polynomial & 特征多项式\\
+minimal polynomial & 最小多项式\\
+diagonalizable & 可对角化\\
+Jordan normal form & Jordan 标准形\\
+Jordan block & Jordan 块\\
+$\lambda$-matrix & $\lambda$-矩阵\\
+Smith normal form & Smith 标准形\\
+determinant divisor & 行列式因子\\
+invariant factor & 不变因子\\
+elementary divisor & 初等因子\\
+inner product & 内积\\
+Cauchy--Schwarz inequality & Cauchy--Schwarz 不等式\\
+orthogonal / orthonormal basis & 正交基 / 标准正交基\\
+Gram--Schmidt process & Gram--Schmidt 正交化\\
+orthogonal complement & 正交补\\
+orthogonal projection & 正交投影\\
+Riesz representation theorem & Riesz 表示定理\\
+least squares & 最小二乘\\
+normal equations & 正规方程\\
+orthogonal transformation & 正交变换\\
+orthogonal matrix & 正交矩阵\\
+spectral theorem & 谱定理\\
+bilinear form & 双线性函数（型）\\
+symmetric / skew-symmetric & 对称 / 反对称\\
+alternating & 交错\\
+nondegenerate & 非退化\\
+polarization identity & 极化恒等式\\
+symplectic space & 辛空间\\
+\bottomrule
+\end{longtable}
+\endgroup
+
+\section*{参考文献 | References}
+\begin{enumerate}[label={[\arabic*]},leftmargin=2.6em,itemsep=2pt]
+\item 北京大学数学系前代数小组（王萼芳、石生明 修订）. \emph{高等代数}（第五版）. 北京：高等教育出版社. 第 6 章 线性空间、第 7 章 线性变换、第 8 章 $\lambda$-矩阵、第 9 章 欧几里得空间、第 10 章 双线性函数与辛空间。
+\item Hoffman, K., and Kunze, R. \emph{Linear Algebra}, 2nd edition. Prentice--Hall, 1971. Ch.~2 Vector Spaces; Ch.~3 Linear Transformations; Ch.~6 Elementary Canonical Forms; Ch.~7 The Rational and Jordan Forms; Ch.~8 Inner Product Spaces; Ch.~9 Operators on Inner Product Spaces; Ch.~10 Bilinear Forms.
+\end{enumerate}
+
+\end{document}
