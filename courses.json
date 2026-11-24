@@ -132,7 +132,7 @@
     "group": "analysis",
     "groupLabel": "分析",
     "scope": "柳彬《常微分方程》第 1–5 章",
-    "pages": 21,
+    "pages": 22,
     "summary": "以定理和证明为主，涵盖初等积分、Picard 与 Peano 定理、解的延伸与比较、对初值和参数的依赖，以及线性方程组。",
     "pdf": "materials/ordinary-differential-equations/ordinary-differential-equations-aps.pdf",
     "tex": "materials/ordinary-differential-equations/source.tex",
@@ -152,6 +152,20 @@
     "tex": "materials/differential-geometry/source.tex",
     "cover": "materials/differential-geometry/cover.png",
     "keywords": "微分几何 曲线 弧长 曲率 挠率 Frenet 标架 Frenet 公式 第一基本形式 第二基本形式 法曲率 Weingarten 映射 主曲率 Gauss 曲率 平均曲率 Gauss-Codazzi 方程 绝妙定理 测地线 平行移动 Gauss-Bonnet"
+  },
+  {
+    "id": "partial-differential-equations",
+    "title": "偏微分方程",
+    "subtitle": "Partial Differential Equations",
+    "group": "analysis",
+    "groupLabel": "分析",
+    "scope": "Evans《Partial Differential Equations》第 2–4 章",
+    "pages": 47,
+    "summary": "按 Evans 第 2–4 章的框架整理：先讲二阶方程分类与 Hadamard 适定性；再依次展开输运、位势（基本解、平均值公式、极值原理、Green 函数与 Poisson 公式）、热（热核、极值原理、能量法、向后唯一性）、波动（d'Alembert、球面平均、Kirchhoff 与 Poisson 公式、Huygens 原理）；随后讲一阶非线性方程（完全积分与包络、特征方法、Hopf–Lax、守恒律与熵条件、Burgers 激波）；最后讲解的表示（分离变量、相似解、Fourier/Laplace 变换、Hopf–Cole 与图变换、渐近方法、幂级数法与 Cauchy–Kovalevskaya）。每个对象都有完整定义，配算例、应用与口试问答。",
+    "pdf": "materials/partial-differential-equations/partial-differential-equations-aps.pdf",
+    "tex": "materials/partial-differential-equations/source.tex",
+    "cover": "materials/partial-differential-equations/cover.png",
+    "keywords": "偏微分方程 二阶方程分类 适定性 特征线 输运方程 位势方程 调和函数 基本解 平均值公式 极值原理 Harnack 不等式 Liouville 定理 Green 函数 Poisson 核 热方程 热核 能量法 d'Alembert 公式 球面平均 Kirchhoff 公式 Huygens 原理 完全积分 包络 特征方法 Hamilton-Jacobi Hopf-Lax 粘性解 守恒律 弱解 熵条件 Rankine-Hugoniot Burgers 激波 分离变量 Sturm-Liouville 相似解 Fourier 变换 Laplace 变换 Hopf-Cole 图变换 渐近展开 Cauchy-Kovalevskaya"
   },
   {
     "id": "topology",

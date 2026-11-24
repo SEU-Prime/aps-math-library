@@ -1,0 +1,1235 @@
+\documentclass[UTF8,11pt,a4paper]{ctexart}
+\usepackage{amsmath,amssymb,amsthm,geometry,enumitem,hyperref,array,longtable,booktabs,ragged2e}
+\geometry{margin=2.1cm}
+\setlist{itemsep=2pt,topsep=3pt}
+\hypersetup{colorlinks=true,linkcolor=blue}
+\setlength{\emergencystretch}{2em}
+\ctexset{section={beforeskip=1.8ex,afterskip=0.8ex},subsection={beforeskip=1.2ex,afterskip=0.5ex}}
+\setlength{\abovedisplayskip}{4pt}
+\setlength{\belowdisplayskip}{4pt}
+\setlength{\abovedisplayshortskip}{2pt}
+\setlength{\belowdisplayshortskip}{2pt}
+\newcommand{\APS}[2]{\par\noindent\textbf{中文。} #1\par\noindent\textbf{English.} #2\par\smallskip}
+\newcommand{\EN}[1]{\par\noindent \textbf{English.} #1\par}
+\newcommand{\FORMULA}[2]{\par\noindent\textbf{公式名称 / Formula name.} #1 / #2\par}
+\newcommand{\READ}[1]{\par\noindent \textbf{公式英文读法 / How to read it.} #1\par}
+\newcommand{\EX}[2]{\par\noindent \textbf{例子 / Example.} #1\par\EN{#2}}
+\newcommand{\ASK}[4]{\par\noindent \textbf{可能问题 / Possible question.} #1\par\EN{#2}\noindent \textbf{回答要点 / Key answer.} #3\par\EN{#4}\medskip}
+\newtheorem{definition}{定义\,/\,Definition}[section]
+\newtheorem{theorem}[definition]{定理\,/\,Theorem}
+\newtheorem{proposition}[definition]{命题\,/\,Proposition}
+\newtheorem{lemma}[definition]{引理\,/\,Lemma}
+\newtheorem{corollary}[definition]{推论\,/\,Corollary}
+\newtheorem{remark}[definition]{注记\,/\,Remark}
+\renewcommand{\proofname}{证明\,/\,Proof}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\pdn}{\partial_n}
+\pagestyle{plain}
+\title{偏微分方程 APS 复习讲义\\[4pt]\large Evans《Partial Differential Equations》第 2--4 章}
+\author{Partial Differential Equations: Bilingual Review}
+\date{}
+\begin{document}\maketitle
+
+\section*{课程概述 | Course overview}
+\APS{偏微分方程（PDE）研究含未知多元函数及其偏导数的方程，核心问题是：给定方程与定解条件（初始条件、边界条件），解是否存在、唯一、连续依赖数据？能否把解写出来？解有哪些不依赖显式公式的定性性质？本讲义对应 Evans《Partial Differential Equations》第 2--4 章，按教材顺序展开：第 2 章用统一框架处理四个模型线性方程（输运、位势、热、波动），每个方程都沿``基本解 $\to$ 平均值公式 $\to$ 极值原理或能量方法 $\to$ 正则性''这条主线展开；第 3 章研究一阶非线性方程，用特征方法把 PDE 化为常微分方程组，用完全积分与包络描述通解结构，用 Hopf--Lax 公式显式求解 Hamilton--Jacobi 方程，用弱解与熵条件处理特征线相交后形成的激波；第 4 章讨论解的表示，即把解写成级数、积分或相似函数的形式（分离变量、相似解、Fourier 与 Laplace 变换、Green 函数、幂级数）。}{Partial differential equations (PDEs) study equations involving an unknown function of several variables and its partial derivatives. The central questions are: given the equation and suitable side conditions (initial and boundary data), does a solution exist, is it unique, and does it depend continuously on the data? Can the solution be written down? Which qualitative properties hold without an explicit formula? These notes follow Chapters 2--4 of Evans, \emph{Partial Differential Equations}. Chapter 2 treats the four model linear PDEs (transport, Laplace, heat, wave) in one framework, each along the chain ``fundamental solution $\to$ mean-value formula $\to$ maximum principle or energy method $\to$ regularity''. Chapter 3 studies nonlinear first-order PDEs: the method of characteristics reduces the PDE to a system of ODEs, complete integrals and envelopes describe the structure of general solutions, the Hopf--Lax formula solves Hamilton--Jacobi equations explicitly, and weak solutions with an entropy condition handle the shocks formed after characteristics cross. Chapter 4 discusses representations of solutions, writing the solution as a series, an integral or a similarity profile (separation of variables, similarity solutions, Fourier and Laplace transforms, Green functions, power series).}
+
+\APS{为了让教材的抽象框架落地，本讲义把经典《数学物理方程》中的显式方法（d'Alembert 公式、热核、Poisson 积分、分离变量与 Sturm--Liouville 理论）嵌入对应各节，作为``算得出''的实例；同时保留 Evans 的现代观点：基本解是分布的卷积核，平均值公式是正则性的来源，极值原理与能量方法是唯一性与稳定性的两条独立路线。每节都给出严格定义、带完整假设的定理、证明或证明思路、一个算例与一个口试问答。定义与定理的表述按 Evans 第 2--4 章的原文整理，节号与书中一致（如 2.2.2 即书中第 2.2 节第 2 小节），便于对照原书复核；算例优先采用书中的模型与结论，补充的算例另行标明。}{To make the abstract framework concrete, the notes embed the explicit methods of the classical theory of mathematical physics (d'Alembert's formula, the heat kernel, Poisson integrals, separation of variables and Sturm--Liouville theory) into the corresponding sections as worked examples, while keeping Evans's modern viewpoint: the fundamental solution is a distributional convolution kernel, the mean-value formula is the source of regularity, and the maximum principle and the energy method are two independent routes to uniqueness and stability. Each section gives rigorous definitions, theorems with full hypotheses, proofs or ideas of proof, one worked example and one interview question. Definitions and theorem statements follow the text of Evans Chapters 2--4, with section numbers matching the book (e.g. 2.2.2 means Section 2.2, Subsection 2), so that each item can be checked against the original; examples follow the book's models and conclusions where available, and supplementary computations are marked as such.}
+
+\subsection*{主线地图 | Road map}
+\begin{center}\footnotesize
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.8cm}>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}p{10.0cm}@{}}
+\toprule
+节 & 核心对象 Object & 关键结论 Key conclusion \\
+\midrule
+1 & 分类、定解条件、适定性 classification, well-posedness & 三类方程需要不同数据；Hadamard 三条件；椭圆方程 Cauchy 问题不适定 \\
+2 & 输运、位势、热、波动 transport, Laplace, heat, wave & 基本解 $\to$ 平均值 $\to$ 极值原理/能量 $\to$ 正则性 \\
+3 & 一阶非线性方程 first-order nonlinear & 特征线；完全积分与包络；Hopf--Lax；弱解与熵条件 \\
+4 & 解的表示 representations & 分离变量、相似解、Fourier/Laplace 变换、Green 函数、幂级数 \\
+5 & 应用与口试 applications & 热传导、弦与膜、静电场、交通流、Black--Scholes \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{预备：二阶方程的分类与适定性 | Preliminaries: classification and well-posedness}
+\APS{本节的三个概念贯穿全书：方程的类型决定需要什么定解条件；适定性保证问题在数学上``提得对''；特征线则同时是一阶方程的解法与双曲方程信息传播的几何载体。}{Three notions in this section run through the whole book: the type of an equation decides which side conditions are appropriate; well-posedness says the problem is mathematically ``correctly posed''; and characteristics serve both as the solution device for first-order equations and as the geometry of information propagation for hyperbolic equations.}
+
+\subsection{二阶线性方程的分类 | Classification of second-order linear equations}
+\APS{在 $n$ 个自变量 $x=(x_1,\dots,x_n)$ 下，二阶线性方程写成
+\[
+\sum_{i,j=1}^{n}a_{ij}(x)u_{x_ix_j}+\sum_{i=1}^{n}b_i(x)u_{x_i}+c(x)u=f(x),
+\]
+其中可设 $a_{ij}=a_{ji}$ 对称。主部由系数矩阵 $A(x)=(a_{ij}(x))$ 决定：低阶项不影响类型，也不影响特征方向。当 $a_{ij},b_i,c,f$ 光滑且 $A(x)$ 处处非退化时，方程在每点的类型由 $A(x)$ 的特征值符号决定。}{In $n$ independent variables $x=(x_1,\dots,x_n)$ a second-order linear equation is written as displayed, where we may take $a_{ij}=a_{ji}$ symmetric. The principal part is determined by the coefficient matrix $A(x)=(a_{ij}(x))$: lower-order terms affect neither the type nor the characteristic directions. When the coefficients are smooth and $A(x)$ is everywhere nondegenerate, the type at a point is decided by the signs of the eigenvalues of $A(x)$.}
+
+\begin{definition}[二阶方程的类型 / types of second-order equations]\label{def:type}
+设 $A(x)$ 为实对称矩阵。方程在点 $x$ 处称为
+(i) \textbf{椭圆型 / elliptic}，若 $A(x)$ 的全部特征值同号（且非零）；
+(ii) \textbf{抛物型 / parabolic}，若恰有一个特征值为零、其余 $n-1$ 个同号（并要求主部秩恒为 $n-1$）；
+(iii) \textbf{双曲型 / hyperbolic}，若 $n-1$ 个特征值同号、一个异号；
+(iv) 其余情形称为\textbf{超双曲型 / ultrahyperbolic}。
+\EN{Let $A(x)$ be a real symmetric matrix. The equation is elliptic at $x$ if all eigenvalues of $A(x)$ have the same nonzero sign; parabolic if exactly one eigenvalue vanishes and the remaining $n-1$ have one sign (with the principal part of constant rank $n-1$); hyperbolic if $n-1$ eigenvalues have one sign and one the opposite sign; otherwise ultrahyperbolic.}
+\end{definition}
+
+\APS{二维情形最常用：$Au_{xx}+2Bu_{xy}+Cu_{yy}+Du_x+Eu_y+Fu=G$，主部矩阵 $\bigl(\begin{smallmatrix}A&B\\B&C\end{smallmatrix}\bigr)$ 的特征值乘积为 $\det A=AC-B^2$，故类型完全由判别式决定。这个判据在后续二次曲线的分类中会以同样的代数形式反复出现。}{The two-dimensional case is the most used: for the equation displayed, the product of the two eigenvalues of the principal matrix $\bigl(\begin{smallmatrix}A&B\\B&C\end{smallmatrix}\bigr)$ equals $\det A=AC-B^2$, so the type is decided entirely by the discriminant. The same algebraic criterion recurs in the classification of conics.}
+
+\FORMULA{二维二阶线性方程的分类}{classification in two variables}
+\[
+\Delta=B^2-AC:\qquad
+\begin{cases}
+\Delta>0, & \text{双曲型 / hyperbolic},\\
+\Delta=0, & \text{抛物型 / parabolic},\\
+\Delta<0, & \text{椭圆型 / elliptic}.
+\end{cases}
+\]
+
+\APS{分类在光滑非退化坐标变换 $y=\Phi(x)$ 下不变：主部矩阵变为 $J A J^{\mathsf T}$（$J=\partial y/\partial x$），而 $\det(JAJ^{\mathsf T})=(\det J)^2\det A$ 保持判别式符号；更一般地，$A(x)$ 的惯性指数（正、负、零特征值个数）是坐标不变量（Sylvester 惯性定理）。所以``椭圆/双曲''是方程的内在属性，不因坐标系而变。}{The classification is invariant under a smooth nondegenerate change of variables $y=\Phi(x)$: the principal matrix becomes $JAJ^{\mathsf T}$ with $J=\partial y/\partial x$, and $\det(JAJ^{\mathsf T})=(\det J)^2\det A$ keeps the sign of the discriminant; more generally the inertia of $A(x)$ (the numbers of positive, negative and zero eigenvalues) is a coordinate invariant (Sylvester's law of inertia). Hence ``elliptic'' and ``hyperbolic'' are intrinsic properties of the equation, not of the coordinate system.}
+
+\APS{特征线给出几何刻画。二维时称曲线 $y=y(x)$ 为特征线，若沿它最高阶法向导数无法解出，即
+\[
+A\,(\dd y)^2-2B\,\dd x\,\dd y+C\,(\dd x)^2=0 .
+\]
+双曲型有两族实特征线，取它们为坐标即化为 $u_{\xi\eta}=H$；抛物型只有一族，化为 $u_{\eta\eta}=H$；椭圆型没有实特征线，取复特征的实部、虚部作坐标化为 $u_{\alpha\alpha}+u_{\beta\beta}=H$。高维时特征面由一阶方程 $\sum a_{ij}\phi_{x_i}\phi_{x_j}=0$ 定义。}{Characteristics give a geometric description. In two variables, a curve $y=y(x)$ is characteristic if the highest-order normal derivative cannot be solved along it, i.e. the displayed equation holds. Hyperbolic equations have two real families, and using them as coordinates gives $u_{\xi\eta}=H$; parabolic equations have one family and give $u_{\eta\eta}=H$; elliptic equations have no real characteristics, and the real and imaginary parts of the complex characteristics give $u_{\alpha\alpha}+u_{\beta\beta}=H$. In higher dimensions characteristic surfaces are defined by the first-order equation $\sum a_{ij}\phi_{x_i}\phi_{x_j}=0$.}
+
+\EX{化简 $u_{xx}-4u_{xy}+3u_{yy}=0$。这里 $A=1$，$2B=-4$，$C=3$，故 $\Delta=B^2-AC=4-3=1>0$，是双曲型。特征方程 $\dd y^2+4\,\dd x\,\dd y+3\,\dd x^2=0$ 分解为 $(\dd y+\dd x)(\dd y+3\,\dd x)=0$，特征线为 $y+x=\mathrm{const}$ 与 $y+3x=\mathrm{const}$。令 $\xi=y+x$、$\eta=y+3x$，代入得 $u_{xx}-4u_{xy}+3u_{yy}=-4u_{\xi\eta}$，于是 $u_{\xi\eta}=0$，通解 $u=F(y+x)+G(y+3x)$。}{Reduce $u_{xx}-4u_{xy}+3u_{yy}=0$. Here $A=1$, $2B=-4$, $C=3$, so $\Delta=B^2-AC=4-3=1>0$: hyperbolic. The characteristic equation factors as $(\dd y+\dd x)(\dd y+3\dd x)=0$, giving the characteristics $y+x=\mathrm{const}$ and $y+3x=\mathrm{const}$. With $\xi=y+x$, $\eta=y+3x$ the equation becomes $-4u_{\xi\eta}=0$, hence $u_{\xi\eta}=0$ and $u=F(y+x)+G(y+3x)$.}
+
+\subsection{定解条件与 Hadamard 适定性 | Side conditions and Hadamard well-posedness}
+\APS{单有方程不足以确定解：$u_{xx}=0$ 的通解是 $u=ax+b$，还需要两个条件。条件的类型由方程类型决定，强行错配会导致不适定甚至无解。椭圆方程给边界条件（Dirichlet、Neumann 或 Robin），抛物方程给一个初始条件加边界条件，双曲方程给两个初始条件（位移与速度）加边界条件。边界条件又分三类：$u|_{\partial\Omega}=g$（第一类 / Dirichlet）、$\pdn u|_{\partial\Omega}=g$（第二类 / Neumann）、$\pdn u+\alpha u|_{\partial\Omega}=g$（第三类 / Robin）。}{An equation alone does not determine the solution: $u_{xx}=0$ has the general solution $u=ax+b$ and still needs two conditions. The type of conditions is dictated by the type of equation, and mismatching them produces ill-posed or even unsolvable problems. Elliptic equations take boundary data (Dirichlet, Neumann or Robin), parabolic equations take one initial condition plus boundary data, hyperbolic equations take two initial conditions (displacement and velocity) plus boundary data. Boundary conditions come in three kinds: $u|_{\partial\Omega}=g$ (first kind / Dirichlet), $\pdn u|_{\partial\Omega}=g$ (second kind / Neumann), and $\pdn u+\alpha u|_{\partial\Omega}=g$ (third kind / Robin).}
+
+\begin{definition}[适定性 / well-posedness]\label{def:wp}
+一个定解问题称为在 Hadamard 意义下\textbf{适定 / well-posed}，若 (i) 解\textbf{存在 / existence}；(ii) 解\textbf{唯一 / uniqueness}；(iii) 解\textbf{连续依赖数据 / continuous dependence on the data}，即存在常数 $C$ 使解的先验估计
+\[
+\|u\|\le C\,\|(\text{data})\|
+\]
+成立：数据在小范数意义下的扰动只引起解的小扰动。
+\EN{A problem is well-posed in the sense of Hadamard if (i) a solution exists, (ii) it is unique, and (iii) it depends continuously on the data: there is a constant $C$ with the displayed a priori estimate, so that small perturbations of the data produce small perturbations of the solution.}
+\end{definition}
+
+\begin{theorem}[Laplace 方程 Cauchy 问题的不适定性 / ill-posedness of the Cauchy problem]\label{thm:illposed}
+在上半平面 $\{y>0\}$ 上考虑
+\[
+u_{xx}+u_{yy}=0,\qquad u(x,0)=0,\qquad u_y(x,0)=\frac1n\sin(nx).
+\]
+其解为 $u_n(x,y)=\frac{1}{n^2}\sinh(ny)\sin(nx)$。当 $n\to\infty$ 时数据连同任意阶导数一致趋于零，但在任意固定 $y>0$ 处 $u_n$ 按 $n^{-2}e^{ny}$ 指数增长，故解不连续依赖数据。
+\EN{On the upper half-plane $\{y>0\}$ consider the displayed problem, whose solution is $u_n(x,y)=n^{-2}\sinh(ny)\sin(nx)$. As $n\to\infty$ the data and all their derivatives tend to zero uniformly, yet at any fixed $y>0$ the solution grows exponentially like $n^{-2}e^{ny}$, so it does not depend continuously on the data.}
+\end{theorem}
+
+\begin{proof}[证明 / Proof]
+直接验证：$\partial_y^2\sinh(ny)=n^2\sinh(ny)$ 与 $\partial_x^2\sin(nx)=-n^2\sin(nx)$ 相互抵消，故 $u_n$ 调和；$u_n(x,0)=0$，$u_{n,y}(x,0)=\frac1n\sin(nx)$。数据在 $C^k$ 范数下按 $n^{k-2}$ 量级趋于零，而解在固定 $y>0$ 处按 $\frac1{n^2}\sinh(ny)\sim\frac{1}{2n^2}e^{ny}$ 发散。因此对任何 $C>0$ 都无法保证 $\|u\|\le C\|(\text{data})\|$，Hadamard 第三条件失效。\EN{Direct differentiation shows that $\partial_y^2\sinh(ny)$ and $\partial_x^2\sin(nx)$ cancel, so $u_n$ is harmonic with the stated data. The data tend to zero in every $C^k$ norm like $n^{k-2}$, while the solution diverges like $n^{-2}e^{ny}$ at fixed $y>0$. Hence no constant $C$ can give $\|u\|\le C\|(\text{data})\|$, and the third Hadamard condition fails.}
+\end{proof}
+
+\APS{这个反例说明椭圆方程必须配边界条件，而不能像双曲方程那样给初始条件。反过来，对双曲方程给整个边界上的 Dirichlet 数据则会约束过多。定解条件的数目要正好等于``沿传播方向''的自由度，这正是特征理论的作用。}{This counterexample shows that elliptic equations must be given boundary rather than initial data. Conversely, imposing Dirichlet data on the whole boundary of a hyperbolic equation overdetermines the problem. The number of side conditions must match the number of degrees of freedom ``along the direction of propagation'', which is exactly the role of characteristic theory.}
+
+\ASK{为什么不同方程需要不同类型的定解条件？}{Why do different equations need different kinds of data?}{双曲方程有实特征线，信息以有限速度传播，给一个时刻的位移和速度即可决定未来；抛物方程只有一个时间方向且时间不可逆，只需初始温度；椭圆方程没有实特征方向，解由整个边界决定，给初值会破坏稳定性（定理 \ref{thm:illposed}）。}{Hyperbolic equations have real characteristics and carry information at finite speed, so displacement and velocity at one time determine the future; parabolic equations have a single, irreversible time direction, so the initial temperature suffices; elliptic equations have no real characteristic direction and are determined by the whole boundary, so initial data destroy stability (Theorem \ref{thm:illposed}).}
+
+\subsection{三类方程的标准型对照 | The three model types side by side}
+\begin{center}\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.5cm}>{\raggedright\arraybackslash}p{3.1cm}>{\raggedright\arraybackslash}p{4.2cm}>{\raggedright\arraybackslash}p{4.7cm}@{}}
+\toprule
+类型 Type & 标准型 Model & 典型定解问题 Data & 定性特征 Qualitative behaviour \\
+\midrule
+椭圆 elliptic & $-\Delta u=f$ & Dirichlet / Neumann / Robin 边值问题 & 无实特征；解由整个边界决定；极值原理；内部实解析 \\
+抛物 parabolic & $u_t-\kappa\Delta u=f$ & 初值 $u(\cdot,0)=g$ 加边界条件 & 时间单向；无限传播速度；$t>0$ 立即光滑；极值原理 \\
+双曲 hyperbolic & $u_{tt}-c^2\Delta u=f$ & 两初值 $u(\cdot,0),u_t(\cdot,0)$ 加边界条件 & 实特征线；有限传播速度；能量守恒；激波（非线性） \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\APS{三条标准型的代表分别对应稳态、扩散与振动三种物理过程，也对应三种数学工具：椭圆用极值原理与 Green 函数，抛物用极值原理与热核，双曲用特征线与能量。第 2 章把这套对照逐条严格化。}{The three model types correspond to steady state, diffusion and vibration, and to three mathematical toolkits: elliptic equations use the maximum principle and Green functions, parabolic equations use the maximum principle and the heat kernel, hyperbolic equations use characteristics and energy. Chapter 2 makes this comparison rigorous point by point.}
+
+\section{四大线性方程：Evans 第 2 章 | Four important linear PDEs}
+\APS{Evans 第 2 章只挑四个方程：输运、位势（Laplace）、热、波动。挑选标准不是``物理上重要''，而是``能算到底''：四个方程的基本解都能显式写出，因而可以完整走通``基本解 $\to$ 平均值公式 $\to$ 极值原理或能量方法 $\to$ 正则性''这条链。这四个方程同时是三类二阶方程的模型：输运与波动是双曲型，热是抛物型，位势是椭圆型。}{Evans Chapter 2 selects only four equations: transport, potential (Laplace), heat and wave. The criterion is not physical importance but complete solvability: all four have explicit fundamental solutions, so the chain ``fundamental solution $\to$ mean-value formula $\to$ maximum principle or energy method $\to$ regularity'' can be carried through in full. The four are also models of the three types of second-order equations: transport and wave are hyperbolic, heat is parabolic, potential is elliptic.}
+
+\begin{definition}[古典解 / classical solution]\label{def:classical}
+设 $U\subset\R^n$ 为开集、$T>0$。函数 $u\in C^2(U\times(0,T))\cap C(\bar U\times[0,T])$ 称为方程 $u_t=\kappa\Delta u$（或 $u_{tt}=c^2\Delta u$、$\Delta u=0$）在 $U_T=U\times(0,T]$ 上的\textbf{古典解 / classical solution}，若它在 $U\times(0,T)$ 内逐点满足方程；带有初始与边界数据且连续到边界、取到数据值的古典解称为该定解问题的古典解。只要求满足积分恒等式（把导数转移到检验函数上）的解称为\textbf{弱解 / weak solution}（定义 \ref{def:weak}）。古典解一定是弱解，反之不然。
+\EN{Let $U\subset\R^n$ be open and $T>0$. A function $u\in C^2(U\times(0,T))\cap C(\bar U\times[0,T])$ is a classical solution of $u_t=\kappa\Delta u$ (or $u_{tt}=c^2\Delta u$, $\Delta u=0$) on $U_T=U\times(0,T]$ if it satisfies the equation pointwise in $U\times(0,T)$; if in addition it is continuous up to the parabolic boundary and takes the prescribed data there, it is a classical solution of the initial-boundary value problem. A solution required only to satisfy an integral identity, with derivatives moved onto test functions, is a weak solution (Definition \ref{def:weak}). Classical solutions are weak solutions, but not conversely.}
+\end{definition}
+
+\subsection{输运方程 | The transport equation}
+\APS{输运方程 $u_t+b\cdot\nabla u=0$（$b\in\R^n$ 为常向量）是最简单的双曲方程：解在每一点的值等于初值沿直线 $x-tb$ 平移过来的值，波形不变形、不衰减、也不光滑化。它是理解特征线、有限传播速度与''信息沿特征线携带''的最小模型。}{The transport equation $u_t+b\cdot\nabla u=0$ with constant $b\in\R^n$ is the simplest hyperbolic equation: the value at each point equals the initial value translated along the line $x-tb$, so the profile neither deforms, decays nor smooths. It is the minimal model for characteristics, finite propagation speed, and ``information carried along characteristics''.}
+
+\begin{theorem}[常系数输运方程 / constant-coefficient transport]\label{thm:transport}
+设 $b\in\R^n$，$g\in C^1(\R^n)$。初值问题
+\[
+u_t+b\cdot\nabla u=0\quad\text{于 }\R^n\times(0,\infty),\qquad u=g\quad\text{于 }\R^n\times\{0\}
+\]
+有唯一解 $u(x,t)=g(x-tb)$。若 $g\in C^k$，则 $u\in C^k$；一般地 $u$ 恰具有 $g$ 的正则性。
+\EN{If $b\in\R^n$ and $g\in C^1(\R^n)$, the displayed initial-value problem has the unique solution $u(x,t)=g(x-tb)$. If $g\in C^k$ then $u\in C^k$; in general $u$ has exactly the regularity of $g$.}
+\end{theorem}
+
+\begin{proof}[证明 / Proof]
+沿特征线 $\dot x=b$ 考察 $t\mapsto u(x+tb,t)$：由链式法则
+\[
+\frac{\dd}{\dd t}u(x+tb,t)=u_t(x+tb,t)+b\cdot\nabla u(x+tb,t)=0,
+\]
+故 $u$ 沿每条特征线为常数；在 $t=0$ 处取值为 $g(x)$，于是 $u(x,t)=g(x-tb)$。唯一性：过任意 $(x,t)$ 的特征线反向延伸到 $t=0$ 落在唯一的点，故解被初值唯一决定。正则性：$u$ 是 $g$ 与线性映射的复合，复合不增加也不减少光滑性；反解 $g(x)=u(x+tb,t)$ 说明二者正则性相同。\EN{Along a characteristic $\dot x=b$, the chain rule gives the displayed identity, so $u$ is constant on each characteristic; its value at $t=0$ is $g(x)$, hence $u(x,t)=g(x-tb)$. Uniqueness: the characteristic through any $(x,t)$, extended backwards, meets the hyperplane $t=0$ in a unique point, so the data determine $u$. Regularity: $u$ is $g$ composed with a linear map, and composition neither gains nor loses smoothness; conversely $g(x)=u(x+tb,t)$ shows that both have the same regularity.}
+\end{proof}
+
+\APS{非齐次方程 $u_t+b\cdot\nabla u=f$ 用 Duhamel 原理：沿特征线把源项积分起来，
+\[
+u(x,t)=g(x-tb)+\int_0^t f\bigl(x+(s-t)b,\,s\bigr)\,\dd s .
+\]
+几何上，$(x,t)$ 处的值由初值 $g(x-tb)$ 与从 $t=0$ 到 $t$ 沿同一条特征线累积的源项组成。验证只需对 $t$ 求导并注意复合函数的链式法则。}{For the inhomogeneous equation $u_t+b\cdot\nabla u=f$, Duhamel's principle integrates the source along characteristics, giving the displayed formula: the value at $(x,t)$ is the initial value $g(x-tb)$ plus the source accumulated along the same characteristic from time $0$ to $t$. Verification is a direct differentiation using the chain rule.}
+
+\EX{对变系数方程 $u_t+xu_x=0$、$u(x,0)=g(x)$，特征线满足 $\dot x=x$，即 $x=x_0e^t$，故 $u(x,t)=g(xe^{-t})$：初始波形被速度场 $x$ 拉伸，但每个点的值沿特征线保持不变。对 $u_t+au_x=0$（$a$ 为常数）退化为右行平移 $u=g(x-at)$。}{For the variable-coefficient equation $u_t+xu_x=0$ with $u(x,0)=g(x)$, the characteristics satisfy $\dot x=x$, i.e. $x=x_0e^t$, hence $u(x,t)=g(xe^{-t})$: the profile is stretched by the velocity field $x$, while the value at each point stays constant along its characteristic. For $u_t+au_x=0$ with constant $a$ this reduces to the right-moving translation $u=g(x-at)$.}
+
+\APS{在有界区域 $\Omega$ 上，输运方程不能在整个边界上给条件：信息只沿 $b$ 的方向流动，只需在``入流边界'' $\{x\in\partial\Omega: b\cdot\nu(x)<0\}$ 上给 $u$，其中 $\nu$ 是外法向；出流边界上的值由内部决定。这一点与椭圆方程``整个边界都要给''形成鲜明对照，也是特征理论决定定解条件的直接体现。}{On a bounded domain $\Omega$ the transport equation cannot be prescribed on the whole boundary: information flows only along $b$, so $u$ is prescribed on the inflow part $\{x\in\partial\Omega: b\cdot\nu(x)<0\}$ of the boundary, where $\nu$ is the outward normal; values on the outflow part are determined by the interior. This contrasts sharply with elliptic equations, which need the whole boundary, and is a direct consequence of characteristic theory.}
+
+\ASK{为什么输运方程不光滑化，而热方程立即光滑化？}{Why does transport not smooth, while the heat equation smooths instantly?}{输运方程的解就是初值的平移 $g(x-tb)$，算子 $b\cdot\nabla$ 只是沿一个方向的方向导数，没有任何耗散；热方程的基本解是高斯核，卷积把导数全部转移到光滑核上，高频分量按 $e^{-\kappa|\xi|^2t}$ 衰减。前者是``搬运信息''，后者是``抹平信息''。}{The solution of the transport equation is just the translate $g(x-tb)$; the operator $b\cdot\nabla$ is a directional derivative with no dissipation. The heat equation has a Gaussian fundamental solution, and convolution moves all derivatives onto the smooth kernel while high frequencies decay like $e^{-\kappa|\xi|^2t}$. The former transports information, the latter wipes it out.}
+
+\subsection{位势方程（Laplace 方程）| Laplace's equation}
+\APS{位势方程研究稳态：无源时 $\Delta u=0$，有源时 $-\Delta u=f$。它是热方程的稳态、也是静电场与引力场的控制方程。本节按 Evans 的顺序建立：Green 公式与基本解、平均值公式、极值原理与正则性、Green 函数与 Poisson 公式。}{Potential equations describe steady states: $\Delta u=0$ without a source and $-\Delta u=f$ with one. The equation is the steady state of the heat equation and the governing equation of electrostatics and gravitation. This section follows Evans: Green's identities and the fundamental solution, the mean-value formula, the maximum principle and regularity, Green's functions and Poisson's formula.}
+
+\begin{definition}[调和函数、Poisson 方程与 Dirichlet 问题 / harmonic functions and the Dirichlet problem]\label{def:harmonic}
+设 $\Omega\subset\R^n$ 为开集，$u\in C^2(\Omega)$。
+(i) 若 $\Delta u=0$ 于 $\Omega$，则称 $u$ 为 $\Omega$ 上的\textbf{调和函数 / harmonic function}；
+(ii) 若 $-\Delta u=f$ 于 $\Omega$（$f$ 给定），则称该方程为 \textbf{Poisson 方程 / Poisson's equation}；
+(iii) 给定 $g\in C(\partial\Omega)$，求 $u\in C^2(\Omega)\cap C(\bar\Omega)$ 使 $\Delta u=0$ 于 $\Omega$、$u=g$ 于 $\partial\Omega$，称为 \textbf{Dirichlet 问题 / Dirichlet problem}；把 $u=g$ 换成 $\partial_\nu u=g$ 称为 \textbf{Neumann 问题 / Neumann problem}（$\nu$ 为外法向）。
+\EN{Let $\Omega\subset\R^n$ be open and $u\in C^2(\Omega)$. (i) $u$ is harmonic in $\Omega$ if $\Delta u=0$ there; (ii) the equation $-\Delta u=f$ with given $f$ is Poisson's equation; (iii) given $g\in C(\partial\Omega)$, the Dirichlet problem asks for $u\in C^2(\Omega)\cap C(\bar\Omega)$ with $\Delta u=0$ in $\Omega$ and $u=g$ on $\partial\Omega$; replacing $u=g$ by $\partial_\nu u=g$ gives the Neumann problem, with $\nu$ the outward normal.}
+\end{definition}
+
+\subsubsection{Green 公式与基本解 | Green's identities and the fundamental solution}
+\APS{一切从散度定理开始。对光滑函数 $u,v$ 与光滑区域 $\Omega$（外法向 $\nu$），在 $\nabla\cdot(u\nabla v)=u\Delta v+\nabla u\cdot\nabla v$ 上积分并用散度定理，得第一 Green 公式；把 $u,v$ 互换后两式相减，得第二 Green 公式。它们把区域内的 Laplacian 换成边界上的法向导数，是 Green 函数方法的出发点。}{Everything starts from the divergence theorem. Integrating $\nabla\cdot(u\nabla v)=u\Delta v+\nabla u\cdot\nabla v$ over a smooth domain $\Omega$ with outward normal $\nu$ gives the first Green identity; interchanging $u$ and $v$ and subtracting gives the second. They convert the Laplacian in the interior into normal derivatives on the boundary, the starting point of the Green-function method.}
+
+\[
+\int_\Omega u\,\Delta v\,\dd y=\int_{\partial\Omega}u\,\partial_\nu v\,\dd S-\int_\Omega\nabla u\cdot\nabla v\,\dd y,
+\]
+\[
+\int_\Omega\bigl(u\,\Delta v-v\,\Delta u\bigr)\dd y=\int_{\partial\Omega}\bigl(u\,\partial_\nu v-v\,\partial_\nu u\bigr)\dd S .
+\]
+
+\begin{definition}[基本解 / fundamental solution]\label{def:fundsol}
+函数 $\Phi$ 称为 Laplace 算子的\textbf{基本解 / fundamental solution}，若在分布意义下 $-\Delta\Phi=\delta_0$。显式地，取 $\omega_n=|\partial B(0,1)|$ 为单位球面面积，
+\[
+\Phi(x)=\begin{cases}
+-\dfrac{1}{2\pi}\ln|x|, & n=2,\\[6pt]
+\dfrac{1}{(n-2)\,\omega_n\,|x|^{\,n-2}}, & n\ge 3 .
+\end{cases}
+\]
+\EN{A function $\Phi$ is a fundamental solution of the Laplacian if $-\Delta\Phi=\delta_0$ distributionally. Explicitly, with $\omega_n$ the area of the unit sphere, $\Phi(x)=-\frac{1}{2\pi}\ln|x|$ for $n=2$ and $\Phi(x)=\frac{1}{(n-2)\omega_n|x|^{n-2}}$ for $n\ge3$.}
+\end{definition}
+
+\APS{常数是这样定出来的：对 $n\ge3$，$\Phi=c|x|^{2-n}$，$\nabla\Phi=-c(n-2)|x|^{-n}x$，于是通过半径 $r$ 球面的通量为
+\[
+\int_{\partial B(0,r)}\partial_r\Phi\,\dd S=-c(n-2)\,\omega_n=-1,
+\]
+只要 $c=1/((n-2)\omega_n)$；$-1$ 正是 $-\Delta\Phi=\delta_0$ 所要求的总通量。二维的对数核同理，$\int_{\partial B(0,r)}\partial_r\Phi\,\dd S=-(1/2\pi)\cdot2\pi=-1$。注意 $\omega_n=n\alpha(n)$，其中 $\alpha(n)$ 是单位球的体积；两种记法不要混用，否则常数会差因子 $n$。}{The constant is fixed by the flux: for $n\ge3$, $\Phi=c|x|^{2-n}$ gives $\nabla\Phi=-c(n-2)|x|^{-n}x$, so the flux through a sphere of radius $r$ is $-c(n-2)\omega_n$, which equals $-1$ exactly when $c=1/((n-2)\omega_n)$; this $-1$ is the total flux required by $-\Delta\Phi=\delta_0$. The two-dimensional logarithmic kernel is analogous, with flux $-(1/2\pi)\cdot2\pi=-1$. Note that $\omega_n=n\alpha(n)$, where $\alpha(n)$ is the volume of the unit ball; mixing the two conventions changes the constant by a factor $n$.}
+
+\begin{theorem}[Poisson 方程的解 / solving Poisson's equation]\label{thm:poisson}
+设 $f\in C^2_c(\R^n)$，定义
+\[
+u(x)=\int_{\R^n}\Phi(x-y)f(y)\,\dd y=(\Phi*f)(x).
+\]
+则 $u\in C^2(\R^n)$ 且 $-\Delta u=f$。若 $\Omega$ 有界光滑、$f$ 在 $\Omega$ 上光滑，则 $-\Delta u=f$ 在 $\Omega$ 内的任意两个 $C^2(\bar\Omega)$ 解只相差一个调和函数。
+\EN{If $f\in C^2_c(\R^n)$, then the displayed convolution satisfies $u\in C^2(\R^n)$ and $-\Delta u=f$. If $\Omega$ is bounded and smooth and $f$ is smooth on $\Omega$, then any two $C^2(\bar\Omega)$ solutions of $-\Delta u=f$ in $\Omega$ differ by a harmonic function.}
+\end{theorem}
+
+\begin{proof}[证明思路 / Idea of proof]
+基本解在原点奇异，不能直接对 $\Phi$ 求二阶导数。做法是把积分拆成 $|x-y|<\varepsilon$ 与外部：外部区域上 $\Phi$ 光滑，可以求导并把导数转移到 $f$ 上；小球内部用 Green 公式把 $\Delta\Phi$ 换成球面上的通量，半径 $\varepsilon\to0$ 时通量趋于 $-f(x)$，其余项趋于零。于是 $-\Delta u(x)=f(x)$。第二个断言由线性性：两解之差满足 $-\Delta w=0$。\EN{The fundamental solution is singular at the origin, so second derivatives cannot be taken directly. Split the integral into $|x-y|<\varepsilon$ and its complement: outside the small ball $\Phi$ is smooth, and derivatives can be moved onto $f$; inside, Green's formula converts $\Delta\Phi$ into a flux through the sphere, which tends to $-f(x)$ as $\varepsilon\to0$ while the remaining terms vanish. Hence $-\Delta u=f$. The second assertion follows from linearity: the difference of two solutions satisfies $-\Delta w=0$.}
+\end{proof}
+
+\EX{取 $f=\mathbf 1_{B(0,R)}$（单位球上的均匀源，$n=3$）。由 $\Phi(x)=1/(4\pi|x|)$ 与平均值性质，对 $|x|>R$，
+\[
+u(x)=\frac{1}{4\pi}\int_{B(0,R)}\frac{\dd y}{|x-y|}=\frac{1}{4\pi|x|}\cdot\frac{4\pi R^3}{3}=\frac{R^3}{3|x|},
+\]
+即球外场与把总质量 $M=\frac{4\pi R^3}{3}$ 集中在原点的点源相同（Newton 定理）；球内则是 $u=R^2/6-|x|^2/6$。这是静电学中均匀带电球的势。}{Take $f=\mathbf 1_{B(0,R)}$, the uniform source on a ball, in $n=3$. Using $\Phi(x)=1/(4\pi|x|)$ and the mean-value property, for $|x|>R$ the displayed computation gives $u=R^3/(3|x|)$: outside the ball the field is that of a point mass $M=4\pi R^3/3$ at the origin (Newton's theorem), while inside $u=R^2/6-|x|^2/6$. This is the potential of a uniformly charged ball in electrostatics.}
+
+\subsubsection{平均值公式 | The mean-value formula}
+\begin{theorem}[平均值公式 / mean-value formulas]\label{thm:mvp}
+设 $u\in C^2(U)$ 在 $U$ 内调和，$\overline{B(x,r)}\subset U$。则
+\[
+u(x)=\frac{1}{|\partial B(x,r)|}\int_{\partial B(x,r)}u\,\dd S=\frac{1}{|B(x,r)|}\int_{B(x,r)}u\,\dd y,
+\]
+即调和函数在球心的值等于它在球面与球体上的平均值。反之，若 $u\in C(U)$ 对每个包含在 $U$ 内的球都满足球面平均公式，则 $u\in C^\infty(U)$ 且调和。
+\EN{If $u\in C^2(U)$ is harmonic in $U$ and $\overline{B(x,r)}\subset U$, then $u(x)$ equals both its average over the sphere and its average over the ball, as displayed. Conversely, if $u\in C(U)$ satisfies the spherical mean-value formula for every ball compactly contained in $U$, then $u\in C^\infty(U)$ and is harmonic.}
+\end{theorem}
+
+\begin{proof}[证明 / Proof]
+记 $\phi(r)=\dfrac{1}{|\partial B(x,r)|}\displaystyle\int_{\partial B(x,r)}u\,\dd S=\dfrac{1}{\omega_n r^{n-1}}\int_{\partial B(x,r)}u\,\dd S$。对 $r$ 求导（把球面换成单位球面再对半径积分），用散度定理：
+\[
+\phi'(r)=\frac{1}{\omega_n r^{n-1}}\int_{B(x,r)}\Delta u\,\dd y=0,
+\]
+故 $\phi$ 为常数。令 $r\to0$，由 $u$ 连续得 $\phi(r)\to u(x)$，于是球面平均公式成立。再把 $\phi(r)=u(x)$ 对 $r$ 从 $0$ 到 $R$ 积分：
+\[
+|B(x,R)|\,u(x)=\int_0^R\omega_n r^{n-1}u(x)\,\dd r=\int_{B(x,R)}u\,\dd y,
+\]
+得球体平均公式。逆命题：若球面平均成立，则对 $r\to0$ 作 Taylor 展开 $\phi(r)=u(x)+\frac{r^2}{2n}\Delta u(x)+o(r^2)$，平均条件迫使 $\Delta u(x)=0$；光滑性可由磨光或 Poisson 积分得到。\EN{Set $\phi(r)$ equal to the spherical average. Differentiating in $r$ (rescaling to the unit sphere and integrating over the radius) and using the divergence theorem gives $\phi'(r)=\omega_n^{-1}r^{1-n}\int_{B(x,r)}\Delta u=0$, so $\phi$ is constant. Letting $r\to0$ gives $\phi(r)\to u(x)$ by continuity, proving the spherical formula. Integrating $\phi(r)=u(x)$ from $0$ to $R$ gives $|B(x,R)|u(x)=\int_{B(x,R)}u$, the ball formula. Conversely, Taylor's formula $\phi(r)=u(x)+\frac{r^2}{2n}\Delta u(x)+o(r^2)$ forces $\Delta u(x)=0$; smoothness follows by mollification or from the Poisson integral.}
+\end{proof}
+
+\APS{平均值公式是调和函数一切正则性性质的源头：它把内部值写成边界值的平均，于是``内部不能有严格极值''（极值原理）、``有界调和函数在紧集上互相控制''（Harnack 不等式）、``导数由 $L^1$ 范数控制''（导数估计）都成为推论。逆命题更强：只要求连续函数满足平均公式，就已经自动是调和的、因而无穷次可微（Weyl 引理的思想）。}{The mean-value formula is the source of all regularity properties of harmonic functions: it writes an interior value as an average of boundary values, so ``no strict interior extremum'' (maximum principle), ``bounded harmonic functions control each other on compact sets'' (Harnack's inequality) and ``derivatives controlled by the $L^1$ norm'' (derivative estimates) all follow. The converse is stronger: a merely continuous function satisfying the mean-value formula is automatically harmonic, hence infinitely differentiable (the idea behind Weyl's lemma).}
+
+\EX{取 $u(x)=x_1$：$\Delta u=0$，球面平均 $\frac{1}{|\partial B(x,r)|}\int_{\partial B(x,r)}y_1\,\dd S=x_1$ 由对称性直接得到。取 $u(x)=x_1x_2$：$\Delta u=0$，球面平均仍是 $x_1x_2$。而 $u(x)=|x|^2$ 满足 $\Delta u=2n\ne0$，不是调和的，其球面平均为 $|x|^2+r^2$，比球心值多出 $r^2$，正好反映 $\Delta u=2n$。}{For $u(x)=x_1$ we have $\Delta u=0$ and the spherical average is $x_1$ by symmetry; $u(x)=x_1x_2$ is harmonic with the same average $x_1x_2$. The function $u(x)=|x|^2$ satisfies $\Delta u=2n\ne0$ and is not harmonic; its spherical average is $|x|^2+r^2$, larger than the centre value by $r^2$, reflecting $\Delta u=2n$.}
+
+\subsubsection{极值原理、正则性与 Liouville 定理 | Maximum principle, regularity, Liouville}
+\begin{theorem}[强极值原理与 Hopf 引理 / strong maximum principle and Hopf's lemma]\label{thm:harmmax}
+设 $\Omega$ 有界连通，$u\in C^2(\Omega)\cap C(\bar\Omega)$ 在 $\Omega$ 内调和。
+(i) 若 $u$ 在 $\Omega$ 内某点取到最大值或最小值，则 $u$ 在 $\Omega$ 内为常数，从而在 $\bar\Omega$ 上为常数。
+(ii) 由此，$u$ 的最大值与最小值都在边界 $\partial\Omega$ 上取到；若 $u|_{\partial\Omega}=0$，则 $u\equiv0$。
+(iii) \textbf{Hopf 引理}: 若 $x_0\in\partial\Omega$ 处 $u(x_0)>u(x)$ 对一切 $x\in\Omega$ 成立，且 $\Omega$ 在 $x_0$ 满足内球条件，则外法向导数 $\partial_\nu u(x_0)>0$。
+\EN{Let $\Omega$ be bounded and connected and $u\in C^2(\Omega)\cap C(\bar\Omega)$ harmonic in $\Omega$. (i) An interior maximum or minimum forces $u$ constant in $\Omega$, hence on $\bar\Omega$. (ii) Hence both extrema are attained on $\partial\Omega$; if $u=0$ on $\partial\Omega$ then $u\equiv0$. (iii) Hopf's lemma: if at $x_0\in\partial\Omega$ one has $u(x_0)>u(x)$ for all $x\in\Omega$ and $\Omega$ satisfies an interior ball condition at $x_0$, then the outward normal derivative satisfies $\partial_\nu u(x_0)>0$.}
+\end{theorem}
+
+\begin{proof}[证明思路 / Idea of proof]
+(i) 设 $u$ 在 $x_0\in\Omega$ 取到最大值 $M$。由平均值公式，$u(x_0)$ 是球面平均，而球面上每点 $\le M$，故球面上 $u\equiv M$；对任意半径成立，连通性把``$u=M$''传播到整个 $\Omega$。(iii) 在 $x_0$ 附近的内切球上构造辅助函数 $v(x)=u(x)+\varepsilon|x-x_0|^2$ 或用 $e^{-\lambda|x|^2}$ 型函数，对 $u-v$ 用极值原理得 $\partial_\nu u(x_0)\ge c\varepsilon>0$。\EN{(i) Suppose $u$ attains its maximum $M$ at $x_0\in\Omega$. By the mean-value formula $u(x_0)$ is a spherical average, while every point of the sphere has $u\le M$; hence $u\equiv M$ on the sphere. This holds for all radii, and connectedness propagates $u=M$ to all of $\Omega$. (iii) On the interior tangent ball near $x_0$ build an auxiliary function $v=u+\varepsilon|x-x_0|^2$ (or a Gaussian bump), apply the maximum principle to $u-v$, and obtain $\partial_\nu u(x_0)\ge c\varepsilon>0$.}
+\end{proof}
+
+\begin{theorem}[正则性、导数估计、Liouville 与 Harnack / regularity, estimates, Liouville, Harnack]\label{thm:lapreg}
+设 $u$ 在 $U$ 内调和。
+(i) $u\in C^\infty(U)$，且 $u$ 在 $U$ 内实解析。
+(ii) 对每个多重指标 $\alpha$ 存在 $C_k$ 使
+\[
+|D^\alpha u(x_0)|\le\frac{C_k}{r^{\,n+|\alpha|}}\int_{B(x_0,r)}|u|\,\dd y,\qquad B(x_0,r)\subset\subset U,\ |\alpha|=k .
+\]
+(iii) \textbf{Liouville 定理}: $\R^n$ 上有界（或单侧有界）的调和函数必为常数。
+(iv) \textbf{Harnack 不等式}: 若 $V\subset\subset U$ 连通、$u\ge0$ 在 $U$ 内调和，则存在只依赖 $V,U$ 的常数 $C$ 使 $\sup_Vu\le C\inf_Vu$。
+\EN{Let $u$ be harmonic in $U$. (i) $u\in C^\infty(U)$ and $u$ is real-analytic in $U$. (ii) For every multi-index $\alpha$ with $|\alpha|=k$ there is $C_k$ with the displayed derivative estimate. (iii) Liouville: a bounded (or one-sided bounded) harmonic function on $\R^n$ is constant. (iv) Harnack: if $V\subset\subset U$ is connected and $u\ge0$ is harmonic in $U$, then $\sup_Vu\le C\inf_Vu$ with $C$ depending only on $V,U$.}
+\end{theorem}
+
+\begin{proof}[证明思路 / Idea of proof]
+(i) 由平均值公式 $u(x)=\int_{B(x,r)}u\,\eta\,\dd y$（$\eta$ 为径向磨光子）可把 $u$ 写成光滑核的积分，从而光滑；解析性由球上的 Poisson 积分公式对 $|x|<r$ 展开为幂级数得到。(ii) 对平均值公式在球上求导并估计。(iii) 对 $Du$ 用 (ii) 与 $|Du|\le\frac{n}{r}\sup|u|$，令 $r\to\infty$ 得 $Du\equiv0$。(iv) 用一串球连接 $V$ 内两点：在相邻两球的公共区域上，平均值公式给出两球平均值之比的上下界，只依赖球的半径与重叠程度，链式相乘即得。\EN{(i) The mean-value formula writes $u(x)=\int u\eta$ with a radial mollifier, hence $u$ is smooth; analyticity follows by expanding the Poisson integral on balls as a power series. (ii) Differentiate the mean-value formula and estimate. (iii) Apply (ii) to $Du$ together with $|Du|\le\frac nr\sup|u|$ and let $r\to\infty$. (iv) Join two points of $V$ by a chain of balls; on overlaps the mean-value formula bounds the ratio of the two ball averages by a constant depending only on radii and overlap, and multiplying along the chain gives the inequality.}
+\end{proof}
+
+\APS{极值原理与能量方法是证明唯一性的两条独立路线。对 Dirichlet 问题 $-\Delta u=f$、$u|_{\partial\Omega}=g$：极值原理说差 $w=u_1-u_2$ 满足 $-\Delta w=0$、$w|_{\partial\Omega}=0$，故 $w$ 在内部取不到非零极值，只能为零；能量法则用
+\[
+0=\int_\Omega w(-\Delta w)\,\dd y=\int_\Omega|\nabla w|^2\,\dd y-\int_{\partial\Omega}w\,\partial_\nu w\,\dd S=\int_\Omega|\nabla w|^2\,\dd y
+\]
+得 $\nabla w\equiv0$，再由零边界值得 $w\equiv0$。能量法不要求极值原理的强形式，可以推广到变系数与弱解框架。}{The maximum principle and the energy method are two independent routes to uniqueness. For the Dirichlet problem $-\Delta u=f$, $u|_{\partial\Omega}=g$: the maximum principle says the difference $w=u_1-u_2$ satisfies $-\Delta w=0$ and $w=0$ on the boundary, so it has no nonzero interior extremum and must vanish; the energy method uses the displayed identity, which forces $\nabla w\equiv0$, and the zero boundary data give $w\equiv0$. The energy method does not need the strong form of the maximum principle and extends to variable coefficients and to weak solutions.}
+
+\APS{能量方法还给出 Dirichlet 原理：$-\Delta u=f$ 在 $\Omega$ 内、$u=g$ 在 $\partial\Omega$ 上的解是能量泛函
+\[
+I[w]=\int_\Omega\Bigl(\frac12|\nabla w|^2-wf\Bigr)\dd y
+\]
+在所有满足边界条件 $w|_{\partial\Omega}=g$ 的函数中的极小元。取 $w=u+v$（$v|_{\partial\Omega}=0$）展开 $I[u+v]=I[u]+\int\nabla u\cdot\nabla v-\int fv+O(v^2)$，一次项由 $-\Delta u=f$ 与 Green 公式为零，故 $u$ 极小；反之极小元的变分为零即得方程。这是变分法的起点，也是有限元方法的理论基础。}{The energy method also yields Dirichlet's principle: the solution of $-\Delta u=f$ in $\Omega$ with $u=g$ on the boundary minimizes the displayed energy functional among all functions with boundary data $g$. Writing $w=u+v$ with $v=0$ on the boundary gives $I[u+v]=I[u]+\int\nabla u\cdot\nabla v-\int fv+O(v^2)$, whose linear term vanishes by $-\Delta u=f$ and Green's identity; conversely a vanishing first variation of the minimizer gives the equation. This is the starting point of the calculus of variations and the basis of the finite-element method.}
+
+\APS{Neumann 问题 $-\Delta u=f$ 在 $\Omega$ 内、$\partial_\nu u=g$ 在 $\partial\Omega$ 上并非对任意数据可解：对常数测试函数用 Green 公式得相容性条件
+\[
+\int_\Omega f\,\dd y+\int_{\partial\Omega}g\,\dd S=0,
+\]
+且解在相差一个常数的意义下唯一。这个``可解性条件''是椭圆理论的一般现象：算子不是满射时，数据必须与算子的核正交。}{The Neumann problem $-\Delta u=f$ in $\Omega$, $\partial_\nu u=g$ on $\partial\Omega$ is not solvable for arbitrary data: Green's identity with the constant test function gives the displayed compatibility condition, and the solution is unique only up to an additive constant. This solvability condition is a general phenomenon of elliptic theory: when the operator is not surjective, the data must be orthogonal to its kernel.}
+
+\subsubsection{Green 函数与 Poisson 公式 | Green's functions and Poisson's formula}
+\begin{definition}[Green 函数 / Green's function]\label{def:green}
+对区域 $\Omega$ 与 Dirichlet 边界，\textbf{Green 函数 / Green's function} 定义为
+\[
+G(x,y)=\Phi(x-y)-h^x(y),
+\]
+其中 $h^x$ 在 $\Omega$ 内调和、在 $\partial\Omega$ 上取 $\Phi(x-\cdot)$ 的边界值（$x\in\Omega$ 固定）。于是 $G(x,\cdot)$ 满足 $-\Delta_yG(x,y)=\delta_x$（$\Omega$ 内）、$G(x,y)=0$（$y\in\partial\Omega$），且 $G(x,y)=G(y,x)$。
+\EN{For a domain $\Omega$ with Dirichlet data, the Green function is defined as displayed, where $h^x$ is harmonic in $\Omega$ and equals $\Phi(x-\cdot)$ on $\partial\Omega$ (with $x\in\Omega$ fixed). Thus $G(x,\cdot)$ satisfies $-\Delta_yG(x,y)=\delta_x$ in $\Omega$ and $G=0$ on $\partial\Omega$, and $G$ is symmetric.}
+\end{definition}
+
+\begin{theorem}[Green 表示公式 / Green's representation formula]\label{thm:greenrep}
+设 $u\in C^2(\bar\Omega)$ 满足 $-\Delta u=f$（$\Omega$ 内）、$u=g$（$\partial\Omega$）。则
+\[
+u(x)=\int_\Omega G(x,y)f(y)\,\dd y-\int_{\partial\Omega}g(y)\,\partial_{\nu_y}G(x,y)\,\dd S(y),\qquad x\in\Omega .
+\]
+\EN{If $u\in C^2(\bar\Omega)$ satisfies $-\Delta u=f$ in $\Omega$ and $u=g$ on $\partial\Omega$, then the displayed representation holds for $x\in\Omega$.}
+\end{theorem}
+
+\begin{proof}[证明思路 / Idea of proof]
+在 $\Omega\setminus B(x,\varepsilon)$ 上对 $u(\cdot)$ 与 $G(x,\cdot)$ 用第二 Green 公式。$G$ 在边界为零，故边界项只剩 $g\,\partial_\nu G$；内边界 $\partial B(x,\varepsilon)$ 上 $G$ 的奇性给出 $u(x)$；令 $\varepsilon\to0$ 即得。\EN{Apply the second Green identity on $\Omega\setminus B(x,\varepsilon)$ to $u$ and $G(x,\cdot)$. Since $G$ vanishes on the boundary, only $g\,\partial_\nu G$ survives there; the singularity of $G$ on the inner sphere $\partial B(x,\varepsilon)$ produces $u(x)$; let $\varepsilon\to0$.}
+\end{proof}
+
+\APS{半空间 $\R^n_+=\{x_n>0\}$ 的 Green 函数用镜像法：把源点 $y$ 关于边界反射成 $y^*=(y',-y_n)$，令
+\[
+G(x,y)=\Phi(x-y)-\Phi(x-y^*).
+\]
+当 $y_n=0$ 时两距离相等，$G=0$；反射点在区域外，故内部仍满足点源方程。对 $y_n$ 求法向导数得 Poisson 核
+\[
+P(x,y')=\frac{2x_n}{\omega_n|x-y'|^{\,n}},\qquad
+u(x)=\int_{\partial\R^n_+}P(x,y')\,g(y')\,\dd y' ,
+\]
+它满足 $P>0$、$\int P=1$，故解是边界数据的加权平均，也直接给出 $g$ 连续时 $u\to g$ 的边界连续性。}{The Green function of the half-space $\R^n_+=\{x_n>0\}$ is obtained by reflection: reflect the source $y$ across the boundary to $y^*=(y',-y_n)$ and set $G=\Phi(x-y)-\Phi(x-y^*)$. For $y_n=0$ the two distances agree and $G=0$; the reflected point lies outside the domain, so the point-source equation still holds inside. Differentiating in the normal direction gives the Poisson kernel displayed, with $P>0$ and $\int P=1$, so the solution is a weighted average of the boundary data and $u\to g$ at continuity points.}
+
+\APS{球 $B(0,R)$ 的 Green 函数由 Kelvin 变换（关于球面的反演）构造，得到的 Poisson 公式为
+\[
+u(x)=\frac{R^2-|x|^2}{\omega_n R}\int_{\partial B(0,R)}\frac{g(y)}{|x-y|^{\,n}}\,\dd S(y),\qquad |x|<R,
+\]
+Poisson 核 $P(x,y)=\dfrac{R^2-|x|^2}{\omega_n R\,|x-y|^n}$ 非负、积分为 $1$。它是上半空间公式的``弯曲版本''，也是证明调和函数解析性与 Harnack 不等式的工具。}{The Green function of the ball $B(0,R)$ is built from the Kelvin transform (inversion in the sphere), and the resulting Poisson formula is displayed, with kernel $P(x,y)=(R^2-|x|^2)/(\omega_nR|x-y|^n)$ nonnegative and of integral one. It is the ``curved'' version of the half-space formula and the tool for proving analyticity and Harnack's inequality.}
+
+\EX{二维上半平面 $x_2>0$，边界数据 $g=1$（$|y|<a$）、$g=0$（$|y|>a$）。Poisson 积分给出
+\[
+u(x_1,x_2)=\frac{x_2}{\pi}\int_{-a}^{a}\frac{\dd y}{(x_1-y)^2+x_2^2}
+=\frac{1}{\pi}\Bigl[\arctan\frac{x_1+a}{x_2}-\arctan\frac{x_1-a}{x_2}\Bigr],
+\]
+这是半空间 Green 函数最简的解析例子：$x_2\to0^+$ 时它趋于 $1$（$|x_1|<a$）与 $0$（$|x_1|>a$）。}{On the upper half-plane $x_2>0$ with boundary data $g=1$ for $|y|<a$ and $0$ otherwise, the Poisson integral gives the displayed arctangent formula, the simplest explicit half-space Green-function example: as $x_2\to0^+$ it tends to $1$ for $|x_1|<a$ and to $0$ for $|x_1|>a$.}
+
+\ASK{基本解与 Green 函数有什么区别？}{What is the difference between a fundamental solution and a Green function?}{基本解 $\Phi$ 是 $-\Delta\Phi=\delta_0$ 在全空间的解，只依赖算子；Green 函数是具体区域上、还满足齐次边界条件的点源响应，等于基本解减去一个调和修正项 $h^x$，因此依赖区域形状与边界条件。求 Green 函数等价于解一个 Dirichlet 问题。}{The fundamental solution solves $-\Delta\Phi=\delta_0$ on the whole space and depends only on the operator; the Green function is the point-source response on a specific domain satisfying homogeneous boundary data, equal to the fundamental solution minus a harmonic correction $h^x$, hence depends on the shape of the domain and the boundary condition. Finding the Green function is equivalent to solving a Dirichlet problem.}
+
+\APS{二维还有一个特殊工具：保角映射。若 $\varphi:\Omega\to D$ 是保角双射，则 $\Omega$ 上的 Green 函数可由 $D$（例如单位圆盘）上的 Green 函数复合得到，因为调和性在保角映射下不变。这解释了为什么圆盘、半平面、带形区域的 Poisson 公式都有显式形式，而一般区域没有。}{In two dimensions there is an extra tool: conformal mapping. If $\varphi:\Omega\to D$ is a conformal bijection, the Green function of $\Omega$ is obtained by composing the Green function of $D$ (e.g. the unit disk) with $\varphi$, since harmonicity is preserved by conformal maps. This explains why disks, half-planes and strips have explicit Poisson formulas while general domains do not.}
+
+\subsection{热方程 | The heat equation}
+\APS{热方程 $u_t=\kappa\Delta u$（$\kappa>0$ 为热扩散系数）描述温度在介质中的扩散。它的两个定性特征与波动方程正好相反：传播速度无限（紧支撑的初温在任意 $t>0$ 后于全空间为正），以及立即光滑化（有界初值在 $t>0$ 时解已无穷次可微）。这两个性质都来自基本解是高斯核。}{The heat equation $u_t=\kappa\Delta u$ with diffusivity $\kappa>0$ describes the diffusion of temperature. Two qualitative features are opposite to those of the wave equation: infinite propagation speed (compactly supported initial temperature becomes positive everywhere for any $t>0$), and immediate smoothing (bounded initial data give a $C^\infty$ solution for $t>0$). Both come from the Gaussian fundamental solution.}
+
+\begin{theorem}[热方程的基本解 / fundamental solution of the heat equation]\label{thm:heatkernel}
+对 $\kappa>0$ 定义
+\[
+\Phi(x,t)=\begin{cases}
+\dfrac{1}{(4\pi\kappa t)^{n/2}}\,e^{-|x|^2/(4\kappa t)}, & x\in\R^n,\ t>0,\\[6pt]
+0, & x\in\R^n,\ t<0 .
+\end{cases}
+\]
+则 (i) $\Phi\in C^\infty(\R^n\times(0,\infty))$；(ii) $(\partial_t-\kappa\Delta)\Phi=0$（$t>0$）；(iii) $\int_{\R^n}\Phi(x,t)\,\dd x=1$，且 $\Phi(\cdot,t)\to\delta_0$（$t\to0^+$）在分布意义下成立。若 $g$ 有界连续，则
+\[
+u(x,t)=\int_{\R^n}\Phi(x-y,t)\,g(y)\,\dd y
+\]
+满足 $u_t=\kappa\Delta u$（$t>0$）、$u\in C^\infty(\R^n\times(0,\infty))$、$\lim_{t\to0^+}u(x,t)=g(x)$（在 $g$ 的连续点），且 $\sup|u|\le\sup|g|$。
+\EN{For $\kappa>0$ define $\Phi$ as displayed. Then (i) $\Phi\in C^\infty$ for $t>0$; (ii) $(\partial_t-\kappa\Delta)\Phi=0$ for $t>0$; (iii) $\int\Phi\,dx=1$ and $\Phi(\cdot,t)\to\delta_0$ distributionally as $t\to0^+$. If $g$ is bounded and continuous, then $u=\Phi*g$ satisfies the heat equation for $t>0$, lies in $C^\infty$, converges to $g$ at continuity points as $t\to0^+$, and obeys the maximum bound $\sup|u|\le\sup|g|$.}
+\end{theorem}
+
+\begin{proof}[证明思路 / Idea of proof]
+(i)(ii) 直接求导验证。归一化用高斯积分 $\int_\R e^{-z^2}\dd z=\sqrt\pi$：令 $z=x/\sqrt{4\kappa t}$ 得 $\int\Phi\,\dd x=\pi^{-n/2}\int e^{-|z|^2}\dd z=1$。(iii) 当 $t\to0^+$ 时核的支集收缩到原点而总质量恒为 $1$，故按分布收敛到 $\delta_0$。方程由卷积把导数转移到 $\Phi$ 上得到；初值与最大界由近似恒等性质给出。\EN{(i)(ii) Direct differentiation. Normalization uses the Gaussian integral $\int e^{-z^2}dz=\sqrt\pi$: with $z=x/\sqrt{4\kappa t}$ the mass equals $\pi^{-n/2}\int e^{-|z|^2}dz=1$. (iii) As $t\to0^+$ the support of the kernel shrinks to the origin while its mass stays one, so it converges distributionally to $\delta_0$. The equation follows because convolution moves derivatives onto $\Phi$; the initial value and the maximum bound follow from the approximation-to-identity property.}
+\end{proof}
+
+\APS{非齐次问题 $u_t-\kappa\Delta u=f$、$u(\cdot,0)=g$ 由 Duhamel 原理求解：
+\[
+u(x,t)=\int_{\R^n}\Phi(x-y,t)g(y)\,\dd y+\int_0^t\!\!\int_{\R^n}\Phi(x-y,t-s)f(y,s)\,\dd y\,\dd s .
+\]
+第一项是初值的扩散，第二项把每个时刻的源 $f(\cdot,s)$ 当作新的初值、再扩散 $t-s$ 时间后叠加。热方程的基本解满足半群性质 $\Phi(\cdot,t+s)=\Phi(\cdot,t)*\Phi(\cdot,s)$，这正是 Duhamel 叠加的代数表达。}{The inhomogeneous problem $u_t-\kappa\Delta u=f$ with $u(\cdot,0)=g$ is solved by Duhamel's principle as displayed: the first term is the diffusion of the initial data, the second treats the source $f(\cdot,s)$ at each time as new initial data, diffuses it for the remaining time $t-s$, and superposes. The semigroup property $\Phi(\cdot,t+s)=\Phi(\cdot,t)*\Phi(\cdot,s)$ is the algebraic expression of this superposition.}
+
+\begin{definition}[热球 / heat ball]\label{def:heatball}
+取 $\kappa=1$（时间可重新标度）。对 $(x,t)\in\R^n\times\R$ 与 $r>0$，称
+\[
+E(x,t;r)=\Bigl\{(y,s):\ s\le t,\ \Phi(x-y,t-s)\ge\frac{1}{r^n}\Bigr\}
+\]
+为以 $(x,t)$ 为心、半径 $r$ 的\textbf{热球 / heat ball}，其中 $\Phi$ 是定理 \ref{thm:heatkernel} 的热核。它是热核的一个水平集，边界上 $\Phi(x-y,t-s)=r^{-n}$，其体积随 $r$ 按 $r^n$ 标度。
+\EN{Taking $\kappa=1$ (time may be rescaled), for $(x,t)\in\R^n\times\R$ and $r>0$ call the displayed set the heat ball of centre $(x,t)$ and radius $r$, where $\Phi$ is the heat kernel of Theorem \ref{thm:heatkernel}. It is a level set of the heat kernel, with $\Phi(x-y,t-s)=r^{-n}$ on the boundary, and its volume scales like $r^n$.}
+\end{definition}
+
+\begin{definition}[Duhamel 原理 / Duhamel's principle]\label{def:duhamel}
+设 $L$ 是作用于空间变量的线性算子，$S(t)$ 表示齐次方程 $v_t=Lv$ 的解算子，即 $v(\cdot,t)=S(t)v(\cdot,0)$。则非齐次方程
+\[
+u_t=Lu+f,\qquad u(\cdot,0)=g
+\]
+的解为
+\[
+u(\cdot,t)=S(t)g+\int_0^tS(t-s)f(\cdot,s)\,\dd s .
+\]
+直观上，每个时刻 $s$ 的源 $f(\cdot,s)$ 被当作新的初值，独立演化 $t-s$ 时间后叠加；热方程、波动方程与输运方程的相应公式都是它的特例。
+\EN{Let $L$ be a linear operator in the space variables and $S(t)$ the solution operator of the homogeneous equation $v_t=Lv$, i.e. $v(\cdot,t)=S(t)v(\cdot,0)$. Then the solution of the inhomogeneous problem displayed is given by the displayed formula. Intuitively, the source $f(\cdot,s)$ at each time is treated as new initial data, evolved independently for time $t-s$, and superposed; the corresponding formulas for the heat, wave and transport equations are special cases.}
+\end{definition}
+
+\begin{theorem}[热方程的平均值公式 / mean-value formula for the heat equation]\label{thm:heatmvp}
+为记号简单设 $\kappa=1$（时间可重新标度）。设 $u\in C^2_1(U\times(0,T))$ 满足 $u_t=\Delta u$。则对每个热球 $E(x,t;r)$（定义 \ref{def:heatball}）成立
+\[
+u(x,t)=\frac{1}{4r^n}\int_{E(x,t;r)}u(y,s)\,\frac{|x-y|^2}{(t-s)^2}\,\dd y\,\dd s .
+\]
+\EN{Taking $\kappa=1$ for simplicity (time can be rescaled), let $u\in C^2_1(U\times(0,T))$ solve $u_t=\Delta u$. Then for the heat ball $E(x,t;r)$ defined by $\Phi(x-y,t-s)\ge r^{-n}$ the displayed identity holds.}
+\end{theorem}
+
+\begin{proof}[证明思路 / Idea of proof]
+令 $\phi(r)=\dfrac{1}{4r^n}\displaystyle\int_{E(x,t;r)}u(y,s)\dfrac{|x-y|^2}{(t-s)^2}\,\dd y\,\dd s$。把热球按 $\Phi$ 的水平集参数化、对 $r$ 求导，再用分部积分与 $(\partial_s+\Delta_y)\Phi=0$ 消去各项，得 $\phi'(r)=0$。令 $r\to0$，热球收缩到 $(x,t)$ 且被积函数归一化为 $4r^nu(x,t)$，故 $\phi(r)=u(x,t)$。整个计算与调和函数平均值公式的证明结构相同，只是球换成了热球、Laplacian 换成了热算子。\EN{Let $\phi(r)$ be the displayed normalized integral over the heat ball. Parametrize the heat ball by level sets of $\Phi$, differentiate in $r$, integrate by parts and use $(\partial_s+\Delta_y)\Phi=0$ to cancel all terms, obtaining $\phi'(r)=0$. As $r\to0$ the heat ball shrinks to $(x,t)$ and the integral normalizes to $4r^nu(x,t)$, so $\phi(r)=u(x,t)$. The computation parallels the proof of the harmonic mean-value formula, with the ball replaced by a heat ball and the Laplacian by the heat operator.}
+\end{proof}
+
+\begin{theorem}[抛物极值原理、唯一性与稳定性 / parabolic maximum principle]\label{thm:heatmax}
+设 $\Omega$ 有界，$Q_T=\Omega\times(0,T]$，抛物边界 $\Gamma_T=(\bar\Omega\times\{0\})\cup(\partial\Omega\times[0,T])$。若 $u\in C^2(\Omega\times(0,T))\cap C(\bar Q_T)$ 满足 $u_t-\kappa\Delta u\le0$，则
+\[
+\max_{\bar Q_T}u=\max_{\Gamma_T}u .
+\]
+若 $u_t-\kappa\Delta u=0$ 且在 $(x_0,t_0)\in\Omega\times(0,T]$ 取到最大值，则 $u$ 在 $\bar Q_T$ 上为常数（强极值原理）。由此：初边值问题的解唯一；若 $|f|\le M$，则
+\[
+\max_{\bar Q_T}|u|\le\max_{\Gamma_T}|u|+MT .
+\]
+\EN{With the notation displayed, if $u\in C^2\cap C(\bar Q_T)$ satisfies $u_t-\kappa\Delta u\le0$, then the maximum over $\bar Q_T$ equals the maximum over the parabolic boundary. If equality holds and the maximum is attained at an interior point $(x_0,t_0)$ with $t_0>0$, then $u$ is constant. Consequently the initial-boundary value problem is unique, and if $|f|\le M$ then the displayed maximum-norm estimate holds.}
+\end{theorem}
+
+\begin{proof}[证明思路 / Idea of proof]
+若最大值在内部点取得，则 $u_t=0$、$\Delta u\le0$，与 $u_t-\kappa\Delta u\le0$ 不矛盾，需要用``严格''版本：对 $\varepsilon>0$ 令 $v=u-\varepsilon t$，则 $v_t-\kappa\Delta v\le-\varepsilon<0$，在内部极大点处必须 $v_t=0$、$\Delta v\le0$，于是 $0<-\varepsilon$，矛盾；故 $v$ 的最大值在抛物边界上，再令 $\varepsilon\to0$。强形式用 Hopf 引理沿连通性传播。稳定性：对 $v=u-Mt$ 与 $-v$ 分别用极值原理。\EN{If the maximum were attained inside, $u_t=0$ and $\Delta u\le0$ would not contradict the weak inequality, so one uses a strict version: for $\varepsilon>0$ set $v=u-\varepsilon t$, then $v_t-\kappa\Delta v\le-\varepsilon<0$, and at an interior maximum $v_t=0$, $\Delta v\le0$ force $0<-\varepsilon$, a contradiction; hence the maximum of $v$ lies on the parabolic boundary, and $\varepsilon\to0$. The strong form propagates by Hopf's lemma and connectedness. Stability follows by applying the principle to $u-Mt$ and to $-u-Mt$.}
+\end{proof}
+
+\APS{热方程还有\textbf{向后唯一性 / backward uniqueness}：若 $u$ 在 $Q_T$ 内解热方程且 $u(x,T)=0$ 对一切 $x\in\Omega$ 成立（并满足零边界条件），则 $u\equiv0$。物理上这对应``扩散不可逆''：从末态无法倒推初态，因为高频信息已被指数衰减抹掉。这与波动方程的时间可逆性（$t\mapsto-t$ 仍是解）形成根本对照。}{The heat equation also has \emph{backward uniqueness}: if $u$ solves the heat equation in $Q_T$ and $u(x,T)=0$ for all $x\in\Omega$ (with zero boundary data), then $u\equiv0$. Physically this is the irreversibility of diffusion: the initial state cannot be recovered from the final state because high-frequency information has been exponentially damped. This contrasts fundamentally with the time-reversibility of the wave equation ($t\mapsto-t$ is again a solution).}
+
+\APS{能量方法对热方程同样有效。设 $u$ 在 $U_T$ 内解热方程、在 $\partial\Omega$ 上为零，则
+\[
+\frac{\dd}{\dd t}\int_\Omega u^2\,\dd y=2\int_\Omega uu_t\,\dd y=2\kappa\int_\Omega u\Delta u\,\dd y=-2\kappa\int_\Omega|\nabla u|^2\,\dd y\le0,
+\]
+故 $\|u(\cdot,t)\|_{L^2}$ 单调不增；两个解之差满足同样的不等式且初值为零，于是 $L^2$ 范数恒为零。与极值原理的逐点估计相比，能量估计给出的是积分意义下的稳定性，且对变系数方程同样成立。}{The energy method works for the heat equation too. If $u$ solves it in $U_T$ and vanishes on $\partial\Omega$, then the displayed computation gives $\frac{d}{dt}\int u^2=-2\kappa\int|\nabla u|^2\le0$, so the $L^2$ norm is nonincreasing; the difference of two solutions obeys the same inequality with zero initial data, hence has zero $L^2$ norm for all time. Compared with the pointwise maximum-principle estimate, the energy estimate gives stability in an integral sense and works for variable coefficients as well.}
+
+\EX{半无界热方程 $u_t=\kappa u_{xx}$（$x>0$）、$u(0,t)=0$、$u(x,0)=1$。用奇延拓化为全直线问题，或直接用正弦变换，得
+\[
+u(x,t)=\frac{2}{\pi}\int_0^\infty e^{-\kappa\xi^2t}\,\frac{\sin(\xi x)}{\xi}\,\dd\xi
+=\operatorname{erf}\!\Bigl(\frac{x}{\sqrt{4\kappa t}}\Bigr).
+\]
+验证：$u(0,t)=0$；$t\to0^+$ 时 $x>0$ 给 $1$、$x=0$ 给 $0$；$t\to\infty$ 时 $u\to0$，即整根杆被零温端逐渐冷却。这个解是相似解（第 4.2 节），也是热核与边界条件结合的典型算例。}{For the half-line heat equation $u_t=\kappa u_{xx}$ on $x>0$ with $u(0,t)=0$ and $u(x,0)=1$, odd reflection (or the sine transform) gives the displayed error-function solution. Verification: $u(0,t)=0$; as $t\to0^+$ it tends to $1$ for $x>0$ and $0$ at $x=0$; as $t\to\infty$ it tends to $0$, so the rod is gradually cooled by the zero-temperature end. This is a similarity solution (Section 4.2) and a typical combination of the heat kernel with boundary data.}
+
+\EX{全直线上取阶跃初值 $g=\mathbf 1_{\{x>0\}}$。由热核卷积，
+\[
+u(x,t)=\frac{1}{\sqrt{\pi}}\int_{-x/\sqrt{4\kappa t}}^{\infty}e^{-z^2}\,\dd z
+=\frac12\Bigl[1+\operatorname{erf}\Bigl(\frac{x}{\sqrt{4\kappa t}}\Bigr)\Bigr],
+\]
+它在 $x=0$ 处恒为 $1/2$，过渡层宽度为 $O(\sqrt{\kappa t})$。这解释了扩散的``$\sqrt t$ 律''：热的影响范围按时间的平方根增长，而不是像波那样线性增长。}{On the whole line take the step data $g=\mathbf 1_{\{x>0\}}$. Convolution with the heat kernel gives the displayed profile, which equals $1/2$ at $x=0$ and has a transition layer of width $O(\sqrt{\kappa t})$. This is the ``$\sqrt t$ law'' of diffusion: the region influenced by heat grows like the square root of time, not linearly as for waves.}
+
+\ASK{为什么热方程的解在 $t>0$ 立即无穷次可微，即使初值只连续？}{Why is the heat solution $C^\infty$ for $t>0$ even for merely continuous data?}{因为 $u(\cdot,t)=\Phi(\cdot,t)*g$，而 $\Phi$ 在 $t>0$ 时是高斯型光滑核；卷积运算把任意多个导数都转移到 $\Phi$ 上，$g$ 只需要有界可积。频域上这对应乘子 $e^{-\kappa|\xi|^2t}$ 对所有高频给出指数衰减。波动方程的基本解是测度（支在特征锥上），不能这样转移导数，所以不会立即光滑。}{Because $u(\cdot,t)=\Phi(\cdot,t)*g$ and $\Phi$ is a smooth Gaussian kernel for $t>0$; convolution moves arbitrarily many derivatives onto $\Phi$, while $g$ only needs to be bounded and integrable. In frequency space this is the multiplier $e^{-\kappa|\xi|^2t}$, which damps every high frequency exponentially. The fundamental solution of the wave equation is a measure supported on the characteristic cone, so derivatives cannot be moved onto it in the same way and no immediate smoothing occurs.}
+
+\subsection{波动方程 | The wave equation}
+\APS{波动方程 $u_{tt}=c^2\Delta u$ 描述以速度 $c$ 传播的振动。与热方程相反，它具有有限传播速度：$(x,t)$ 处的解只依赖特征锥内 $|y-x|\le ct$ 的初值；解的奇性沿特征线传播而不会被抹平。一维有 d'Alembert 公式，高维用球面平均法统一处理。}{The wave equation $u_{tt}=c^2\Delta u$ describes vibrations propagating at speed $c$. Unlike the heat equation it has finite propagation speed: the solution at $(x,t)$ depends only on data inside the characteristic cone $|y-x|\le ct$, and singularities travel along characteristics without being smoothed. In one dimension there is d'Alembert's formula; in higher dimensions the method of spherical means treats all cases uniformly.}
+
+\begin{definition}[球面平均、依赖区域与影响区域 / spherical means, domains of dependence and influence]\label{def:spheremean}
+设 $u$ 定义在 $\R^n\times[0,\infty)$ 上。
+(i) 对 $r>0$，称
+\[
+U(x;r,t)=\frac{1}{|\partial B(x,r)|}\int_{\partial B(x,r)}u(y,t)\,\dd S(y)
+\]
+为 $u$ 在球面 $\partial B(x,r)$ 上的\textbf{球面平均 / spherical mean}；
+(ii) 点 $(x,t)$ 的\textbf{后向特征锥 / backward characteristic cone} 为 $C(x,t)=\{(y,s):0\le s\le t,\ |y-x|\le c(t-s)\}$，它在 $s=0$ 上的截面 $B(x,ct)$ 称为 $(x,t)$ 的\textbf{依赖区域 / domain of dependence}；
+(iii) 初始点 $x_0$ 的\textbf{影响区域 / domain of influence} 为 $\{(x,t):|x-x_0|\le ct\}$。
+\EN{For $u$ defined on $\R^n\times[0,\infty)$: (i) the displayed average is the spherical mean of $u$ over $\partial B(x,r)$; (ii) the backward characteristic cone of $(x,t)$ is $C(x,t)=\{(y,s):0\le s\le t,\ |y-x|\le c(t-s)\}$, whose section $B(x,ct)$ at $s=0$ is the domain of dependence of $(x,t)$; (iii) the domain of influence of an initial point $x_0$ is $\{(x,t):|x-x_0|\le ct\}$.}
+\end{definition}
+
+\begin{theorem}[d'Alembert 公式 / d'Alembert's formula]\label{thm:dalembert}
+设 $\varphi\in C^2(\R)$，$\psi\in C^1(\R)$。初值问题
+\[
+u_{tt}=c^2u_{xx},\qquad u(x,0)=\varphi(x),\quad u_t(x,0)=\psi(x)
+\]
+有唯一解
+\[
+u(x,t)=\frac{\varphi(x-ct)+\varphi(x+ct)}{2}+\frac{1}{2c}\int_{x-ct}^{x+ct}\psi(s)\,\dd s,
+\]
+且解在紧集的一致范数意义下连续依赖数据。
+\EN{If $\varphi\in C^2(\R)$ and $\psi\in C^1(\R)$, the displayed initial-value problem has the unique solution displayed, depending continuously on the data in the uniform norm on compact sets.}
+\end{theorem}
+
+\begin{proof}[证明 / Proof]
+把方程因式分解为 $(\partial_t-c\partial_x)(\partial_t+c\partial_x)u=0$，令 $\xi=x+ct$、$\eta=x-ct$，则 $\partial_\xi\partial_\eta u=0$，两次积分得 $u=F(\xi)+G(\eta)$。代入初值：$F(x)+G(x)=\varphi(x)$，$cF'(x)-cG'(x)=\psi(x)$，积分后解出
+\[
+F(x)=\frac12\varphi(x)+\frac{1}{2c}\int_0^x\psi(s)\,\dd s+C,\qquad G(x)=\frac12\varphi(x)-\frac{1}{2c}\int_0^x\psi(s)\,\dd s-C,
+\]
+合并即得公式。唯一性由通解形式与初值唯一确定 $F,G$。稳定性：公式右端对 $\varphi,\psi$ 的扰动在紧集上一致可控。\EN{Factor the equation as displayed; with $\xi=x+ct$, $\eta=x-ct$ one gets $\partial_\xi\partial_\eta u=0$, hence $u=F(\xi)+G(\eta)$ after two integrations. The initial data give $F(x)+G(x)=\varphi(x)$ and $cF'(x)-cG'(x)=\psi(x)$; integrating yields the two displayed expressions for $F$ and $G$, whose sum is the formula. Uniqueness follows since the data fix $F,G$. Stability follows because the right-hand side is uniformly controlled by perturbations of $\varphi,\psi$ on compact sets.}
+\end{proof}
+
+\EX{取 $c=1$、$\varphi=\sin x$、$\psi=0$，得 $u=\frac12[\sin(x-t)+\sin(x+t)]=\sin x\cos t$；取 $\varphi=0$、$\psi=\sin x$，得 $u=\frac12\int_{x-t}^{x+t}\sin s\,\dd s=\sin x\sin t$。初位移给出 $\cos(ct)$ 型时间因子，初速度给出 $\sin(ct)$ 型因子，二者都以特征速度传播。}{With $c=1$, $\varphi=\sin x$, $\psi=0$ we get $u=\frac12[\sin(x-t)+\sin(x+t)]=\sin x\cos t$; with $\varphi=0$, $\psi=\sin x$ we get $u=\frac12\int_{x-t}^{x+t}\sin s\,ds=\sin x\sin t$. Initial displacement produces a $\cos(ct)$ time factor, initial velocity a $\sin(ct)$ factor, and both travel at the characteristic speed.}
+
+\APS{d'Alembert 公式的几何含义：$(x,t)$ 处的值只依赖区间 $[x-ct,x+ct]$ 上的初值，这个区间称为\textbf{依赖区间 / domain of dependence}；反之初始点 $x_0$ 只影响特征锥 $|x-x_0|\le ct$ 内的点，称为\textbf{影响区域 / domain of influence}。信息沿特征线 $x\pm ct=\mathrm{const}$ 以速度 $c$ 传播，绝不会超光速——这就是因果性。}{The geometric meaning of d'Alembert's formula: the value at $(x,t)$ depends only on the initial data on $[x-ct,x+ct]$, the \emph{domain of dependence}; conversely an initial point $x_0$ influences only the characteristic cone $|x-x_0|\le ct$, the \emph{domain of influence}. Information travels along the characteristics $x\pm ct=\mathrm{const}$ at speed $c$ and never faster — this is causality.}
+
+\APS{半无界弦（$x>0$）用延拓法：Dirichlet 边界 $u(0,t)=0$ 时把初值奇延拓到全直线，解自动满足边界；Neumann 边界 $u_x(0,t)=0$ 时用偶延拓。若端点按 $g(t)$ 振动、初值为零，则解在 $x>ct$ 时为零、在 $x<ct$ 时为 $g(t-x/c)$：边界扰动以速度 $c$ 传入，波前是一条特征线。}{The half-line string ($x>0$) is handled by extension: for Dirichlet data $u(0,t)=0$ extend the initial data oddly to the whole line, and the solution automatically satisfies the boundary condition; for Neumann data $u_x(0,t)=0$ extend evenly. If the endpoint oscillates as $g(t)$ with zero initial data, the solution vanishes for $x>ct$ and equals $g(t-x/c)$ for $x<ct$: the boundary disturbance enters at speed $c$ behind a characteristic front.}
+
+\begin{theorem}[球面平均与 Kirchhoff 公式 / spherical means and Kirchhoff's formula]\label{thm:kirchhoff}
+设 $n=3$，$\varphi\in C^3(\R^3)$，$\psi\in C^2(\R^3)$。初值问题 $u_{tt}=c^2\Delta u$、$u(\cdot,0)=\varphi$、$u_t(\cdot,0)=\psi$ 的解为
+\[
+u(x,t)=\frac{1}{4\pi c^2t^2}\int_{\partial B(x,ct)}\bigl(t\psi(y)+\varphi(y)+\nabla\varphi(y)\cdot(y-x)\bigr)\dd S(y),
+\]
+等价地
+\[
+u(x,t)=\frac{\partial}{\partial t}\Bigl(\frac{1}{4\pi c^2t}\int_{\partial B(x,ct)}\varphi\,\dd S\Bigr)
++\frac{1}{4\pi c^2t}\int_{\partial B(x,ct)}\psi\,\dd S .
+\]
+特别地，$(x,t)$ 处的值只依赖球面 $\partial B(x,ct)$ 上的初值：三维空间中脉冲波经过后不留余波（强 Huygens 原理）。
+\EN{For $n=3$, $\varphi\in C^3$, $\psi\in C^2$, the solution is the displayed Kirchhoff formula (or its equivalent derivative form). In particular the value at $(x,t)$ depends only on the data on the sphere $\partial B(x,ct)$: in three dimensions a pulse leaves no wake (the strong Huygens principle).}
+\end{theorem}
+
+\begin{proof}[证明思路 / Idea of proof]
+定义球面平均 $U(x;r,t)=\dfrac{1}{4\pi r^2}\displaystyle\int_{\partial B(x,r)}u(y,t)\,\dd S(y)$。对 $r$ 求导并用散度定理，得 Euler--Poisson--Darboux 方程
+\[
+U_{tt}=U_{rr}+\frac{2}{r}U_r .
+\]
+令 $\widetilde U=rU$，则 $\widetilde U_{tt}=\widetilde U_{rr}$，即一维波动方程；用 d'Alembert 公式解出 $\widetilde U$，再由 $\widetilde U(x;0,t)=0$、$\partial_r\widetilde U(x;0,t)=u(x,t)$ 取极限即得 $u$。二维情形用降维法：把二维数据看成不依赖 $x_3$ 的三维数据，球面积分化为圆盘积分，得 Poisson 公式。\EN{Define the spherical mean $U(x;r,t)$. Differentiating in $r$ and using the divergence theorem gives the Euler--Poisson--Darboux equation displayed. Setting $\widetilde U=rU$ yields $\widetilde U_{tt}=\widetilde U_{rr}$, the one-dimensional wave equation; d'Alembert's formula gives $\widetilde U$, and the limits $\widetilde U(x;0,t)=0$, $\partial_r\widetilde U(x;0,t)=u(x,t)$ recover $u$. The two-dimensional case follows by descent: regard the data as three-dimensional data independent of $x_3$, turning the sphere integral into a disk integral and yielding Poisson's formula.}
+\end{proof}
+
+\APS{二维的 Poisson 公式为
+\[
+u(x,t)=\frac{1}{2\pi}\frac{\partial}{\partial t}\int_{B(x,t)}\frac{\varphi(y)}{\sqrt{t^2-|y-x|^2}}\,\dd y
++\frac{1}{2\pi}\int_{B(x,t)}\frac{\psi(y)}{\sqrt{t^2-|y-x|^2}}\,\dd y
+\]
+（$c=1$）。它依赖圆盘 $B(x,t)$ 内的全部初值，故二维波有``尾巴''（余波）：脉冲经过后并不立即恢复平静。一般结论是：强 Huygens 原理在奇数维（$n\ge3$）成立，在偶数维失效；三维与二维的差别是这一现象的典型例子。}{Poisson's formula in two dimensions is displayed (with $c=1$). It depends on all the data in the disk $B(x,t)$, so two-dimensional waves have a wake: after a pulse passes, the medium does not immediately return to rest. The general conclusion is that the strong Huygens principle holds in odd dimensions $n\ge3$ and fails in even dimensions; the contrast between three and two dimensions is the standard example.}
+
+\begin{theorem}[能量守恒、唯一性与有限传播 / energy, uniqueness, finite speed]\label{thm:waveenergy}
+设 $u\in C^2$ 是 $u_{tt}=c^2\Delta u$ 在 $\Omega\times[0,T]$ 上、零 Dirichlet 边界条件下的解。则能量
+\[
+E(t)=\frac12\int_\Omega\bigl(u_t^2+c^2|\nabla u|^2\bigr)\dd y
+\]
+守恒；于是解唯一，且 $L^2$ 意义下连续依赖数据。对局部能量
+\[
+e(t)=\frac12\int_{B(x_0,t_0-t)}\bigl(u_t^2+c^2|\nabla u|^2\bigr)\dd y,\qquad 0\le t\le t_0,
+\]
+有 $e'(t)\le0$，由此 $u(x_0,t_0)$ 只依赖后向特征锥 $\{(y,s):|y-x_0|\le c(t_0-s)\}$ 内的数据。
+\EN{Let $u\in C^2$ solve $u_{tt}=c^2\Delta u$ on $\Omega\times[0,T]$ with zero Dirichlet data. Then the displayed energy is conserved, so the solution is unique and depends continuously on the data in $L^2$. For the displayed local energy one has $e'(t)\le0$, hence $u(x_0,t_0)$ depends only on data in the backward characteristic cone.}
+\end{theorem}
+
+\begin{proof}[证明 / Proof]
+求导并分部积分：
+\[
+E'(t)=\int_\Omega\bigl(u_tu_{tt}+c^2\nabla u\cdot\nabla u_t\bigr)\dd y
+=\int_\Omega u_t\bigl(u_{tt}-c^2\Delta u\bigr)\dd y+c^2\int_{\partial\Omega}u_t\,\partial_\nu u\,\dd S=0,
+\]
+因为方程项为零、固定端使 $u_t|_{\partial\Omega}=0$。局部情形：$e(t)$ 的积分区域以速度 $1$ 收缩，求导得
+\[
+e'(t)=-\frac12\int_{\partial B(x_0,t_0-t)}\bigl(u_t^2+c^2|\nabla u|^2-2c^2u_t\partial_\nu u\bigr)\dd S\le0,
+\]
+被积函数由 $2c^2u_t\partial_\nu u\le c^2u_t^2+c^2|\nabla u|^2$ 非负。零数据时 $e(0)=0$、$e\ge0$，得锥内恒为零。\EN{The equation term vanishes and the boundary term vanishes because the ends are fixed. In the local case the domain of integration shrinks at speed one, and differentiation gives the displayed expression, whose integrand is nonnegative by $2c^2u_t\partial_\nu u\le c^2u_t^2+c^2|\nabla u|^2$, so $e'\le0$; with zero data $e(0)=0$ and $e\ge0$, giving vanishing in the cone.}
+\end{proof}
+
+\APS{有源项时用 Duhamel 原理：把 $f(\cdot,s)$ 在每个时刻当作初速度为零的初始位移，传播 $t-s$ 时间后叠加。三维时
+\[
+u(x,t)=u_{\text{hom}}(x,t)+\int_0^t\frac{1}{4\pi c^2(t-s)^2}\int_{\partial B(x,c(t-s))}f(y,s)\,\dd S(y)\,\dd s ,
+\]
+其中 $u_{\text{hom}}$ 是齐次方程初值问题的解。二维同理，把球面积分换成圆盘积分。}{With a source one uses Duhamel's principle: treat $f(\cdot,s)$ at each time as an initial displacement with zero initial velocity, propagate it for time $t-s$, and superpose. In three dimensions the displayed formula holds, where $u_{\text{hom}}$ solves the homogeneous initial-value problem; in two dimensions the sphere integral is replaced by a disk integral.}
+
+\EX{三维、$c=1$、$\varphi=0$、$\psi=\mathbf 1_{B(0,1)}$。Kirchhoff 公式给出
+\[
+u(x,t)=\frac{1}{4\pi t}\int_{\partial B(x,t)}\psi\,\dd S=\frac{|\partial B(x,t)\cap B(0,1)|}{4\pi t}.
+\]
+当 $t$ 固定时，球面与单位球相交部分的面积决定 $u$；当 $t$ 大到使球面完全离开单位球（$t>|x|+1$）时 $u\equiv0$——脉冲过后彻底恢复平静，这就是强 Huygens 原理的直观内容。}{In three dimensions with $c=1$, $\varphi=0$ and $\psi=\mathbf 1_{B(0,1)}$, Kirchhoff's formula gives the displayed expression, the area of the intersection of the sphere with the unit ball divided by $4\pi t$. For $t>|x|+1$ the sphere has left the unit ball and $u\equiv0$: the medium is completely at rest after the pulse passes, the intuitive content of the strong Huygens principle.}
+
+\ASK{为什么三维波没有余波，二维波有余波？}{Why is there no wake in three dimensions but a wake in two dimensions?}{三维 Kirchhoff 公式只对球面 $\partial B(x,ct)$ 积分，球面扫过之后数据不再被访问，故信号一过即静。二维 Poisson 公式对圆盘 $B(x,ct)$ 积分，波前到达后圆盘内部仍在不断``回看''早先的数据，形成逐渐衰减的余波。数学上这是球面积分与圆盘积分、即奇数维与偶数维基本解支集不同的反映。}{Kirchhoff's three-dimensional formula integrates only over the sphere $\partial B(x,ct)$, so once the sphere has swept past, the data are never revisited and the signal ends cleanly. Poisson's two-dimensional formula integrates over the disk $B(x,ct)$; after the front arrives, the interior of the disk keeps looking back at earlier data, producing a decaying wake. Mathematically this reflects the different supports of the fundamental solutions in odd and even dimensions.}
+
+\section{一阶非线性方程：Evans 第 3 章 | Nonlinear first-order PDEs}
+\APS{第 3 章处理一般的一阶方程 $F(Du,u,x)=0$。三条主线：特征方法把 PDE 化为常微分方程组，从而把解''沿曲线搬运''；完全积分与包络给出通解的代数结构，并通向 Legendre 变换；Hamilton--Jacobi 方程是特征方法与变分法的交汇点，其粘性解由 Hopf--Lax 公式显式给出。最后，当特征线相交、经典解爆破时，守恒律的弱解与熵条件接管，这是双曲守恒律理论的入口。}{Chapter 3 treats the general first-order equation $F(Du,u,x)=0$ along three lines: the method of characteristics reduces the PDE to a system of ODEs and transports the solution along curves; complete integrals and envelopes give the algebraic structure of general solutions and lead to the Legendre transform; Hamilton--Jacobi equations are where characteristics meet the calculus of variations, their viscosity solutions being given explicitly by the Hopf--Lax formula. Finally, when characteristics cross and classical solutions blow up, weak solutions and entropy conditions for conservation laws take over — the gateway to hyperbolic conservation laws.}
+
+\subsection{完全积分与包络 | Complete integrals and envelopes}
+\begin{definition}[完全积分 / complete integral]\label{def:complete}
+一阶方程 $F(Du,u,x)=0$ 的一个\textbf{完全积分 / complete integral} 是一个 $C^2$ 参数族 $u=v(x;a)$，$a=(a_1,\dots,a_n)$，满足
+(i) 对每个参数 $a$，$F(Dv(\cdot;a),v(\cdot;a),\cdot)=0$；
+(ii) 矩阵 $\bigl(D_xD_av\bigr)=\bigl(\partial^2v/\partial x_i\partial a_j\bigr)$ 非奇异，即参数族``非退化地''依赖 $n$ 个参数。
+\EN{A complete integral of $F(Du,u,x)=0$ is a $C^2$ family $u=v(x;a)$, $a=(a_1,\dots,a_n)$, such that (i) $F(Dv(\cdot;a),v(\cdot;a),\cdot)=0$ for every $a$, and (ii) the matrix $(\partial^2v/\partial x_i\partial a_j)$ is nonsingular, i.e. the family depends nondegenerately on $n$ parameters.}
+\end{definition}
+
+\APS{完全积分是 $n$ 个参数的解族，比通解（含任意函数）小，但足以通过包络生成大量解，也足以通过 Legendre 变换构造 Hamilton--Jacobi 方程的解。最典型的例子是线性方程 $a(x)\cdot Du=0$ 的完全积分 $u=c+\text{const}$ 与程函方程的 $u=a\cdot x+b$。}{A complete integral is an $n$-parameter family, smaller than the general solution (which contains arbitrary functions) but large enough to generate many solutions by envelopes and to build solutions of Hamilton--Jacobi equations via the Legendre transform. The typical examples are the complete integral $u=\text{const}$ of the linear equation $a(x)\cdot Du=0$ and $u=a\cdot x+b$ for the eikonal equation.}
+
+\begin{theorem}[包络构造解 / envelopes give solutions]\label{thm:envelope}
+设 $v(x;a)$ 是 $F(Du,u,x)=0$ 的完全积分。对任意 $C^1$ 映射 $a(\cdot)$，若 $a(x)$ 由隐式方程
+\[
+D_av\bigl(x;a(x)\bigr)=0
+\]
+确定，则 $u(x)=v(x;a(x))$ 满足 $F(Du,u,x)=0$。当 $F$ 不显含 $u$ 时，完全积分 $u=a\cdot x+b$（$b$ 为自由常数）的包络给出全部 $C^2$ 解。
+\EN{Let $v(x;a)$ be a complete integral. For any $C^1$ map $a(\cdot)$ determined implicitly by $D_av(x;a(x))=0$, the function $u(x)=v(x;a(x))$ solves $F(Du,u,x)=0$. When $F$ is independent of $u$, the envelopes of the complete integral $u=a\cdot x+b$ (with free constant $b$) give all $C^2$ solutions.}
+\end{theorem}
+
+\begin{proof}[证明思路 / Idea of proof]
+由包络条件 $D_av=0$ 与链式法则，
+\[
+Du=D_xv+\bigl(D_av\bigr)D_xa=D_xv,
+\]
+故 $F(Du,u,x)=F(D_xv,v,x)=0$。第二个断言：对 $F(p,x)=0$，沿特征线构造的解都可以写成某个 $a$ 的参数族上的包络，这是特征方法与 Pfaff 形式的推论。\EN{By the envelope condition $D_av=0$ and the chain rule, $Du=D_xv+(D_av)D_xa=D_xv$, hence $F(Du,u,x)=F(D_xv,v,x)=0$. For the second assertion, when $F(p,x)=0$ every solution built along characteristics arises as an envelope of the family parametrized by $a$, a consequence of the method of characteristics and the Pfaffian form.}
+\end{proof}
+
+\EX{对程函方程 $u_x^2+u_y^2=1$，完全积分为 $u=ax+\sqrt{1-a^2}\,y+b$（$|a|\le1$）。以 $a=\cos\theta$、$\sqrt{1-a^2}=\sin\theta$ 参数化，包络条件为
+\[
+-x\sin\theta+y\cos\theta+b'(\theta)=0,
+\]
+包络 $u=x\cos\theta+y\sin\theta+b(\theta)$ 即为以 $\theta$ 为参数的一族直线（特征线）的包络，几何上对应波前族。}{For the eikonal equation $u_x^2+u_y^2=1$ a complete integral is $u=ax+\sqrt{1-a^2}y+b$ with $|a|\le1$. Parametrizing by $a=\cos\theta$, $\sqrt{1-a^2}=\sin\theta$, the envelope condition is displayed, and the envelope $u=x\cos\theta+y\sin\theta+b(\theta)$ is the envelope of a one-parameter family of lines (the characteristics), geometrically a family of wave fronts.}
+
+\APS{完全积分与 Hamilton--Jacobi 方程的联系通过 Legendre 变换实现。设 $H$ 凸，$L(q)=\sup_p(p\cdot q-H(p))$ 为其 Legendre 变换。方程 $u_t+H(Du)=0$ 有一个完全积分
+\[
+u(x,t)=a\cdot x-tH(a)+b,
+\]
+因为 $Du=a$、$u_t=-H(a)$ 使方程成立。对该族作包络（对 $a$ 求极小）：
+\[
+u(x,t)=\min_a\bigl\{a\cdot x-tH(a)\bigr\}=t\min_a\Bigl\{a\cdot\frac xt-H(a)\Bigr\}=t\,L\Bigl(\frac xt\Bigr),
+\]
+正是 Hopf--Lax 公式在 $g\equiv0$ 时的特例。这条``完全积分 $\to$ 包络 $\to$ Legendre 变换 $\to$ Hopf--Lax''的路线，把第 3.1 节与第 3.3 节连成一体。}{Complete integrals connect to Hamilton--Jacobi equations through the Legendre transform. For convex $H$ with Legendre transform $L(q)=\sup_p(p\cdot q-H(p))$, the equation $u_t+H(Du)=0$ has the complete integral displayed, since $Du=a$ and $u_t=-H(a)$ satisfy it. Taking the envelope over $a$ (a minimization) gives $u=tL(x/t)$, precisely the Hopf--Lax formula for $g\equiv0$. The chain ``complete integral $\to$ envelope $\to$ Legendre transform $\to$ Hopf--Lax'' links Sections 3.1 and 3.3.}
+
+\subsection{特征方法 | The method of characteristics}
+\APS{对一般一阶方程 $F(Du,u,x)=0$（$x\in\R^n$），记 $p=Du$、$z=u(x)$。核心想法：沿一条特殊曲线同时追踪 $x$、$z=u(x)$ 与 $p=Du$，使 PDE 变成关于弧长 $s$ 的常微分方程组。特征曲线由 $F$ 对 $p$ 的梯度给出，$p$ 的演化由 $F$ 对 $x$ 与 $z$ 的依赖给出。}{For the general first-order equation $F(Du,u,x)=0$ with $x\in\R^n$, write $p=Du$ and $z=u(x)$. The idea is to track $x$, $z=u(x)$ and $p=Du$ simultaneously along a special curve, turning the PDE into an ODE system in the arc length $s$. The characteristic curve is given by the gradient of $F$ in $p$, and the evolution of $p$ by the dependence of $F$ on $x$ and $z$.}
+
+\begin{definition}[特征曲线、特征方程组与非特征初始流形 / characteristic curves and noncharacteristic data]\label{def:char}
+对一阶方程 $F(Du,u,x)=0$，定理 \ref{thm:char} 中的常微分方程组
+\[
+\dot x=D_pF,\qquad \dot z=p\cdot D_pF,\qquad \dot p=-D_xF-p\,D_zF
+\]
+称为\textbf{特征方程组 / characteristic system}，其解曲线 $s\mapsto(x(s),z(s),p(s))$ 称为\textbf{特征曲线 / characteristic curve}（投影到 $x$ 空间称为\textbf{特征线 / characteristic}）。给定初始流形 $\Gamma=\{x:\Phi(x)=0\}$ 与 $\Gamma$ 上的数据，若在 $\Gamma$ 上处处
+\[
+D_pF(p,z,x)\cdot\nabla\Phi(x)\ne0,
+\]
+则称 $\Gamma$ 关于该方程是\textbf{非特征 / noncharacteristic} 的：特征曲线横截地穿过 $\Gamma$，初值可以沿特征线唯一地传播到 $\Gamma$ 的邻域；若上式在某点为零，则称该点为\textbf{特征点 / characteristic point}，初值问题在该点可能失效。
+\EN{For $F(Du,u,x)=0$, the displayed ODE system is the characteristic system, and its solution curves $(x(s),z(s),p(s))$ are characteristic curves (their projections to $x$-space are the characteristics). Given an initial manifold $\Gamma=\{x:\Phi(x)=0\}$ with data on it, $\Gamma$ is noncharacteristic if $D_pF\cdot\nabla\Phi\ne0$ everywhere on $\Gamma$: characteristic curves cross it transversally and the data propagate uniquely to a neighbourhood; points where the expression vanishes are characteristic points, where the initial-value problem may fail.}
+\end{definition}
+
+\begin{theorem}[特征方程组 / characteristic system]\label{thm:char}
+设 $F=F(p,z,x)$ 为 $C^2$，并设 $F(Du,u,x)=0$ 有 $C^2$ 解 $u$。则沿特征曲线 $(x(s),z(s),p(s))$ 满足
+\[
+\dot x=D_pF,\qquad \dot z=p\cdot D_pF,\qquad \dot p=-D_xF-p\,D_zF .
+\]
+更精确地：若 $(x(s),z(s),p(s))$ 是该方程组的解，且在 $s=0$ 处 $p(0)=Du(x(0))$、$z(0)=u(x(0))$，则对一切 $s$ 有 $p(s)=Du(x(s))$、$z(s)=u(x(s))$，且 $F(p(s),z(s),x(s))\equiv0$。
+\EN{Let $F=F(p,z,x)$ be $C^2$ and let $u$ be a $C^2$ solution. Then along characteristics the displayed ODE system holds. More precisely, if $(x,z,p)$ solves it with $p(0)=Du(x(0))$ and $z(0)=u(x(0))$, then $p(s)=Du(x(s))$ and $z(s)=u(x(s))$ for all $s$, and $F(p(s),z(s),x(s))\equiv0$.}
+\end{theorem}
+
+\begin{proof}[证明思路 / Idea of proof]
+令 $P(s)=Du(x(s))$、$Z(s)=u(x(s))$。沿特征线求导，$\dot P_j=\sum_k u_{x_jx_k}\dot x_k$；把 $F(Du,u,x)=0$ 对 $x_j$ 求导得
+\[
+\sum_k F_{p_k}u_{x_kx_j}+F_zu_{x_j}+F_{x_j}=0 .
+\]
+代入 $\dot x=D_pF$ 并整理，即得 $\dot P=-D_xF-D_zF\,P$；$\dot Z=p\cdot D_pF$ 由链式法则给出。反之，若 ODE 解在 $s=0$ 满足初值相容，则由解的唯一性与上述计算，$P(s)$ 与 $Du(x(s))$ 满足同一 ODE 与同一初值，故恒等。\EN{Set $P(s)=Du(x(s))$ and $Z(s)=u(x(s))$. Differentiating along characteristics gives $\dot P_j=\sum_k u_{x_jx_k}\dot x_k$, while differentiating $F(Du,u,x)=0$ in $x_j$ gives the displayed relation. Substituting $\dot x=D_pF$ yields $\dot P=-D_xF-D_zF\,P$, and $\dot Z=p\cdot D_pF$ is the chain rule. Conversely, if the ODE solution matches the data at $s=0$, uniqueness of ODE solutions shows that $P(s)$ and $Du(x(s))$ satisfy the same equation with the same initial value, hence coincide.}
+\end{proof}
+
+\APS{线性与拟线性方程是特例。对 $a(x)\cdot Du=c(x)u+d(x)$，特征方程为 $\dot x=a(x)$、$\dot z=c(x)z+d(x)$，沿特征线解一阶线性 ODE 即可；对拟线性 $a(u,x)\cdot Du=c(u,x)$，特征速度依赖 $u$ 本身，这正是激波产生的根源。初始条件 $u|_\Gamma=g$ 要求 $\Gamma$ 与特征方向横截（非特征），否则局部解可能不存在或不唯一。}{Linear and quasilinear equations are special cases. For $a(x)\cdot Du=c(x)u+d(x)$ the characteristic equations are $\dot x=a(x)$, $\dot z=c(x)z+d(x)$, and one solves a linear ODE along each characteristic; for the quasilinear equation $a(u,x)\cdot Du=c(u,x)$ the characteristic speed depends on $u$ itself, the source of shocks. Initial data $u|_\Gamma=g$ require $\Gamma$ to be transverse to the characteristic directions (noncharacteristic); otherwise the local solution may fail to exist or be unique.}
+
+\EX{对 $u_t+uu_x=0$（Burgers 方程）取 $x=(x,t)$、$F(p,z,x)=p_2+zp_1$，则 $D_pF=(z,1)$，特征方程组为
+\[
+\dot x=z,\qquad \dot t=1,\qquad \dot z=0,
+\]
+即特征线是直线 $x=x_0+z_0t$，$u=z_0$ 沿特征线为常数，隐式解为 $u=g(x-ut)$。沿特征线求导 $u_x=g'(x_0)/(1+g'(x_0)t)$：若某处 $g'<0$，则在有限时刻 $t^*=1/\max(-g')$ 处 $u_x$ 爆破，经典解终止，必须引入激波。}{For $u_t+uu_x=0$ take $x=(x,t)$ and $F(p,z,x)=p_2+zp_1$; then $D_pF=(z,1)$ and the characteristic system is displayed: characteristics are the straight lines $x=x_0+z_0t$, $u=z_0$ is constant along them, and the implicit solution is $u=g(x-ut)$. Differentiating along characteristics gives $u_x=g'(x_0)/(1+g'(x_0)t)$: if $g'<0$ somewhere, then $u_x$ blows up at the finite time $t^*=1/\max(-g')$, the classical solution ends, and a shock must be introduced.}
+
+\ASK{特征方法什么时候失效？}{When does the method of characteristics fail?}{当初始曲线本身是特征线（特征初值问题）时，局部解可能不存在或不唯一，因为特征线无法``离开''初始流形去覆盖邻域；对拟线性方程，即使初值非特征，相邻特征线也会相交，经典解在有限时刻爆破，需要弱解与熵条件。}{It fails when the initial curve is itself characteristic (a characteristic initial-value problem): the local solution may fail to exist or be unique, since the characteristics cannot leave the initial manifold to cover a neighbourhood. For quasilinear equations, even with noncharacteristic data, neighbouring characteristics eventually cross, the classical solution blows up in finite time, and weak solutions with entropy conditions are required.}
+
+\subsection{Hamilton--Jacobi 方程与 Hopf--Lax 公式 | Hamilton--Jacobi equations}
+\APS{Hamilton--Jacobi 方程 $u_t+H(Du)=0$（或 $u_t+H(Du,x)=0$）是经典力学（作用量）与最优控制（值函数）的核心方程。它的特征线就是 Hamilton 方程组 $\dot x=D_pH$、$\dot p=-D_xH$；当 $H$ 凸时，方程有显式的粘性解公式。}{The Hamilton--Jacobi equation $u_t+H(Du)=0$ (or $u_t+H(Du,x)=0$) is the central equation of classical mechanics (the action) and of optimal control (the value function). Its characteristics are Hamilton's equations $\dot x=D_pH$, $\dot p=-D_xH$; when $H$ is convex there is an explicit formula for the viscosity solution.}
+
+\begin{definition}[Hamilton--Jacobi 方程、Legendre 变换与粘性解 / Hamilton--Jacobi equations, Legendre transform and viscosity solutions]\label{def:hj}
+(i) 形如 $u_t+H(Du)=0$ 或 $u_t+H(Du,x)=0$ 的一阶方程称为 \textbf{Hamilton--Jacobi 方程 / Hamilton--Jacobi equation}，$H$ 称为 \textbf{Hamilton 量 / Hamiltonian}。
+(ii) 对凸函数 $H:\R^n\to\R$，称 $L(q)=\sup_{p\in\R^n}\bigl(p\cdot q-H(p)\bigr)$ 为 $H$ 的 \textbf{Legendre 变换 / Legendre transform}。
+(iii) 设 $u\in C(\R^n\times(0,T))$。称 $u$ 为 $u_t+H(Du)=0$ 的 \textbf{粘性下解 / viscosity subsolution}，若对每个光滑 $\phi$ 与 $u-\phi$ 的每个极大点 $(x_0,t_0)$ 有 $\phi_t(x_0,t_0)+H(D\phi(x_0,t_0))\le0$；类似地，在极小点处要求 $\ge0$ 得 \textbf{粘性上解 / viscosity supersolution}；既为下解又为上解者称为 \textbf{粘性解 / viscosity solution}。
+\EN{(i) An equation of the form $u_t+H(Du)=0$ or $u_t+H(Du,x)=0$ is a Hamilton--Jacobi equation and $H$ is the Hamiltonian. (ii) For convex $H$ the displayed supremum is its Legendre transform. (iii) A continuous $u$ is a viscosity subsolution if at every maximum point of $u-\phi$ with smooth $\phi$ one has $\phi_t+H(D\phi)\le0$, a supersolution if the reverse inequality holds at minimum points, and a viscosity solution if it is both.}
+\end{definition}
+
+\begin{theorem}[Hopf--Lax 公式 / the Hopf--Lax formula]\label{thm:hopflax}
+设 $H:\R^n\to\R$ 凸，且 $\lim_{|p|\to\infty}H(p)/|p|=+\infty$；设 $L(q)=\sup_{p}\bigl(p\cdot q-H(p)\bigr)$ 为其 Legendre 变换，$g:\R^n\to\R$ 为 Lipschitz 连续。则初值问题
+\[
+u_t+H(Du)=0,\qquad u(\cdot,0)=g
+\]
+的唯一粘性解为
+\[
+u(x,t)=\min_{y\in\R^n}\Bigl\{t\,L\Bigl(\frac{x-y}{t}\Bigr)+g(y)\Bigr\},\qquad t>0 .
+\]
+\EN{Let $H$ be convex with superlinear growth, $L(q)=\sup_p(p\cdot q-H(p))$ its Legendre transform, and $g$ Lipschitz. Then the unique viscosity solution of the displayed initial-value problem is the displayed Hopf--Lax formula.}
+\end{theorem}
+
+\begin{proof}[证明思路 / Idea of proof]
+先验证 $L$ 凸、超线性且 $H(p)=\sup_q(p\cdot q-L(q))$。对公式中的 $u$，其最小值点 $y$ 满足最优性条件 $p:=L'((x-y)/t)\in\partial u(x,t)$；沿最优轨道用 Hamilton 方程直接验证 $u_t+H(Du)=0$。初值：$t\to0^+$ 时若 $y\ne x$，则 $tL((x-y)/t)\sim t\cdot\infty$，故只有 $y=x$ 的项存活，得 $u(x,0)=g(x)$。唯一性需要粘性解的比较原理（见下注）。\EN{First check that $L$ is convex and superlinear and that $H(p)=\sup_q(p\cdot q-L(q))$. For the formula, each minimizer $y$ satisfies the optimality condition $p:=L'((x-y)/t)\in\partial u(x,t)$; along the optimal trajectories Hamilton's equations verify $u_t+H(Du)=0$ directly. Initial data: as $t\to0^+$, a term with $y\ne x$ blows up like $t\cdot\infty$, so only $y=x$ survives and $u(x,0)=g(x)$. Uniqueness requires the comparison principle for viscosity solutions (see the remark).}
+\end{proof}
+
+\begin{remark}[为什么需要粘性解 / why viscosity solutions]\label{rem:visc}
+Hamilton--Jacobi 方程一般没有整体 $C^1$ 解：特征线相交后解出现折角（例如 $H(p)=\frac12p^2$、$g(x)=|x|$ 时解是分段光滑的）。粘性解用极值原理代替逐点可微（定义 \ref{def:hj}），只要求 $u$ 连续，却保证比较原理与唯一性，并允许 Hopf--Lax 公式给出的 Lipschitz 解；$\varepsilon\to0^+$ 时 $u_t+H(Du)=\varepsilon\Delta u$ 的解收敛到粘性解，这是``粘性''一词的来源。\EN{Hamilton--Jacobi equations generally have no global $C^1$ solution: after characteristics cross the solution develops corners (for $H(p)=\frac12p^2$ and $g(x)=|x|$ the solution is only piecewise smooth). Viscosity solutions replace pointwise differentiability by a maximum principle (Definition \ref{def:hj}), require only continuity, yet give a comparison principle and uniqueness, and admit the Lipschitz solutions produced by the Hopf--Lax formula; as $\varepsilon\to0^+$ the solutions of $u_t+H(Du)=\varepsilon\Delta u$ converge to the viscosity solution, which is the origin of the name.}
+\end{remark}
+
+\EX{取 $H(p)=\frac12|p|^2$、$g(x)=\frac12|x|^2$。则 $L(q)=\frac12|q|^2$，Hopf--Lax 公式要最小化
+\[
+\frac{|x-y|^2}{2t}+\frac{|y|^2}{2},
+\]
+最优 $y=x/(1+t)$，最小值 $\dfrac{|x|^2}{2(1+t)}$。直接验证：$u_t=-\dfrac{|x|^2}{2(1+t)^2}$，$Du=\dfrac{x}{1+t}$，故 $u_t+\frac12|Du|^2=0$，且 $u(x,0)=\frac12|x|^2$。这说明 Hopf--Lax 公式确实给出光滑解（当初始数据与 $H$ 都光滑且凸时，特征线在短时间内不相交）。}{With $H(p)=\frac12|p|^2$ and $g(x)=\frac12|x|^2$ we have $L(q)=\frac12|q|^2$, and the Hopf--Lax formula minimizes the displayed expression, with optimum $y=x/(1+t)$ and minimum $|x|^2/(2(1+t))$. Directly, $u_t=-|x|^2/(2(1+t)^2)$ and $Du=x/(1+t)$, so $u_t+\frac12|Du|^2=0$ and $u(x,0)=\frac12|x|^2$: the formula indeed gives a smooth solution (for smooth convex data, characteristics do not cross for short time).}
+
+\APS{最优控制解释：设受控系统 $\dot X=b(X,\alpha)$、运行代价 $\int_0^tL(X,\alpha)\dd s+g(X(t))$，值函数 $V(x,t)=\inf_\alpha\{\cdots\}$ 满足 Hamilton--Jacobi--Bellman 方程 $V_t+\min_\alpha\{b(x,\alpha)\cdot DV+L(x,\alpha)\}=0$，即 $H(p,x)=\min_\alpha\{b\cdot p+L\}$。Hopf--Lax 公式是``无控制项''（$b$ 只依赖 $p$）时的显式解，动态规划原理则是粘性解比较原理的物理版本。}{Optimal-control interpretation: for the controlled system $\dot X=b(X,\alpha)$ with running cost $\int_0^tL(X,\alpha)ds+g(X(t))$, the value function satisfies the Hamilton--Jacobi--Bellman equation displayed, i.e. $H(p,x)=\min_\alpha\{b\cdot p+L\}$. The Hopf--Lax formula is the explicit solution in the ``no state dependence'' case (when $b$ depends only on $p$), and the dynamic programming principle is the physical version of the comparison principle for viscosity solutions.}
+
+\subsection{守恒律、弱解与熵条件 | Conservation laws, weak solutions, entropy}
+\APS{标量守恒律 $u_t+\bigl(F(u)\bigr)_x=0$ 来自守恒陈述：任意区间 $[a,b]$ 上的总量只通过端点通量改变，
+\[
+\frac{\dd}{\dd t}\int_a^b u\,\dd x=F(u(a,t))-F(u(b,t)).
+\]
+$u$ 可表示密度、浓度或交通流密度，$F$ 是通量。经典解由特征线 $\dot x=F'(u)$ 给出，$u$ 沿特征线为常数；若 $F'$ 沿初值递减，特征线相交，$u_x$ 爆破，经典解在有限时刻终止。}{The scalar conservation law $u_t+(F(u))_x=0$ comes from a conservation statement: the total amount in any interval $[a,b]$ changes only through the fluxes at the endpoints, as displayed. Here $u$ may be a density, a concentration or a traffic density, and $F$ is the flux. Classical solutions follow the characteristics $\dot x=F'(u)$, with $u$ constant along them; if $F'$ decreases along the initial data, characteristics cross, $u_x$ blows up, and the classical solution ends in finite time.}
+
+\begin{definition}[激波、稀疏波与 Riemann 问题 / shocks, rarefactions and Riemann problems]\label{def:shock}
+(i) 若弱解 $u$ 沿一条曲线 $\Gamma=\{x=x(t)\}$ 两侧的极限 $u_L\ne u_R$，则 $\Gamma$ 称为 \textbf{激波 / shock wave}，$s=\dot x$ 称为激波速度；
+(ii) 若 $u$ 连续，且其特征线从某区域发散，解在由 $x/t$ 参数化的扇形区域内取自相似形式 $u=\phi(x/t)$，并连续地接到两侧的常数状态，则称为 \textbf{（中心）稀疏波 / (centred) rarefaction wave}；
+(iii) 初值取左右两个常数的 Cauchy 问题 $u_0=u_L$（$x<0$）、$u_0=u_R$（$x>0$）称为 \textbf{Riemann 问题 / Riemann problem}。
+\EN{(i) If a weak solution has one-sided limits $u_L\ne u_R$ across a curve $\Gamma=\{x=x(t)\}$, then $\Gamma$ is a shock wave and $s=\dot x$ is its speed; (ii) if $u$ is continuous and its characteristics diverge from a region, with the solution taking the self-similar form $u=\phi(x/t)$ in the fan and matching constant states on both sides, it is a centred rarefaction wave; (iii) the Cauchy problem with the two constant states displayed is the Riemann problem.}
+\end{definition}
+
+\begin{definition}[弱解 / weak solution]\label{def:weak}
+设 $u_0\in L^\infty(\R)$。函数 $u\in L^\infty(\R\times[0,\infty))$ 称为守恒律的\textbf{弱解 / weak solution}，若对一切检验函数 $\phi\in C^\infty_c(\R\times[0,\infty))$，
+\[
+\int_0^\infty\!\!\int_\R\bigl(u\phi_t+F(u)\phi_x\bigr)\dd x\,\dd t+\int_\R u_0(x)\phi(x,0)\,\dd x=0 .
+\]
+\EN{Let $u_0\in L^\infty(\R)$. A function $u\in L^\infty(\R\times[0,\infty))$ is a weak solution if the displayed identity holds for every test function $\phi\in C^\infty_c(\R\times[0,\infty))$.}
+\end{definition}
+
+\APS{弱解的定义是把方程乘以 $\phi$、分部积分、把导数全部转移到 $\phi$ 上得到的；它只要求 $u$ 有界可测，因此允许间断。经典解一定是弱解；反之弱解可以不连续，而且一般不唯一。}{The definition is obtained by multiplying the equation by $\phi$, integrating by parts and moving all derivatives onto $\phi$; it requires only that $u$ be bounded and measurable, hence allows discontinuities. Every classical solution is a weak solution; conversely weak solutions may be discontinuous and are generally nonunique.}
+
+\begin{theorem}[Rankine--Hugoniot 跳跃条件 / the jump condition]\label{thm:rh}
+设 $u$ 是弱解，除一条光滑曲线 $\Gamma=\{x=x(t)\}$ 外为 $C^1$，两侧极限记为 $u_L,u_R$。则在 $\Gamma$ 上
+\[
+s\,[u]=[F(u)],\qquad s=\dot x(t),\quad [u]=u_L-u_R,\quad [F(u)]=F(u_L)-F(u_R),
+\]
+其中 $s$ 是激波速度。
+\EN{If $u$ is a weak solution that is $C^1$ away from a smooth curve $\Gamma=\{x=x(t)\}$ with one-sided limits $u_L,u_R$, then the displayed jump condition holds on $\Gamma$, where $s=\dot x$ is the shock speed.}
+\end{theorem}
+
+\begin{proof}[证明思路 / Idea of proof]
+取支集跨过 $\Gamma$ 的检验函数，把积分分成 $\Gamma$ 两侧并在每侧分部积分；令支集缩向 $\Gamma$ 上一点，两侧的体积项相消，只剩沿 $\Gamma$ 的线积分，其被积函数为 $(u_L-u_R)\dot x-\bigl(F(u_L)-F(u_R)\bigr)$，对任意这样的 $\phi$ 为零即得条件。\EN{Take test functions supported across $\Gamma$, split the integral into the two sides and integrate by parts on each; shrinking the support to a point of $\Gamma$, the two volume terms cancel and only a line integral along $\Gamma$ remains, with integrand $(u_L-u_R)\dot x-(F(u_L)-F(u_R))$; it vanishes for all such $\phi$, giving the condition.}
+\end{proof}
+
+\begin{definition}[熵对与熵解 / entropy pairs and entropy solutions]\label{def:entropy}
+设 $F$ 严格凸。一对函数 $(\eta,q)$ 称为 \textbf{熵对 / entropy pair}，若 $\eta$ 凸且 $q'=\eta'F'$；称弱解 $u$ 为 \textbf{熵解 / entropy solution}，若对一切凸熵对成立分布不等式
+\[
+\eta(u)_t+q(u)_x\le0 .
+\]
+最常用的选择是 $\eta(u)=\frac12u^2$、$q(u)=\int^u sF'(s)\,\dd s$（对 Burgers，$q=\frac23u^3$）。
+\EN{Let $F$ be strictly convex. A pair $(\eta,q)$ is an entropy pair if $\eta$ is convex and $q'=\eta'F'$; a weak solution $u$ is an entropy solution if the displayed distributional inequality holds for every convex entropy pair. The standard choice is $\eta=\frac12u^2$ and $q=\int^u sF'(s)ds$ (for Burgers, $q=\frac23u^3$).}
+\end{definition}
+
+\APS{仅有 Rankine--Hugoniot 条件不足以选出物理解：同一个初值可以对应多个满足跳跃条件的间断解（例如把稀疏波换成一条激波）。需要附加\textbf{熵条件 / entropy condition}。对凸通量 $F$，Lax 熵条件要求特征线''进入''激波：
+\[
+F'(u_L)>s>F'(u_R),
+\]
+几何上即激波左侧的特征速度大于激波速度、右侧小于激波速度。等价地，对一切凸熵对 $(\eta,q)$（$q'=\eta'F'$）成立分布不等式 $\eta(u)_t+q(u)_x\le0$；对 Burgers 情形（$\eta=u^2$、$q=\frac23u^3$）这两种表述等价。}{The Rankine--Hugoniot condition alone cannot select the physical solution: the same initial data may admit several discontinuous solutions satisfying the jump condition (for instance replacing a rarefaction by a shock). An entropy condition is needed. For convex flux, the Lax entropy condition requires characteristics to enter the shock, as displayed: the characteristic speed on the left exceeds the shock speed and that on the right is smaller. Equivalently, for every convex entropy pair $(\eta,q)$ with $q'=\eta'F'$ the distributional inequality $\eta(u)_t+q(u)_x\le0$ holds; for Burgers ($\eta=u^2$, $q=\frac23u^3$) the two formulations are equivalent.}
+
+\begin{theorem}[熵解的存在唯一性 / existence and uniqueness of entropy solutions]\label{thm:entropy}
+设 $F$ 严格凸、$u_0\in L^\infty(\R)$。则存在唯一的熵解 $u$，它满足 Lax 条件（对每个间断）且可由粘性消没得到：
+\[
+u=\lim_{\nu\to0^+}u^\nu,\qquad u^\nu_t+F(u^\nu)_x=\nu\,u^\nu_{xx},
+\]
+极限在 $L^1_{\mathrm{loc}}$ 中成立。熵解还满足 $L^1$ 压缩性：两个熵解之差满足 $\|u(\cdot,t)-v(\cdot,t)\|_{L^1}\le\|u_0-v_0\|_{L^1}$，从而唯一且连续依赖初值。
+\EN{Let $F$ be strictly convex and $u_0\in L^\infty(\R)$. Then there is a unique entropy solution, satisfying the Lax condition at every discontinuity and obtainable by vanishing viscosity, as displayed, with the limit in $L^1_{\mathrm{loc}}$. Entropy solutions are $L^1$-contractive: the difference of two entropy solutions satisfies the displayed inequality, giving uniqueness and continuous dependence on the initial data.}
+\end{theorem}
+
+\APS{对一般凸通量的 Riemann 问题（初值为左右两个常数 $u_L,u_R$），熵解的结构只由 $u_L$ 与 $u_R$ 的大小决定：$u_L>u_R$ 时为激波，速度 $s=\dfrac{F(u_L)-F(u_R)}{u_L-u_R}$；$u_L<u_R$ 时为中心稀疏波，解在扇形区域 $F'(u_L)<x/t<F'(u_R)$ 内由隐式方程 $F'(u)=x/t$ 给出。Burgers 的 $F(u)=u^2/2$ 使这两支都有最简形式（见 3.5 节）。}{For the Riemann problem of a general convex flux (initial data equal to constants $u_L,u_R$), the entropy solution depends only on the order of $u_L$ and $u_R$: for $u_L>u_R$ it is a shock with speed $s=(F(u_L)-F(u_R))/(u_L-u_R)$; for $u_L<u_R$ it is a centred rarefaction, given in the fan $F'(u_L)<x/t<F'(u_R)$ implicitly by $F'(u)=x/t$. For Burgers' flux $F(u)=u^2/2$ both branches take their simplest form (Section 3.5).}
+
+\ASK{弱解为什么不唯一，熵条件如何恢复唯一性？}{Why are weak solutions nonunique, and how does the entropy condition restore uniqueness?}{特征线相交后，Rankine--Hugoniot 条件允许把稀疏波替换成激波，于是同一个初值有多个弱解。熵条件要求特征线进入激波（$u_L>u_R$，等价于 $\eta(u)_t+q(u)_x\le0$），排除了非物理的间断；粘性消没的极限恰好满足它，且熵解满足 $L^1$ 压缩性，故唯一并连续依赖初值。}{After characteristics cross, the Rankine--Hugoniot condition allows replacing a rarefaction by a shock, so the same initial data admit several weak solutions. The entropy condition requires characteristics to enter the shock ($u_L>u_R$, equivalently $\eta(u)_t+q(u)_x\le0$), excluding nonphysical discontinuities; the vanishing-viscosity limit satisfies it, and entropy solutions are $L^1$-contractive, hence unique and continuously dependent on the data.}
+
+\subsection{Burgers 方程与激波 | Burgers' equation and shocks}
+\APS{Burgers 方程 $u_t+\bigl(\frac{u^2}{2}\bigr)_x=0$（即 $u_t+uu_x=0$）的流量 $F(u)=\frac{u^2}{2}$ 严格凸，是最小的守恒律模型，也是交通流 Lighthill--Whitham--Richards 模型的骨架。}{Burgers' equation $u_t+(\tfrac{u^2}{2})_x=0$, i.e. $u_t+uu_x=0$, has the strictly convex flux $F(u)=u^2/2$; it is the minimal conservation-law model and the backbone of the Lighthill--Whitham--Richards traffic model.}
+
+\begin{theorem}[Burgers 的 Riemann 问题 / the Riemann problem for Burgers]\label{thm:riemann}
+对初值 $u_0(x)=u_L$（$x<0$）、$u_0(x)=u_R$（$x>0$），熵解为：当 $u_L>u_R$ 时
+\[
+u(x,t)=\begin{cases}u_L,&x<st,\\ u_R,&x>st,\end{cases}\qquad s=\frac{u_L+u_R}{2},
+\]
+即右行激波；当 $u_L<u_R$ 时为中心稀疏波
+\[
+u(x,t)=\begin{cases}u_L,&x<u_Lt,\\ x/t,&u_Lt<x<u_Rt,\\ u_R,&x>u_Rt .\end{cases}
+\]
+\EN{For the displayed Riemann data the entropy solution is a shock with speed $s=(u_L+u_R)/2$ when $u_L>u_R$, and the displayed centred rarefaction when $u_L<u_R$.}
+\end{theorem}
+
+\begin{proof}[证明思路 / Idea of proof]
+$u_L>u_R$ 时，Rankine--Hugoniot 条件给出 $s=(u_L+u_R)/2$，Lax 条件 $u_L>s>u_R$ 成立，故激波是熵解。$u_L<u_R$ 时特征线向右发散，尝试自相似解 $u=\phi(x/t)$：代入得 $-\phi'\xi+\phi\phi'=0$（$\xi=x/t$），即 $(\phi-\xi)\phi'=0$，在扇形内取 $\phi=\xi$，两侧与常数解匹配，得到连续解。\EN{For $u_L>u_R$ the jump condition gives $s=(u_L+u_R)/2$ and the Lax condition $u_L>s>u_R$ holds, so the shock is the entropy solution. For $u_L<u_R$ characteristics diverge to the right; the self-similar ansatz $u=\phi(x/t)$ with $\xi=x/t$ gives $(\phi-\xi)\phi'=0$, so $\phi=\xi$ in the fan, matched to the constant states on both sides.}
+\end{proof}
+
+\EX{取 $u_L=1$、$u_R=0$：激波速度 $s=\frac12$，解为 $u=1$（$x<t/2$）、$u=0$（$x>t/2$），右行激波；取 $u_L=0$、$u_R=1$：稀疏波 $u=0$（$x<0$）、$u=x/t$（$0<x<t$）、$u=1$（$x>t$）。若初值是光滑的递减函数且在 $x_0$ 处 $u_0'(x_0)<0$，则激波在 $t^*=1/\max(-u_0')$ 处形成，位置由 Rankine--Hugoniot 条件确定。}{With $u_L=1$, $u_R=0$ the shock speed is $s=\frac12$ and the solution is $u=1$ for $x<t/2$, $u=0$ for $x>t/2$; with $u_L=0$, $u_R=1$ the rarefaction is displayed. If the initial data are a smooth decreasing function with $u_0'(x_0)<0$, a shock forms at $t^*=1/\max(-u_0')$ and its position is determined by the jump condition.}
+
+\APS{粘性 Burgers 方程 $u_t+uu_x=\nu u_{xx}$（$\nu>0$）没有激波，但有光滑的行波解：取 $\xi=(x-st)/(4\nu)$，
+\[
+u(x,t)=\frac12\Bigl[1-\tanh\Bigl(\frac{x-t/2}{4\nu}\Bigr)\Bigr],
+\]
+它连接 $u_L=1$（$x\to-\infty$）与 $u_R=0$（$x\to+\infty$），波速 $s=\frac12$，过渡层宽度 $O(\nu)$。代入验证：$u_t+uu_x=\nu u_{xx}$ 等价于 $s=\frac{u_L+u_R}{2}$。令 $\nu\to0^+$ 时该行波收缩为上面的激波，这就是\textbf{粘性消没 / vanishing viscosity} 方法，也是熵条件的物理来源。}{The viscous Burgers equation $u_t+uu_x=\nu u_{xx}$ has no shocks but a smooth travelling wave: with $\xi=(x-st)/(4\nu)$ the displayed profile connects $u_L=1$ at $x\to-\infty$ to $u_R=0$ at $x\to+\infty$, moves with speed $s=\frac12$ and has a transition layer of width $O(\nu)$. Substituting verifies $u_t+uu_x=\nu u_{xx}$ precisely when $s=(u_L+u_R)/2$. As $\nu\to0^+$ the wave shrinks to the shock above: this is the \emph{vanishing viscosity} method and the physical origin of the entropy condition.}
+
+\APS{守恒律的一般理论还有两个重要结论：其一，熵解满足\textbf{Oleinik 熵条件}，对凸通量与任意介于 $u_L,u_R$ 之间的 $u$，
+\[
+\frac{F(u)-F(u_L)}{u-u_L}\ge s\ge\frac{F(u)-F(u_R)}{u-u_R},
+\]
+它等价于 Lax 条件并给出激波强度的单调性；其二，多解性的根源是特征线相交，而熵条件等价于``粘性极限''与``特征线进入激波''两种提法，三者一致。}{Two further results of the general theory: entropy solutions satisfy the \emph{Oleinik entropy condition}, which for convex flux and every $u$ between $u_L$ and $u_R$ reads as displayed; it is equivalent to the Lax condition and controls the strength of shocks. Second, nonuniqueness originates in crossing characteristics, and the entropy condition has three equivalent formulations: vanishing viscosity, characteristics entering the shock, and the Oleinik inequality.}
+
+\section{解的表示：Evans 第 4 章 | Other ways to represent solutions}
+\APS{第 4 章换一个角度：不再问``解有什么性质''，而问``解能写成什么形式''。Evans 给出六类表示：分离变量（级数）、相似解（一元函数）、积分变换（Fourier 与 Laplace）、非线性转线性（Hopf--Cole、势函数、图变换）、渐近展开（奇异摄动、Laplace 方法、几何光学、驻相、均匀化）、幂级数（Cauchy--Kovalevskaya）。每一种表示都对应一类可解的问题，也对应一种近似或计算策略。}{Chapter 4 changes the question: instead of asking what properties a solution has, it asks in what form a solution can be written. Evans gives six kinds of representation: separation of variables (series), similarity solutions (functions of one variable), integral transforms (Fourier and Laplace), conversion of nonlinear problems to linear ones (Hopf--Cole, potential functions, hodograph), asymptotic expansions (singular perturbations, Laplace's method, geometric optics, stationary phase, homogenization), and power series (Cauchy--Kovalevskaya). Each representation corresponds to a solvable class of problems and to a computational or approximation strategy.}
+
+\subsection{分离变量 | Separation of variables}
+\begin{definition}[分离变量法 / separation of variables]\label{def:sep}
+对线性齐次方程与齐次边界条件，设解为乘积形式 $u(x,t)=X(x)T(t)$（或多变量的乘积）。代入方程并把含不同自变量的因子移到等式两端，若能推出``一端只依赖 $x$、另一端只依赖 $t$''，则两端都等于同一常数 $-\lambda$，从而把一个偏微分方程分解为若干个常微分方程：
+\[
+\frac{T'}{\kappa T}=\frac{X''}{X}=-\lambda\quad\Longleftrightarrow\quad
+T'=-\kappa\lambda T,\qquad X''+\lambda X=0 .
+\]
+边界条件只作用在 $X$ 上，给出\textbf{本征值问题 / eigenvalue problem}；使问题有非零解的 $\lambda$ 称为\textbf{本征值 / eigenvalue}，对应的 $X$ 称为\textbf{本征函数 / eigenfunction}。把所有本征解叠加并用初值确定系数，即得级数形式的解。
+\EN{For a linear homogeneous equation with homogeneous boundary data, try a product $u(x,t)=X(x)T(t)$ (or a product over more variables). Substituting and moving the factors with different variables to opposite sides, one shows that one side depends only on $x$ and the other only on $t$; both must equal a constant $-\lambda$, splitting the PDE into ODEs as displayed. The boundary data act on $X$ alone and form an eigenvalue problem; the $\lambda$ for which a nonzero solution exists are the eigenvalues and the corresponding $X$ the eigenfunctions. Superposing all eigen-solutions and fixing the coefficients from the initial data gives the series representation.}
+\end{definition}
+
+\begin{theorem}[正则 Sturm--Liouville 问题 / regular Sturm--Liouville problem]\label{thm:sl}
+在区间 $(0,L)$ 上考虑
+\[
+-(p(x)X')'+q(x)X=\lambda w(x)X,
+\]
+其中 $p\in C^1$，$p>0$，$q,w\in C$，$w>0$，并配齐次自伴边界条件（如 $X(0)=X(L)=0$，或 $X'(0)=X'(L)=0$，或周期条件）。则：
+(i) 存在可数多个实本征值 $\lambda_1<\lambda_2\le\lambda_3\le\cdots$，$\lambda_n\to\infty$，每个本征值单重；
+(ii) 对应本征函数可取实值且关于权 $w$ 正交归一：$\langle X_m,X_n\rangle_w=\int_0^LX_mX_nw\,\dd x=\delta_{mn}$；
+(iii) 本征函数系在 $L^2_w(0,L)$ 中完备：每个 $f\in L^2_w$ 有展开 $f=\sum_nc_nX_n$，$c_n=\langle f,X_n\rangle_w$，级数在 $L^2_w$ 中收敛；若 $f$ 分段 $C^1$，则级数逐点收敛到 $\frac12[f(x+)+f(x-)]$。
+\EN{On $(0,L)$ consider the displayed equation with $p\in C^1$, $p>0$, $q,w\in C$, $w>0$ and homogeneous self-adjoint boundary conditions. Then (i) there are countably many real eigenvalues $\lambda_1<\lambda_2\le\cdots$ tending to infinity, each simple; (ii) the eigenfunctions may be taken real and orthonormal with weight $w$, $\langle X_m,X_n\rangle_w=\delta_{mn}$; (iii) they are complete in $L^2_w(0,L)$: every $f\in L^2_w$ expands as displayed with $c_n=\langle f,X_n\rangle_w$, converging in $L^2_w$ and pointwise to $\frac12[f(x+)+f(x-)]$ for piecewise $C^1$ data.}
+\end{theorem}
+
+\begin{proof}[证明思路 / Idea of proof]
+\textbf{对称性}: 用自伴性，边界项 $[p(X_m'X_n-X_mX_n')]_0^L=0$，相减得 $(\lambda_m-\lambda_n)\langle X_m,X_n\rangle_w=0$，故不同本征值正交、本征值为实、单重。\textbf{离散性}: 本征值由边界条件给出的超越方程（如 $\sin(\sqrt\lambda L)=0$）决定，只有离散零点且趋于无穷。\textbf{完备性}: $-\frac1w\frac{\dd}{\dd x}(p\frac{\dd}{\dd x})+\frac qw$ 的逆是自伴紧算子，由紧自伴算子的谱定理得完备正交基；逐点收敛是 Fourier 级数收敛定理的推广。\EN{Symmetry: self-adjointness kills the boundary term, and subtraction gives $(\lambda_m-\lambda_n)\langle X_m,X_n\rangle_w=0$, so distinct eigenvalues are orthogonal, eigenvalues real, and each simple. Discreteness: the eigenvalues are zeros of a transcendental equation imposed by the boundary data (e.g. $\sin(\sqrt\lambda L)=0$), discrete and tending to infinity. Completeness: the inverse of $-\frac1w\frac{d}{dx}(p\frac{d}{dx})+\frac qw$ is compact and self-adjoint, and the spectral theorem for compact self-adjoint operators gives a complete orthonormal basis; pointwise convergence is the Fourier convergence theorem.}
+\end{proof}
+
+\APS{对热方程混合问题 $u_t=\kappa u_{xx}$（$0<x<L$）、$u(0,t)=u(L,t)=0$、$u(x,0)=f(x)$，本征值为 $\lambda_n=(n\pi/L)^2$、本征函数为 $X_n=\sin(n\pi x/L)$，解为
+\[
+u(x,t)=\sum_{n\ge1}b_ne^{-\kappa(n\pi/L)^2t}\sin\frac{n\pi x}{L},\qquad
+b_n=\frac{2}{L}\int_0^Lf(x)\sin\frac{n\pi x}{L}\,\dd x .
+\]
+对波动方程 $u_{tt}=c^2u_{xx}$ 同一边界条件，时间因子变为 $A_n\cos(\sqrt{\lambda_n}\,ct)+B_n\sin(\sqrt{\lambda_n}\,ct)$，解是驻波的叠加。非齐次方程或非齐次边界先化为齐次（稳态化或 Duhamel 展开）。}{For the heat mixed problem on $0<x<L$ with zero endpoint data and initial data $f$, the eigenvalues are $(n\pi/L)^2$ and the eigenfunctions $\sin(n\pi x/L)$, giving the displayed series with the displayed Fourier coefficients. For the wave equation with the same boundary data the time factors become $A_n\cos(\sqrt{\lambda_n}ct)+B_n\sin(\sqrt{\lambda_n}ct)$, and the solution is a superposition of standing waves. Inhomogeneous equations or boundary data are first reduced to the homogeneous case (steady state or Duhamel expansion).}
+
+\APS{Dirichlet 边界给正弦本征函数、$\lambda_n=(n\pi/L)^2$；Neumann 边界给余弦、$n\ge0$，其中 $\lambda_0=0$ 对应常数模态与总热量守恒；Robin 边界给由超越方程决定的离散本征值。二维矩形区域用二重级数（$X_n(x)Y_m(y)$），圆域则用 Bessel 函数——本征值问题的几何由区域形状决定。}{Dirichlet data give sine eigenfunctions with $\lambda_n=(n\pi/L)^2$; Neumann data give cosines with $n\ge0$, where $\lambda_0=0$ corresponds to the constant mode and conservation of total heat; Robin data give discrete eigenvalues from a transcendental equation. Rectangular domains use double series $X_n(x)Y_m(y)$, while disks use Bessel functions: the geometry of the eigenvalue problem is dictated by the shape of the domain.}
+
+\EX{取 $L=\pi$、$\kappa=1$、$f(x)=1$（$0<x<\pi$）。则 $b_n=\frac{2}{\pi}\int_0^\pi\sin(nx)\,\dd x=\frac{2(1-(-1)^n)}{n\pi}$，故
+\[
+u(x,t)=\sum_{n\ \text{odd}}\frac{4}{n\pi}\,e^{-n^2t}\sin(nx),
+\]
+$t>0$ 时级数绝对一致收敛（$e^{-n^2t}$ 压过一切多项式增长），且 $u\to f$（$t\to0^+$）在 $(0,\pi)$ 内成立、在端点不成立：端点处 $f$ 与零边界不连续，Fourier 级数在端点收敛到 $0$（平均值的 $1/2$ 被边界值取代）。}{Take $L=\pi$, $\kappa=1$, $f=1$ on $(0,\pi)$. Then $b_n=\frac{2}{\pi}\int_0^\pi\sin(nx)dx=2(1-(-1)^n)/(n\pi)$, giving the displayed series over odd $n$. For $t>0$ it converges absolutely and uniformly, and $u\to f$ as $t\to0^+$ inside $(0,\pi)$ but not at the endpoints, where $f$ is discontinuous with the zero boundary data and the series converges to $0$.}
+
+\subsection{相似解 | Similarity solutions}
+\begin{definition}[相似解与行波解 / similarity and travelling-wave solutions]\label{def:similarity}
+若方程在伸缩变换 $(x,t)\mapsto(\lambda x,\lambda^\alpha t)$（$\lambda>0$）下不变，则存在由尺度不变量组成的\textbf{相似变量 / similarity variable} $\xi=x/t^{1/\alpha}$（例如热方程的 $x/\sqrt{\kappa t}$），使解可写成 $u(x,t)=t^{\beta}U(\xi)$ 或 $u(x,t)=U(\xi)$。把该形式代入 PDE，若化为关于 $\xi$ 的常微分方程，则称 $u$ 为\textbf{相似解 / similarity solution}。若解只依赖 $x-ct$，即 $u(x,t)=U(x-ct)$，则称为\textbf{行波解 / travelling wave}，$c$ 为波速。
+\EN{If the equation is invariant under the scaling $(x,t)\mapsto(\lambda x,\lambda^\alpha t)$ for $\lambda>0$, there is a similarity variable $\xi=x/t^{1/\alpha}$ built from the scale invariants (for the heat equation, $x/\sqrt{\kappa t}$), and solutions may be sought in the form $u=t^\beta U(\xi)$ or $u=U(\xi)$. If substitution reduces the PDE to an ODE in $\xi$, the solution is a similarity solution. If the solution depends only on $x-ct$, $u=U(x-ct)$, it is a travelling wave with speed $c$.}
+\end{definition}
+
+\APS{热方程 $u_t=\kappa u_{xx}$ 在 $x\mapsto\lambda x$、$t\mapsto\lambda^2t$、$u$ 不变下不变，故 $\xi=x/\sqrt{\kappa t}$ 是相似变量，设 $u=U(\xi)$。代入：
+\[
+u_t=-\frac{\xi}{2t}U'(\xi),\qquad u_{xx}=\frac{1}{\kappa t}U''(\xi),
+\]
+方程化为 $U''+\frac{\xi}{2}U'=0$，即 $(U'e^{\xi^2/4})'=0$，积分两次得
+\[
+U(\xi)=A+B\int_0^{\xi/2}e^{-z^2}\,\dd z=A+B\,\operatorname{erf}\Bigl(\frac{\xi}{2}\Bigr).
+\]
+这正是 2.3 节半无界热方程 $\operatorname{erf}$ 解的来源，也是一切扩散问题``$\sqrt t$ 标度''的根源。}{The heat equation is invariant under $x\mapsto\lambda x$, $t\mapsto\lambda^2t$ with $u$ fixed, so $\xi=x/\sqrt{\kappa t}$ is a similarity variable; set $u=U(\xi)$. Substitution gives the displayed derivatives and reduces the equation to $U''+\frac{\xi}{2}U'=0$, i.e. $(U'e^{\xi^2/4})'=0$, whose two integrations give $U(\xi)=A+B\,\mathrm{erf}(\xi/2)$. This is the origin of the error-function solution of the half-line problem in Section 2.3 and of the ``$\sqrt t$ scaling'' of all diffusion problems.}
+
+\APS{行波解是相似解的一维特例，用于守恒律与反应扩散方程：设 $u=U(x-ct)$ 代入 $u_t+F(u)_x=\nu u_{xx}$ 得 $-\bigl(cU-F(U)\bigr)'=\nu U''$，积分一次得 $O-U$ 平面上的轨道方程。Burgers 的粘性激波（3.5 节）、KdV 的孤立子、Fisher 方程的波前都是行波解。}{A travelling wave is the one-dimensional special case of a similarity solution, used for conservation laws and reaction--diffusion equations: substituting $u=U(x-ct)$ into $u_t+F(u)_x=\nu u_{xx}$ gives $-(cU-F(U))'=\nu U''$, and one integration gives the orbit equation in the $U$-$U'$ plane. The viscous Burgers shock (Section 3.5), KdV solitons and Fisher wave fronts are all travelling waves.}
+
+\APS{相似解也广泛用于非线性扩散与流体力学：多孔介质方程 $u_t=(u^m)_{xx}$ 的 Barenblatt 解、边界层方程的 Blasius 解都由尺度不变性化为 ODE。注意相似解只是``特解族''，一般初值问题的解不是自相似的，但长时间后往往收敛到某个相似解（自相似吸引子）。}{Similarity solutions are also widely used in nonlinear diffusion and fluid mechanics: the Barenblatt solutions of the porous-medium equation $u_t=(u^m)_{xx}$ and the Blasius solution of the boundary-layer equations both reduce to ODEs by scaling invariance. Note that similarity solutions form a special family; the solution of a general initial-value problem is not self-similar, but often converges to one at large times (a self-similar attractor).}
+
+\EX{对多孔介质方程 $u_t=(u^2)_{xx}$，取自相似形式 $u(x,t)=t^{-1/3}U(\xi)$、$\xi=x/t^{1/3}$，代入得
+\[
+(U^2)''+\frac{\xi}{3}U'+\frac13U=0,
+\]
+即 $\bigl((U^2)'+\frac{\xi}{3}U\bigr)'=0$，一次积分后得 $U$ 的显式解（Barenblatt 源解）。这个例子说明：相似解把非线性 PDE 化为可积的 ODE，但边界条件（如紧支撑）会选出特定的指数与常数。}{For the porous-medium equation $u_t=(u^2)_{xx}$, take the self-similar form $u=t^{-1/3}U(\xi)$ with $\xi=x/t^{1/3}$; substitution gives the displayed ODE, i.e. $((U^2)'+\frac{\xi}{3}U)'=0$, which integrates once to an explicit Barenblatt source solution. The example shows how similarity reduces a nonlinear PDE to an integrable ODE, while boundary conditions such as compact support select the exponents and constants.}
+
+\subsection{Fourier 与 Laplace 变换 | Fourier and Laplace transforms}
+\begin{definition}[Fourier 变换 / Fourier transform]\label{def:fourier}
+对 $f\in L^1(\R^n)$，定义
+\[
+\widehat f(\xi)=\int_{\R^n}f(x)e^{-i\xi\cdot x}\,\dd x,\qquad
+f(x)=\frac{1}{(2\pi)^n}\int_{\R^n}\widehat f(\xi)e^{i\xi\cdot x}\,\dd\xi
+\]
+（第二个等式在适当条件下成立，称为\textbf{逆变换 / inversion formula}）。对 Schwartz 类函数，变换是 $\mathcal S(\R^n)$ 到自身的同构，并满足 $\widehat{D^\alpha f}=(i\xi)^\alpha\widehat f$、$\widehat{f*g}=(2\pi)^{n/2}\widehat f\,\widehat g$（对称归一化下）以及 Plancherel 等式 $\|f\|_{L^2}=\|\widehat f\|_{L^2}$。
+\EN{For $f\in L^1(\R^n)$ define the Fourier transform and its inversion formula as displayed (the second holds under suitable hypotheses). On the Schwartz class the transform is an isomorphism and satisfies $\widehat{D^\alpha f}=(i\xi)^\alpha\widehat f$, the convolution theorem, and Plancherel's identity.}
+\end{definition}
+
+\APS{Fourier 变换把空间微分变成频率乘法，因此把常系数线性 PDE 变成关于 $t$ 的 ODE（或代数方程）。热方程：$\widehat u_t=-\kappa|\xi|^2\widehat u$，故 $\widehat u=e^{-\kappa|\xi|^2t}\widehat g$。逆变换需要计算 $\mathcal F^{-1}(e^{-\kappa|\xi|^2t})$，这正是高斯热核；于是 $u=\Phi*g$，回到 2.3 节的卷积公式。高频因子 $e^{-\kappa|\xi|^2t}$ 迅速衰减，这是``立即光滑化''的频域解释。}{The Fourier transform turns spatial derivatives into multiplication by frequency, hence turns a constant-coefficient linear PDE into an ODE (or an algebraic equation) in $t$. For the heat equation $\widehat u_t=-\kappa|\xi|^2\widehat u$, so $\widehat u=e^{-\kappa|\xi|^2t}\widehat g$. Inverting requires $\mathcal F^{-1}(e^{-\kappa|\xi|^2t})$, which is exactly the Gaussian heat kernel; thus $u=\Phi*g$, recovering the convolution formula of Section 2.3. The rapid decay of $e^{-\kappa|\xi|^2t}$ at high frequency is the frequency-space explanation of immediate smoothing.}
+
+\begin{definition}[Laplace 变换 / Laplace transform]\label{def:laplace}
+对定义在 $t\ge0$ 上的函数 $y(t)$，其 Laplace 变换为
+\[
+Y(s)=\mathcal L[y](s)=\int_0^\infty e^{-st}y(t)\,\dd t,
+\]
+在使积分绝对收敛的半平面 $\operatorname{Re}s>\sigma_0$ 内有定义。分部积分给出 $\mathcal L[y']=sY-y(0)$、$\mathcal L[y'']=s^2Y-sy(0)-y'(0)$；卷积性质 $\mathcal L[f*g]=FG$；常用对为 $\mathcal L[1]=1/s$、$\mathcal L[e^{at}]=1/(s-a)$、$\mathcal L[t^n]=n!/s^{n+1}$。
+\EN{For a function $y(t)$ on $t\ge0$, the Laplace transform is displayed, defined in the half-plane where the integral converges absolutely. Integration by parts gives the derivative rules, the convolution property, and the standard pairs listed.}
+\end{definition}
+
+\APS{Laplace 变换适合时间方向的初值问题：初值直接进入代数方程。半无界弦 $u_{tt}=c^2u_{xx}$、$u(0,t)=g(t)$、零初值：变换得 $s^2U=c^2U_{xx}$、$U(s,0)=G(s)$，取有界解 $U=G(s)e^{-sx/c}$，逆变换得 $u=g(t-x/c)$（$x<ct$）——延迟 $x/c$ 在 $s$ 域中变成指数因子 $e^{-sx/c}$。}{The Laplace transform suits initial-value problems in time: initial data enter the algebraic equation directly. For the half-line string $u_{tt}=c^2u_{xx}$ with $u(0,t)=g(t)$ and zero data, transforming gives $s^2U=c^2U_{xx}$ and $U(s,0)=G(s)$; the bounded solution $U=G(s)e^{-sx/c}$ inverts to $u=g(t-x/c)$ for $x<ct$: the delay $x/c$ becomes the exponential factor $e^{-sx/c}$.}
+
+\EX{解 $y'+2y=1$、$y(0)=0$。变换得 $(s+2)Y=1/s$，故 $Y=\frac{1}{s(s+2)}=\frac12\bigl(\frac1s-\frac1{s+2}\bigr)$，逆变换 $y=\frac12(1-e^{-2t})$。若改为 $y(0)=1$，则 $Y=\frac{1+y(0)}{s+2}=\frac{2}{s+2}$，得 $y=2e^{-2t}$，可见初值如何直接改变解。}{Solve $y'+2y=1$, $y(0)=0$: transforming gives $(s+2)Y=1/s$, hence $Y=\frac12(1/s-1/(s+2))$ and $y=\frac12(1-e^{-2t})$. With $y(0)=1$ instead, $Y=2/(s+2)$ and $y=2e^{-2t}$, showing how the initial value enters directly.}
+
+\ASK{Fourier 变换与 Laplace 变换的关系是什么？}{How are the Fourier and Laplace transforms related?}{Laplace 变换是 Fourier 变换在复频率 $s=\sigma+i\omega$ 上的推广，只对 $t\ge0$ 积分，$e^{-\sigma t}$ 起收敛因子作用；它把初值问题代数化，并把延迟与卷积变成乘法和指数因子。Fourier 变换处理全空间、稳态与频率分析，二者通过 $s=i\omega$（在虚轴上）相联系。}{The Laplace transform extends the Fourier transform to complex frequency $s=\sigma+i\omega$ and integrates only over $t\ge0$, with $e^{-\sigma t}$ acting as a convergence factor; it algebraizes initial-value problems and turns delays and convolutions into multiplication and exponential factors. The Fourier transform handles the whole space, steady states and frequency analysis, and the two are related by $s=i\omega$ on the imaginary axis.}
+
+\subsection{非线性转线性 | Converting nonlinear problems into linear ones}
+\begin{definition}[Hopf--Cole 变换 / the Hopf--Cole transformation]\label{def:hopfcole}
+对粘性 Burgers 方程 $u_t+uu_x=\nu u_{xx}$（$\nu>0$），令
+\[
+u=-2\nu\,\frac{\varphi_x}{\varphi}=-2\nu\,(\ln\varphi)_x .
+\]
+若 $\varphi>0$ 满足热方程 $\varphi_t=\nu\varphi_{xx}$，则 $u$ 满足粘性 Burgers 方程；反之每个光滑解都可这样表示。这个变换把非线性方程化为线性热方程，称为 \textbf{Hopf--Cole 变换 / Hopf--Cole transformation}。
+\EN{For the viscous Burgers equation $u_t+uu_x=\nu u_{xx}$ with $\nu>0$, set $u=-2\nu\varphi_x/\varphi=-2\nu(\ln\varphi)_x$. If $\varphi>0$ solves the heat equation $\varphi_t=\nu\varphi_{xx}$, then $u$ solves the viscous Burgers equation, and conversely every smooth solution arises this way. This reduction to the linear heat equation is the Hopf--Cole transformation.}
+\end{definition}
+
+\begin{proof}[验证 / Verification]
+记 $u=-2\nu(\ln\varphi)_x$。则
+\[
+u_t=-2\nu(\ln\varphi)_{xt},\qquad
+u_x=-2\nu(\ln\varphi)_{xx},\qquad
+u_{xx}=-2\nu(\ln\varphi)_{xxx}.
+\]
+代入 $u_t+uu_x-\nu u_{xx}$，利用 $\varphi_t=\nu\varphi_{xx}$（即 $(\ln\varphi)_t=\nu(\ln\varphi)_{xx}$）逐项相消，得零。\EN{Write $u=-2\nu(\ln\varphi)_x$. Then the displayed derivatives follow, and substituting into $u_t+uu_x-\nu u_{xx}$, using $\varphi_t=\nu\varphi_{xx}$ (i.e. $(\ln\varphi)_t=\nu(\ln\varphi)_{xx}$), cancels all terms.}
+\end{proof}
+
+\APS{Hopf--Cole 变换的意义：粘性 Burgers 方程可以通过线性热方程求解，从而得到显式的激波剖面（3.5 节的行波解就是 $\varphi$ 取高斯型时的结果）。但 $\nu\to0$ 时变换退化（$u$ 由 $\varphi$ 的对数导数给出，$\varphi$ 的零点对应激波），所以无粘极限仍需熵条件，不能直接由线性理论得到。}{The meaning of the Hopf--Cole transformation: the viscous Burgers equation is solvable through the linear heat equation, giving explicit shock profiles (the travelling wave of Section 3.5 corresponds to a Gaussian $\varphi$). But the transformation degenerates as $\nu\to0$ (the zeros of $\varphi$ become shocks), so the inviscid limit still requires the entropy condition and cannot be read off directly from the linear theory.}
+
+\begin{definition}[势函数与图变换 / potential functions and hodograph transformations]\label{def:potential}
+(i) \textbf{势函数 / potential function}: 对守恒律 $v_t+\bigl(G(v)\bigr)_x=0$，若存在 $u$ 使 $v=u_x$，则 $u$ 称为 $v$ 的势函数，$u$ 满足 Hamilton--Jacobi 型方程 $u_t+G(u_x)=0$；反之 Hamilton--Jacobi 方程 $u_t+H(Du)=0$ 的梯度 $v=Du$ 满足守恒律 $v_t+\nabla\cdot\bigl(DH(v)\bigr)=0$。
+(ii) \textbf{图变换 / hodograph transformation}: 对拟线性方程 $u_t+a(u)u_x=0$，在 $u_x\ne0$ 处把 $x$ 看成 $u,t$ 的函数 $x=x(u,t)$，由 $u(x(u,t),t)=u$ 求导得 $u_x=1/x_u$、$u_t=-x_t/x_u$，代入原方程化为关于 $x$ 的线性方程 $x_t=a(u)x_u$。这个``交换自变量与未知函数''的操作称为图变换。
+\EN{(i) Potential function: for the conservation law $v_t+(G(v))_x=0$, a function $u$ with $v=u_x$ is a potential for $v$, and it satisfies the Hamilton--Jacobi type equation $u_t+G(u_x)=0$; conversely the gradient $v=Du$ of a solution of $u_t+H(Du)=0$ satisfies the conservation law $v_t+\nabla\cdot(DH(v))=0$. (ii) Hodograph transformation: for the quasilinear equation $u_t+a(u)u_x=0$, wherever $u_x\ne0$ regard $x$ as a function $x=x(u,t)$ of $u$ and $t$; differentiating $u(x(u,t),t)=u$ gives $u_x=1/x_u$ and $u_t=-x_t/x_u$, and substitution yields the linear equation $x_t=a(u)x_u$. Interchanging the roles of the independent and unknown variables is the hodograph transformation.}
+\end{definition}
+
+\EX{用图变换解 $u_t+uu_x=0$。由定义 \ref{def:potential}，$x=x(u,t)$ 满足线性方程 $x_t=u\,x_u$，其特征线为 $u=\mathrm{const}$ 上的 $\dd x/\dd t=u$，故 $x=ut+\varphi(u)$，其中 $\varphi$ 由初值确定（$t=0$ 时 $x=\varphi(u_0)$）。再解出 $u$ 即得隐式解 $u=g(x-ut)$，与特征方法一致。图变换的价值在于：它把非线性方程变成线性方程，代价是解可能多值（特征线相交即多值），多值处对应激波。}{Solve $u_t+uu_x=0$ by the hodograph transformation. By Definition \ref{def:potential}, $x=x(u,t)$ satisfies the linear equation $x_t=ux_u$, whose characteristics are $\dd x/\dd t=u$ on lines $u=\mathrm{const}$, hence $x=ut+\varphi(u)$ with $\varphi$ fixed by the initial data ($x=\varphi(u_0)$ at $t=0$). Solving for $u$ recovers the implicit solution $u=g(x-ut)$, in agreement with the method of characteristics. The value of the hodograph transformation is that it linearizes the equation; the price is that the solution may become multivalued (where characteristics cross), and multivaluedness corresponds to shocks.}
+
+
+
+\EX{对无粘 Burgers 方程取 $H(p)=p^2/2$ 的 Hamilton--Jacobi 形式 $u_t+\frac12(u_x)^2=0$（注意这与 $u_t+uu_x=0$ 不同）。令 $v=u_x$，对 $x$ 求导得 $v_t+vv_x=0$，即守恒律；反之给定 $v$，$u(x,t)=\int^xv(y,t)\dd y$ 满足 HJ 方程。这就是``势函数''关系：守恒律是 HJ 方程的 $x$ 导数。对 $u_t+uu_x=0$ 本身，$u$ 就是某个势函数的导数，故两个方程只差一次积分。}{For the inviscid Burgers flux, consider the Hamilton--Jacobi form $u_t+\frac12(u_x)^2=0$ (note this differs from $u_t+uu_x=0$). Setting $v=u_x$ and differentiating in $x$ gives $v_t+vv_x=0$, a conservation law; conversely, given $v$, the integral $u(x,t)=\int^xv(y,t)dy$ solves the HJ equation. This is the potential-function relation: the conservation law is the $x$-derivative of the HJ equation. For $u_t+uu_x=0$ itself, $u$ is the derivative of a potential, so the two equations differ by one integration.}
+
+\subsection{渐近方法 | Asymptotic methods}
+\APS{多数实际问题无法求出显式解，只能求近似。Evans 第 4.5 节列出五类渐近工具，它们都以``小参数''或``大参数''为组织原则。}{Most practical problems admit no explicit solution and only approximations. Evans Section 4.5 lists five asymptotic tools, all organized around a small or large parameter.}
+
+\begin{definition}[渐近展开 / asymptotic expansion]\label{def:asymptotic}
+设 $\varepsilon\to0^+$。称形式级数 $\sum_{k\ge0}a_k\varepsilon^k$ 为函数 $f(\varepsilon)$ 的\textbf{渐近展开 / asymptotic expansion}（写到第 $N$ 阶），若
+\[
+f(\varepsilon)=\sum_{k=0}^{N-1}a_k\varepsilon^k+O(\varepsilon^N),\qquad \varepsilon\to0^+ .
+\]
+渐近展开不必收敛（它通常是发散的），但截断到适当阶数能给出任意精度；一致有效的近似要求在区域的所有点（包括边界层内部）都满足这样的误差估计。
+\EN{As $\varepsilon\to0^+$, the formal series $\sum_{k\ge0}a_k\varepsilon^k$ is an asymptotic expansion of $f$ to order $N$ if the displayed estimate holds. The expansion need not converge (it is usually divergent), but truncating at a suitable order gives arbitrary accuracy; a uniformly valid approximation requires such an error estimate at every point of the domain, including inside boundary layers.}
+\end{definition}
+
+\begin{definition}[奇异摄动与边界层 / singular perturbation and boundary layer]\label{def:singular}
+含小参数 $\varepsilon$ 的方程称为\textbf{奇异摄动 / singular perturbation}，若令 $\varepsilon\to0$ 会降低方程的阶数（例如 $\varepsilon u''+a(x)u'+b(x)u=0$ 在 $\varepsilon=0$ 时退化为一阶方程）。此时解在大部分区域由退化方程控制，但在边界附近出现宽度 $O(\varepsilon)$ 的急剧过渡层，称为\textbf{边界层 / boundary layer}；用``外解 + 内解 + 匹配''构造一致有效的近似，称为匹配渐近展开。
+\EN{An equation with a small parameter $\varepsilon$ is a singular perturbation if letting $\varepsilon\to0$ lowers its order (e.g. $\varepsilon u''+a(x)u'+b(x)u=0$ degenerates to a first-order equation at $\varepsilon=0$). Then the solution is governed by the reduced equation in most of the domain but has a rapid transition layer of width $O(\varepsilon)$ near the boundary, the boundary layer; an outer solution, an inner solution and matching give a uniformly valid approximation.}
+\end{definition}
+
+\APS{\textbf{Laplace 方法 / Laplace's method}: 对 $\lambda\to+\infty$，
+\[
+\int_a^b e^{\lambda f(x)}g(x)\,\dd x\ \sim\ e^{\lambda f(x_0)}g(x_0)\sqrt{\frac{2\pi}{\lambda|f''(x_0)|}},
+\]
+其中 $x_0$ 是 $f$ 在 $(a,b)$ 内的唯一极大点。它把积分集中到极大点附近的 $O(\lambda^{-1/2})$ 邻域，是概率论中 Laplace 近似与大偏差理论的工具。}{Laplace's method: as $\lambda\to+\infty$ the displayed asymptotic holds, where $x_0$ is the unique interior maximum of $f$. The integral concentrates in an $O(\lambda^{-1/2})$ neighbourhood of the maximum, a tool in Laplace approximation and large-deviation theory.}
+
+\APS{\textbf{几何光学 / WKB 近似}: 对高频波 $u\approx A(x)e^{i\omega\varphi(x)}$，代入 $u_{tt}=c^2(x)\Delta u$ 并按 $\omega$ 的幂次比较，首阶给出\textbf{程函方程 / eikonal equation} $|\nabla\varphi|^2=1/c^2(x)$，次阶给出输运方程 $\nabla\cdot(A^2\nabla\varphi)=0$。这就是几何光学：波前由程函方程决定，振幅由能量守恒（输运方程）决定。}{Geometric optics / WKB approximation: for a high-frequency wave $u\approx A(x)e^{i\omega\varphi(x)}$, substituting into $u_{tt}=c^2(x)\Delta u$ and comparing powers of $\omega$ gives at leading order the eikonal equation $|\nabla\varphi|^2=1/c^2(x)$, and at the next order the transport equation $\nabla\cdot(A^2\nabla\varphi)=0$. This is geometric optics: the wave fronts are governed by the eikonal equation and the amplitude by energy conservation.}
+
+\APS{\textbf{驻相法 / stationary phase}: 对 $\lambda\to+\infty$，
+\[
+\int_a^b e^{i\lambda f(x)}g(x)\,\dd x\ \sim\ \sum_{f'(x_j)=0}g(x_j)e^{i\lambda f(x_j)}e^{i\frac\pi4\operatorname{sgn}f''(x_j)}\sqrt{\frac{2\pi}{\lambda|f''(x_j)|}} ,
+\]
+只有驻相点 $f'=0$ 附近的贡献不被振荡抵消。它是 Fourier 积分与色散波渐近分析的标准工具。}{Stationary phase: as $\lambda\to+\infty$ the displayed asymptotic holds, with contributions only from the stationary points $f'=0$, where the oscillations do not cancel. It is the standard tool for Fourier integrals and dispersive-wave asymptotics.}
+
+\APS{\textbf{均匀化 / homogenization}: 当介质系数在细尺度 $\varepsilon$ 上快速振荡（如 $a(x/\varepsilon)$）时，解 $u^\varepsilon$ 的极限满足一个系数被``平均''掉的常系数方程，平均系数由胞元问题（cell problem）确定。这是复合材料、多孔介质与周期结构的数学理论，也是多尺度建模的入口。}{Homogenization: when the coefficients oscillate rapidly on a fine scale $\varepsilon$ (e.g. $a(x/\varepsilon)$), the solutions $u^\varepsilon$ converge to the solution of a constant-coefficient equation whose averaged coefficients are determined by a cell problem. This is the mathematics of composites, porous media and periodic structures, and the entry point to multiscale modelling.}
+
+\EX{求解 $\varepsilon u''+u'=1$（$0<x<1$）、$u(0)=u(1)=0$，$\varepsilon\ll1$。退化方程 $u'=1$ 给出外解 $u_{\text{out}}=x+C$，由 $u(1)=0$ 得 $C=-1$，即 $u_{\text{out}}=x-1$。它在 $x=0$ 处取 $-1\ne0$，故边界层位于 $x=0$；令 $\xi=x/\varepsilon$，内解满足 $u_{\xi\xi}+u_\xi=0$，即 $u_{\text{in}}=A+Be^{-\xi}$，由 $u_{\text{in}}(0)=0$ 得 $B=-A$，再由匹配 $u_{\text{in}}(\infty)=u_{\text{out}}(0)=-1$ 得 $A=-1$，于是
+\[
+u(x)\approx x-1+e^{-x/\varepsilon}.
+\]
+精确解为
+\[
+u(x)=x-\frac{1-e^{-x/\varepsilon}}{1-e^{-1/\varepsilon}}
+=x-1+\frac{e^{-x/\varepsilon}-e^{-1/\varepsilon}}{1-e^{-1/\varepsilon}},
+\]
+与近似相差 $O(e^{-1/\varepsilon})$；$x=0$ 附近确有一个宽度 $O(\varepsilon)$ 的边界层。}{Solve $\varepsilon u''+u'=1$ on $0<x<1$ with $u(0)=u(1)=0$ and $\varepsilon\ll1$. The reduced equation $u'=1$ gives the outer solution $x+C$, and $u(1)=0$ fixes $C=-1$, so $u_{\text{out}}=x-1$; its value at $x=0$ is $-1\ne0$, so the boundary layer sits at $x=0$. With $\xi=x/\varepsilon$ the inner equation is $u_{\xi\xi}+u_\xi=0$, i.e. $u_{\text{in}}=A+Be^{-\xi}$; the condition $u_{\text{in}}(0)=0$ gives $B=-A$. Matching $u_{\text{in}}(\infty)=u_{\text{out}}(0)=-1$ then gives $A=-1$, hence $u\approx x-1+e^{-x/\varepsilon}$. The exact solution is displayed and differs from the approximation by $O(e^{-1/\varepsilon})$; there is indeed a boundary layer of width $O(\varepsilon)$ near $x=0$.}
+
+\subsection{幂级数法与解析性 | Power series and analyticity}
+\begin{definition}[实解析函数与非特征超曲面 / real-analytic functions and noncharacteristic surfaces]\label{def:analytic}
+函数 $u$ 在 $x_0$ 附近称为\textbf{实解析 / real-analytic}，若它在该点的某邻域内可展成收敛的多元幂级数。对一阶方程组 $u_t=\sum_jA_j(u,x)u_{x_j}+B(u,x)$，初始超曲面 $\{t=0\}$ 称为\textbf{非特征 / noncharacteristic}，若可以从方程解出 $t$ 方向的高阶导数（对本例恒成立）；一般地，对 $F(Du,u,x)=0$，超曲面 $\{S(x)=0\}$ 非特征当且仅当 $D_pF\cdot\nabla S\ne0$。
+\EN{A function is real-analytic near $x_0$ if it can be expanded in a convergent power series in a neighbourhood. For the first-order system displayed, the surface $\{t=0\}$ is noncharacteristic if the highest derivative in the $t$ direction can be solved from the equation (automatic here); in general, for $F(Du,u,x)=0$ the surface $\{S(x)=0\}$ is noncharacteristic exactly when $D_pF\cdot\nabla S\ne0$.}
+\end{definition}
+
+\begin{theorem}[Cauchy--Kovalevskaya 定理 / Cauchy--Kovalevskaya theorem]\label{thm:ck}
+设 $A_j,B$ 在 $(u,x)$ 的某邻域内实解析，初值 $\phi$ 在 $x_0$ 附近实解析。则初值问题
+\[
+u_t=\sum_{j=1}^{n}A_j(u,x)u_{x_j}+B(u,x),\qquad u(x,0)=\phi(x)
+\]
+在 $(x_0,0)$ 附近存在唯一的实解析解 $u$，它由把 $\phi$ 的 Taylor 级数代入方程、逐阶比较系数得到的递推关系唯一确定。
+\EN{If $A_j,B$ are real-analytic near $(u,x)$ and $\phi$ is real-analytic near $x_0$, then the displayed initial-value problem has a unique real-analytic solution near $(x_0,0)$, determined by substituting the Taylor series of $\phi$ and solving the recursion obtained by comparing coefficients.}
+\end{theorem}
+
+\begin{proof}[证明思路 / Idea of proof]
+把解写成 $u=\sum_{\alpha}\frac{1}{\alpha!}u_\alpha(x')t^{|\alpha|}$ 的形式，比较 $t$ 的各阶幂得到 $u_\alpha$ 的递推公式（每阶只依赖低阶项）。关键是证明形式幂级数有正收敛半径：用控制级数（majorant）方法，构造一个系数逐项控制原级数、且可显式求和的辅助问题（如线性热方程），其收敛半径给出原级数的收敛半径。\EN{Write the solution as a power series in $t$ with coefficients depending on the spatial variables; comparing powers of $t$ gives a recursion in which each coefficient depends only on lower-order ones. The point is to prove a positive radius of convergence: the method of majorants constructs an auxiliary problem (e.g. a linear heat equation) whose coefficients dominate the original ones term by term and which can be summed explicitly, its radius of convergence bounding that of the original series.}
+\end{proof}
+
+\EX{解 $u_t=u_{xx}$、$u(x,0)=\cos x$。设 $u=\sum_{k\ge0}\frac{t^k}{k!}u_k(x)$，代入得 $u_{k+1}=u_k''$，故 $u_k=(-1)^k\cos x$，从而
+\[
+u(x,t)=\sum_{k\ge0}\frac{(-t)^k}{k!}\cos x=e^{-t}\cos x .
+\]
+这正是热方程的一个解析解，也可用分离变量（$X=\cos x$ 是 $X''=-\lambda X$ 的本征函数，$\lambda=1$）或 Fourier 变换得到。}{Solve $u_t=u_{xx}$ with $u(x,0)=\cos x$. Writing $u=\sum_k\frac{t^k}{k!}u_k(x)$ and substituting gives $u_{k+1}=u_k''$, so $u_k=(-1)^k\cos x$ and the series sums to $e^{-t}\cos x$. This analytic solution can also be obtained by separation of variables ($\cos x$ is an eigenfunction with $\lambda=1$) or by Fourier transform.}
+
+\begin{remark}[Cauchy--Kovalevskaya 的局限 / limitations]
+Cauchy--Kovalevskaya 只保证解析数据的局部解析解：它不保证光滑（非解析）数据的解存在，不保证整体存在，也不给出连续依赖（适定性）。例如热方程对 $C^\infty$ 初值有解，但 Laplace 方程的 Cauchy 问题不适定（第 1.2 节）。因此它是``局部存在性''的工具，而不是适定性理论。\EN{Cauchy--Kovalevskaya guarantees only a local analytic solution for analytic data: it does not give existence for smooth non-analytic data, nor global existence, nor continuous dependence (well-posedness). For example the heat equation is solvable for $C^\infty$ data, while the Cauchy problem for Laplace's equation is ill-posed (Section 1.2). It is thus a tool for local existence, not a theory of well-posedness.}
+\end{remark}
+
+\section{综合应用与口试速查 | Applications and interview summary}
+\APS{本节把第 2--4 章的工具放到五个真实模型里：热传导、弦与膜、静电场、交通流与期权定价。每个模型的 PDE、定解条件、所用定理与结论都写全，作为``从实际问题到方程再到定理''的完整示范。}{This section places the tools of Chapters 2--4 in five real models: heat conduction, strings and membranes, electrostatics, traffic flow and option pricing. For each model the PDE, the side conditions, the theorems used and the conclusions are stated in full, as a complete demonstration from a real problem to an equation to a theorem.}
+
+\subsection{热传导：Robin 边界与散热片 | Heat conduction and cooling fins}
+\APS{一维杆的温度 $u(x,t)$ 满足 $u_t=\kappa u_{xx}$。若杆表面与温度为 $u_\infty$ 的环境发生牛顿冷却，则方程多一个散热项：
+\[
+u_t=\kappa u_{xx}-\beta(u-u_\infty),\qquad \beta=\frac{hP}{\rho cA}>0,
+\]
+其中 $h$ 是换热系数、$P$ 是周长、$A$ 是截面积。稳态 $u_t=0$ 时化为 $u''=\frac{\beta}{\kappa}(u-u_\infty)$，其解是指数衰减的（散热片越远越接近环境温度），特征长度 $\sqrt{\kappa/\beta}$ 决定散热片的有效长度。}{The temperature $u(x,t)$ in a one-dimensional rod satisfies $u_t=\kappa u_{xx}$. If the surface exchanges heat with an environment at temperature $u_\infty$ by Newton's law of cooling, the equation gains a radiation term as displayed, with $h$ the heat-transfer coefficient, $P$ the perimeter and $A$ the cross-section. At steady state it becomes $u''=(\beta/\kappa)(u-u_\infty)$, whose solution decays exponentially (a fin approaches the ambient temperature with distance), and the characteristic length $\sqrt{\kappa/\beta}$ governs the effective length of the fin.}
+
+\APS{边界条件同样是物理的：固定温度端给 Dirichlet 条件，绝热端给 Neumann 条件 $\partial_\nu u=0$，与环境的对流换热给 Robin 条件 $\partial_\nu u+\alpha(u-u_\infty)=0$。解的唯一性与稳定性由抛物极值原理保证（定理 \ref{thm:heatmax}），长时间行为由主本征值 $\lambda_1$ 控制：$u-u_\infty\sim Ce^{-\kappa\lambda_1t}X_1(x)$。}{The boundary conditions are equally physical: a fixed-temperature end gives Dirichlet data, an insulated end Neumann data $\partial_\nu u=0$, and convective exchange with the environment Robin data $\partial_\nu u+\alpha(u-u_\infty)=0$. Uniqueness and stability follow from the parabolic maximum principle (Theorem \ref{thm:heatmax}), and the large-time behaviour is governed by the principal eigenvalue: $u-u_\infty\sim Ce^{-\kappa\lambda_1t}X_1(x)$.}
+
+\subsection{弦与膜：本征模态与能量 | Strings and membranes: normal modes and energy}
+\APS{长度为 $L$、两端固定的弦满足 $u_{tt}=c^2u_{xx}$、$u(0,t)=u(L,t)=0$。分离变量给出本征模态
+\[
+u_n(x,t)=\sin\frac{n\pi x}{L}\Bigl(A_n\cos\frac{n\pi ct}{L}+B_n\sin\frac{n\pi ct}{L}\Bigr),
+\]
+第 $n$ 个模态的频率为 $\omega_n=n\pi c/L$（基频 $c/2L$），叠加即得一般解。二维圆形膜用 Bessel 函数 $J_m$，其零点决定鼓膜的频率比，这是乐器音色的数学来源。}{A string of length $L$ fixed at both ends satisfies $u_{tt}=c^2u_{xx}$ with zero endpoint data. Separation of variables gives the displayed normal modes, the $n$-th having frequency $\omega_n=n\pi c/L$ (fundamental $c/2L$); superposing gives the general solution. A circular membrane uses Bessel functions $J_m$, whose zeros determine the frequency ratios of a drum — the mathematical origin of instrumental timbre.}
+
+\APS{能量 $E(t)=\frac12\int_0^L(u_t^2+c^2u_x^2)\dd x$ 守恒（定理 \ref{thm:waveenergy}），这是弦振动的``无耗散''表述：没有外力时总能量不变，故解唯一且稳定。加上阻尼项 $u_t$ 或 $u_{txx}$ 后能量单调衰减，对应``拨弦后声音逐渐消失''。}{The energy is conserved (Theorem \ref{thm:waveenergy}), the ``no dissipation'' statement for a vibrating string: without external forces the total energy is constant, so the solution is unique and stable. With a damping term $u_t$ or $u_{txx}$ the energy decreases monotonically, corresponding to the sound of a plucked string dying away.}
+
+\subsection{静电场：Poisson 方程与镜像法 | Electrostatics: Poisson's equation and images}
+\APS{真空中电势 $u$ 满足 $-\Delta u=\rho/\varepsilon_0$（Poisson 方程），无电荷区满足 $\Delta u=0$。导体表面是等势面，给 Dirichlet 条件 $u|_{\partial\Omega}=V_0$；总电荷给 Neumann 条件。由 Green 表示公式（定理 \ref{thm:greenrep}），$u$ 由体电荷与边界电势共同决定。}{In vacuum the electric potential satisfies $-\Delta u=\rho/\varepsilon_0$ (Poisson's equation), and $\Delta u=0$ in charge-free regions. A conductor surface is an equipotential and gives Dirichlet data $u|_{\partial\Omega}=V_0$; total charge gives Neumann data. By the Green representation formula (Theorem \ref{thm:greenrep}), $u$ is determined by the volume charge together with the boundary potential.}
+
+\APS{点电荷在接地导体平面（$x_3=0$）上方的场，用镜像法：在 $(x',-x_3)$ 处放一个反号电荷，Green 函数为 $G=\Phi(x-y)-\Phi(x-y^*)$，正是 2.2.4 节的半空间 Green 函数。由此得导体表面的感应电荷密度 $\sigma=-\varepsilon_0\partial_\nu u$，以及点电荷受到的吸引力 $F=q^2/(16\pi\varepsilon_0d^2)$（$d$ 为到平面的距离）。}{The field of a point charge above a grounded conducting plane ($x_3=0$) is obtained by images: place an opposite charge at $(x',-x_3)$, giving $G=\Phi(x-y)-\Phi(x-y^*)$, exactly the half-space Green function of Section 2.2.4. Hence the induced surface charge density $\sigma=-\varepsilon_0\partial_\nu u$ and the attraction on the charge, $F=q^2/(16\pi\varepsilon_0d^2)$ with $d$ the distance to the plane.}
+
+\subsection{交通流：LWR 模型与激波 | Traffic flow: the LWR model and shocks}
+\APS{Lighthill--Whitham--Richards 模型把车流看作可压缩流体：
+\[
+\rho_t+\bigl(\rho v(\rho)\bigr)_x=0,\qquad v(\rho)=v_{\max}\Bigl(1-\frac{\rho}{\rho_{\max}}\Bigr),
+\]
+其中 $\rho$ 是车流密度，通量 $F(\rho)=\rho v(\rho)$ 是凹函数（先增后减，最大通行能力在 $\rho=\rho_{\max}/2$ 处）。\textbf{红绿灯}就是 Riemann 问题：红灯转绿时，停止线后拥堵（$\rho_L=\rho_{\max}$）、前方无车（$\rho_R=0$），此时 $F'(\rho_L)=-v_{\max}<0<F'(\rho_R)=v_{\max}$，Rankine--Hugoniot 速度 $s=0$ 不满足 Lax 条件，故解是稀疏波，车队按特征速度 $F'(\rho)$ 逐层疏散；绿灯转红时，$\rho_L=0<\rho_R=\rho_{\max}$，$F'(0)=v_{\max}>s=0>F'(\rho_{\max})$ 满足 Lax 条件，故解是激波（停车波），以速度 $s=0$ 向上游传播、排队长度线性增长。}{The Lighthill--Whitham--Richards model treats traffic as a compressible fluid, as displayed, where $\rho$ is the density and the flux $F(\rho)=\rho v(\rho)$ is concave (increasing then decreasing, with maximum throughput at $\rho=\rho_{\max}/2$). A traffic light is precisely a Riemann problem: when red turns green, the queue behind has $\rho_L=\rho_{\max}$ while the road ahead is empty, $\rho_R=0$; then $F'(\rho_L)=-v_{\max}<0<F'(\rho_R)=v_{\max}$, the Rankine--Hugoniot speed $s=0$ violates the Lax condition, and the solution is a rarefaction discharging the queue layer by layer at characteristic speed $F'(\rho)$. When green turns red, $\rho_L=0<\rho_R=\rho_{\max}$ and $F'(0)=v_{\max}>s=0>F'(\rho_{\max})$ satisfies the Lax condition, so the solution is a shock (the stopping wave) moving upstream at speed $s=0$, with the queue length growing linearly.}
+
+\APS{这个模型说明了守恒律理论的两个要点：第一，通量不必凸，凹通量同样有激波与稀疏波，熵条件要按特征速度的大小重新表述；第二，宏观模型的预测（如激波速度、排队长度）只依赖通量与熵条件，不需要逐车模拟——这正是``PDE 是集体行为的有效描述''的体现。}{The model illustrates two points of conservation-law theory: first, the flux need not be convex — concave fluxes also produce shocks and rarefactions, with the entropy condition restated in terms of characteristic speeds; second, the macroscopic predictions (shock speed, queue length) depend only on the flux and the entropy condition, with no car-by-car simulation — precisely the sense in which a PDE is an effective description of collective behaviour.}
+
+\subsection{期权定价：Black--Scholes 与热方程 | Option pricing: Black--Scholes and the heat equation}
+\APS{Black--Scholes 方程
+\[
+V_t+\frac12\sigma^2S^2V_{SS}+rSV_S-rV=0
+\]
+（$V$ 为期权价格，$S$ 为标的资产价格，$\sigma$ 为波动率，$r$ 为无风险利率）看似与热方程无关，但作变量替换
+\[
+S=e^x,\qquad \tau=T-t,\qquad V(S,t)=e^{-r\tau}u(x,\tau)
+\]
+后化为 $u_\tau=\frac12\sigma^2u_{xx}+(r-\frac12\sigma^2)u_x$，再令 $u=e^{\alpha x+\beta\tau}w$ 消去一阶项，即得标准热方程 $w_\tau=\frac12\sigma^2w_{xx}$。}{The Black--Scholes equation displayed ($V$ the option price, $S$ the underlying, $\sigma$ the volatility, $r$ the risk-free rate) seems unrelated to the heat equation, but the substitutions displayed reduce it to $u_\tau=\frac12\sigma^2u_{xx}+(r-\frac12\sigma^2)u_x$, and a further exponential factor removes the first-order term, yielding the standard heat equation $w_\tau=\frac12\sigma^2w_{xx}$.}
+
+\APS{于是欧式看涨期权的价格就是热核与终值条件的卷积：
+\[
+V(S,t)=e^{-r(T-t)}\,\mathbb E^{\mathbb Q}\bigl[(S_T-K)^+\mid S_t=S\bigr],
+\]
+其中 $S_T=S\exp\bigl((r-\frac12\sigma^2)(T-t)+\sigma\sqrt{T-t}\,Z\bigr)$，$Z\sim N(0,1)$；计算得 Black--Scholes 公式 $V=SN(d_1)-Ke^{-r(T-t)}N(d_2)$。这个例子把第 2 章的热核、第 4 章的变换与相似解、以及概率表示串在一起，是 PDE 与随机分析交汇的经典案例。}{The price of a European call is therefore the convolution of the heat kernel with the terminal condition, as displayed, where $S_T$ is log-normal and $Z$ is standard normal; the computation gives the Black--Scholes formula $V=SN(d_1)-Ke^{-r(T-t)}N(d_2)$. This example ties together the heat kernel of Chapter 2, the transforms and similarity solutions of Chapter 4, and the probabilistic representation — a classic meeting point of PDEs and stochastic analysis.}
+
+\subsection{一页速查表 | One-page summary}
+\begin{center}\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{2.9cm}>{\raggedright\arraybackslash}p{4.5cm}>{\raggedright\arraybackslash}p{8.0cm}@{}}
+\toprule
+方程 Equation & 基本解 Fundamental solution & 关键定性性质 Key properties \\
+\midrule
+输运 $u_t+b\cdot\nabla u=0$ & $\delta(x-tb)$ & 沿特征线平移；不光滑化；有限速度 $|b|$ \\
+Laplace $\Delta u=0$ & $-\frac1{2\pi}\ln|x|$，$\frac{1}{(n-2)\omega_n|x|^{n-2}}$ & 平均值公式；极值原理；解析；Liouville；Harnack \\
+热 $u_t=\kappa\Delta u$ & $\frac{1}{(4\pi\kappa t)^{n/2}}e^{-|x|^2/(4\kappa t)}$ & 无限速度；立即光滑；极值原理；向后唯一 \\
+波 $u_{tt}=c^2\Delta u$ & $\frac{1}{2c}\mathbf 1_{\{|x|<ct\}}$（$n=1$），$\frac{\delta_{|x|=ct}}{4\pi c^2t}$（$n=3$） & 有限速度；能量守恒；Huygens（奇维） \\
+Burgers $u_t+uu_x=0$ & 特征线 $x=x_0+u_0(x_0)t$ & 激波；RH 条件；熵条件；Hopf--Cole（粘性） \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section*{中英术语表 | Chinese--English glossary}
+\noindent\small
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{5.0cm}>{\raggedright\arraybackslash}p{6.4cm}@{}}
+\hline
+\textbf{中文} & \textbf{English} & \textbf{简要说明 / Note} \\
+\hline
+\endfirsthead
+\hline
+\textbf{中文} & \textbf{English} & \textbf{简要说明 / Note} \\
+\hline
+\endhead
+偏微分方程 & partial differential equation (PDE) & 含未知多元函数及其偏导数的方程 \\
+\hline
+主部 & principal part & 最高阶导数项的系数矩阵 $A(x)$ \\
+\hline
+椭圆型 & elliptic & 主部特征值同号 \\
+\hline
+抛物型 & parabolic & 一个零特征值、其余同号 \\
+\hline
+双曲型 & hyperbolic & 一个异号、其余同号 \\
+\hline
+判别式 & discriminant & 二维 $B^2-AC$ 决定类型 \\
+\hline
+特征线 & characteristic & 把一阶或双曲方程化为 ODE 的曲线 \\
+\hline
+特征方向 & characteristic direction & 使主部退化、信息可传播的方向 \\
+\hline
+适定性 & well-posedness & 存在、唯一、连续依赖数据（Hadamard） \\
+\hline
+定解条件 & side conditions & 初始条件与边界条件的统称 \\
+\hline
+Dirichlet 条件 & Dirichlet condition & $u|_{\partial\Omega}=g$ \\
+\hline
+Neumann 条件 & Neumann condition & $\partial_\nu u|_{\partial\Omega}=g$ \\
+\hline
+Robin 条件 & Robin condition & $\partial_\nu u+\alpha u|_{\partial\Omega}=g$ \\
+\hline
+相容性条件 & compatibility condition & 数据必须满足的可解性条件 \\
+\hline
+输运方程 & transport equation & $u_t+b\cdot\nabla u=0$，平移解 \\
+\hline
+调和函数 & harmonic function & 满足 $\Delta u=0$ 的函数 \\
+\hline
+基本解 & fundamental solution & 满足 $-\Delta\Phi=\delta_0$（或热/波）的点源响应 \\
+\hline
+Poisson 方程 & Poisson's equation & $-\Delta u=f$ \\
+\hline
+平均值公式 & mean-value formula & 调和/热方程解等于球面或热球上的加权平均 \\
+\hline
+强极值原理 & strong maximum principle & 内部极值导致解为常数 \\
+\hline
+Hopf 引理 & Hopf's lemma & 边界严格极大处外法向导数为正 \\
+\hline
+Harnack 不等式 & Harnack inequality & 正调和函数在紧子集上 $\sup\le C\inf$ \\
+\hline
+Liouville 定理 & Liouville's theorem & 全空间有界调和函数为常数 \\
+\hline
+Green 公式 & Green's identities & 由散度定理得到的积分恒等式 \\
+\hline
+Green 函数 & Green function & 满足齐次边界条件的点源响应 \\
+\hline
+镜像法 & method of images & 用对称点构造半空间/圆域 Green 函数 \\
+\hline
+Poisson 核 & Poisson kernel & 边界数据到内部调和函数的积分核 \\
+\hline
+热核 & heat kernel & 高斯型热方程基本解 \\
+\hline
+热球 & heat ball & 热核的水平集 $\{\Phi\ge r^{-n}\}$ \\
+\hline
+抛物边界 & parabolic boundary & $(\bar\Omega\times\{0\})\cup(\partial\Omega\times[0,T])$ \\
+\hline
+向后唯一性 & backward uniqueness & 末态为零则解恒为零 \\
+\hline
+d'Alembert 公式 & d'Alembert's formula & 一维波动方程初值问题的显式解 \\
+\hline
+球面平均 & spherical mean & 球面上的平均值，满足 Euler--Poisson--Darboux 方程 \\
+\hline
+Kirchhoff 公式 & Kirchhoff's formula & 三维波动方程的球面积分解 \\
+\hline
+Poisson 公式 & Poisson's formula & 二维波动方程的圆盘积分解 \\
+\hline
+惠更斯原理 & Huygens' principle & 奇维强惠更斯：脉冲过后无余波 \\
+\hline
+能量方法 & energy method & 用能量范数控制解对数据的依赖 \\
+\hline
+完全积分 & complete integral & $n$ 参数的非退化解族 \\
+\hline
+包络 & envelope & 完全积分在 $D_av=0$ 下生成的解 \\
+\hline
+Legendre 变换 & Legendre transform & 凸函数的对偶变换，连接 $H$ 与 $L$ \\
+\hline
+Hamilton--Jacobi 方程 & Hamilton--Jacobi equation & $u_t+H(Du)=0$ \\
+\hline
+Hopf--Lax 公式 & Hopf--Lax formula & 凸 Hamilton 量的显式极小表示 \\
+\hline
+粘性解 & viscosity solution & 用极值原理定义的弱解 \\
+\hline
+守恒律 & conservation law & $u_t+(F(u))_x=0$ \\
+\hline
+弱解 & weak solution & 满足积分（分布）形式的解 \\
+\hline
+Rankine--Hugoniot 条件 & Rankine--Hugoniot condition & 间断速度 $s[u]=[F(u)]$ \\
+\hline
+熵条件 & entropy condition & 挑出物理弱解（特征线进入激波） \\
+\hline
+熵解 & entropy solution & 满足熵条件、唯一且 $L^1$ 稳定的弱解 \\
+\hline
+稀疏波 & rarefaction wave & 特征线发散、解连续膨胀的波 \\
+\hline
+激波 & shock wave & 特征线相交形成的间断 \\
+\hline
+粘性消没 & vanishing viscosity & $\nu\to0^+$ 的粘性解极限 \\
+\hline
+Riemann 问题 & Riemann problem & 左右常值初值的间断初值问题 \\
+\hline
+分离变量 & separation of variables & 设 $u=X(x)T(t)$ 分解方程 \\
+\hline
+Sturm--Liouville 问题 & Sturm--Liouville problem & $-(pX')'+qX=\lambda wX$ 及自伴边界条件 \\
+\hline
+本征值 / 本征函数 & eigenvalue / eigenfunction & 使齐次边值问题有非零解的 $\lambda$ 与 $X$ \\
+\hline
+正交性 / 完备性 & orthogonality / completeness & 不同本征值正交；本征函数张成 $L^2_w$ \\
+\hline
+相似解 & similarity solution & 由尺度不变性把 PDE 化为 ODE \\
+\hline
+行波解 & travelling wave & $u=U(x-ct)$ 形式的解 \\
+\hline
+Fourier 变换 & Fourier transform & 把空间微分变为频率乘法 \\
+\hline
+Laplace 变换 & Laplace transform & 把时间初值问题代数化 \\
+\hline
+Hopf--Cole 变换 & Hopf--Cole transformation & 粘性 Burgers 化为热方程 \\
+\hline
+图变换 & hodograph transformation & 交换 $u$ 与 $x$ 的角色使方程线性化 \\
+\hline
+几何光学 & geometric optics & 高频渐近，首阶为程函方程 \\
+\hline
+程函方程 & eikonal equation & $|\nabla\varphi|^2=n^2(x)$ \\
+\hline
+驻相法 & stationary phase & 振荡积分的渐近展开 \\
+\hline
+均匀化 & homogenization & 细尺度振荡系数的平均化 \\
+\hline
+实解析 & real-analytic & 可展成收敛幂级数 \\
+\hline
+非特征曲面 & noncharacteristic surface & $D_pF\cdot\nabla S\ne0$ 的初始曲面 \\
+\hline
+Cauchy--Kovalevskaya 定理 & Cauchy--Kovalevskaya theorem & 解析数据给局部解析解 \\
+\hline
+\end{longtable}
+\normalsize
+
+\section*{参考文献 | References}
+\noindent L. C. Evans. \emph{Partial Differential Equations}, 2nd ed. Graduate Studies in Mathematics 19. Providence: American Mathematical Society, 2010. 第 2 章（四大线性方程：输运、位势、热、波动）、第 3 章（一阶非线性方程：完全积分与包络、特征方法、Hamilton--Jacobi、守恒律与熵条件）、第 4 章（解的表示：分离变量、相似解、Fourier 与 Laplace 变换、非线性转线性、渐近方法、幂级数法）．\par
+\noindent 姜礼尚，陈亚浙，刘西垣，易法槐 编．数学物理方程讲义（第三版）．北京：高等教育出版社，2007．第 1 章（方程的导出与定解条件）、第 2 章（波动方程）、第 3 章（热传导方程）、第 4 章（位势方程）及第 5 章第 1 节（二阶方程分类）．\par
+\noindent W. A. Strauss. \emph{Partial Differential Equations: An Introduction}, 2nd ed. Hoboken: Wiley, 2008. 第 1--8 章（方程来源、波与扩散、反射与源、边值问题、Fourier 级数、调和函数、Green 恒等式与 Green 函数、分布与变换）．\par
+\noindent G. B. Folland. \emph{Introduction to Partial Differential Equations}, 2nd ed. Princeton: Princeton University Press, 1995. 调和函数的性质与奇异积分算子．\par
+\noindent F. John. \emph{Partial Differential Equations}, 4th ed. New York: Springer, 1982. 一阶方程、特征方法与 Hamilton--Jacobi 理论．\par
+\EN{Main source: Evans, \emph{Partial Differential Equations}, 2nd ed., AMS, 2010, Chapters 2--4 (the four important linear PDEs; nonlinear first-order PDEs; other ways to represent solutions). Chinese source: Jiang Lishang et al., \emph{Lecture Notes on Mathematical Physics Equations}, 3rd ed., Higher Education Press, 2007. Standard references: Strauss (2008), Folland (1995), John (1982). References are chapter-level; page numbers are omitted on purpose.}
+
+\end{document}
+
