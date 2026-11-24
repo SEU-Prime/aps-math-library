@@ -72,7 +72,7 @@ f(x,y)=k .
 u(x,y)=\int_{x_0}^{x}M(s,y_0)\,ds+\int_{y_0}^{y}N(x,t)\,dt .
 \]
 由 $M_y=N_x$ 对第二式关于 $x$ 求导并用 Leibniz 法则，得 $u_x=M$、$u_y=N$，故 $du=Mdx+Ndy$。在一般的单连通区域内，用 Green 定理的路径无关结论定义势函数。上式是矩形内取两段坐标线的写法。}{Theorem (exactness criterion). Let $M,N$ be continuously differentiable on a simply connected domain $D$; then $Mdx+Ndy=0$ is exact if and only if the displayed equality holds on $D$. Proof. Necessity: if $du=Mdx+Ndy$ then $M=u_x$, $N=u_y$, and commuting mixed partials gives $M_y=u_{xy}=u_{yx}=N_x$. Sufficiency on a rectangle: fix $(x_0,y_0)\in D$ and define the displayed $u$. Using $M_y=N_x$ and differentiating the second integral in $x$ via Leibniz's rule yields $u_x=M$ and $u_y=N$, hence $du=Mdx+Ndy$. Simple connectedness makes the line integral path-independent, which is what makes sufficiency work.}
-\EX{解 $(2x+y)dx+(x+2y)dy=0$。这里 $M=2x+y$、$N=x+2y$，$\partial_yM=1=\partial_xN$，故恰当。由 $u_x=2x+y$ 对 $x$ 积分得 $u=x^2+xy+\varphi(y)$；令 $u_y=x+\varphi'(y)=x+2y$，得 $\varphi=y^2$。通解为 $x^2+xy+y^2=C$。}{Solve $(2x+y)dx+(x+2y)dy=0$. Here $M=2x+y$, $N=x+2y$ and $M_y=1=N_x$, so it is exact. Integrating $u_x=2x+y$ gives $u=x^2+xy+\varphi(y)$; setting $u_y=x+\varphi'(y)=x+2y$ gives $\varphi=y^2$. The general solution is $x^2+xy+y^2=C$.}
+\APS{例：$(2x+y)dx+(x+2y)dy=0$ 满足 $M_y=N_x=1$；由 $u_x=2x+y$ 积分得 $u=x^2+xy+\varphi(y)$，再由 $u_y=x+\varphi'=x+2y$ 得 $\varphi=y^2$，故通解为 $x^2+xy+y^2=C$。}{Example: for $(2x+y)dx+(x+2y)dy=0$ one has $M_y=N_x=1$; integrating $u_x=2x+y$ gives $u=x^2+xy+\varphi(y)$, and $u_y=x+\varphi'=x+2y$ gives $\varphi=y^2$, hence the general solution $x^2+xy+y^2=C$.}
 \subsection{变量分离方程 | Separable equations}
 \APS{\textbf{命题}. 设 $f$ 在区间 $(a,b)$、$g$ 在区间 $(c,d)$ 上连续。对初值问题
 \[
@@ -84,6 +84,11 @@ y'=f(x)g(y),\qquad y(x_0)=y_0,\qquad (x_0,y_0)\in(a,b)\times(c,d),
 \]
 确定。若存在 $y_0$ 使 $g(y_0)=0$，则 $y\equiv y_0$ 也是解，且处在上式要求的 $g(y)\ne0$ 区域之外，必须单独补上。}{Proposition. Let $f$ be continuous on $(a,b)$ and $g$ continuous on $(c,d)$. For the initial value problem displayed with $(x_0,y_0)\in(a,b)\times(c,d)$: if $g(y_0)\ne0$, there is a unique solution near $(x_0,y_0)$ determined implicitly by the displayed antiderivative relation; if $g(y_0)=0$ for some $y_0$, then $y\equiv y_0$ is also a solution, outside the region where division by $g(y)$ is valid, so it must be added separately.}
 \APS{证明要点：由 $g(y_0)\ne0$，$\int_{y_0}^{y}du/g(u)$ 在 $y_0$ 附近是严格单调可微函数，故其反函数存在，隐式关系局部解出唯一的 $y=\varphi(x)$，再对 $x$ 求导即验证它是解。任何通过初值的局部解也必须满足同一积分关系，所以反函数的唯一性给出解的唯一性。}{Proof sketch: since $g(y_0)\ne0$, the antiderivative $\int_{y_0}^{y}du/g(u)$ is strictly monotone and differentiable near $y_0$, so its inverse exists and the implicit relation locally defines a unique $y=\varphi(x)$; differentiating in $x$ verifies it is a solution. Every local solution through the initial point must satisfy the same integral identity, which has a unique inverse branch.}
+\EX{Logistic 方程 $y'=ay-by^2$（$a,b>0$）。它是变量分离方程，平衡解为 $y\equiv0$ 与 $y\equiv a/b$。对 $y\not\equiv0,a/b$，用部分分式 $\frac1{y(a-by)}=\frac1a\left(\frac1y+\frac b{a-by}\right)$ 分离积分得 $\ln\frac{y}{a-by}=ax+C$，即
+\[
+y(x)=\frac{a/b}{1+Ce^{-ax}},
+\]
+其中 $C=\frac{a/b-y_0}{y_0}$ 由初值 $y(0)=y_0$ 决定（$0<y_0<a/b$ 时 $C>0$）。这是 S 形（logistic）曲线，$x\to+\infty$ 时趋于承载容量 $a/b$，是种群增长、传染病传播与自催化反应的经典模型；平衡解的稳定性由线性化 $f'(y)=a-2by$ 在 $y=0$ 处为正、在 $y=a/b$ 处为负决定。}{The logistic equation $y'=ay-by^2$ with $a,b>0$ is separable; the equilibria are $y\equiv0$ and $y\equiv a/b$. For $y\not\equiv0,a/b$, the partial fraction $\frac1{y(a-by)}=\frac1a\left(\frac1y+\frac b{a-by}\right)$ and separation give $\ln\frac{y}{a-by}=ax+C$, i.e. the displayed S-shaped (logistic) curve, where $C=\frac{a/b-y_0}{y_0}$ is fixed by $y(0)=y_0$ (so $C>0$ when $0<y_0<a/b$). As $x\to+\infty$ it tends to the carrying capacity $a/b$; it is the classical model for population growth, epidemic spread and autocatalytic reactions. The stability of the equilibria follows from the linearization $f'(y)=a-2by$ being positive at $y=0$ and negative at $y=a/b$.}
 \subsection{一阶线性微分方程 | First-order linear equations}
 \APS{\textbf{定理}. 设 $P,Q$ 在区间 $I$ 上连续，则 $y'+P(x)y=Q(x)$ 在 $I$ 上的通解为
 \[
