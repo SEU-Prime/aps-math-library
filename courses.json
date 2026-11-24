@@ -112,6 +112,20 @@
     "keywords": "微分几何 曲线 弧长 曲率 挠率 Frenet 标架 Frenet 公式 第一基本形式 第二基本形式 法曲率 Weingarten 映射 主曲率 Gauss 曲率 平均曲率 Gauss-Codazzi 方程 绝妙定理 测地线 平行移动 Gauss-Bonnet"
   },
   {
+    "id": "analytic-geometry",
+    "title": "解析几何",
+    "subtitle": "Analytic Geometry",
+    "group": "analysis",
+    "groupLabel": "分析",
+    "scope": "吕林根、许子道《解析几何》第五版第 4–5 章",
+    "pages": 68,
+    "summary": "覆盖第 4 章「柱面、锥面、旋转曲面与二次曲面」与第 5 章「二次曲线的一般理论」：柱面与锥面的定义、射影柱面、齐次方程与二次锥面、旋转曲面的纬圆与经线及坐标替换规律、椭球面与双曲面/抛物面的标准方程、对称性与平行截割法、单叶双曲面与双曲抛物面的两族直母线及共面/异面定理；二次曲线的渐近方向、中心、渐近线、切线、直径与共轭直径、主直径与主方向、坐标变换化简与九种标准方程、不变量与半不变量的分类判别。定义与定理按教材原文并标注书中编号，配 30 个完整算例、23 条口试问答与 85 条中英术语。",
+    "pdf": "materials/analytic-geometry/analytic-geometry-aps.pdf",
+    "tex": "materials/analytic-geometry/source.tex",
+    "cover": "materials/analytic-geometry/cover.png",
+    "keywords": "解析几何 柱面 锥面 旋转曲面 椭球面 单叶双曲面 双叶双曲面 椭圆抛物面 双曲抛物面 直母线 二次曲线 渐近方向 中心 渐近线 切线 直径 共轭直径 主直径 主方向 特征方程 坐标变换 标准方程 不变量 半不变量 二次曲线分类"
+  },
+  {
     "id": "partial-differential-equations",
     "title": "偏微分方程",
     "subtitle": "Partial Differential Equations",
